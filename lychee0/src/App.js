@@ -1,16 +1,14 @@
-<<<<<<< HEAD
-import logo from "./logo.svg";
 import "./App.css";
-=======
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SignUp from "./pages/SignUp";
-import Login from "./pages/Login";
->>>>>>> 869fbeefe7aabce933e4d49db7a3341f7cc7c501
+import SignUp from "./pages/SignUp"; // Make sure this is the correct path
+import Login from "./pages/Login"; // Make sure this is the correct path
+import NavBar from "./components/NavBar";
 
 function App() {
   return (
     <Router>
+      <NavBar />
       <Routes>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />

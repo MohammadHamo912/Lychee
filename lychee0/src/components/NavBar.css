@@ -1,0 +1,17 @@
+/* NavBar.css */
+
+/* Default styles */
+.mobile-menu-button {
+  display: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .desktop-nav {
+    display: none !important;
+  }
+}
