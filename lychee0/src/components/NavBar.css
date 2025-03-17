@@ -1,6 +1,6 @@
 /* NavBar.css */
 
-/* Default styles */
+/* ==================== Common Styles (Intersected) ==================== */
 .navbar-header {
   padding: 20px 5%;
   display: flex;
@@ -25,65 +25,14 @@
   color: inherit;
 }
 
-.mobile-menu-button {
-  display: none; /* Hide by default, show on mobile via media query */
-  cursor: pointer;
-}
-
-.hamburger-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.hamburger-line {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background-color: #8b3c5d;
-}
-
-.desktop-nav {
-  display: block;
-}
-
-.nav-links {
-  display: flex;
-  gap: 30px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
 .nav-link {
-  color: #d9b6a3; /* Warm Taupe */
+  color: black; /* Warm Taupe */
   text-decoration: none;
   transition: color 0.3s;
 }
 
-.mobile-menu {
-  position: absolute;
-  top: 80px;
-  left: 0;
-  right: 0;
-  background-color: #fff5e1;
-  padding: 20px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  z-index: 99;
-}
-
-.mobile-nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.mobile-nav-link {
-  color: #d9b6a3;
-  text-decoration: none;
+.nav-link:hover {
+  color: #b76e79;
 }
 
 .cart-container {
@@ -111,7 +60,64 @@
   font-size: 12px;
 }
 
-/* Responsive styles */
+/* ==================== Desktop Styles ==================== */
+.desktop-nav {
+  /* Show desktop nav by default */
+  display: block;
+}
+.nav-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==================== Mobile Styles ==================== */
+.mobile-menu-button {
+  display: none; /* Hide by default, show on mobile via media query */
+  cursor: pointer;
+}
+
+.hamburger-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hamburger-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: #8b3c5d;
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  right: 0;
+  background-color: #fff5e1;
+  padding: 20px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  z-index: 99;
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mobile-nav-link {
+  color: #d9b6a3;
+  text-decoration: none;
+}
+
+/* ==================== Responsive Styles ==================== */
 @media (max-width: 768px) {
   .mobile-menu-button {
     display: block;
@@ -119,5 +125,68 @@
 
   .desktop-nav {
     display: none !important;
+  }
+}
+
+/* User Authentication Section */
+.auth-section {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Push to the right side of navbar */
+}
+
+.auth-section li {
+  list-style: none;
+}
+
+.auth-section .nav-link {
+  padding: 8px 15px;
+  font-weight: 500;
+  color: #8b3c5d; /* Match your Deep Berry color */
+  transition: all 0.3s ease;
+}
+
+.auth-section .nav-link:hover {
+  color: #b76e79; /* Match your hover color */
+  background-color: rgba(183, 110, 121, 0.1); /* Light background on hover */
+  border-radius: 4px;
+}
+
+/* Profile link styling */
+.auth-section .profile-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #b76e79; /* Rose Gold */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .auth-section {
+    display: none; /* Hide from top navbar on mobile */
+  }
+
+  /* Add these to your mobile menu section */
+  .mobile-nav-links .auth-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(139, 60, 93, 0.2);
+  }
+
+  .mobile-nav-links .auth-section li {
+    margin-bottom: 10px;
   }
 }
