@@ -1,0 +1,61 @@
+.shop-card {
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.shop-card:hover {
+    transform: scale(1.02);
+}
+
+.shop-card-logo {
+    width: 100%;
+    height: 80px;
+    object-fit: contain;
+    object-position: center;
+    margin-top: 15px;
+}
+
+.shop-card-body {
+    padding: 15px;
+    width: 100%;
+}
+
+.shop-card-title {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #8B3C5D;
+    /* Deep Berry */
+}
+
+.shop-card-description {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.shop-card-button {
+    background-color: #8B3C5D;
+    /* Deep Berry */
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.shop-card-button:hover {
+    background-color: #B76E79;
+    /* Rose Gold */
+}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./../styles/NavBar.css";
+import "../ComponentsCss/NavBar.css";
 
 function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,7 +45,7 @@ function NavBar() {
                 </Link>
               </li>
               <li>
-                <Link to="/shop" className="nav-link">
+                <Link to="/shops" className="nav-link">
                   Shop
                 </Link>
               </li>

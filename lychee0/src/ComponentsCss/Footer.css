@@ -1,0 +1,195 @@
+/* Footer.css */
+
+.site-footer {
+  background-color: #fff5e1; /* Matches your navbar background */
+  color: #555;
+  padding-top: 60px;
+  margin-top: 60px;
+  border-top: 1px solid #eee;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 30px;
+  padding-right: 20px;
+}
+
+.footer-heading {
+  color: #8b3c5d; /* Deep Berry color from your palette */
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.footer-tagline {
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: #555;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #b76e79; /* Rose Gold color from your palette */
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #8b3c5d; /* Deep Berry */
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.social-link:hover {
+  background-color: #b76e79; /* Rose Gold */
+}
+
+.newsletter-section {
+  flex-basis: 100%;
+  max-width: 400px;
+}
+
+.newsletter-form {
+  display: flex;
+  margin-top: 15px;
+}
+
+.newsletter-input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  font-size: 14px;
+}
+
+.newsletter-button {
+  background-color: #8b3c5d; /* Deep Berry */
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.newsletter-button:hover {
+  background-color: #b76e79; /* Rose Gold */
+}
+
+.footer-bottom {
+  background-color: #f5e6c9; /* Slightly darker than the main footer */
+  padding: 20px 0;
+  margin-top: 30px;
+}
+
+.footer-bottom-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copyright {
+  margin: 0;
+  font-size: 14px;
+}
+
+.policy-links {
+  display: flex;
+  gap: 20px;
+}
+
+.policy-links a {
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.policy-links a:hover {
+  color: #8b3c5d; /* Deep Berry */
+}
+
+.payment-methods {
+  display: flex;
+  gap: 10px;
+}
+
+.payment-icon {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 992px) {
+  .footer-section {
+    flex-basis: 50%;
+  }
+
+  .newsletter-section {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+  }
+
+  .footer-section {
+    flex-basis: 100%;
+    padding-right: 0;
+  }
+
+  .footer-bottom-container {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .policy-links {
+    justify-content: center;
+  }
+
+  .payment-methods {
+    justify-content: center;
+  }
+}
