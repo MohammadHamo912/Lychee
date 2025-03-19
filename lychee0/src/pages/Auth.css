@@ -43,6 +43,7 @@ body {
 
 .auth-box input {
   width: calc(100% - 20px);
+  max-width: 350px;
   padding: 12px;
   margin: 10px auto;
   border: 1px solid #d9b6a3;

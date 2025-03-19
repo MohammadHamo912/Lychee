@@ -16,6 +16,7 @@ import CheckoutForm from "./components/CheckoutForm";
 import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
+import FiltersPanel from "./components/FiltersPanel";
 
 function App() {
   /*dummy data for shopping cart */
@@ -32,7 +33,7 @@ function App() {
         <Route path="/navbar" element={<NavBar />} />
         <Route path="/footer" element={<Footer />} />
         <Route path="/shops" element={<ShopGrid />} />
-
+        <Route path="/filterspanel" element={<FiltersPanel />} />
         <Route
           path="/productcard"
           element={
