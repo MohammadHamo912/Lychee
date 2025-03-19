@@ -11,7 +11,7 @@ function NavBar() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Example state
 
-  // const isLoggedIn = true
+  //const isLoggedIn = true
 
   const loggedInUser = () => {
     setIsLoggedIn(!isLoggedIn);
