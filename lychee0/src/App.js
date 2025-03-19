@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/SignUp"; // Make sure this is the correct path
 import Login from "./pages/Login"; // Make sure this is the correct path
@@ -13,10 +13,15 @@ import ShopGrid from "./components/ShopGrid";
 import Footer from "./components/Footer";
 import ShoppingCart from "./components/ShoppingCart";
 import CheckoutForm from "./components/CheckoutForm";
-import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
+import FiltersPanel from "./components/FiltersPanel";
+import OrderSummary from "./components/OrderSummary.jsx";
+import OrderConfirmation from "./components/OrderConfirmation.jsx";
+
+// dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
-import FiltersPanel from "./components/FiltersPanel";
+import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
+import { dummyOrderData } from "./Data/dummyOrderData.js";
 
 function App() {
   /*dummy data for shopping cart */
@@ -80,6 +85,39 @@ function App() {
             <CheckoutForm
               onSubmit={handleCheckoutSubmit}
               cartTotal={calculateCartTotal()}
+            />
+          }
+        />
+
+        <Route
+          path="/ordersummary"
+          element={
+            <OrderSummary
+              cartItems={cartItems}
+              subtotal={1000}
+              tax={30}
+              shipping={25}
+              discount={10}
+              total={1045}
+              onProceedToPayment={() => console.log("Proceed to payment")}
+            />
+          }
+        />
+        <Route
+          path="/orderconfirmation"
+          element={
+            <OrderConfirmation
+              orderNumber={dummyOrderData.orderNumber}
+              orderDate={dummyOrderData.orderDate}
+              shippingAddress={dummyOrderData.shippingAddress}
+              billingAddress={dummyOrderData.billingAddress}
+              paymentMethod={dummyOrderData.paymentMethod}
+              items={dummyOrderData.items}
+              subtotal={dummyOrderData.subtotal}
+              tax={dummyOrderData.tax}
+              shipping={dummyOrderData.shipping}
+              discount={dummyOrderData.discount}
+              total={dummyOrderData.total}
             />
           }
         />

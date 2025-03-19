@@ -1,0 +1,47 @@
+export const dummyOrderData = {
+  orderNumber: "ORD-12345",
+  orderDate: "2025-03-20",
+  shippingAddress: {
+    name: "Jane Smith",
+    street: "123 Main St",
+    city: "Anytown",
+    state: "CA",
+    zip: "12345",
+    country: "USA",
+  },
+  billingAddress: {
+    name: "Jane Smith",
+    street: "123 Main St",
+    city: "Anytown",
+    state: "CA",
+    zip: "12345",
+    country: "USA",
+  },
+  paymentMethod: {
+    type: "Credit Card",
+    last4: "4242",
+  },
+  items: [
+    {
+      id: 1,
+      name: "Lip Gloss",
+      imageUrl: "/images/lipgloss.jpeg",
+      price: 9.99,
+      quantity: 2,
+      shop_name: "Beauty Shop",
+    },
+    {
+      id: 2,
+      name: "Mascara",
+      imageUrl: "/images/mascara.jpeg",
+      price: 14.99,
+      quantity: 1,
+      shop_name: "Beauty Shop",
+    },
+  ],
+  subtotal: 34.97,
+  tax: 3.5,
+  shipping: 5.99,
+  discount: 5.0,
+  total: 39.46,
+};
