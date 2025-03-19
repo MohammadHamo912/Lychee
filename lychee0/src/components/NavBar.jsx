@@ -57,7 +57,7 @@ function NavBar() {
 
               {/* Cart icon */}
               <div className="cart-container">
-                <Link to="/cart" className="nav-link">
+                <Link to="/ShoppingCart" className="nav-link">
                   Cart
                 </Link>
                 <span className="cart-count">5</span>
