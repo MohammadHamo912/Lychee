@@ -1,0 +1,59 @@
+.order-management-container {
+    padding: 40px;
+    background: #FFF5E1;
+    min-height: 100vh;
+    color: #8B3C5D;
+}
+
+.order-management-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.order-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.order-card {
+    width: 300px;
+    background: #ffffff;
+    border: 2px solid #D9B6A3;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.order-card:hover {
+    transform: scale(1.02);
+}
+
+.order-details h3 {
+    margin-bottom: 10px;
+}
+
+.order-details p {
+    margin: 5px 0;
+}
+
+.order-status {
+    margin-top: 15px;
+}
+
+.order-status label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.order-status select {
+    padding: 5px 8px;
+    border: 1px solid #D9B6A3;
+    border-radius: 4px;
+    background: #FFF5E1;
+    color: #8B3C5D;
+    cursor: pointer;
+}

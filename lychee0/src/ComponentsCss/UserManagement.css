@@ -1,0 +1,71 @@
+.user-management-container {
+    padding: 40px;
+    background: #FFF5E1;
+    min-height: 100vh;
+    color: #8B3C5D;
+}
+
+.user-management-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Filter buttons */
+.filter-controls {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.filter-controls button {
+    padding: 8px 14px;
+    margin: 0 5px;
+    background: #fff;
+    border: 1px solid #D9B6A3;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-controls button.active,
+.filter-controls button:hover {
+    background: #8B3C5D;
+    color: #FFF5E1;
+}
+
+/* User cards */
+.user-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.user-card {
+    width: 280px;
+    background: #ffffff;
+    border: 2px solid #D9B6A3;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-card h3 {
+    margin-bottom: 10px;
+}
+.user-actions button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    background: #8B3C5D;
+    color: #FFF5E1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .user-actions button:hover {
+    background: #B76E79;
+  }
+  

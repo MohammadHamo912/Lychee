@@ -1,4 +1,4 @@
-export const dummyOrderData = {
+/*export const dummyOrderData = {
   orderNumber: "ORD-12345",
   orderDate: "2025-03-20",
   shippingAddress: {
@@ -45,3 +45,53 @@ export const dummyOrderData = {
   discount: 5.0,
   total: 39.46,
 };
+// dummyOrderData.js
+*/
+export const dummyOrderData = [
+  {
+    id: 101,
+    date: '2024-03-01',
+    total: 49.99,
+    items: [
+      {
+        productName: 'Lip Gloss',
+        quantity: 2,
+        price: 9.99,
+      },
+      {
+        productName: 'Mascara',
+        quantity: 1,
+        price: 29.99,
+      },
+    ],
+  },
+  {
+    id: 102,
+    date: '2024-02-15',
+    total: 79.50,
+    items: [
+      {
+        productName: 'Foundation',
+        quantity: 1,
+        price: 39.50,
+      },
+      {
+        productName: 'Blush',
+        quantity: 1,
+        price: 40.00,
+      },
+    ],
+  },
+  {
+    id: 103,
+    date: '2024-01-20',
+    total: 22.00,
+    items: [
+      {
+        productName: 'Eyeliner',
+        quantity: 1,
+        price: 22.00,
+      },
+    ],
+  },
+];

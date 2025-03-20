@@ -16,13 +16,26 @@ import CheckoutForm from "./components/CheckoutForm";
 import FiltersPanel from "./components/FiltersPanel";
 import OrderSummary from "./components/OrderSummary.jsx";
 import OrderConfirmation from "./components/OrderConfirmation.jsx";
+import PasswordReset from "./components/PasswordReset.jsx";
+import ProfilePage from "./components/ProfilePage.jsx";
+import ProductDetails from "./pages/ProductDetails.jsx";
+import OrderHistory from "./components/OrderHistory.jsx";
 
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
 import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
 import { dummyOrderData } from "./Data/dummyOrderData.js";
-
+import PaymentSuccess from "./components/PaymentSuccess.jsx";
+import Wishlist from "./components/WishList.jsx";
+import WishListPage from "./DummyFiles/wishListPage.jsx";
+import Reviews from "./components/Reviews.jsx";
+import ShopOwnerDashboard from "./components/ShopOwnerDashboard.jsx";
+import ProductManagement from "./components/ProductManagement.jsx";
+import OrderManagement from "./components/OrderManagement.jsx";
+import UserManagement from "./components/UserManagement.jsx";
+import ShopApproval from "./components/ShopApproval.jsx";
+import DiscountManagement from "./components/DiscountManagement.jsx";
 function App() {
   /*dummy data for shopping cart */
   const { cartItems, updateQuantity, removeItem, applyPromo } = useCart();
@@ -39,6 +52,36 @@ function App() {
         <Route path="/footer" element={<Footer />} />
         <Route path="/shops" element={<ShopGrid />} />
         <Route path="/filterspanel" element={<FiltersPanel />} />
+        <Route path="/passwordreset" element={<PasswordReset />} />
+        <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+        <Route path="/profilepage" element={<ProfilePage />} />
+        <Route path="/orderhistory" element={<OrderHistory />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/wishlistpage" element={<WishListPage />} />
+        <Route path="/reviews" element={<Reviews />} />
+        <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
+        <Route path="/productmanagement" element={<ProductManagement />} />
+        <Route path="/ordermanagement" element={<OrderManagement />} />
+        <Route path="/usermanagement" element={<UserManagement />} />
+        <Route path="/shopapproval" element={<ShopApproval />} />
+        <Route path="/discountmanagement" element={<DiscountManagement />} />
+        <Route
+          path="/productdetails"
+          element={
+            <ProductDetails
+              product={{
+                id: 1,
+                name: 'Hydrating Lip Gloss',
+                imageUrl: '/images/lipgloss.jpeg',
+                brand: 'Lychee Cosmetics',
+                price: 14.99,
+                description: 'A long-lasting lip gloss that hydrates and adds shine.',
+                reviews: ['I love it!', 'So smooth on the lips.', 'Color is amazing!']
+              }}
+              onAddToCart={(p) => console.log("Add to cart:", p)}
+            />
+          }
+        />
         <Route
           path="/productcard"
           element={
@@ -123,6 +166,7 @@ function App() {
         />
 
         <Route path="/dummyhomepage" element={<DummyHomePage />} />
+
       </Routes>
     </Router>
   );

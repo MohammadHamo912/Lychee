@@ -1,0 +1,162 @@
+/* Main container with a gradient white background for a fresh look */
+.dashboard-container {
+    padding: 40px 80px;
+    background: linear-gradient(135deg, #FFF5E1 0%, #ffffff 100%);
+    min-height: 100vh;
+    box-sizing: border-box;
+    color: #8B3C5D;
+    /* Deep Berry for text */
+}
+
+/* Main heading */
+.dashboard-container h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2rem;
+    letter-spacing: 1px;
+}
+
+/* Content layout: two columns */
+.dashboard-content {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Left column: Overview Card */
+.overview-column {
+    flex: 0 0 400px;
+}
+
+.overview-card {
+    background: #ffffff;
+    border: 2px solid #D9B6A3;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.overview-card:hover {
+    transform: scale(1.03);
+}
+
+.overview-card h2 {
+    font-size: 1.8rem;
+    color: #8B3C5D;
+    margin-bottom: 20px;
+}
+
+.overview-card p {
+    font-size: 1.1rem;
+    margin: 8px 0;
+}
+
+/* Right column: Sections for orders and products */
+.info-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* Sections styling */
+.section {
+    background: #ffffff;
+    border: 2px solid #D9B6A3;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.section:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+    color: #8B3C5D;
+}
+
+/* Orders and products lists */
+.section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.section li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #D9B6A3;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.section li:last-child {
+    border-bottom: none;
+}
+
+.section li:hover {
+    background: rgba(183, 110, 121, 0.1);
+}
+
+.order-id,
+.order-date,
+.order-total,
+.product-name,
+.product-price,
+.product-stock {
+    font-size: 0.95rem;
+}
+
+.order-id {
+    font-weight: bold;
+    color: #8B3C5D;
+}
+
+.order-date,
+.order-total {
+    color: #B76E79;
+    font-weight: bold;
+}
+
+.product-price {
+    color: #B76E79;
+    font-weight: bold;
+}
+
+.product-stock {
+    font-style: italic;
+    color: #8B3C5D;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .overview-column,
+    .info-column {
+        width: 100%;
+    }
+
+    .overview-card {
+        width: 90%;
+    }
+
+    .section {
+        width: 90%;
+    }
+}
