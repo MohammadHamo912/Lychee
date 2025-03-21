@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 // Yanal
 
 // Import images
+import lipgloss from "./images/lipgloss.jpeg"; // Update path if necessary
 import shop1Url from "./images/shop1SampleImage.png"; // Update path if necessary
 
 // Pages
