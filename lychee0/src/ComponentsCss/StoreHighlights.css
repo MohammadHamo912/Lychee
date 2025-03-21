@@ -1,0 +1,19 @@
+/* src/ComponentsCss/StoreHighlights.css */
+.store-highlights {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.store-title {
+  font-size: 2rem;
+  color: #8b3c5d;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.store-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}

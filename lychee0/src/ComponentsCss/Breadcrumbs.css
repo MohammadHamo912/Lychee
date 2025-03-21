@@ -1,0 +1,31 @@
+/* src/ComponentsCss/Breadcrumbs.css */
+.breadcrumbs {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+  font-size: 0.9rem;
+}
+
+.breadcrumb-item {
+  display: inline;
+}
+
+.breadcrumb-link {
+  color: #8b3c5d;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.breadcrumb-link:hover {
+  color: #b76e79;
+}
+
+.breadcrumb-separator {
+  margin: 0 8px;
+  color: #555;
+}
+
+.breadcrumb-current {
+  color: #555;
+  font-weight: 500;
+}

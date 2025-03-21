@@ -4,6 +4,10 @@ import Footer from "./../components/Footer";
 import SearchBar from "./../components/SearchBar";
 import Carousel from "./../components/Carousel";
 import ProductGrid from "./../components/ProductGrid";
+import HeroSection from "./../components/HeroSection";
+import CategoryGrid from "./../components/CategoryGrid";
+import TrendingProducts from "./../components/TrendingProducts";
+import StoreHighlights from "./../components/StoreHighlights";
 
 // Mock data for the carousel
 const carouselSlides = [
@@ -54,6 +58,9 @@ const HomePage = () => {
         className="main-content"
         style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}
       >
+        {/* Hero Section */}
+        <HeroSection />
+
         {/* Search Bar */}
         <div style={{ marginBottom: "30px" }}>
           <SearchBar
@@ -62,13 +69,18 @@ const HomePage = () => {
           />
         </div>
 
-        {/* Carousel/Banner */}
+        {/* Carousel */}
         <div style={{ marginBottom: "40px" }}>
           <Carousel slides={carouselSlides} />
         </div>
 
-        {/* Featured Products */}
-        <div className="section">
+        {/* Category Grid */}
+        <div className="section" style={{ marginBottom: "40px" }}>
+          <CategoryGrid />
+        </div>
+
+        {/* Featured Products (using existing ProductGrid) */}
+        <div className="section" style={{ marginBottom: "40px" }}>
           <h2
             className="section-title"
             style={{
@@ -80,6 +92,16 @@ const HomePage = () => {
             Featured Products
           </h2>
           <ProductGrid />
+        </div>
+
+        {/* Trending Products */}
+        <div className="section" style={{ marginBottom: "40px" }}>
+          <TrendingProducts />
+        </div>
+
+        {/* Store Highlights */}
+        <div className="section" style={{ marginBottom: "40px" }}>
+          <StoreHighlights />
         </div>
       </div>
 
