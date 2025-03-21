@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router-dom"; // Fixed import
 // Import images
 import lipgloss from "./images/lipgloss.jpeg"; // Update path if necessary
 import shop1Url from "./images/shop1SampleImage.png"; // Update path if necessary
-
+//yanal omar
 // Pages
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
