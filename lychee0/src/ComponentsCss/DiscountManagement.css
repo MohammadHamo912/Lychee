@@ -1,0 +1,127 @@
+.discount-management {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.discount-title {
+  color: #8b3c5d;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.discount-form-section,
+.discount-list-section {
+  margin-bottom: 40px;
+}
+
+.discount-form-section h2,
+.discount-list-section h2 {
+  color: #8b3c5d;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.discount-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  background: #fff5e1;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #555;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.submit-button {
+  background-color: #8b3c5d;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #b76e79;
+}
+
+.discount-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.discount-table th,
+.discount-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.discount-table th {
+  background-color: #8b3c5d;
+  color: white;
+}
+
+.discount-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.toggle-button,
+.delete-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 0.9rem;
+}
+
+.toggle-button {
+  background-color: #b76e79;
+  color: white;
+}
+
+.toggle-button:hover {
+  background-color: #8b3c5d;
+}
+
+.delete-button {
+  background-color: #721c24;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #501518;
+}
+
+@media (max-width: 768px) {
+  .discount-form {
+    grid-template-columns: 1fr;
+  }
+}

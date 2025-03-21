@@ -1,0 +1,125 @@
+/* HeroSection.css */
+
+.hero-container {
+  background-image: linear-gradient(
+      rgba(255, 245, 225, 0.7),
+      rgba(255, 245, 225, 0.9)
+    ),
+    url("/hero-background.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 60px 5%;
+  text-align: center;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+.hero-title {
+  color: #8b3c5d; /* Deep Berry color from your palette */
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.hero-description {
+  color: #555;
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.hero-button-primary {
+  background-color: #8b3c5d;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.hero-button-primary:hover {
+  background-color: #b76e79; /* Rose Gold from your palette */
+}
+
+.hero-button-secondary {
+  background-color: transparent;
+  color: #8b3c5d;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  border: 2px solid #8b3c5d;
+  transition: background-color 0.3s;
+}
+
+.hero-button-secondary:hover {
+  background-color: rgba(183, 110, 121, 0.1);
+  color: #b76e79;
+  border-color: #b76e79;
+}
+
+.promo-banner {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.promo-content h3 {
+  color: #8b3c5d;
+  margin-bottom: 10px;
+}
+
+.promo-content p {
+  color: #555;
+  margin: 0;
+}
+
+.promo-button {
+  background-color: #b76e79;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.promo-button:hover {
+  background-color: #8b3c5d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .promo-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .promo-content {
+    margin-bottom: 15px;
+  }
+}

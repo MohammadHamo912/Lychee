@@ -16,12 +16,23 @@ import CheckoutForm from "./components/CheckoutForm";
 import FiltersPanel from "./components/FiltersPanel";
 import OrderSummary from "./components/OrderSummary.jsx";
 import OrderConfirmation from "./components/OrderConfirmation.jsx";
+import HeroSection from "./components/HeroSection.jsx";
+import CategoryGrid from "./components/CategoryGrid";
+import TrendingProducts from "./components/TrendingProducts";
+import StoreHighlights from "./components/StoreHighlights";
+import Breadcrumbs from "./components/Breadcrumbs";
+import Modal from "./components/Modal.jsx";
+import Toast from "./components/Toast";
+import Spinner from "./components/Spinner";
+import Pagination from "./components/Pagination";
+import DiscountManagement from "./components/DiscountManagement";
 
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
 import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
 import { dummyOrderData } from "./Data/dummyOrderData.js";
+import { dummyCoreData } from "./Data/dummyCoreData.js";
 
 function App() {
   /*dummy data for shopping cart */
@@ -39,6 +50,11 @@ function App() {
         <Route path="/footer" element={<Footer />} />
         <Route path="/shops" element={<ShopGrid />} />
         <Route path="/filterspanel" element={<FiltersPanel />} />
+        <Route path="/herosection" element={<HeroSection />} />
+        <Route path="/categorygrid" element={<CategoryGrid />} />
+        <Route path="/trendingproducts" element={<TrendingProducts />} />
+        <Route path="/storehighlights" element={<StoreHighlights />} />
+        <Route path="/discountmanagement" element={<DiscountManagement />} />
         <Route
           path="/productcard"
           element={
@@ -118,6 +134,45 @@ function App() {
               shipping={dummyOrderData.shipping}
               discount={dummyOrderData.discount}
               total={dummyOrderData.total}
+            />
+          }
+        />
+
+        <Route
+          path="/breadcrumbs"
+          element={<Breadcrumbs paths={dummyCoreData.breadcrumbPaths} />}
+        />
+        <Route
+          path="/modal"
+          element={
+            <Modal
+              isOpen={true} // Always open for testing
+              onClose={() => console.log("Modal closed")}
+              title="Test Modal"
+            >
+              <p>This is a test modal content.</p>
+            </Modal>
+          }
+        />
+        <Route
+          path="/toast"
+          element={
+            <Toast
+              message={dummyCoreData.toastMessage}
+              type={dummyCoreData.toastType}
+              onClose={() => console.log("Toast closed")}
+              duration={3000}
+            />
+          }
+        />
+        <Route path="/spinner" element={<Spinner size={60} />} />
+        <Route
+          path="/pagination"
+          element={
+            <Pagination
+              currentPage={dummyCoreData.currentPage}
+              totalPages={dummyCoreData.totalPages}
+              onPageChange={(page) => console.log("Page changed to:", page)}
             />
           }
         />
