@@ -2,10 +2,6 @@ import "./App.css";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-// Mohammad Hamo
-// Yanal
-
-// Import images
 import lipgloss from "./images/lipgloss.jpeg"; // Update path if necessary
 import shop1Url from "./images/shop1SampleImage.png"; // Update path if necessary
 
@@ -40,7 +36,6 @@ import DiscountManagement from "./components/DiscountManagement";
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
-import dummyHomePage from "./DummyFiles/DummyHomePage.jsx";
 import { dummyOrderData } from "./Data/dummyOrderData.js";
 import { dummyCoreData } from "./Data/dummyCoreData.js";
 
