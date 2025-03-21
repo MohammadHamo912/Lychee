@@ -2,8 +2,10 @@ import "./App.css";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
+// Mohammad Hamo
+// Yanal
+
 // Import images
-import lipgloss from "./images/lipgloss.jpeg"; // Update path if necessary
 import shop1Url from "./images/shop1SampleImage.png"; // Update path if necessary
 
 // Pages
