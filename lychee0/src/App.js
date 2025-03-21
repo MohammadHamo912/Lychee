@@ -1,7 +1,6 @@
 import "./App.css";
 import React from "react";
-import { Routes, Route } from "react-router-dom"; // Fixed import
-// import images
+import { Routes, Route } from "react-router-dom";
 
 // Import images
 import lipgloss from "./images/lipgloss.jpeg"; // Update path if necessary
