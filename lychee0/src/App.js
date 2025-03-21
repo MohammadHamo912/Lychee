@@ -162,7 +162,6 @@ function App() {
         />
 
         <Route path="/dummyhomepage" element={<DummyHomePage />} />
-
       </Routes>
     </Router>
   );
