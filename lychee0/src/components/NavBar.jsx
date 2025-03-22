@@ -9,13 +9,13 @@ function NavBar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // const [isLoggedIn, setIsLoggedIn] = useState(false); // Example state
+  //const [isLoggedIn, setIsLoggedIn] = useState(false); // Example state
 
   const isLoggedIn = false;
 
   //const loggedInUser = () => {
-  //  setIsLoggedIn(!isLoggedIn);
-  // };
+  //setIsLoggedIn(!isLoggedIn);
+  //};
 
   return (
     <div style={{ width: "1200px", padding: "0 0 0 40px" }}>

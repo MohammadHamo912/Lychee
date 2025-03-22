@@ -3,7 +3,6 @@
 /* ==================== Common Styles (Intersected) ==================== */
 .navbar-header {
   padding: 15px 5%;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -11,8 +10,9 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  font-family: "Poppins", sans-serif; /* Modern sans-serif font */
+  font-family: "Poppins", sans-serif;
+  /* Modern sans-serif font */
+  max-width: 1200px;
 }
 
 .navbar-logo {
