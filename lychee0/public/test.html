@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lychee - Premium Beauty Marketplace</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.6.0/css/glide.core.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.6.0/css/glide.theme.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://ai-public.creatie.ai/gen_page/tailwind-custom.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.5?plugins=forms@0.5.7,typography@0.5.13,aspect-ratio@0.4.2,container-queries@0.1.1"></script>
+    <script
+      src="https://ai-public.creatie.ai/gen_page/tailwind-config.min.js"
+      data-color="#000000"
+      data-border-radius="small"
+    ></script>
+  </head>
+  <body class="font-[Poppins] bg-gray-50">
+    <header
+      class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100"
+    >
+      <nav class="max-w-8xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+          <div class="flex items-center">
+            <a href="/" class="flex-shrink-0">
+              <img
+                class="h-12"
+                src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png"
+                alt="Lychee"
+              />
+            </a>
+          </div>
+
+          <div class="hidden md:flex flex-1 max-w-2xl mx-12">
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Search for products, brands and more..."
+                class="w-full pl-12 pr-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:border-custom"
+              />
+              <i
+                class="fas fa-search absolute left-4 top-3.5 text-gray-400"
+              ></i>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4 md:space-x-8">
+            <a href="#" class="text-gray-600 hover:text-custom">
+              <i class="far fa-heart text-xl"></i>
+            </a>
+            <div class="relative">
+              <a href="#" class="text-gray-600 hover:text-custom">
+                <i class="fas fa-shopping-bag text-xl"></i>
+                <span
+                  class="absolute -top-2 -right-2 bg-custom text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                  >3</span
+                >
+              </a>
+            </div>
+            <button
+              class="flex items-center space-x-2 text-gray-600 hover:text-custom"
+            >
+              <i class="far fa-user text-xl"></i>
+              <span class="hidden md:inline">Sign In</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main class="mt-20">
+      <div class="glide relative overflow-hidden max-h-[600px]">
+        <div class="glide__track" data-glide-el="track">
+          <ul class="glide__slides">
+            <li class="glide__slide relative">
+              <img src=./../src/images/heroSectionBackground.jpg" class="w-full
+              h-[600px] object-cover" alt="Beauty Products" />
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center"
+              >
+                <div class="max-w-8xl mx-auto px-6 w-full">
+                  <div class="max-w-xl">
+                    <h1
+                      class="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6"
+                    >
+                      Discover Your Perfect Beauty
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/90 mb-6 md:mb-8">
+                      Explore our curated collection of premium beauty products
+                      from trusted brands
+                    </p>
+                    <button
+                      class="!rounded-button bg-custom text-white px-8 py-3 text-lg font-medium hover:bg-custom/90"
+                    >
+                      Shop Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div
+          class="absolute bottom-6 left-0 right-0"
+          data-glide-el="controls[nav]"
+        >
+          <div class="flex justify-center gap-2">
+            <button
+              class="w-2.5 h-2.5 rounded-full bg-white/50"
+              data-glide-dir="=0"
+            ></button>
+            <button
+              class="w-2.5 h-2.5 rounded-full bg-white/50"
+              data-glide-dir="=1"
+            ></button>
+            <button
+              class="w-2.5 h-2.5 rounded-full bg-white/50"
+              data-glide-dir="=2"
+            ></button>
+          </div>
+        </div>
+      </div>
+      <section class="py-16 bg-white">
+        <div class="max-w-8xl mx-auto px-6">
+          <h2 class="text-3xl font-semibold mb-12 text-center">
+            Shop by Category
+          </h2>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+          >
+            <a href="#" class="group">
+              <div class="relative rounded-lg overflow-hidden">
+                <img
+                  src="https://creatie.ai/ai/api/search-image?query=A collection of luxury makeup products including lipsticks, eyeshadow palettes, and brushes arranged artistically on a clean white surface with soft shadows and professional studio lighting. High-end cosmetics photography with attention to detail&width=400&height=400&orientation=squarish&flag=cca70eb9-8742-4e90-9741-1590f038a736&flag=6bd26963-0beb-48f7-b400-8b56aed69cb1"
+                  class="w-full h-64 object-cover transition duration-300 group-hover:scale-105"
+                  alt="Makeup"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6"
+                >
+                  <h3 class="text-xl font-medium text-white">Makeup</h3>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="group">
+              <div class="relative rounded-lg overflow-hidden">
+                <img
+                  src="https://creatie.ai/ai/api/search-image?query=Premium skincare products with elegant glass bottles and minimalist packaging, arranged on a marble surface with water droplets and botanical elements. Clean beauty product photography with soft, natural lighting&width=400&height=400&orientation=squarish&flag=00993066-5306-4252-a010-6b0a307aef45&flag=3b692f94-321d-460e-a0b9-81fcf7286641"
+                  class="w-full h-64 object-cover transition duration-300 group-hover:scale-105"
+                  alt="Skincare"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6"
+                >
+                  <h3 class="text-xl font-medium text-white">Skincare</h3>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="group">
+              <div class="relative rounded-lg overflow-hidden">
+                <img
+                  src="https://creatie.ai/ai/api/search-image?query=Professional hair care products including shampoo, conditioner, and styling products displayed elegantly with natural elements and modern packaging. Luxury haircare photography with soft lighting and clean background&width=400&height=400&orientation=squarish&flag=4e00308a-0641-4b8d-a4bd-4e3ba8eb8beb&flag=b4730e82-76cd-4904-9edf-534d89340a86"
+                  class="w-full h-64 object-cover transition duration-300 group-hover:scale-105"
+                  alt="Haircare"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6"
+                >
+                  <h3 class="text-xl font-medium text-white">Haircare</h3>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="group">
+              <div class="relative rounded-lg overflow-hidden">
+                <img
+                  src="https://creatie.ai/ai/api/search-image?query=Luxury perfume bottles with elegant design and premium packaging, arranged artistically with soft reflections and minimal props. High-end fragrance photography with dramatic lighting and clean background&width=400&height=400&orientation=squarish&flag=ddc78239-436e-4ab4-995f-81a77cda2179&flag=73bf23a6-1e91-4d8a-b2f0-97d31ad4a120"
+                  class="w-full h-64 object-cover transition duration-300 group-hover:scale-105"
+                  alt="Fragrances"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6"
+                >
+                  <h3 class="text-xl font-medium text-white">Fragrances</h3>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+      <section class="py-16">
+        <div class="max-w-8xl mx-auto px-6">
+          <div class="flex items-center justify-between mb-12">
+            <h2 class="text-3xl font-semibold">Trending Products</h2>
+            <a href="#" class="text-custom hover:text-custom/80 font-medium"
+              >View All</a
+            >
+          </div>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+          >
+            <div
+              class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
+            >
+              <div class="relative group">
+                <img
+                  src="https://creatie.ai/ai/api/search-image?query=Luxury lipstick product photography with elegant gold packaging against a clean white background. Professional cosmetic photography with attention to detail and soft lighting&width=300&height=300&orientation=squarish&flag=871a40dc-7bb9-4daf-9d41-17ba976ac5b9&flag=7e057937-4566-40c4-9c15-41d6f308cc01"
+                  class="w-full h-72 object-cover"
+                  alt="Product"
+                />
+                <button
+                  class="!rounded-button absolute bottom-4 left-4 right-4 bg-custom text-white py-2 opacity-0 group-hover:opacity-100 transition"
+                >
+                  Quick View
+                </button>
+              </div>
+              <div class="p-6">
+                <div class="flex items-center text-yellow-400 mb-2">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                  <span class="text-gray-500 text-sm ml-2">(124)</span>
+                </div>
+                <h3 class="font-medium mb-2">Luxury Matte Lipstick</h3>
+                <p class="text-gray-500 text-sm mb-4">Charlotte Tilbury</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-lg font-semibold">$34.00</span>
+                  <button
+                    class="!rounded-button w-10 h-10 bg-custom/10 text-custom hover:bg-custom/20"
+                  >
+                    <i class="fas fa-shopping-bag"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Repeat product cards with different images and details -->
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="bg-gray-900 text-gray-300 py-16">
+      <div class="max-w-8xl mx-auto px-6">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12"
+        >
+          <div>
+            <img
+              src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png"
+              alt="Lychee"
+              class="h-8 mb-6"
+            />
+            <p class="text-sm leading-relaxed mb-6">
+              Your trusted destination for premium beauty products in Ramallah.
+              We connect you with the best beauty shops and pharmacies.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white"
+                ><i class="fab fa-twitter"></i
+              ></a>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-white mb-6">Quick Links</h4>
+            <ul class="space-y-4">
+              <li><a href="#" class="hover:text-white">About Us</a></li>
+              <li><a href="#" class="hover:text-white">Contact</a></li>
+              <li><a href="#" class="hover:text-white">FAQs</a></li>
+              <li><a href="#" class="hover:text-white">Store Locator</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-white mb-6">Customer Service</h4>
+            <ul class="space-y-4">
+              <li><a href="#" class="hover:text-white">Shipping Policy</a></li>
+              <li>
+                <a href="#" class="hover:text-white">Returns &amp; Exchanges</a>
+              </li>
+              <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+              <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-white mb-6">Newsletter</h4>
+            <p class="text-sm mb-4">
+              Subscribe to get special offers, free giveaways, and updates.
+            </p>
+            <div class="relative">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-custom"
+              />
+              <button
+                class="!rounded-button absolute right-2 top-2 bg-custom text-white px-4 py-1 text-sm"
+              >
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 mt-12 pt-8 text-center text-sm">
+          <p>© 2024 Lychee. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.6.0/glide.min.js"></script>
+    <script>
+      new Glide(".glide", {
+        type: "carousel",
+        startAt: 0,
+        perView: 1,
+        autoplay: 5000,
+      }).mount();
+    </script>
+  </body>
+</html>

@@ -1,4 +1,3 @@
-import "./App.css";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -32,6 +31,8 @@ import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
 import DiscountManagement from "./components/DiscountManagement";
+import PasswordReset from "./components/PasswordReset";
+import ProductDetails from "./pages/ProductDetails.jsx";
 
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
@@ -60,6 +61,23 @@ function App() {
         <Route path="/trendingproducts" element={<TrendingProducts />} />
         <Route path="/storehighlights" element={<StoreHighlights />} />
         <Route path="/discountmanagement" element={<DiscountManagement />} />
+        <Route path="/passwordreset" element={<PasswordReset />} />
+        <Route
+          path="/productdetails"
+          element={
+            <ProductDetails
+              product={{
+                id: 1,
+                name: "Lip Gloss",
+                imageUrl: lipgloss,
+                description: "This is a descreption",
+                price: 9.99,
+                shop_name: "",
+              }}
+            />
+          }
+        />
+
         <Route
           path="/productcard"
           element={

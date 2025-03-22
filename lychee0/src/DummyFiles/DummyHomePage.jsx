@@ -52,7 +52,9 @@ const searchSuggestions = [
 const HomePage = () => {
   return (
     <div className="home-page">
-      <NavBar />
+      <div style={{ background: "#670010" }}>
+        <NavBar />
+      </div>
 
       <div
         className="main-content"

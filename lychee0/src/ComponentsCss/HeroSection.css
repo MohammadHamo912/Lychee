@@ -1,11 +1,16 @@
-/* HeroSection.css */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
 
 .hero-container {
   background-image: linear-gradient(
-      rgba(255, 245, 225, 0.7),
-      rgba(255, 245, 225, 0.9)
+      rgba(255, 245, 225, 0.5),
+      /* Reduced opacity for a softer effect */ rgba(255, 245, 225, 0.7)
+        /* Increased opacity for balance */
     ),
-    url("/hero-background.jpg");
+    url("./../images/heroSectionBackground.jpg");
   background-size: cover;
   background-position: center;
   padding: 60px 5%;
@@ -16,7 +21,7 @@
 }
 
 .hero-title {
-  color: #8b3c5d; /* Deep Berry color from your palette */
+  color: #670010; /* Deep Berry color from your palette */
   font-size: 2.5rem;
   margin-bottom: 20px;
 }
@@ -36,7 +41,7 @@
 }
 
 .hero-button-primary {
-  background-color: #8b3c5d;
+  background-color: #670010;
   color: white;
   padding: 12px 24px;
   border-radius: 4px;
@@ -51,12 +56,12 @@
 
 .hero-button-secondary {
   background-color: transparent;
-  color: #8b3c5d;
+  color: #670010;
   padding: 12px 24px;
   border-radius: 4px;
   text-decoration: none;
   font-weight: bold;
-  border: 2px solid #8b3c5d;
+  border: 2px solid #670010;
   transition: background-color 0.3s;
 }
 

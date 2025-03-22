@@ -2,22 +2,25 @@
 
 /* ==================== Common Styles (Intersected) ==================== */
 .navbar-header {
-  padding: 20px 5%;
+  padding: 15px 5%;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff5e1; /* Creamy White background */
+  background-color: #670010; /* Creamy White background */
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif; /* Modern sans-serif font */
 }
 
 .navbar-logo {
   font-size: 24px;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #8b3c5d; /* Deep Berry for logo text */
+  color: #fff5e1;
+  font-family: "Poppins", sans-serif; /* Modern font */
 }
 
 .logo-link {
@@ -26,9 +29,10 @@
 }
 
 .nav-link {
-  color: black; /* Warm Taupe */
+  color: #fff5e1;
   text-decoration: none;
   transition: color 0.3s;
+  font-family: "Roboto", sans-serif; /* Another modern font */
 }
 
 .nav-link:hover {
@@ -65,6 +69,7 @@
   /* Show desktop nav by default */
   display: block;
 }
+
 .nav-links {
   display: flex;
   gap: 30px;
@@ -142,8 +147,9 @@
 .auth-section .nav-link {
   padding: 8px 15px;
   font-weight: 500;
-  color: #8b3c5d; /* Match your Deep Berry color */
+  color: #fff5e1;
   transition: all 0.3s ease;
+  font-family: "Roboto", sans-serif; /* Consistent font for links */
 }
 
 .auth-section .nav-link:hover {
