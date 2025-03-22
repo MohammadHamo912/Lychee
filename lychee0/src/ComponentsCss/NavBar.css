@@ -1,26 +1,39 @@
-/* NavBar.css */
-
-/* ==================== Common Styles (Intersected) ==================== */
 .navbar-header {
-  padding: 15px 5%;
+  position: fixed;
+  /* instead of sticky */
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(103, 0, 16, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 1s ease;
+  z-index: 1000;
+}
+
+.navbar-header.solid {
+  background: #670010;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 7.5px;
+  padding-bottom: 7.5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #670010; /* Creamy White background */
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  font-family: "Poppins", sans-serif;
-  /* Modern sans-serif font */
-  max-width: 1200px;
 }
 
+/* Logo */
 .navbar-logo {
   font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-weight: bold;
   color: #fff5e1;
-  font-family: "Poppins", sans-serif; /* Modern font */
 }
 
 .logo-link {
@@ -28,171 +41,108 @@
   color: inherit;
 }
 
+/* Desktop Nav */
+.desktop-nav .nav-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
 .nav-link {
   color: #fff5e1;
   text-decoration: none;
-  transition: color 0.3s;
-  font-family: "Roboto", sans-serif; /* Another modern font */
+  transition: color 0.3s ease;
 }
 
 .nav-link:hover {
   color: #b76e79;
 }
 
+/* Cart */
 .cart-container {
   position: relative;
-}
-
-.cart-link {
-  color: #8b3c5d; /* Deep Berry color */
-  text-decoration: none;
-  transition: color 0.3s;
 }
 
 .cart-count {
   position: absolute;
   top: -8px;
-  right: -8px;
-  background-color: #b76e79; /* Rose Gold */
+  right: -12px;
+  background: #b76e79;
   color: white;
-  border-radius: 50%;
   width: 18px;
   height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 12px;
-}
-
-/* ==================== Desktop Styles ==================== */
-.desktop-nav {
-  /* Show desktop nav by default */
-  display: block;
-}
-
-.nav-links {
+  border-radius: 50%;
   display: flex;
-  gap: 30px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  justify-content: center;
+  align-items: center;
 }
 
-/* ==================== Mobile Styles ==================== */
-.mobile-menu-button {
-  display: none; /* Hide by default, show on mobile via media query */
-  cursor: pointer;
-}
-
-.hamburger-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.hamburger-line {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background-color: #8b3c5d;
-}
-
-.mobile-menu {
-  position: absolute;
-  top: 80px;
-  left: 0;
-  right: 0;
-  background-color: #fff5e1;
-  padding: 20px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  z-index: 99;
-}
-
-.mobile-nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.mobile-nav-link {
-  color: #d9b6a3;
-  text-decoration: none;
-}
-
-/* ==================== Responsive Styles ==================== */
-@media (max-width: 768px) {
-  .mobile-menu-button {
-    display: block;
-  }
-
-  .desktop-nav {
-    display: none !important;
-  }
-}
-
-/* User Authentication Section */
+/* Auth Section */
 .auth-section {
   display: flex;
+  gap: 15px;
   align-items: center;
-  margin-left: auto; /* Push to the right side of navbar */
 }
 
-.auth-section li {
-  list-style: none;
-}
-
-.auth-section .nav-link {
-  padding: 8px 15px;
-  font-weight: 500;
-  color: #fff5e1;
-  transition: all 0.3s ease;
-  font-family: "Roboto", sans-serif; /* Consistent font for links */
-}
-
-.auth-section .nav-link:hover {
-  color: #b76e79; /* Match your hover color */
-  background-color: rgba(183, 110, 121, 0.1); /* Light background on hover */
-  border-radius: 4px;
-}
-
-/* Profile link styling */
-.auth-section .profile-link {
+.profile-link {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .profile-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #b76e79; /* Rose Gold */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #b76e79;
   color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 14px;
 }
 
-/* Mobile adjustments */
+/* Hamburger */
+.mobile-menu-button {
+  display: none;
+  cursor: pointer;
+}
+
+.hamburger-line {
+  width: 24px;
+  height: 2px;
+  background: #fff5e1;
+  margin: 4px 0;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  background: #fff5e1;
+  padding: 20px;
+}
+
+.mobile-nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mobile-nav-link {
+  text-decoration: none;
+  color: #8b3c5d;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
+
+  .desktop-nav,
   .auth-section {
-    display: none; /* Hide from top navbar on mobile */
+    display: none;
   }
 
-  /* Add these to your mobile menu section */
-  .mobile-nav-links .auth-section {
-    display: flex;
-    flex-direction: column;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(139, 60, 93, 0.2);
-  }
-
-  .mobile-nav-links .auth-section li {
-    margin-bottom: 10px;
+  .mobile-menu-button {
+    display: block;
   }
 }
