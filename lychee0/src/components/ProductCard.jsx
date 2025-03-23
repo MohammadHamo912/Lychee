@@ -1,7 +1,7 @@
-import React from 'react';
-import '../ComponentsCss/ProductCard.css';
-import PropTypes from 'prop-types';
-import cartIcon from '../images/white-cart-icon.png';
+import React from "react";
+import "../ComponentsCss/ProductCard.css";
+import PropTypes from "prop-types";
+import cartIcon from "../images/white-cart-icon.png";
 
 const ProductCard = ({ product, onAddToCart }) => {
   // Destructure product details, including description and shop_name
@@ -9,14 +9,21 @@ const ProductCard = ({ product, onAddToCart }) => {
 
   return (
     <div className="product-card">
-      <img className="product-card-image" src={imageUrl} alt={`Image of ${name}`} />
+      <img
+        className="product-card-image"
+        src={imageUrl}
+        alt={`Image of ${name}`}
+      />
       <div className="product-card-body">
         <h3 className="product-card-title">{name}</h3>
         {shop_name && <p className="product-card-shop">Shop: {shop_name}</p>}
         <p className="product-card-description">{description}</p>
         <div className="product-card-footer">
           <p className="product-card-price">${price.toFixed(2)}</p>
-          <button className="product-card-button" onClick={() => onAddToCart(product)}>
+          <button
+            className="product-card-button"
+            onClick={() => onAddToCart(product)}
+          >
             <img src={cartIcon} alt="Add to Cart" className="cart-icon" />
           </button>
         </div>

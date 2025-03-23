@@ -1,11 +1,9 @@
-/* Footer.css */
-
 .site-footer {
-  background-color: #fff5e1; /* Matches your navbar background */
-  color: #555;
-  padding-top: 60px;
-  margin-top: 60px;
-  border-top: 1px solid #eee;
+  background-color: #670010; /* Deep Berry for a bold footer */
+  color: #fff5e1; /* Cream text */
+  padding-top: 80px;
+  margin-top: 80px;
+  border-top: 2px solid #b76e79; /* Rose Gold accent */
 }
 
 .footer-container {
@@ -15,25 +13,35 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  gap: 30px; /* Consistent spacing */
 }
 
 .footer-section {
   flex: 1;
   min-width: 200px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   padding-right: 20px;
 }
 
+.footer-section.brand-section {
+  flex-basis: 25%; /* Slightly wider for branding */
+}
+
 .footer-heading {
-  color: #8b3c5d; /* Deep Berry color from your palette */
-  margin-bottom: 20px;
-  font-size: 18px;
-  font-weight: 600;
+  color: #fff5e1; /* Cream */
+  margin-bottom: 25px;
+  font-size: 1.5rem; /* Larger for emphasis */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .footer-tagline {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   line-height: 1.6;
+  font-size: 1rem;
+  color: #fff5e1; /* Cream */
+  opacity: 0.9;
 }
 
 .footer-links {
@@ -43,78 +51,98 @@
 }
 
 .footer-links li {
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
 
 .footer-links a {
-  color: #555;
+  color: #fff5e1; /* Cream */
   text-decoration: none;
-  transition: color 0.3s;
+  font-size: 1rem;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .footer-links a:hover {
-  color: #b76e79; /* Rose Gold color from your palette */
+  color: #b76e79; /* Rose Gold */
+  transform: translateX(5px); /* Subtle shift */
 }
 
 .social-links {
   display: flex;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 20px;
+  margin-top: 25px;
 }
 
 .social-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: #8b3c5d; /* Deep Berry */
-  color: white;
+  background-color: #fff5e1; /* Cream */
+  color: #670010; /* Deep Berry */
   text-decoration: none;
-  transition: background-color 0.3s;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .social-link:hover {
   background-color: #b76e79; /* Rose Gold */
+  color: #fff5e1; /* Cream */
+  transform: scale(1.1);
 }
 
 .newsletter-section {
   flex-basis: 100%;
   max-width: 400px;
+  margin: 0 auto; /* Center on smaller screens */
 }
 
 .newsletter-form {
   display: flex;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 .newsletter-input {
   flex-grow: 1;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px 0 0 4px;
-  font-size: 14px;
+  padding: 12px 15px;
+  border: 2px solid #b76e79; /* Rose Gold border */
+  border-radius: 25px 0 0 25px;
+  font-size: 1rem;
+  background-color: #fff5e1; /* Cream */
+  color: #670010; /* Deep Berry */
+  outline: none;
+}
+
+.newsletter-input::placeholder {
+  color: #8b3c5d; /* Softer Deep Berry */
+  opacity: 0.7;
 }
 
 .newsletter-button {
-  background-color: #8b3c5d; /* Deep Berry */
-  color: white;
+  background-color: #b76e79; /* Rose Gold */
+  color: #fff5e1; /* Cream */
   border: none;
-  padding: 0 20px;
-  border-radius: 0 4px 4px 0;
+  padding: 12px 25px;
+  border-radius: 0 25px 25px 0;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .newsletter-button:hover {
-  background-color: #b76e79; /* Rose Gold */
+  background-color: #fff5e1; /* Cream */
+  color: #670010; /* Deep Berry */
+  transform: scale(1.05);
 }
 
 .footer-bottom {
-  background-color: #f5e6c9; /* Slightly darker than the main footer */
-  padding: 20px 0;
-  margin-top: 30px;
+  background-color: #5a0010; /* Darker Deep Berry */
+  padding: 25px 0;
+  margin-top: 40px;
+  border-top: 1px solid #b76e79; /* Rose Gold */
 }
 
 .footer-bottom-container {
@@ -125,53 +153,74 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 }
 
 .copyright {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.9rem;
+  color: #fff5e1; /* Cream */
 }
 
 .policy-links {
   display: flex;
-  gap: 20px;
+  gap: 25px;
 }
 
 .policy-links a {
-  color: #555;
+  color: #fff5e1; /* Cream */
   text-decoration: none;
-  font-size: 14px;
-  transition: color 0.3s;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
 }
 
 .policy-links a:hover {
-  color: #8b3c5d; /* Deep Berry */
+  color: #b76e79; /* Rose Gold */
 }
 
 .payment-methods {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
 
 .payment-icon {
-  font-size: 14px;
-  color: #555;
+  font-size: 1rem;
+  color: #fff5e1; /* Cream */
+  background-color: #b76e79; /* Rose Gold */
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
-/* Media queries for responsiveness */
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
 @media (max-width: 992px) {
   .footer-section {
-    flex-basis: 50%;
+    flex-basis: 45%;
   }
 
-  .newsletter-section {
+  .footer-section.brand-section {
     flex-basis: 100%;
+    text-align: center;
+  }
+
+  .social-links {
+    justify-content: center;
   }
 }
 
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
+    text-align: center;
   }
 
   .footer-section {
@@ -179,14 +228,30 @@
     padding-right: 0;
   }
 
+  .newsletter-form {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .newsletter-input {
+    border-radius: 25px;
+    border: 2px solid #b76e79;
+  }
+
+  .newsletter-button {
+    border-radius: 25px;
+    padding: 12px 20px;
+  }
+
   .footer-bottom-container {
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
     text-align: center;
   }
 
   .policy-links {
     justify-content: center;
+    flex-wrap: wrap;
   }
 
   .payment-methods {

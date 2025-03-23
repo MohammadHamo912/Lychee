@@ -7,17 +7,15 @@ const Footer = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle newsletter subscription here
     console.log(`Subscribed with email: ${email}`);
-    // Clear input after submission
     setEmail("");
-    // You would typically send this to your backend
+    // Add backend integration here if needed
   };
 
   return (
     <footer className="site-footer">
       <div className="footer-container">
-        <div className="footer-section">
+        <div className="footer-section brand-section">
           <h3 className="footer-heading">Lychee</h3>
           <p className="footer-tagline">
             Premium handcrafted products from independent artisans.
@@ -28,6 +26,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="social-link"
+              aria-label="Facebook"
             >
               <i className="fab fa-facebook-f"></i>
             </a>
@@ -36,6 +35,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="social-link"
+              aria-label="Instagram"
             >
               <i className="fab fa-instagram"></i>
             </a>
@@ -44,6 +44,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="social-link"
+              aria-label="Twitter"
             >
               <i className="fab fa-twitter"></i>
             </a>
@@ -52,6 +53,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="social-link"
+              aria-label="Pinterest"
             >
               <i className="fab fa-pinterest-p"></i>
             </a>
@@ -126,6 +128,7 @@ const Footer = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="newsletter-input"
+              aria-label="Email for newsletter"
             />
             <button type="submit" className="newsletter-button">
               Subscribe
@@ -146,7 +149,7 @@ const Footer = () => {
           </div>
           <div className="payment-methods">
             <span className="payment-icon">Visa</span>
-            <span className="payment-icon">MC</span>
+            <span className="payment-icon">MasterCard</span>
             <span className="payment-icon">Amex</span>
             <span className="payment-icon">PayPal</span>
           </div>

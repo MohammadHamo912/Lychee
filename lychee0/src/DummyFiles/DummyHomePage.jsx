@@ -8,6 +8,8 @@ import HeroSection from "./../components/HeroSection";
 import CategoryGrid from "./../components/CategoryGrid";
 import TrendingProducts from "./../components/TrendingProducts";
 import StoreHighlights from "./../components/StoreHighlights";
+import "../ComponentsCss/HomePage.css"; // New CSS file
+import "../ComponentsCss/FeaturedProducts.css"; // Existing CSS for Featured Products
 
 // Mock data for the carousel
 const carouselSlides = [
@@ -52,61 +54,32 @@ const searchSuggestions = [
 const HomePage = () => {
   return (
     <div className="home-page">
-      <div style={{ background: "#670010" }}>
-        <NavBar />
-      </div>
-
-      <div
-        className="main-content"
-        style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}
-      >
-        {/* Hero Section */}
+      <NavBar />
+      <main className="main-content">
         <HeroSection />
-
-        {/* Search Bar */}
-        <div style={{ marginBottom: "30px" }}>
+        <div className="search-bar-section section">
           <SearchBar
             placeholder="Search for products, shops, or collections..."
             suggestions={searchSuggestions}
           />
         </div>
-
-        {/* Carousel */}
-        <div style={{ marginBottom: "40px" }}>
+        <div className="carousel-section section">
           <Carousel slides={carouselSlides} />
         </div>
-
-        {/* Category Grid */}
-        <div className="section" style={{ marginBottom: "40px" }}>
+        <div className="category-grid-section section">
           <CategoryGrid />
         </div>
-
-        {/* Featured Products (using existing ProductGrid) */}
-        <div className="section" style={{ marginBottom: "40px" }}>
-          <h2
-            className="section-title"
-            style={{
-              color: "#8b3c5d",
-              textAlign: "center",
-              marginBottom: "20px",
-            }}
-          >
-            Featured Products
-          </h2>
-          <ProductGrid />
+        <div className="featured-products section">
+          <h2 className="section-title">Featured Products</h2>
+          <ProductGrid limit={4} />
         </div>
-
-        {/* Trending Products */}
-        <div className="section" style={{ marginBottom: "40px" }}>
+        <div className="trending-products-section section">
           <TrendingProducts />
         </div>
-
-        {/* Store Highlights */}
-        <div className="section" style={{ marginBottom: "40px" }}>
+        <div className="store-highlights-section section">
           <StoreHighlights />
         </div>
-      </div>
-
+      </main>
       <Footer />
     </div>
   );

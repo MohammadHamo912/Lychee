@@ -1,88 +1,169 @@
 .product-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-    margin: 10px;
+  background: #fff5e1; /* Cream background */
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(103, 0, 16, 0.1);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+  height: 400px; /* Fixed height for consistency */
+  display: flex;
+  flex-direction: column; /* Stack image and body vertically */
+  justify-content: space-between; /* Distribute space evenly */
 }
 
 .product-card:hover {
-    transform: scale(1.02);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(103, 0, 16, 0.2);
 }
 
 .product-card-image {
-    width: 100%;
-    height: 200px;
-    /* Set a fixed height; adjust as needed */
-    object-fit: cover;
+  width: 100%;
+  height: 220px; /* Fixed image height */
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-card-image {
+  transform: scale(1.05);
 }
 
 .product-card-body {
-    padding: 15px;
+  padding: 20px;
+  text-align: center;
+  flex-grow: 1; /* Allows body to take remaining space */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Evenly space content within body */
 }
 
 .product-card-title {
-    font-size: 1.2rem;
-    margin: 0 0 10px;
-    color: #8B3C5D;
-    /* Deep Berry */
+  font-size: 1.4rem;
+  margin: 0 0 12px;
+  color: #670010; /* Deep Berry */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  overflow: hidden; /* Prevent overflow */
+  text-overflow: ellipsis; /* Add ellipsis if too long */
+  white-space: nowrap; /* Keep title on one line */
 }
 
 .product-card-shop {
-    font-size: 0.9rem;
-    color: #555;
-    margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #b76e79; /* Rose Gold */
+  margin: 0 0 10px;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .product-card-description {
-    font-size: 0.95rem;
-    color: #555;
-    margin-bottom: 10px;
+  font-size: 1rem;
+  color: #8b3c5d; /* Softer Deep Berry */
+  margin: 0 0 15px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical; /* Truncate with ellipsis */
 }
 
 .product-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
 }
 
 .product-card-price {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0;
-    color: #8B3C5D;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #670010; /* Deep Berry */
 }
 
-/* Updated Product Card Button (Cart) */
 .product-card-button {
-    background: #8B3C5D;
-    /* Deep Berry background */
-    border: 2px solid #B76E79;
-    /* Rose Gold border for extra boldness */
-    border-radius: 5px;
-    /* Circular shape */
-    width: 60px;
-    /* Increased width */
-    height: 40px;
-    /* Increased height */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-right: 5%;
+  background: #670010; /* Deep Berry */
+  border: 2px solid #b76e79; /* Rose Gold border */
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .product-card-button:hover {
-    background: #B76E79;
-    /* Change to Rose Gold on hover */
+  background: #b76e79; /* Rose Gold */
+  transform: scale(1.1);
+  border-color: #670010;
 }
 
-/* Adjust the cart icon styling if needed */
 .cart-icon {
-    width: 22px;
-    height: 22px;
+  width: 24px;
+  height: 24px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-card {
+    height: 360px; /* Slightly shorter for tablets */
+  }
+
+  .product-card-image {
+    height: 180px;
+  }
+
+  .product-card-title {
+    font-size: 1.2rem;
+  }
+
+  .product-card-description {
+    font-size: 0.9rem;
+  }
+
+  .product-card-price {
+    font-size: 1.1rem;
+  }
+
+  .product-card-button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .cart-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    height: 340px; /* Even shorter for small screens */
+  }
+
+  .product-card-image {
+    height: 160px;
+  }
+
+  .product-card-body {
+    padding: 15px;
+  }
 }

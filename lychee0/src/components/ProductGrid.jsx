@@ -1,40 +1,36 @@
-import React from 'react';
-import ProductCard from './ProductCard';
-import '../ComponentsCss/ProductGrid.css';
-import lipgloss from '../images/lipgloss.jpeg';
-import mascara from '../images/mascara.png';
+import React from "react";
+import ProductCard from "./ProductCard";
+import "../ComponentsCss/ProductGrid.css";
+import dummyProducts from "../Data/dummyProducts";
+import { Link } from "react-router-dom"; // Import Link for navigation
 
-const products = [
-    {
-        id: 1,
-        name: 'Lip Gloss',
-        imageUrl: lipgloss,
-        description: '30ml',
-        price: 9.99,
-        shop_name: 'Awesome Store',
-    },
-    {
-        id: 2,
-        name: 'Mascara',
-        imageUrl: mascara,
-        description: '45ml',
-        price: 19.99,
-        shop_name: 'Fashion Hub',
-    }
-];
+const ProductGrid = ({ limit = dummyProducts.length }) => {
+  const handleAddToCart = (product) => {
+    console.log("Added to cart:", product);
+  };
 
-const ProductGrid = () => {
-    const handleAddToCart = (product) => {
-        console.log('Added to cart:', product);
-    };
+  const displayedProducts = dummyProducts.slice(0, limit); // Limit the number of products
 
-    return (
-        <div className="product-grid">
-            {products.map((product) => (
-                <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
-            ))}
+  return (
+    <div className="product-grid-container">
+      <div className="product-grid">
+        {displayedProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={handleAddToCart}
+          />
+        ))}
+      </div>
+      {limit < dummyProducts.length && (
+        <div className="see-all-container">
+          <Link to="/products" className="see-all-link">
+            Click to See All Products
+          </Link>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default ProductGrid;

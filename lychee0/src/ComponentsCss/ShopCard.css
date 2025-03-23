@@ -1,61 +1,126 @@
 .shop-card {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  width: 320px; /* Slightly wider for better content fit */
+  background: #fff; /* White card on cream background */
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(103, 0, 16, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 340px; /* Fixed height for consistency */
+  animation: fadeInUp 0.6s ease-out;
 }
 
 .shop-card:hover {
-    transform: scale(1.02);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(103, 0, 16, 0.2);
 }
 
 .shop-card-logo {
-    width: 100%;
-    height: 80px;
-    object-fit: contain;
-    object-position: center;
-    margin-top: 15px;
+  width: 100%;
+  height: 180px; /* Increased height for better logo display */
+  object-fit: cover; /* Changed to cover for better image scaling */
+  margin-top: 0; /* Removed margin since padding handles it */
 }
 
 .shop-card-body {
-    padding: 15px;
-    width: 100%;
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Evenly space content */
 }
 
 .shop-card-title {
-    font-size: 1.2rem;
-    margin: 10px 0;
-    color: #8B3C5D;
-    /* Deep Berry */
+  font-size: 1.4rem;
+  margin: 0 0 10px;
+  color: #670010; /* Deep Berry */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .shop-card-description {
-    font-size: 0.95rem;
-    color: #555;
-    margin-bottom: 15px;
+  font-size: 1rem;
+  color: #8b3c5d; /* Softer Deep Berry */
+  margin: 0 0 15px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
 }
 
 .shop-card-button {
-    background-color: #8B3C5D;
-    /* Deep Berry */
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease;
+  background-color: #670010; /* Deep Berry */
+  color: #fff5e1; /* Cream */
+  border: 2px solid #b76e79; /* Rose Gold border */
+  padding: 10px 20px;
+  border-radius: 25px; /* Rounded like other buttons */
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .shop-card-button:hover {
-    background-color: #B76E79;
-    /* Rose Gold */
+  background-color: #b76e79; /* Rose Gold */
+  transform: scale(1.05);
+  border-color: #670010;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .shop-card {
+    width: 280px;
+    height: 320px;
+  }
+
+  .shop-card-logo {
+    height: 160px;
+  }
+
+  .shop-card-title {
+    font-size: 1.2rem;
+  }
+
+  .shop-card-description {
+    font-size: 0.9rem;
+  }
+
+  .shop-card-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-card {
+    width: 100%; /* Full width on small screens */
+    max-width: 300px;
+    height: 300px;
+  }
+
+  .shop-card-logo {
+    height: 140px;
+  }
 }

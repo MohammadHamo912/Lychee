@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Use Link instead of <a>
 import ShopCard from "./ShopCard";
+import "../ComponentsCss/StoreHighlights.css";
 
 const StoreHighlights = () => {
-  // Sample featured stores data - replace with your actual data
   const featuredStores = [
     {
       id: 1,
@@ -30,75 +31,22 @@ const StoreHighlights = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "#FFF5E1",
-        padding: "60px 20px",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
-        <h2
-          style={{
-            color: "#8B3C5D",
-            fontSize: "1.8rem",
-            marginBottom: "30px",
-            textAlign: "center",
-          }}
-        >
-          Featured Stores
-        </h2>
-
-        <p
-          style={{
-            color: "#555",
-            textAlign: "center",
-            maxWidth: "700px",
-            margin: "0 auto 40px",
-            fontSize: "1.1rem",
-          }}
-        >
+    <div className="store-highlights">
+      <div className="store-highlights-container">
+        <h2 className="store-title">Featured Stores</h2>
+        <p className="store-subtitle">
           Discover Ramallah's finest beauty shops and pharmacies, all in one
           place.
         </p>
-
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: "30px",
-          }}
-        >
+        <div className="store-container">
           {featuredStores.map((store) => (
             <ShopCard key={store.id} shop={store} onViewShop={handleViewShop} />
           ))}
         </div>
-
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "40px",
-          }}
-        >
-          <a
-            href="/shops"
-            style={{
-              backgroundColor: "#8B3C5D",
-              color: "white",
-              padding: "12px 24px",
-              borderRadius: "4px",
-              textDecoration: "none",
-              fontWeight: "bold",
-              display: "inline-block",
-            }}
-          >
+        <div className="view-all-container">
+          <Link to="/shops" className="view-all-link">
             View All Stores
-          </a>
+          </Link>
         </div>
       </div>
     </div>

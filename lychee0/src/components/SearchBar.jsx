@@ -13,7 +13,6 @@ const SearchBar = ({
   const searchContainerRef = useRef(null);
   const navigate = useNavigate();
 
-  // Handle clicks outside search component to close suggestions
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -33,7 +32,6 @@ const SearchBar = ({
     };
   }, [searchTerm]);
 
-  // Filter suggestions based on search term
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredSuggestions([]);

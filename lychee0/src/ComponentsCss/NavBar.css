@@ -18,7 +18,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-
 .navbar-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -136,7 +135,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-
   .desktop-nav,
   .auth-section {
     display: none;

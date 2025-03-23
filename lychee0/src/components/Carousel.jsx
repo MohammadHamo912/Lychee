@@ -5,67 +5,42 @@ import { Link } from "react-router-dom";
 const Carousel = ({ slides }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Handle automatic slideshow
+  // Autoplay effect
   useEffect(() => {
     let interval;
-    if (autoplay) {
+    if (autoplay && !isHovered) {
       interval = setInterval(() => {
-        setCurrentSlide((prevSlide) =>
-          prevSlide === slides.length - 1 ? 0 : prevSlide + 1
-        );
-      }, 5000); // Change slide every 5 seconds
+        setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+      }, 4000); // Slightly faster for better engagement
     }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [autoplay, slides.length]);
+    return () => clearInterval(interval);
+  }, [autoplay, isHovered, slides.length]);
 
   // Navigation functions
-  const goToNextSlide = () => {
-    setCurrentSlide((prevSlide) =>
-      prevSlide === slides.length - 1 ? 0 : prevSlide + 1
-    );
-  };
-
-  const goToPrevSlide = () => {
-    setCurrentSlide((prevSlide) =>
-      prevSlide === 0 ? slides.length - 1 : prevSlide - 1
-    );
-  };
-
-  const goToSlide = (index) => {
-    setCurrentSlide(index);
-  };
-
-  // Pause autoplay when user interacts
-  const handleMouseEnter = () => {
-    setAutoplay(false);
-  };
-
-  const handleMouseLeave = () => {
-    setAutoplay(true);
-  };
+  const goToNextSlide = () =>
+    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  const goToPrevSlide = () =>
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  const goToSlide = (index) => setCurrentSlide(index);
 
   return (
     <div
       className="carousel-container"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="carousel-wrapper">
+      <div
+        className="carousel-wrapper"
+        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+      >
         {slides.map((slide, index) => (
           <div
             key={index}
             className={`carousel-slide ${
               index === currentSlide ? "active" : ""
             }`}
-            style={{
-              transform: `translateX(${100 * (index - currentSlide)}%)`,
-            }}
           >
             <div className="slide-content">
               <div className="slide-text">
@@ -86,15 +61,15 @@ const Carousel = ({ slides }) => {
         ))}
       </div>
 
-      {/* Navigation buttons */}
+      {/* Navigation Arrows */}
       <button className="carousel-control prev" onClick={goToPrevSlide}>
-        &#10094;
+        ❮
       </button>
       <button className="carousel-control next" onClick={goToNextSlide}>
-        &#10095;
+        ❯
       </button>
 
-      {/* Slide indicators */}
+      {/* Indicators */}
       <div className="carousel-indicators">
         {slides.map((_, index) => (
           <span
@@ -104,6 +79,15 @@ const Carousel = ({ slides }) => {
           />
         ))}
       </div>
+
+      {/* Pause/Play Toggle */}
+      <button
+        className="autoplay-toggle"
+        onClick={() => setAutoplay(!autoplay)}
+        title={autoplay ? "Pause" : "Play"}
+      >
+        {autoplay ? "⏸" : "▶"}
+      </button>
     </div>
   );
 };

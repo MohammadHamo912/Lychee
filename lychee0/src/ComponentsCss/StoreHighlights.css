@@ -1,19 +1,101 @@
-/* src/ComponentsCss/StoreHighlights.css */
 .store-highlights {
+  background-color: #fff5e1; /* Cream background */
+  padding: 80px 20px; /* Increased padding for spacing */
+}
+
+.store-highlights-container {
   max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 20px;
+  margin: 0 auto;
 }
 
 .store-title {
-  font-size: 2rem;
-  color: #8b3c5d;
+  font-size: 2.5rem;
+  color: #670010; /* Deep Berry */
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.store-subtitle {
+  color: #8b3c5d; /* Softer Deep Berry */
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  font-size: 1.1rem;
+  line-height: 1.5;
 }
 
 .store-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.view-all-container {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.view-all-link {
+  background-color: #670010; /* Deep Berry */
+  color: #fff5e1; /* Cream */
+  padding: 12px 24px;
+  border-radius: 25px; /* Rounded like other buttons */
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.view-all-link:hover {
+  background-color: #b76e79; /* Rose Gold */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .store-highlights {
+    padding: 60px 20px;
+  }
+
+  .store-title {
+    font-size: 2rem;
+  }
+
+  .store-subtitle {
+    font-size: 1rem;
+  }
+
+  .store-container {
+    gap: 20px;
+  }
+
+  .view-all-link {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .store-container {
+    flex-direction: column;
+    align-items: center;
+  }
 }
