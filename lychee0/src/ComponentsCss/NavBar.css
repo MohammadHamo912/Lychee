@@ -1,6 +1,5 @@
 .navbar-header {
   position: fixed;
-  /* instead of sticky */
   top: 0;
   left: 0;
   right: 0;
@@ -28,7 +27,6 @@
   align-items: center;
 }
 
-/* Logo */
 .navbar-logo {
   font-size: 24px;
   font-weight: bold;
@@ -40,7 +38,6 @@
   color: inherit;
 }
 
-/* Desktop Nav */
 .desktop-nav .nav-links {
   display: flex;
   gap: 30px;
@@ -57,7 +54,6 @@
   color: #b76e79;
 }
 
-/* Cart */
 .cart-container {
   position: relative;
 }
@@ -77,7 +73,6 @@
   align-items: center;
 }
 
-/* Auth Section */
 .auth-section {
   display: flex;
   gap: 15px;
@@ -102,7 +97,6 @@
   font-size: 14px;
 }
 
-/* Hamburger */
 .mobile-menu-button {
   display: none;
   cursor: pointer;
@@ -115,7 +109,6 @@
   margin: 4px 0;
 }
 
-/* Mobile Menu */
 .mobile-menu {
   background: #fff5e1;
   padding: 20px;
@@ -133,14 +126,80 @@
   color: #8b3c5d;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+
   .desktop-nav,
   .auth-section {
     display: none;
   }
 
+  .navbar-container {
+    padding: 0 15px;
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+  }
+
+  .navbar-logo {
+    font-size: 26px;
+  }
+
   .mobile-menu-button {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+  }
+
+  .hamburger-line {
+    width: 36px;
+    height: 3px;
+    background: #fff5e1;
+  }
+
+  .mobile-menu {
+    position: absolute;
+    height: 400px;
+    top: 90px;
+    left: 0;
+    right: 0;
+    background: #fff5e1;
+    width: 100%;
+    padding: 20px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #d9b6a3;
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .mobile-nav-link {
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-decoration: none;
+    color: #8b3c5d;
+    padding: 5px 0;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-container {
+    height: 90px;
+  }
+
+  .mobile-menu {
+    padding: 15px 0;
   }
 }
