@@ -10,21 +10,21 @@ import Login from "./pages/Login";
 import DummyHomePage from "./DummyFiles/DummyHomePage";
 
 // Components
-import NavBar from "./components/NavBar";
-import ProductCard from "./components/ProductCard";
-import ProductGrid from "./components/ProductGrid";
-import ShopCard from "./components/ShopCard";
-import ShopGrid from "./components/ShopGrid";
-import Footer from "./components/Footer";
-import ShoppingCart from "./components/ShoppingCart";
-import CheckoutForm from "./components/CheckoutForm";
+import NavBar from "./components/NavBar"; // DONE
+import ProductCard from "./components/ProductCard"; // DONE
+import ProductGrid from "./components/ProductGrid"; // DONE
+import ShopCard from "./components/ShopCard"; // DONE
+import ShopGrid from "./components/ShopGrid"; // DONE
+import Footer from "./components/Footer"; // DONE
+import ShoppingCart from "./components/ShoppingCart"; // DONE
+import CheckoutForm from "./components/CheckoutForm"; // DONE
 import FiltersPanel from "./components/FiltersPanel";
 import OrderSummary from "./components/OrderSummary.jsx";
 import OrderConfirmation from "./components/OrderConfirmation.jsx";
-import HeroSection from "./components/HeroSection.jsx";
-import CategoryGrid from "./components/CategoryGrid";
-import TrendingProducts from "./components/TrendingProducts";
-import StoreHighlights from "./components/StoreHighlights";
+import HeroSection from "./components/HeroSection.jsx"; // DONE
+import CategoryGrid from "./components/CategoryGrid"; // DONE
+import TrendingProducts from "./components/TrendingProducts"; // DONE
+import StoreHighlights from "./components/StoreHighlights"; // DONE
 import Breadcrumbs from "./components/Breadcrumbs";
 import Modal from "./components/Modal.jsx";
 import Toast from "./components/Toast";
@@ -62,6 +62,7 @@ function App() {
         <Route path="/storehighlights" element={<StoreHighlights />} />
         <Route path="/discountmanagement" element={<DiscountManagement />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
+
         <Route
           path="/productdetails"
           element={

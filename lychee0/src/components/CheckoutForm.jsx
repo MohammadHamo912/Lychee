@@ -4,11 +4,8 @@ import "../ComponentsCss/CheckoutForm.css";
 
 const CheckoutForm = ({ onSubmit, cartTotal }) => {
   const [formData, setFormData] = useState({
-    // Contact Information
     email: "",
     phone: "",
-
-    // Shipping Information
     firstName: "",
     lastName: "",
     address: "",
@@ -17,8 +14,6 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
     state: "",
     zipCode: "",
     country: "United States",
-
-    // Billing Information
     sameAsShipping: true,
     billingFirstName: "",
     billingLastName: "",
@@ -28,18 +23,12 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
     billingState: "",
     billingZipCode: "",
     billingCountry: "United States",
-
-    // Payment Method
     paymentMethod: "creditCard",
     cardName: "",
     cardNumber: "",
     expiryDate: "",
     cvv: "",
-
-    // Order Notes
     orderNotes: "",
-
-    // Terms and Newsletter
     agreeToTerms: false,
     subscribeToNewsletter: false,
   });
@@ -49,13 +38,10 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
-
-    // Clear error message when field is updated
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -65,11 +51,9 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
     const newErrors = {};
 
     if (step === 1) {
-      // Validate contact and shipping
       if (!formData.email) newErrors.email = "Email is required";
       else if (!/\S+@\S+\.\S+/.test(formData.email))
         newErrors.email = "Email is invalid";
-
       if (!formData.firstName) newErrors.firstName = "First name is required";
       if (!formData.lastName) newErrors.lastName = "Last name is required";
       if (!formData.address) newErrors.address = "Address is required";
@@ -78,43 +62,35 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
       if (!formData.zipCode) newErrors.zipCode = "ZIP code is required";
     }
 
-    if (step === 2) {
-      // Validate billing if not same as shipping
-      if (!formData.sameAsShipping) {
-        if (!formData.billingFirstName)
-          newErrors.billingFirstName = "First name is required";
-        if (!formData.billingLastName)
-          newErrors.billingLastName = "Last name is required";
-        if (!formData.billingAddress)
-          newErrors.billingAddress = "Address is required";
-        if (!formData.billingCity) newErrors.billingCity = "City is required";
-        if (!formData.billingState)
-          newErrors.billingState = "State is required";
-        if (!formData.billingZipCode)
-          newErrors.billingZipCode = "ZIP code is required";
-      }
+    if (step === 2 && !formData.sameAsShipping) {
+      if (!formData.billingFirstName)
+        newErrors.billingFirstName = "First name is required";
+      if (!formData.billingLastName)
+        newErrors.billingLastName = "Last name is required";
+      if (!formData.billingAddress)
+        newErrors.billingAddress = "Address is required";
+      if (!formData.billingCity) newErrors.billingCity = "City is required";
+      if (!formData.billingState) newErrors.billingState = "State is required";
+      if (!formData.billingZipCode)
+        newErrors.billingZipCode = "ZIP code is required";
     }
 
     if (step === 3) {
-      // Validate payment
       if (formData.paymentMethod === "creditCard") {
         if (!formData.cardName)
           newErrors.cardName = "Cardholder name is required";
         if (!formData.cardNumber)
           newErrors.cardNumber = "Card number is required";
         else if (!/^\d{15,16}$/.test(formData.cardNumber.replace(/\s/g, "")))
-          newErrors.cardNumber = "Card number is invalid";
-
+          newErrors.cardNumber = "Card number must be 15-16 digits";
         if (!formData.expiryDate)
           newErrors.expiryDate = "Expiry date is required";
         else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate))
-          newErrors.expiryDate = "Expiry date should be MM/YY";
-
+          newErrors.expiryDate = "Use MM/YY format";
         if (!formData.cvv) newErrors.cvv = "CVV is required";
         else if (!/^\d{3,4}$/.test(formData.cvv))
-          newErrors.cvv = "CVV is invalid";
+          newErrors.cvv = "CVV must be 3-4 digits";
       }
-
       if (!formData.agreeToTerms)
         newErrors.agreeToTerms = "You must agree to the terms";
     }
@@ -124,10 +100,9 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
 
   const handleStepChange = (step) => {
     const errors = validateStep(currentStep);
-
     if (Object.keys(errors).length === 0) {
       setCurrentStep(step);
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       setErrors(errors);
     }
@@ -136,31 +111,22 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validateStep(3);
-
     if (Object.keys(errors).length === 0) {
-      // Submit the form
       onSubmit(formData);
     } else {
       setErrors(errors);
     }
   };
 
-  // Format credit card number with spaces
   const formatCardNumber = (value) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
     const matches = v.match(/\d{4,16}/g);
     const match = (matches && matches[0]) || "";
     const parts = [];
-
     for (let i = 0, len = match.length; i < len; i += 4) {
       parts.push(match.substring(i, i + 4));
     }
-
-    if (parts.length) {
-      return parts.join(" ");
-    } else {
-      return value;
-    }
+    return parts.length ? parts.join(" ") : value;
   };
 
   return (
@@ -170,6 +136,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
           className={`step ${currentStep === 1 ? "active" : ""} ${
             currentStep > 1 ? "completed" : ""
           }`}
+          onClick={() => currentStep > 1 && setCurrentStep(1)}
         >
           <span className="step-number">1</span>
           <span className="step-title">Shipping</span>
@@ -178,6 +145,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
           className={`step ${currentStep === 2 ? "active" : ""} ${
             currentStep > 2 ? "completed" : ""
           }`}
+          onClick={() => currentStep > 2 && setCurrentStep(2)}
         >
           <span className="step-number">2</span>
           <span className="step-title">Billing</span>
@@ -189,7 +157,6 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
       </div>
 
       <form className="checkout-form" onSubmit={handleSubmit}>
-        {/* Step 1: Shipping Information */}
         {currentStep === 1 && (
           <div className="checkout-step-content">
             <h3>Contact Information</h3>
@@ -203,6 +170,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   value={formData.email}
                   onChange={handleChange}
                   className={errors.email ? "error" : ""}
+                  placeholder="you@example.com"
                 />
                 {errors.email && (
                   <span className="error-message">{errors.email}</span>
@@ -216,6 +184,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  placeholder="+1 (555) 123-4567"
                 />
               </div>
             </div>
@@ -261,6 +230,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                 value={formData.address}
                 onChange={handleChange}
                 className={errors.address ? "error" : ""}
+                placeholder="123 Main St"
               />
               {errors.address && (
                 <span className="error-message">{errors.address}</span>
@@ -268,15 +238,14 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="apartmentUnit">
-                Apartment, Suite, etc. (Optional)
-              </label>
+              <label htmlFor="apartmentUnit">Apartment, Suite, etc.</label>
               <input
                 type="text"
                 id="apartmentUnit"
                 name="apartmentUnit"
                 value={formData.apartmentUnit}
                 onChange={handleChange}
+                placeholder="Apt 4B"
               />
             </div>
 
@@ -304,6 +273,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   value={formData.state}
                   onChange={handleChange}
                   className={errors.state ? "error" : ""}
+                  placeholder="CA"
                 />
                 {errors.state && (
                   <span className="error-message">{errors.state}</span>
@@ -321,6 +291,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   value={formData.zipCode}
                   onChange={handleChange}
                   className={errors.zipCode ? "error" : ""}
+                  placeholder="90210"
                 />
                 {errors.zipCode && (
                   <span className="error-message">{errors.zipCode}</span>
@@ -337,7 +308,6 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   <option value="United States">United States</option>
                   <option value="Canada">Canada</option>
                   <option value="United Kingdom">United Kingdom</option>
-                  {/* Add more countries as needed */}
                 </select>
               </div>
             </div>
@@ -357,7 +327,6 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
           </div>
         )}
 
-        {/* Step 2: Billing Information */}
         {currentStep === 2 && (
           <div className="checkout-step-content">
             <div className="form-group checkbox-group">
@@ -418,6 +387,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                     value={formData.billingAddress}
                     onChange={handleChange}
                     className={errors.billingAddress ? "error" : ""}
+                    placeholder="123 Main St"
                   />
                   {errors.billingAddress && (
                     <span className="error-message">
@@ -428,7 +398,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
 
                 <div className="form-group">
                   <label htmlFor="billingApartmentUnit">
-                    Apartment, Suite, etc. (Optional)
+                    Apartment, Suite, etc.
                   </label>
                   <input
                     type="text"
@@ -436,6 +406,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                     name="billingApartmentUnit"
                     value={formData.billingApartmentUnit}
                     onChange={handleChange}
+                    placeholder="Apt 4B"
                   />
                 </div>
 
@@ -465,6 +436,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                       value={formData.billingState}
                       onChange={handleChange}
                       className={errors.billingState ? "error" : ""}
+                      placeholder="CA"
                     />
                     {errors.billingState && (
                       <span className="error-message">
@@ -484,6 +456,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                       value={formData.billingZipCode}
                       onChange={handleChange}
                       className={errors.billingZipCode ? "error" : ""}
+                      placeholder="90210"
                     />
                     {errors.billingZipCode && (
                       <span className="error-message">
@@ -502,7 +475,6 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                       <option value="United States">United States</option>
                       <option value="Canada">Canada</option>
                       <option value="United Kingdom">United Kingdom</option>
-                      {/* Add more countries as needed */}
                     </select>
                   </div>
                 </div>
@@ -510,14 +482,14 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
             )}
 
             <div className="form-group">
-              <label htmlFor="orderNotes">Order Notes (Optional)</label>
+              <label htmlFor="orderNotes">Order Notes</label>
               <textarea
                 id="orderNotes"
                 name="orderNotes"
                 value={formData.orderNotes}
                 onChange={handleChange}
                 placeholder="Special instructions for delivery or gift messages"
-              ></textarea>
+              />
             </div>
 
             <div className="form-buttons">
@@ -539,11 +511,9 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
           </div>
         )}
 
-        {/* Step 3: Payment Information */}
         {currentStep === 3 && (
           <div className="checkout-step-content">
             <h3>Payment Method</h3>
-
             <div className="payment-methods">
               <div
                 className={`payment-method ${
@@ -564,11 +534,10 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                 <label htmlFor="creditCard">Credit Card</label>
                 <div className="payment-icons">
                   <span className="payment-icon">Visa</span>
-                  <span className="payment-icon">MC</span>
+                  <span className="payment-icon">MasterCard</span>
                   <span className="payment-icon">Amex</span>
                 </div>
               </div>
-
               <div
                 className={`payment-method ${
                   formData.paymentMethod === "paypal" ? "selected" : ""
@@ -603,7 +572,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                     value={formData.cardName}
                     onChange={handleChange}
                     className={errors.cardName ? "error" : ""}
-                    placeholder="Name as it appears on card"
+                    placeholder="John Doe"
                   />
                   {errors.cardName && (
                     <span className="error-message">{errors.cardName}</span>
@@ -617,15 +586,14 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                     id="cardNumber"
                     name="cardNumber"
                     value={formData.cardNumber}
-                    onChange={(e) => {
-                      const formattedValue = formatCardNumber(e.target.value);
-                      setFormData({ ...formData, cardNumber: formattedValue });
-                      if (errors.cardNumber) {
-                        setErrors({ ...errors, cardNumber: "" });
-                      }
-                    }}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        cardNumber: formatCardNumber(e.target.value),
+                      })
+                    }
                     className={errors.cardNumber ? "error" : ""}
-                    placeholder="XXXX XXXX XXXX XXXX"
+                    placeholder="1234 5678 9012 3456"
                     maxLength="19"
                   />
                   {errors.cardNumber && (
@@ -659,7 +627,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                       value={formData.cvv}
                       onChange={handleChange}
                       className={errors.cvv ? "error" : ""}
-                      placeholder="XXX"
+                      placeholder="123"
                       maxLength="4"
                     />
                     {errors.cvv && (
@@ -681,7 +649,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                 <span>Free</span>
               </div>
               <div className="summary-row">
-                <span>Tax</span>
+                <span>Tax (8%)</span>
                 <span>${(cartTotal * 0.08).toFixed(2)}</span>
               </div>
               <div className="summary-row total">
@@ -701,9 +669,9 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
               />
               <label htmlFor="agreeToTerms">
                 I agree to the{" "}
-                <a href="/terms" target="_blank" rel="noopener noreferrer">
+                <Link to="/terms" target="_blank" rel="noopener noreferrer">
                   Terms & Conditions
-                </a>
+                </Link>
               </label>
               {errors.agreeToTerms && (
                 <span className="error-message">{errors.agreeToTerms}</span>
@@ -719,7 +687,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                 onChange={handleChange}
               />
               <label htmlFor="subscribeToNewsletter">
-                Subscribe to our newsletter for exclusive updates and offers
+                Subscribe to our newsletter for exclusive updates
               </label>
             </div>
 

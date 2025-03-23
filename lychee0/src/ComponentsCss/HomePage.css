@@ -18,22 +18,6 @@
   margin-top: 40px; /* Extra space after HeroSection */
 }
 
-.carousel-section {
-  /* No additional styles needed; Carousel.css handles it */
-}
-
-.category-grid-section {
-  /* CategoryGrid.css handles styling */
-}
-
-.trending-products-section {
-  /* TrendingProducts.css handles styling */
-}
-
-.store-highlights-section {
-  /* StoreHighlights.css handles styling */
-}
-
 /* Animations */
 .section {
   animation: fadeIn 1s ease-in-out;

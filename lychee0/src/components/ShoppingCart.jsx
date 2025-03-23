@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../ComponentsCss/ShoppingCart.css";
 
@@ -8,14 +8,12 @@ const ShoppingCart = ({
   removeItem,
   applyPromo,
 }) => {
-  const [promoCode, setPromoCode] = React.useState("");
+  const [promoCode, setPromoCode] = useState("");
 
-  // Calculate subtotal before any discounts
   const subtotal = cartItems.reduce((total, item) => {
     return total + item.price * item.quantity;
   }, 0);
 
-  // Empty cart state
   if (cartItems.length === 0) {
     return (
       <div className="shopping-cart empty-cart">
@@ -66,6 +64,7 @@ const ShoppingCart = ({
                 <button
                   className="remove-item-btn"
                   onClick={() => removeItem(item.id)}
+                  aria-label={`Remove ${item.name} from cart`}
                 >
                   Remove
                 </button>
@@ -81,6 +80,7 @@ const ShoppingCart = ({
                   updateQuantity(item.id, Math.max(1, item.quantity - 1))
                 }
                 disabled={item.quantity <= 1}
+                aria-label="Decrease quantity"
               >
                 -
               </button>
@@ -92,10 +92,12 @@ const ShoppingCart = ({
                   updateQuantity(item.id, parseInt(e.target.value) || 1)
                 }
                 className="quantity-input"
+                aria-label="Item quantity"
               />
               <button
                 className="quantity-btn"
                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                aria-label="Increase quantity"
               >
                 +
               </button>
@@ -117,6 +119,7 @@ const ShoppingCart = ({
               value={promoCode}
               onChange={(e) => setPromoCode(e.target.value)}
               className="promo-input"
+              aria-label="Enter promo code"
             />
             <button type="submit" className="apply-promo-btn">
               Apply
@@ -129,7 +132,6 @@ const ShoppingCart = ({
             <span>Subtotal:</span>
             <span>${subtotal.toFixed(2)}</span>
           </div>
-          {/* Additional fees or discounts would go here */}
           <div className="cart-buttons">
             <Link to="/shops" className="continue-shopping-btn">
               Continue Shopping

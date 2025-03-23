@@ -1,57 +1,57 @@
 .filters-panel {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 8px;
-    background: #fff;
-    max-width: 250px;
-    /* Reduced from 300px to 250px */
-    margin: 20px auto;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background: #fff;
+  max-width: 250px;
+  /* Reduced from 300px to 250px */
+  margin: 20px auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .filters-panel h3 {
-    margin-top: 0;
-    font-size: 1.4rem;
-    color: #8B3C5D;
-    /* Deep Berry */
-    text-align: center;
+  margin-top: 0;
+  font-size: 1.4rem;
+  color: #8b3c5d;
+  /* Deep Berry */
+  text-align: center;
 }
 
 .filter-group {
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: column;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-group label {
-    font-size: 0.9rem;
-    margin-bottom: 4px;
-    color: #8B3C5D;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  color: #8b3c5d;
 }
 
 .filter-group input,
 .filter-group select {
-    padding: 6px;
-    font-size: 0.9rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  padding: 6px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .apply-button {
-    width: 100%;
-    padding: 8px;
-    background: #8B3C5D;
-    /* Deep Berry */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background 0.3s ease;
+  width: 100%;
+  padding: 8px;
+  background: #8b3c5d;
+  /* Deep Berry */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease;
 }
 
 .apply-button:hover {
-    background: #B76E79;
-    /* Rose Gold */
+  background: #b76e79;
+  /* Rose Gold */
 }
