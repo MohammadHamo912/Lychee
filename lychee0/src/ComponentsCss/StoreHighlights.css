@@ -1,16 +1,16 @@
 .store-highlights {
-  background-color: #fff5e1; /* Cream background */
-  padding: 80px 20px; /* Increased padding for spacing */
+  background-color: #fff5e1;
+  padding: 80px 20px;
+  overflow: hidden;
 }
 
 .store-highlights-container {
   max-width: 1200px;
-  margin: 0 auto;
 }
 
 .store-title {
   font-size: 2.5rem;
-  color: #670010; /* Deep Berry */
+  color: #670010;
   text-align: center;
   margin-bottom: 20px;
   font-weight: 700;
@@ -20,7 +20,7 @@
 }
 
 .store-subtitle {
-  color: #8b3c5d; /* Softer Deep Berry */
+  color: #8b3c5d;
   text-align: center;
   max-width: 700px;
   margin: 0 auto 40px;
@@ -30,21 +30,54 @@
 
 .store-container {
   display: flex;
-  flex-wrap: wrap;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 10px;
   justify-content: center;
-  gap: 30px;
 }
 
+.store-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.store-container::-webkit-scrollbar-thumb {
+  background: rgba(103, 0, 16, 0.4);
+  border-radius: 4px;
+}
+
+.store-container>* {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+}
+
+/* Each Store Card */
+.store-card {
+  width: 260px;
+  height: 320px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 6px 15px rgba(103, 0, 16, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.store-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(103, 0, 16, 0.2);
+}
+
+/* CTA Button */
 .view-all-container {
   text-align: center;
   margin-top: 40px;
 }
 
 .view-all-link {
-  background-color: #670010; /* Deep Berry */
-  color: #fff5e1; /* Cream */
+  background-color: #670010;
+  color: #fff5e1;
   padding: 12px 24px;
-  border-radius: 25px; /* Rounded like other buttons */
+  border-radius: 25px;
   text-decoration: none;
   font-weight: 600;
   font-size: 1rem;
@@ -54,22 +87,23 @@
 }
 
 .view-all-link:hover {
-  background-color: #b76e79; /* Rose Gold */
+  background-color: #b76e79;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Animations */
+/* Fade-in Animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
   .store-highlights {
     padding: 60px 20px;
@@ -83,19 +117,8 @@
     font-size: 1rem;
   }
 
-  .store-container {
-    gap: 20px;
-  }
-
   .view-all-link {
     padding: 10px 20px;
     font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .store-container {
-    flex-direction: column;
-    align-items: center;
   }
 }
