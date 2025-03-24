@@ -1,28 +1,6 @@
 import React from "react";
 import "../ComponentsCss/Pagination.css";
 
-<<<<<<< HEAD
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const visiblePages = 5;
-  const startPage = Math.floor((currentPage - 1) / visiblePages) * visiblePages + 1;
-  const endPage = Math.min(startPage + visiblePages - 1, totalPages);
-
-  const pages = [];
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
-
-  return (
-    <div className="pagination">
-      <button
-        className="pagination-button"
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        Previous
-      </button>
-
-=======
 const Pagination = ({
   currentPage,
   totalPages,
@@ -30,12 +8,10 @@ const Pagination = ({
   itemsPerPage = 5, // Controls how many page numbers to show
   showArrows = true, // Toggle Previous/Next arrows
 }) => {
-  // Calculate the range of pages to display
   const halfRange = Math.floor(itemsPerPage / 2);
   let startPage = Math.max(1, currentPage - halfRange);
   let endPage = Math.min(totalPages, startPage + itemsPerPage - 1);
 
-  // Adjust startPage if endPage is at the limit
   if (endPage - startPage + 1 < itemsPerPage) {
     startPage = Math.max(1, endPage - itemsPerPage + 1);
   }
@@ -65,7 +41,7 @@ const Pagination = ({
           {startPage > 2 && <span className="pagination-ellipsis">...</span>}
         </>
       )}
->>>>>>> d6198506a55d4d4a043229d79974ee1d5c9731c4
+
       {pages.map((page) => (
         <button
           key={page}
@@ -76,16 +52,7 @@ const Pagination = ({
           {page}
         </button>
       ))}
-<<<<<<< HEAD
 
-      <button
-        className="pagination-button"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        Next
-      </button>
-=======
       {endPage < totalPages && (
         <>
           {endPage < totalPages - 1 && (
@@ -99,6 +66,7 @@ const Pagination = ({
           </button>
         </>
       )}
+
       {showArrows && (
         <button
           className="pagination-button pagination-arrow"
@@ -109,7 +77,6 @@ const Pagination = ({
           &rarr;
         </button>
       )}
->>>>>>> d6198506a55d4d4a043229d79974ee1d5c9731c4
     </div>
   );
 };
