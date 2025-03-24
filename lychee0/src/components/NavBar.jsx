@@ -5,7 +5,7 @@ import "../ComponentsCss/NavBar.css";
 function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSolid, setIsSolid] = useState(false);
-  const isLoggedIn = false;
+  const isLoggedIn = true;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 

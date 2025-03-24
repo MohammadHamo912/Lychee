@@ -8,6 +8,7 @@ import shop1Url from "./images/shop1SampleImage.png"; // Update path if necessar
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import DummyHomePage from "./DummyFiles/DummyHomePage";
+import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
 
 // Components
 import NavBar from "./components/NavBar"; // DONE
@@ -54,6 +55,8 @@ function App() {
   return (
     <div>
       <Routes>
+        <Route path="/shopbycategorypage" element={<ShopByCategory />} />
+
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/navbar" element={<NavBar />} />

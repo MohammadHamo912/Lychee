@@ -13,7 +13,7 @@
   background-color: #fff5e1; /* Matches navbar text color */
   border: 1px solid #8b3c5d; /* Matches mobile-nav-link */
   color: #8b3c5d;
-  padding: 8px 12px;
+  padding: 0.5rem 1rem;
   border-radius: 6px; /* Softer, modern corners */
   cursor: pointer;
   font-size: 0.95rem;
