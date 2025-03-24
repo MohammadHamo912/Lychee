@@ -34,6 +34,8 @@ import DiscountManagement from "./components/DiscountManagement";
 import PasswordReset from "./components/PasswordReset";
 import ProductDetails from "./pages/ProductDetails.jsx";
 
+import StorePage from "./pages/StorePage.jsx";
+
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
@@ -62,6 +64,7 @@ function App() {
         <Route path="/storehighlights" element={<StoreHighlights />} />
         <Route path="/discountmanagement" element={<DiscountManagement />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
+        <Route path="/storepage" element={<StorePage />} />
 
         <Route
           path="/productdetails"

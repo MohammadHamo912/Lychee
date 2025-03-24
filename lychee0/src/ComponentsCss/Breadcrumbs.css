@@ -1,31 +1,78 @@
 /* src/ComponentsCss/Breadcrumbs.css */
 .breadcrumbs {
-  max-width: 1200px;
+  max-width: 1200px; /* Matches navbar-container */
   margin: 20px auto;
-  padding: 0 20px;
-  font-size: 0.9rem;
+  padding: 7.5px 20px; /* Adjusted padding to align with navbar */
+  font-size: 0.95rem; /* Slightly larger for better readability */
+  display: flex; /* Added for better alignment */
+  align-items: center;
 }
 
 .breadcrumb-item {
-  display: inline;
+  display: flex;
+  align-items: center;
+  margin-right: 8px; /* Added spacing between items */
 }
 
 .breadcrumb-link {
-  color: #8b3c5d;
+  color: #8b3c5d; /* Matches mobile-nav-link color */
   text-decoration: none;
-  transition: color 0.3s;
+  transition: color 0.3s ease; /* Matches nav-link transition */
+  font-weight: 500;
+  padding: 2px 6px; /* Added padding for clickable area */
 }
 
 .breadcrumb-link:hover {
-  color: #b76e79;
+  color: #b76e79; /* Matches nav-link hover color */
 }
 
 .breadcrumb-separator {
-  margin: 0 8px;
-  color: #555;
+  margin: 0 8px; /* Adjusted spacing */
+  color: #670010; /* Changed to primary color for visibility */
+  opacity: 0.8;
+  font-size: 1rem;
+  font-weight: 600; /* Made bolder */
 }
 
 .breadcrumb-current {
-  color: #555;
-  font-weight: 500;
+  color: #670010; /* Matches navbar solid background */
+  font-weight: 600; /* Slightly bolder than breadcrumb-link */
+  padding: 2px 6px; /* Matches link padding */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .breadcrumbs {
+    padding: 7.5px 15px; /* Matches navbar-container mobile padding */
+    margin: 15px auto;
+  }
+
+  .breadcrumb-link {
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb-current {
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb-separator {
+    margin: 0 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumbs {
+    padding: 5px 15px;
+    font-size: 0.85rem;
+    flex-wrap: wrap; /* Added to handle small screens */
+    gap: 4px; /* Added for wrapped items */
+  }
+
+  .breadcrumb-separator {
+    margin: 0 4px;
+  }
+
+  .breadcrumb-item {
+    margin-right: 4px;
+  }
 }
