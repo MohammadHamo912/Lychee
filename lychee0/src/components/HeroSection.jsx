@@ -4,7 +4,7 @@ import "./../ComponentsCss/HeroSection.css"; // Import the CSS file
 
 const HeroSection = () => {
   return (
-    <div className="hero-container">
+    <div className="hero-container" style={{ maxHeight: "2000px" }}>
       <h1 className="hero-title">Discover Your Beauty Essentials</h1>
       <p className="hero-description">
         Shop premium cosmetics from Ramallah's best beauty shops and pharmacies,

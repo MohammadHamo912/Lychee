@@ -3,19 +3,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px; /* Added padding for better spacing */
 }
 
+/* Spinner Inner */
 .spinner-inner {
-  border: 4px solid;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 1s ease-in-out infinite; /* Default speed, smoother easing */
 }
 
+/* Enhanced Animation */
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .spinner {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .spinner {
+    padding: 6px;
   }
 }

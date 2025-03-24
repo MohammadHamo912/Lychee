@@ -1,33 +1,109 @@
 .pagination {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 8px; /* Tighter gap for modern look */
   padding: 20px 0;
+  max-width: 1200px; /* Matches navbar-container */
+  margin: 0 auto;
 }
 
+/* Base Button Styles */
 .pagination-button {
-  background-color: #fff;
-  border: 1px solid #8b3c5d;
+  background-color: #fff5e1; /* Matches navbar text color */
+  border: 1px solid #8b3c5d; /* Matches mobile-nav-link */
   color: #8b3c5d;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 6px; /* Softer, modern corners */
   cursor: pointer;
-  transition: all 0.3s;
+  font-size: 0.95rem;
+  font-weight: 500; /* Matches breadcrumb-link */
+  transition: all 0.3s ease; /* Matches navbar transitions */
+  min-width: 36px; /* Consistent size */
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Hover State */
 .pagination-button:hover:not(:disabled) {
-  background-color: #b76e79;
-  color: white;
+  background-color: #b76e79; /* Matches navbar hover */
+  color: #fff5e1; /* Matches navbar text */
+  transform: translateY(-2px); /* Subtle lift effect */
+  box-shadow: 0 2px 6px rgba(183, 110, 121, 0.3); /* Hover shadow */
 }
 
+/* Active State */
 .pagination-button.active {
-  background-color: #8b3c5d;
-  color: white;
+  background-color: #670010; /* Matches navbar solid */
+  border-color: #670010;
+  color: #fff5e1; /* Matches navbar text */
+  font-weight: 600; /* Matches breadcrumb-current */
 }
 
+/* Disabled State */
 .pagination-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none; /* Prevents hover effect */
+}
+
+/* Arrow Buttons */
+.pagination-arrow {
+  font-size: 1.1rem;
+  padding: 8px 10px;
+}
+
+/* Ellipsis */
+.pagination-ellipsis {
+  color: #8b3c5d;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .pagination {
+    gap: 6px;
+    padding: 15px 0;
+  }
+
+  .pagination-button {
+    padding: 6px 10px;
+    min-width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+
+  .pagination-arrow {
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    gap: 4px;
+    padding: 10px 0;
+    flex-wrap: wrap; /* Allows wrapping on very small screens */
+  }
+
+  .pagination-button {
+    padding: 5px 8px;
+    min-width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+
+  .pagination-arrow {
+    padding: 5px 6px;
+  }
+
+  .pagination-ellipsis {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {

@@ -1,0 +1,532 @@
+/* Enhanced StorePage.css for Lychee */
+
+/* Store Page Layout */
+.store-page {
+  background-color: #fff5e1; /* Cream background */
+  padding-top: 40px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Store Header Section */
+.store-header {
+  position: relative;
+  background: linear-gradient(
+    to right,
+    rgba(103, 0, 16, 0.9),
+    rgba(139, 60, 93, 0.8)
+  );
+  padding: 60px 0 70px;
+  margin-bottom: 60px;
+  border-radius: 0 0 30px 30px;
+  box-shadow: 0 8px 25px rgba(103, 0, 16, 0.15);
+}
+
+.store-info {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  color: #fff5e1; /* Cream text */
+}
+
+/* Store Logo */
+.store-logo-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #b76e79; /* Rose gold border */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.store-logo-container:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+}
+
+.store-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Store Details */
+.store-details {
+  flex: 1;
+}
+
+.store-name {
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+  color: #fff5e1; /* Cream text */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.store-meta {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.store-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating-stars {
+  color: #ffd700; /* Gold stars */
+  letter-spacing: 2px;
+}
+
+.rating-value {
+  font-weight: 600;
+}
+
+.review-count {
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+.store-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.9;
+}
+
+.location-icon {
+  font-size: 1.2rem;
+}
+
+.store-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 25px;
+  max-width: 90%;
+  opacity: 0.95;
+}
+
+.store-social {
+  display: flex;
+  gap: 15px;
+}
+
+.social-link {
+  padding: 8px 16px;
+  background-color: rgba(255, 245, 225, 0.2); /* Semi-transparent cream */
+  color: #fff5e1; /* Cream text */
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background-color: #b76e79; /* Rose gold */
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Store Content Section */
+.store-content {
+  padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Filters and Sorting */
+.store-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(103, 0, 16, 0.1);
+}
+
+.category-filters h3 {
+  color: #670010; /* Deep berry */
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-btn {
+  padding: 10px 18px;
+  border: none;
+  background-color: transparent;
+  color: #8b3c5d; /* Soft deep berry */
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  color: #670010; /* Deep berry */
+  background-color: rgba(183, 110, 121, 0.1); /* Light rose gold */
+}
+
+.filter-btn.active {
+  background-color: #670010; /* Deep berry */
+  color: #fff5e1; /* Cream */
+  box-shadow: 0 4px 10px rgba(103, 0, 16, 0.2);
+}
+
+.sort-options {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sort-options label {
+  color: #670010; /* Deep berry */
+  font-weight: 600;
+}
+
+.sort-select {
+  padding: 10px 16px;
+  border: 2px solid #b76e79; /* Rose gold */
+  border-radius: 20px;
+  background-color: #fff5e1; /* Cream */
+  color: #670010; /* Deep berry */
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sort-select:focus {
+  border-color: #670010; /* Deep berry */
+  box-shadow: 0 0 8px rgba(103, 0, 16, 0.2);
+}
+
+/* Products Section */
+.products-section {
+  padding: 20px 0 60px;
+}
+
+.products-heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  color: #670010; /* Deep berry */
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.product-count {
+  margin-left: 12px;
+  font-size: 1.1rem;
+  color: #b76e79; /* Rose gold */
+  font-weight: normal;
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 35px;
+}
+
+/* Product Card */
+.product-card {
+  background-color: #fff5e1; /* Cream */
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(103, 0, 16, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(103, 0, 16, 0.15);
+}
+
+.product-image-container {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.08);
+}
+
+/* Product Badges */
+.product-sale-badge,
+.product-new-badge,
+.product-bestseller-badge {
+  position: absolute;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 15px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-sale-badge {
+  top: 15px;
+  right: 15px;
+  background-color: #e74c3c; /* Sale red */
+  color: white;
+}
+
+.product-new-badge {
+  top: 15px;
+  left: 15px;
+  background-color: #2ecc71; /* New green */
+  color: white;
+}
+
+.product-bestseller-badge {
+  top: 50px;
+  left: 15px;
+  background-color: #f39c12; /* Bestseller orange */
+  color: white;
+}
+
+/* Product Content */
+.product-content {
+  padding: 22px;
+}
+
+.product-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #670010; /* Deep berry */
+}
+
+.product-category {
+  font-size: 0.85rem;
+  color: #8b3c5d; /* Soft deep berry */
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.product-rating .rating-stars {
+  color: #f39c12; /* Gold stars */
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.product-rating .rating-value {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.product-rating .review-count {
+  color: #8b3c5d; /* Soft deep berry */
+  font-size: 0.8rem;
+}
+
+.product-price-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.product-price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #670010; /* Deep berry */
+}
+
+.product-original-price {
+  font-size: 1rem;
+  color: #8b3c5d; /* Soft deep berry */
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+.product-add-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: #670010; /* Deep berry */
+  color: #fff5e1; /* Cream */
+  border-radius: 25px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.product-add-btn:hover {
+  background-color: #b76e79; /* Rose gold */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(103, 0, 16, 0.2);
+}
+
+/* Loading State */
+.store-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(103, 0, 16, 0.1);
+  border-top: 5px solid #670010; /* Deep berry */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.store-loading p {
+  color: #670010; /* Deep berry */
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+  .store-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 25px;
+  }
+
+  .store-meta {
+    justify-content: center;
+  }
+
+  .store-description {
+    max-width: 100%;
+  }
+
+  .store-social {
+    justify-content: center;
+  }
+
+  .store-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+  }
+
+  .sort-options {
+    width: 100%;
+  }
+
+  .sort-select {
+    flex: 1;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .store-header {
+    padding: 40px 0 50px;
+  }
+
+  .store-name {
+    font-size: 2.2rem;
+  }
+
+  .products-heading {
+    font-size: 1.5rem;
+  }
+
+  .filter-options {
+    gap: 8px;
+  }
+
+  .filter-btn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .store-logo-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .store-name {
+    font-size: 1.8rem;
+  }
+
+  .store-description {
+    font-size: 1rem;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-image-container {
+    height: 220px;
+  }
+}

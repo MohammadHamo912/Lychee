@@ -1,6 +1,7 @@
 import React from "react";
 import "../ComponentsCss/Pagination.css";
 
+<<<<<<< HEAD
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const visiblePages = 5;
   const startPage = Math.floor((currentPage - 1) / visiblePages) * visiblePages + 1;
@@ -21,15 +22,61 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         Previous
       </button>
 
+=======
+const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+  itemsPerPage = 5, // Controls how many page numbers to show
+  showArrows = true, // Toggle Previous/Next arrows
+}) => {
+  // Calculate the range of pages to display
+  const halfRange = Math.floor(itemsPerPage / 2);
+  let startPage = Math.max(1, currentPage - halfRange);
+  let endPage = Math.min(totalPages, startPage + itemsPerPage - 1);
+
+  // Adjust startPage if endPage is at the limit
+  if (endPage - startPage + 1 < itemsPerPage) {
+    startPage = Math.max(1, endPage - itemsPerPage + 1);
+  }
+
+  const pages = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i
+  );
+
+  return (
+    <div className="pagination">
+      {showArrows && (
+        <button
+          className="pagination-button pagination-arrow"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          aria-label="Previous page"
+        >
+          &larr;
+        </button>
+      )}
+      {startPage > 1 && (
+        <>
+          <button className="pagination-button" onClick={() => onPageChange(1)}>
+            1
+          </button>
+          {startPage > 2 && <span className="pagination-ellipsis">...</span>}
+        </>
+      )}
+>>>>>>> d6198506a55d4d4a043229d79974ee1d5c9731c4
       {pages.map((page) => (
         <button
           key={page}
           className={`pagination-button ${page === currentPage ? "active" : ""}`}
           onClick={() => onPageChange(page)}
+          aria-label={`Page ${page}`}
         >
           {page}
         </button>
       ))}
+<<<<<<< HEAD
 
       <button
         className="pagination-button"
@@ -38,6 +85,31 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       >
         Next
       </button>
+=======
+      {endPage < totalPages && (
+        <>
+          {endPage < totalPages - 1 && (
+            <span className="pagination-ellipsis">...</span>
+          )}
+          <button
+            className="pagination-button"
+            onClick={() => onPageChange(totalPages)}
+          >
+            {totalPages}
+          </button>
+        </>
+      )}
+      {showArrows && (
+        <button
+          className="pagination-button pagination-arrow"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          aria-label="Next page"
+        >
+          &rarr;
+        </button>
+      )}
+>>>>>>> d6198506a55d4d4a043229d79974ee1d5c9731c4
     </div>
   );
 };
