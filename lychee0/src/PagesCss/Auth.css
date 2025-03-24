@@ -7,16 +7,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
+  min-height: 100vh;
+  padding: 20px;
   box-sizing: border-box;
-}
-
-#signUpBox {
-  padding-top: 20px;
-  padding-bottom: 5px;
 }
 
 .auth-box {
@@ -26,7 +19,8 @@ body {
   border-radius: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 380px;
+  width: 100%;
+  max-width: 400px;
   border: 2px solid #d9b6a3;
 }
 
@@ -42,10 +36,9 @@ body {
 }
 
 .auth-box input {
-  width: calc(100% - 20px);
-  max-width: 350px;
+  width: 100%;
   padding: 12px;
-  margin: 10px auto;
+  margin: 10px 0;
   border: 1px solid #d9b6a3;
   border-radius: 8px;
   font-size: 1rem;
@@ -82,10 +75,9 @@ body {
 }
 
 .google-btn {
-  width: 100%;
-  max-width: 355px;
-  padding: 10px;
-  margin: 15px auto 0;
+  width: 92%;
+  padding: 12px;
+  margin: 15px 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,63 +123,51 @@ body {
   text-decoration: underline;
 }
 
+/* Tablet (<=768px) */
 @media (max-width: 768px) {
+  .auth-container {
+    padding: 40px 15px;
+  }
+
   .auth-box {
-    width: 80%;
+    padding: 30px;
+  }
+
+  .auth-box h2 {
+    font-size: 1.7rem;
+    margin-bottom: 18px;
+  }
+
+  .auth-box input,
+  .auth-box button,
+  .google-btn {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile (<=480px) */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 20px 10px;
+  }
+
+  .auth-box {
     padding: 25px;
   }
 
   .auth-box h2 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
+    font-size: 1.5rem;
   }
 
-  .auth-box input {
-    width: 80%;
-    padding: 10px;
-    margin: 8px auto;
-    font-size: 0.95rem;
-  }
-
-  .auth-box button {
-    padding: 10px;
-    font-size: 0.95rem;
-    max-width: 80%;
+  .auth-box input,
+  .auth-box button,
+  .google-btn {
+    padding: 8px;
+    font-size: 0.9rem;
   }
 
   .google-btn {
-    max-width: 80%;
-    padding: 10px;
-  }
-}
-
-@media (max-width: 500px) {
-  .auth-box {
-    width: 80%;
-    padding: 20px;
-  }
-
-  .auth-box h2 {
-    font-size: 1.6rem;
-  }
-
-  .auth-box input {
-    font-size: 0.9rem;
-    padding: 8px;
-    margin: 6px auto;
-    width: 90%;
-  }
-
-  .auth-box button {
-    font-size: 0.9rem;
-    padding: 8px;
-    width: 90%;
-  }
-
-  .google-btn {
-    width: 80%;
-    font-size: 0.9rem;
-    padding: 8px;
     border-radius: 25px;
   }
 }

@@ -1,15 +1,15 @@
 .product-card {
-  background: #fff5e1; /* Cream background */
+  background: #fff5e1;
   border: none;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 6px 15px rgba(103, 0, 16, 0.1);
   transition: all 0.3s ease;
   animation: fadeInUp 0.6s ease-out;
-  height: 400px; /* Fixed height for consistency */
   display: flex;
-  flex-direction: column; /* Stack image and body vertically */
-  justify-content: space-between; /* Distribute space evenly */
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .product-card:hover {
@@ -19,7 +19,7 @@
 
 .product-card-image {
   width: 100%;
-  height: 220px; /* Fixed image height */
+  height: 200px;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
@@ -29,30 +29,30 @@
 }
 
 .product-card-body {
-  padding: 20px;
+  padding: 16px;
   text-align: center;
-  flex-grow: 1; /* Allows body to take remaining space */
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Evenly space content within body */
+  justify-content: space-between;
+  flex-grow: 1;
 }
 
 .product-card-title {
-  font-size: 1.4rem;
-  margin: 0 0 12px;
-  color: #670010; /* Deep Berry */
+  font-size: 1.3rem;
+  margin: 0 0 8px;
+  color: #670010;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  overflow: hidden; /* Prevent overflow */
-  text-overflow: ellipsis; /* Add ellipsis if too long */
-  white-space: nowrap; /* Keep title on one line */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .product-card-shop {
   font-size: 0.9rem;
-  color: #b76e79; /* Rose Gold */
-  margin: 0 0 10px;
+  color: #b76e79;
+  margin-bottom: 8px;
   font-style: italic;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -60,37 +60,36 @@
 }
 
 .product-card-description {
-  font-size: 1rem;
-  color: #8b3c5d; /* Softer Deep Berry */
-  margin: 0 0 15px;
+  font-size: 0.95rem;
+  color: #8b3c5d;
   line-height: 1.4;
+  margin-bottom: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit to 2 lines */
-  -webkit-box-orient: vertical; /* Truncate with ellipsis */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .product-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
 }
 
 .product-card-price {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
-  color: #670010; /* Deep Berry */
+  color: #670010;
 }
 
 .product-card-button {
-  background: #670010; /* Deep Berry */
-  border: 2px solid #b76e79; /* Rose Gold border */
+  background: #670010;
+  border: 2px solid #b76e79;
   border-radius: 50px;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,17 +98,17 @@
 }
 
 .product-card-button:hover {
-  background: #b76e79; /* Rose Gold */
+  background: #b76e79;
   transform: scale(1.1);
   border-color: #670010;
 }
 
 .cart-icon {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
 }
 
-/* Animations */
+/* Animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -121,49 +120,48 @@
   }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .product-card {
-    height: 360px; /* Slightly shorter for tablets */
-  }
-
+/* Responsive */
+@media (max-width: 992px) {
   .product-card-image {
     height: 180px;
   }
+  .product-card-body {
+    padding: 14px;
+  }
+}
 
+@media (max-width: 768px) {
+  .product-card-image {
+    height: 160px;
+  }
   .product-card-title {
-    font-size: 1.2rem;
-  }
-
-  .product-card-description {
-    font-size: 0.9rem;
-  }
-
-  .product-card-price {
     font-size: 1.1rem;
   }
-
-  .product-card-button {
-    width: 45px;
-    height: 45px;
-  }
-
-  .cart-icon {
-    width: 20px;
-    height: 20px;
+  .product-card-description {
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 480px) {
-  .product-card {
-    height: 340px; /* Even shorter for small screens */
-  }
-
   .product-card-image {
-    height: 160px;
+    height: 150px;
   }
-
   .product-card-body {
-    padding: 15px;
+    padding: 12px;
+  }
+  .product-card-title {
+    font-size: 1rem;
+  }
+  .product-card-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .product-card-button {
+    width: 40px;
+    height: 40px;
+  }
+  .cart-icon {
+    width: 20px;
+    height: 20px;
   }
 }

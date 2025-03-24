@@ -1,8 +1,10 @@
 .checkout-form-container {
   max-width: 1000px;
-  margin: 80px auto; /* Matches other components */
+  margin: 80px auto;
+  /* Matches other components */
   padding: 30px;
-  background-color: #fff5e1; /* Cream */
+  background-color: #fff5e1;
+  /* Cream */
   border-radius: 12px;
   box-shadow: 0 6px 15px rgba(103, 0, 16, 0.1);
   animation: fadeIn 0.6s ease-in-out;
@@ -23,7 +25,8 @@
   left: 15%;
   width: 70%;
   height: 3px;
-  background-color: #b76e79; /* Rose Gold */
+  background-color: #b76e79;
+  /* Rose Gold */
   opacity: 0.3;
   z-index: 1;
 }
@@ -44,9 +47,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff; /* White */
-  color: #8b3c5d; /* Softer Deep Berry */
-  border: 2px solid #b76e79; /* Rose Gold */
+  background-color: #fff;
+  /* White */
+  color: #8b3c5d;
+  /* Softer Deep Berry */
+  border: 2px solid #b76e79;
+  /* Rose Gold */
   border-radius: 50%;
   margin-bottom: 10px;
   font-weight: 700;
@@ -56,8 +62,10 @@
 
 .step.active .step-number,
 .step.completed .step-number {
-  background-color: #670010; /* Deep Berry */
-  color: #fff5e1; /* Cream */
+  background-color: #670010;
+  /* Deep Berry */
+  color: #fff5e1;
+  /* Cream */
   border-color: #670010;
 }
 
@@ -69,25 +77,29 @@
 
 .step-title {
   font-size: 1rem;
-  color: #8b3c5d; /* Softer Deep Berry */
+  color: #8b3c5d;
+  /* Softer Deep Berry */
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .step.active .step-title {
-  color: #670010; /* Deep Berry */
+  color: #670010;
+  /* Deep Berry */
 }
 
 /* Form Styling */
 .checkout-form h3 {
-  color: #670010; /* Deep Berry */
+  color: #670010;
+  /* Deep Berry */
   margin: 40px 0 20px;
   font-size: 1.5rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  border-bottom: 2px solid #b76e79; /* Rose Gold */
+  border-bottom: 2px solid #b76e79;
+  /* Rose Gold */
   padding-bottom: 10px;
 }
 
@@ -100,6 +112,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -121,7 +134,8 @@ label {
   display: block;
   margin-bottom: 10px;
   font-size: 1rem;
-  color: #670010; /* Deep Berry */
+  color: #670010;
+  /* Deep Berry */
   font-weight: 600;
 }
 
@@ -130,11 +144,14 @@ select,
 textarea {
   width: 100%;
   padding: 14px 15px;
-  border: 2px solid #b76e79; /* Rose Gold */
+  border: 2px solid #b76e79;
+  /* Rose Gold */
   border-radius: 8px;
   font-size: 1rem;
-  background-color: #fff; /* White */
-  color: #670010; /* Deep Berry */
+  background-color: #fff;
+  /* White */
+  color: #670010;
+  /* Deep Berry */
   transition: all 0.3s ease;
 }
 
@@ -142,20 +159,23 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #670010; /* Deep Berry */
+  border-color: #670010;
+  /* Deep Berry */
   box-shadow: 0 0 5px rgba(103, 0, 16, 0.3);
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: #8b3c5d; /* Softer Deep Berry */
+  color: #8b3c5d;
+  /* Softer Deep Berry */
   opacity: 0.7;
 }
 
 input.error,
 select.error,
 textarea.error {
-  border-color: #e74c3c; /* Red for errors */
+  border-color: #e74c3c;
+  /* Red for errors */
 }
 
 .error-message {
@@ -174,23 +194,27 @@ textarea.error {
 
 .checkbox-group input {
   margin-top: 3px;
-  accent-color: #670010; /* Deep Berry */
+  accent-color: #670010;
+  /* Deep Berry */
 }
 
 .checkbox-group label {
   margin-bottom: 0;
   font-weight: 500;
-  color: #8b3c5d; /* Softer Deep Berry */
+  color: #8b3c5d;
+  /* Softer Deep Berry */
 }
 
 .checkbox-group a {
-  color: #b76e79; /* Rose Gold */
+  color: #b76e79;
+  /* Rose Gold */
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .checkbox-group a:hover {
-  color: #670010; /* Deep Berry */
+  color: #670010;
+  /* Deep Berry */
   text-decoration: underline;
 }
 
@@ -212,20 +236,24 @@ textarea {
   align-items: center;
   gap: 15px;
   padding: 20px;
-  border: 2px solid #b76e79; /* Rose Gold */
+  border: 2px solid #b76e79;
+  /* Rose Gold */
   border-radius: 8px;
   cursor: pointer;
-  background-color: #fff; /* White */
+  background-color: #fff;
+  /* White */
   transition: all 0.3s ease;
 }
 
 .payment-method:hover {
-  border-color: #670010; /* Deep Berry */
+  border-color: #670010;
+  /* Deep Berry */
   box-shadow: 0 4px 10px rgba(103, 0, 16, 0.1);
 }
 
 .payment-method.selected {
-  border-color: #670010; /* Deep Berry */
+  border-color: #670010;
+  /* Deep Berry */
   background-color: rgba(103, 0, 16, 0.05);
 }
 
@@ -234,7 +262,8 @@ textarea {
   font-weight: 600;
   cursor: pointer;
   flex-grow: 1;
-  color: #670010; /* Deep Berry */
+  color: #670010;
+  /* Deep Berry */
 }
 
 .payment-icons {
@@ -243,25 +272,30 @@ textarea {
 }
 
 .payment-icon {
-  color: #8b3c5d; /* Softer Deep Berry */
+  color: #8b3c5d;
+  /* Softer Deep Berry */
   font-size: 1rem;
-  background-color: #fff5e1; /* Cream */
+  background-color: #fff5e1;
+  /* Cream */
   padding: 5px 10px;
   border-radius: 5px;
 }
 
 /* Credit Card Form */
 .credit-card-form {
-  border: 2px solid #b76e79; /* Rose Gold */
+  border: 2px solid #b76e79;
+  /* Rose Gold */
   border-radius: 8px;
   padding: 25px;
   margin-bottom: 30px;
-  background-color: #fff; /* White */
+  background-color: #fff;
+  /* White */
 }
 
 /* Order Summary */
 .order-summary {
-  background-color: #fff; /* White */
+  background-color: #fff;
+  /* White */
   padding: 25px;
   border-radius: 12px;
   margin: 40px 0;
@@ -273,14 +307,16 @@ textarea {
   justify-content: space-between;
   margin-bottom: 15px;
   font-size: 1.1rem;
-  color: #670010; /* Deep Berry */
+  color: #670010;
+  /* Deep Berry */
 }
 
 .summary-row.total {
   font-weight: 700;
   margin-top: 15px;
   padding-top: 15px;
-  border-top: 2px solid #b76e79; /* Rose Gold */
+  border-top: 2px solid #b76e79;
+  /* Rose Gold */
   font-size: 1.2rem;
 }
 
@@ -295,7 +331,8 @@ textarea {
 .primary-button,
 .secondary-button {
   padding: 14px 30px;
-  border-radius: 25px; /* Matches other components */
+  border-radius: 25px;
+  /* Matches other components */
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -306,26 +343,35 @@ textarea {
 }
 
 .primary-button {
-  background-color: #670010; /* Deep Berry */
-  color: #fff5e1; /* Cream */
-  border: 2px solid #b76e79; /* Rose Gold */
+  background-color: #670010;
+  /* Deep Berry */
+  color: #fff5e1;
+  /* Cream */
+  border: 2px solid #b76e79;
+  /* Rose Gold */
 }
 
 .primary-button:hover {
-  background-color: #b76e79; /* Rose Gold */
-  border-color: #670010; /* Deep Berry */
+  background-color: #b76e79;
+  /* Rose Gold */
+  border-color: #670010;
+  /* Deep Berry */
   transform: scale(1.05);
 }
 
 .secondary-button {
   background-color: transparent;
-  color: #670010; /* Deep Berry */
-  border: 2px solid #670010; /* Deep Berry */
+  color: #670010;
+  /* Deep Berry */
+  border: 2px solid #670010;
+  /* Deep Berry */
 }
 
 .secondary-button:hover {
-  background-color: #670010; /* Deep Berry */
-  color: #fff5e1; /* Cream */
+  background-color: #670010;
+  /* Deep Berry */
+  color: #fff5e1;
+  /* Cream */
 }
 
 /* Responsive Styles */
@@ -356,6 +402,10 @@ textarea {
 
   .form-buttons {
     flex-direction: column;
+  }
+
+  .secondary-button {
+    width: 83%;
   }
 }
 

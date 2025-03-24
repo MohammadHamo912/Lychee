@@ -1,30 +1,45 @@
-/* Main layout: two columns – profile form on the left and extra info on the right */
 .profile-page-layout {
     display: flex;
-    gap: 30px;
-    padding: 50px;
+    gap: 40px;
+    padding: 60px;
     background: #FFF5E1;
     min-height: 100vh;
     justify-content: center;
     align-items: flex-start;
     box-sizing: border-box;
+    flex-wrap: wrap;
+    width: 90%;
 }
 
-/* Left Column – Profile Form */
-.profile-box {
-    background: rgba(255, 197, 197, 0.3);
-    padding: 40px;
-    border-radius: 12px;
+/* Shared box styling */
+.profile-box,
+.spending-box,
+.orders-history-box {
+    background: rgba(255, 197, 197, 0.25);
     border: 2px solid #D9B6A3;
-    width: 400px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.profile-box:hover,
+.spending-box:hover,
+.orders-history-box:hover {
+    transform: translateY(-4px);
+}
+
+/* Left - Profile */
+.profile-box {
+    width: 420px;
+    padding: 40px;
+    flex-shrink: 0;
 }
 
 .profile-box h1 {
     color: #8B3C5D;
-    font-size: 1.8rem;
+    font-size: 2rem;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .profile-field {
@@ -40,105 +55,105 @@
 }
 
 .profile-field input {
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #D9B6A3;
     border-radius: 6px;
     background: #FFF5E1;
     color: #8B3C5D;
 }
 
-.profile-field input:disabled {
-    background: #f7e9e9;
-    color: #A9A9A9;
-}
-
 .profile-btn {
-    width: 100%;
+    margin-top: 15px;
     padding: 12px;
+    width: 100%;
     background: #8B3C5D;
-    color: white;
+    color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s ease;
-    margin-top: 10px;
+    transition: all 0.3s;
 }
 
 .profile-btn:hover {
     background: #B76E79;
 }
 
-/* Right Column – Extra Information Boxes */
+/* Right Column as a deck */
 .profile-extra-box {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    width: 350px;
+    gap: 25px;
+    flex: 1;
 }
 
-/* Spending Box */
-.spending-box {
-    background: rgba(255, 197, 197, 0.3);
-    padding: 30px;
-    border-radius: 12px;
-    border: 2px solid #D9B6A3;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+/* Cards */
+.spending-box,
+.orders-history-box {
+    padding: 25px 30px;
 }
 
-.spending-box h2 {
+.spending-box h2,
+.orders-history-box h2 {
     color: #8B3C5D;
-    font-size: 1.4rem;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .spending-box p {
-    font-size: 1.6rem;
-    font-weight: bold;
+    font-size: 1.7rem;
+    font-weight: 700;
     color: #B76E79;
 }
 
-/* Orders History Box */
-.orders-history-box {
-    background: rgba(255, 197, 197, 0.3);
-    padding: 30px;
-    border-radius: 12px;
-    border: 2px solid #D9B6A3;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.orders-history-box h2 {
-    color: #8B3C5D;
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
+/* Orders list */
 .orders-history-box ul {
-    list-style: none;
     padding: 0;
     margin: 0;
+    list-style: none;
 }
 
 .orders-history-box li {
-    background: rgba(255, 197, 197, 0.2);
-    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.5);
     padding: 10px;
-    border-radius: 5px;
-    color: #8B3C5D;
+    border-radius: 8px;
+    margin-bottom: 10px;
     font-size: 0.95rem;
+    color: #8B3C5D;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
+/* Tablet */
+@media (max-width: 992px) {
     .profile-page-layout {
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        justify-content: center;
+        padding: 40px 20px;
     }
 
-    .profile-box,
+    .profile-box {
+        max-width: 300px;
+    }
+
     .profile-extra-box {
+        max-width: 300px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .spending-box,
+    .orders-history-box {
+        max-width: 300px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .profile-extra-box {
+        flex-direction: column;
+    }
+
+    .spending-box,
+    .orders-history-box {
         width: 100%;
     }
 }

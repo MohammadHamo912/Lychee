@@ -25,6 +25,8 @@ import HeroSection from "./components/HeroSection.jsx"; // DONE
 import CategoryGrid from "./components/CategoryGrid"; // DONE
 import TrendingProducts from "./components/TrendingProducts"; // DONE
 import StoreHighlights from "./components/StoreHighlights"; // DONE
+import ProfilePage from "./components/ProfilePage.jsx";
+import OrderHistory from "./components/OrderHistory.jsx";
 import Breadcrumbs from "./components/Breadcrumbs";
 import Modal from "./components/Modal.jsx";
 import Toast from "./components/Toast";
@@ -65,7 +67,8 @@ function App() {
         <Route path="/discountmanagement" element={<DiscountManagement />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/storepage" element={<StorePage />} />
-
+        <Route path="/profilepage" element={<ProfilePage />} />
+        <Route path="/orderhistory" element={<OrderHistory />} />
         <Route
           path="/productdetails"
           element={
