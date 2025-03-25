@@ -1,7 +1,14 @@
 // components/Sidebar.jsx
 import React from "react";
 import "../ComponentsCss/Sidebar.css";
-const Sidebar = ({ filters, handleFilterChange, clearFilters }) => {
+import dummyCategoriesWithCounts from "../Data/dummyCategories";
+
+const Sidebar = ({
+  filters = { categories: [], brands: [], priceRange: "" },
+  handleFilterChange,
+  clearFilters,
+  categories = [], // Add a default empty array
+}) => {
   const categoryOptions = [
     "Face Moisturizers",
     "Night Creams",

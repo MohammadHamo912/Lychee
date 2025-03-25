@@ -37,9 +37,9 @@ import Pagination from "./components/Pagination";
 import DiscountManagement from "./components/DiscountManagement";
 import PasswordReset from "./components/PasswordReset";
 import ProductDetails from "./components/ProductDetails.jsx";
-
+import Sidebar from "./components/Sidebar.jsx";
 import StorePage from "./pages/StorePage.jsx";
-
+import SearchBar from "./components/SearchBar.jsx"; // Keep SearchBar separate
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
@@ -57,7 +57,7 @@ function App() {
     <div>
       <Routes>
         <Route path="/dummyhomepage" element={<DummyHomePage />} />
-        <Route path="/" element={<DummyHomePage />} />
+        <Route path="" element={<DummyHomePage />} />
         <Route path="/product/:id" element={<ProductDetailsPage />} />{" "}
         {/*to test this type http://localhost:3000/product/{the id of the component } 
         example:
@@ -65,6 +65,7 @@ function App() {
         */}
         <Route path="/category/:category" element={<ShopByCategory />} />
         <Route path="/storepage" element={<StorePage />} />
+        <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/navbar" element={<NavBar />} />

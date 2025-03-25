@@ -24,7 +24,9 @@ const ShopByCategoryPage = () => {
 
   // Find the current category from dummyCategories
   const currentCategory =
-    dummyCategories.find((cat) => cat.name === category) || dummyCategories[0]; // Fallback to first category
+    dummyCategories.find(
+      (cat) => cat.name.toLowerCase() === category?.toLowerCase()
+    ) || dummyCategories[0]; // Fallback to first category
 
   const dummyProductsMapped = dummyProducts.map((product) => ({
     id: product.id,
@@ -45,13 +47,15 @@ const ShopByCategoryPage = () => {
     if (category) {
       filtered = filtered.filter((product) =>
         currentCategory.subcategories.some((subcat) =>
-          product.name.includes(subcat)
+          product.name.includes(subcat.toLowerCase())
         )
       );
     }
     if (filters.categories.length > 0) {
       filtered = filtered.filter((product) =>
-        filters.categories.some((cat) => product.name.includes(cat))
+        filters.categories.some((cat) =>
+          product.name.includes(cat.toLowerCase())
+        )
       );
     }
     if (filters.brands.length > 0) {
@@ -90,6 +94,7 @@ const ShopByCategoryPage = () => {
       default:
         return sorted;
     }
+    return products;
   };
 
   const filteredAndSortedProducts = useMemo(() => {
@@ -141,7 +146,7 @@ const ShopByCategoryPage = () => {
             filters={filters}
             handleFilterChange={handleFilterChange}
             clearFilters={clearFilters}
-            categories={currentCategory.subcategories} // Pass subcategories to Sidebar
+            categories={currentCategory.subcategories || []} // Pass subcategories to Sidebar
           />
           <div className="products-section">
             <div className="products-header">
@@ -170,7 +175,10 @@ const ShopByCategoryPage = () => {
               {currentProducts.length > 0 ? (
                 currentProducts.map((product) => (
                   <Link key={product.id} to={`/product/${product.id}`}>
-                    <ProductCard product={product} />
+                    <ProductCard
+                      product={product}
+                      onAddToCart={() => console.log("Add to cart")}
+                    />
                   </Link>
                 ))
               ) : (
