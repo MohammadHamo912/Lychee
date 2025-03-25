@@ -45,7 +45,7 @@ const StoreHighlights = () => {
         </div>
         <div className="view-all-container">
           <Link to="/shops" className="view-all-link">
-            View All Stores
+            {"\0\0 View All Stores \0\0"}
           </Link>
         </div>
       </div>
