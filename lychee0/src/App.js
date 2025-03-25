@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import DummyHomePage from "./DummyFiles/DummyHomePage";
 import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
+import ProductDetailsPage from "./pages/ProductDetailsPage.jsx";
 
 // Components
 import NavBar from "./components/NavBar"; // DONE
@@ -35,7 +36,7 @@ import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
 import DiscountManagement from "./components/DiscountManagement";
 import PasswordReset from "./components/PasswordReset";
-import ProductDetails from "./pages/ProductDetails.jsx";
+import ProductDetails from "./components/ProductDetails.jsx";
 
 import StorePage from "./pages/StorePage.jsx";
 
@@ -44,7 +45,7 @@ import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
 import { dummyOrderData } from "./Data/dummyOrderData.js";
 import { dummyCoreData } from "./Data/dummyCoreData.js";
-
+import dummyProducts from "./Data/dummyProducts.js";
 function App() {
   /*dummy data for shopping cart */
   const { cartItems, updateQuantity, removeItem, applyPromo } = useCart();
@@ -55,8 +56,15 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="/shopbycategorypage" element={<ShopByCategory />} />
-
+        <Route path="/dummyhomepage" element={<DummyHomePage />} />
+        <Route path="/" element={<DummyHomePage />} />
+        <Route path="/product/:id" element={<ProductDetailsPage />} />{" "}
+        {/*to test this type http://localhost:3000/product/{the id of the component } 
+        example:
+        http://localhost:3000/product/1
+        */}
+        <Route path="/category/:category" element={<ShopByCategory />} />
+        <Route path="/storepage" element={<StorePage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/navbar" element={<NavBar />} />
@@ -69,7 +77,6 @@ function App() {
         <Route path="/storehighlights" element={<StoreHighlights />} />
         <Route path="/discountmanagement" element={<DiscountManagement />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
-        <Route path="/storepage" element={<StorePage />} />
         <Route path="/profilepage" element={<ProfilePage />} />
         <Route path="/orderhistory" element={<OrderHistory />} />
         <Route
@@ -87,19 +94,11 @@ function App() {
             />
           }
         />
-
         <Route
           path="/productcard"
           element={
             <ProductCard
-              product={{
-                id: 1,
-                name: "Lip Gloss",
-                imageUrl: lipgloss,
-                description: "This is a descreption",
-                price: 9.99,
-                shop_name: "",
-              }}
+              product={dummyProducts[0]}
               onAddToCart={(p) => console.log("Add to cart:", p)}
             />
           }
@@ -115,7 +114,6 @@ function App() {
             />
           }
         />
-
         <Route
           path="/shoppingcart"
           element={
@@ -127,7 +125,6 @@ function App() {
             />
           }
         />
-
         <Route
           path="/checkout"
           element={
@@ -137,7 +134,6 @@ function App() {
             />
           }
         />
-
         <Route
           path="/ordersummary"
           element={
@@ -170,7 +166,6 @@ function App() {
             />
           }
         />
-
         <Route
           path="/breadcrumbs"
           element={<Breadcrumbs paths={dummyCoreData.breadcrumbPaths} />}
@@ -209,8 +204,6 @@ function App() {
             />
           }
         />
-
-        <Route path="/dummyhomepage" element={<DummyHomePage />} />
       </Routes>
     </div>
   );

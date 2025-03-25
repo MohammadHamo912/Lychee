@@ -1,140 +1,71 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "../ComponentsCss/SearchBar.css";
+import React from "react";
 
-const SearchBar = ({
-  placeholder = "Search products...",
-  suggestions = [],
-}) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isActive, setIsActive] = useState(false);
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const searchContainerRef = useRef(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        searchContainerRef.current &&
-        !searchContainerRef.current.contains(event.target)
-      ) {
-        setShowSuggestions(false);
-        if (!searchTerm) {
-          setIsActive(false);
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [searchTerm]);
-
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setFilteredSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-
-    const filtered = suggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setFilteredSuggestions(filtered);
-    setShowSuggestions(true);
-  }, [searchTerm, suggestions]);
-
-  const handleFocus = () => {
-    setIsActive(true);
-    if (searchTerm.trim() !== "") {
-      setShowSuggestions(true);
-    }
-  };
-
-  const handleChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
-      setShowSuggestions(false);
-    }
-  };
-
-  const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
-    setShowSuggestions(false);
-    navigate(`/search?query=${encodeURIComponent(suggestion)}`);
-  };
-
-  const handleClearSearch = () => {
-    setSearchTerm("");
-    setShowSuggestions(false);
-  };
+const Sidebar = ({ filters, handleFilterChange, clearFilters, categories }) => {
+  const brands = [
+    "Awesome Store",
+    "Fashion Hub",
+    "Glow Essentials",
+    "Luxe Locks",
+    "Scent Haven",
+    "Beauty Boutique",
+  ];
+  const priceRanges = ["Under $25", "$25 - $50", "$50 - $100", "Over $100"];
 
   return (
-    <div
-      className={`search-container ${isActive ? "active" : ""}`}
-      ref={searchContainerRef}
-    >
-      <form onSubmit={handleSubmit} className="search-form">
-        <input
-          type="text"
-          className="search-input"
-          placeholder={placeholder}
-          value={searchTerm}
-          onChange={handleChange}
-          onFocus={handleFocus}
-        />
+    <div className="sidebar">
+      <h3>Filters</h3>
+      <button onClick={clearFilters}>Clear All</button>
 
-        {searchTerm && (
-          <button
-            type="button"
-            className="clear-button"
-            onClick={handleClearSearch}
-          >
-            ×
-          </button>
-        )}
+      <div className="filter-section">
+        <h4>Categories</h4>
+        {categories.map((cat) => (
+          <label key={cat}>
+            <input
+              type="checkbox"
+              checked={filters.categories.includes(cat)}
+              onChange={(e) =>
+                handleFilterChange("categories", cat, e.target.checked)
+              }
+            />
+            {cat}
+          </label>
+        ))}
+      </div>
 
-        <button type="submit" className="search-button">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-      </form>
+      <div className="filter-section">
+        <h4>Brands</h4>
+        {brands.map((brand) => (
+          <label key={brand}>
+            <input
+              type="checkbox"
+              checked={filters.brands.includes(brand)}
+              onChange={(e) =>
+                handleFilterChange("brands", brand, e.target.checked)
+              }
+            />
+            {brand}
+          </label>
+        ))}
+      </div>
 
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <ul className="suggestions-list">
-          {filteredSuggestions.map((suggestion, index) => (
-            <li
-              key={index}
-              className="suggestion-item"
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion}
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="filter-section">
+        <h4>Price Range</h4>
+        {priceRanges.map((range) => (
+          <label key={range}>
+            <input
+              type="radio"
+              name="priceRange"
+              checked={filters.priceRange === range}
+              onChange={(e) =>
+                handleFilterChange("priceRange", range, e.target.checked)
+              }
+            />
+            {range}
+          </label>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default SearchBar;
+export default Sidebar;

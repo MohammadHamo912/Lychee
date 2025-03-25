@@ -1,52 +1,54 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useMemo } from "react";
+import { Link, useParams } from "react-router-dom";
 import "./../PagesCss/ShopByCategoryPage.css";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import Breadcrumbs from "../components/Breadcrumbs";
 import Pagination from "../components/Pagination";
-import Sidebar from "../components/Sidebar"; // Import the new component
+import Sidebar from "../components/Sidebar";
 import dummyProducts from "../Data/dummyProducts";
+import dummyCategories from "../Data/dummyCategories"; // New import
 import { dummyCoreData } from "../Data/dummyCoreData";
-import haircarePlaceholder from "../images/placeholder-haircare.jpg";
-import skincarePlaceholder from "../images/placeholder-skincare.png";
-import makeupPlaceholder from "../images/placeholder-makeup.jpg";
-
-const categoryImages = {
-  skincare: skincarePlaceholder,
-  haircare: haircarePlaceholder,
-  makeup: makeupPlaceholder,
-};
-const getImageSrc = (category) =>
-  categoryImages[category] || haircarePlaceholder;
 
 const ShopByCategoryPage = () => {
   const { category } = useParams();
   const [sortOption, setSortOption] = useState("most-popular");
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
-    categories: ["Face Moisturizers"],
+    categories: [],
     brands: [],
     priceRange: "",
   });
   const productsPerPage = 12;
+
+  // Find the current category from dummyCategories
+  const currentCategory =
+    dummyCategories.find((cat) => cat.name === category) || dummyCategories[0]; // Fallback to first category
 
   const dummyProductsMapped = dummyProducts.map((product) => ({
     id: product.id,
     brand: product.shop_name,
     name: product.name,
     price: product.price,
-    oldPrice: null,
+    oldPrice: product.oldPrice || null,
     image: product.imageUrl,
-    rating: 4,
-    reviews: Math.floor(Math.random() * 100) + 20,
-    discount: null,
-    isNew: product.id % 2 === 0,
+    rating: product.rating || 4,
+    reviews: product.reviews || Math.floor(Math.random() * 100) + 20,
+    discount: product.discount || null,
+    isNew: product.isNew || product.id % 2 === 0,
   }));
 
   const applyFilters = (products, filters) => {
     let filtered = [...products];
+    // Filter by category if URL specifies one
+    if (category) {
+      filtered = filtered.filter((product) =>
+        currentCategory.subcategories.some((subcat) =>
+          product.name.includes(subcat)
+        )
+      );
+    }
     if (filters.categories.length > 0) {
       filtered = filtered.filter((product) =>
         filters.categories.some((cat) => product.name.includes(cat))
@@ -93,7 +95,7 @@ const ShopByCategoryPage = () => {
   const filteredAndSortedProducts = useMemo(() => {
     const filtered = applyFilters(dummyProductsMapped, filters);
     return sortProducts(filtered, sortOption);
-  }, [filters, sortOption]);
+  }, [filters, sortOption, category]);
 
   const currentProducts = filteredAndSortedProducts.slice(
     (currentPage - 1) * productsPerPage,
@@ -118,11 +120,6 @@ const ShopByCategoryPage = () => {
     setFilters({ categories: [], brands: [], priceRange: "" });
   };
 
-  const categoryTitle = category
-    ? category.charAt(0).toUpperCase() + category.slice(1)
-    : "Moisturizers";
-  const categoryDescription = `Discover our collection of premium ${categoryTitle.toLowerCase()} designed to nourish and hydrate your skin.`;
-
   return (
     <div className="shop-by-category">
       <NavBar />
@@ -131,11 +128,11 @@ const ShopByCategoryPage = () => {
           <Breadcrumbs paths={dummyCoreData.breadcrumbPaths} />
         </div>
         <div className="category-header">
-          <img src={getImageSrc(category)} alt={categoryTitle} />
+          <img src={currentCategory.image} alt={currentCategory.displayName} />
           <div className="header-overlay">
             <div className="header-text">
-              <h1>{categoryTitle}</h1>
-              <p>{categoryDescription}</p>
+              <h1>{currentCategory.displayName}</h1>
+              <p>{currentCategory.description}</p>
             </div>
           </div>
         </div>
@@ -144,6 +141,7 @@ const ShopByCategoryPage = () => {
             filters={filters}
             handleFilterChange={handleFilterChange}
             clearFilters={clearFilters}
+            categories={currentCategory.subcategories} // Pass subcategories to Sidebar
           />
           <div className="products-section">
             <div className="products-header">
@@ -171,7 +169,9 @@ const ShopByCategoryPage = () => {
             <div className="products-grid">
               {currentProducts.length > 0 ? (
                 currentProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <Link key={product.id} to={`/product/${product.id}`}>
+                    <ProductCard product={product} />
+                  </Link>
                 ))
               ) : (
                 <p>No products match your filters.</p>

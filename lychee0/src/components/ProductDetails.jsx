@@ -1,6 +1,6 @@
 // src/components/ProductDetails.jsx
 import React, { useState } from "react";
-import "../PagesCss/ProductDetails.css";
+import "../ComponentsCss/ProductDetails.css";
 import productImg from "../images/mascara.png"; // Default image
 
 const ProductDetails = ({ product = {} }) => {
