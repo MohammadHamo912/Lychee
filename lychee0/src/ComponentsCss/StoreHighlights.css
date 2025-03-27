@@ -46,7 +46,7 @@
   border-radius: 4px;
 }
 
-.store-container>* {
+.store-container > * {
   flex: 0 0 auto;
   scroll-snap-align: center;
 }
@@ -69,6 +69,7 @@
 
 /* CTA Button */
 .view-all-container {
+  color: white;
   text-align: center;
   margin-top: 40px;
 }

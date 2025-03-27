@@ -36,7 +36,7 @@ const TrendingProducts = () => {
       <div className="trending-header">
         <h2 className="trending-title">Trending Now</h2>
         <Link to="/shop" className="view-all-link">
-          View All
+          {"\0\0 VIEW ALL \0\0 "}
         </Link>
       </div>
       <div className="trending-container">

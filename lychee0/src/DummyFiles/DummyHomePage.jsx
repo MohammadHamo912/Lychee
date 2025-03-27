@@ -10,7 +10,8 @@ import TrendingProducts from "./../components/TrendingProducts";
 import StoreHighlights from "./../components/StoreHighlights";
 import "../ComponentsCss/HomePage.css"; // New CSS file
 import "../ComponentsCss/FeaturedProducts.css"; // Existing CSS for Featured Products
-
+import dummyCategoriesWithCounts from "../Data/dummyCategories";
+import dummyProducts from "../Data/dummyProducts";
 // Mock data for the carousel
 const carouselSlides = [
   {
@@ -52,6 +53,9 @@ const searchSuggestions = [
 ];
 
 const HomePage = () => {
+  const products = dummyProducts || [];
+  const categories = dummyCategoriesWithCounts || [];
+
   return (
     <div className="home-page">
       <NavBar />

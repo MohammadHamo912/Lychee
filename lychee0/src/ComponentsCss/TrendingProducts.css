@@ -6,10 +6,12 @@
 }
 
 .trending-header {
+  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
+  padding: 20px 0;
 }
 
 .trending-title {
@@ -96,11 +98,10 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
-  
+
   .trending-container::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
   }
-  
 
   .trending-container .product-card {
     flex: 0 0 auto;
