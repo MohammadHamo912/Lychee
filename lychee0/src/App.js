@@ -35,16 +35,14 @@ import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
 import DiscountManagement from "./components/DiscountManagement";
-import PasswordReset from "./pages/PasswordReset.jsx";
-import ProductDetails from "./pages/ProductDetails.jsx";
 import NotFoundPage from "./pages/NotFound.jsx";
-import StorePage from "./pages/StorePage.jsx";
+import StorePage from "./pages/StorePage";
 import ContactAndSupport from "./pages/ContactAndSupport.jsx";
 import FAQ from "./pages/FAQ.jsx";
-import PasswordReset from "./components/PasswordReset";
-import ProductDetails from "./components/ProductDetails.jsx";
+import PasswordReset from "./pages/PasswordReset";
+import ProductDetails from "./components/ProductDetails";
 import Sidebar from "./components/Sidebar.jsx";
-import StorePage from "./pages/StorePage.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 import SearchBar from "./components/SearchBar.jsx"; // Keep SearchBar separate
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
