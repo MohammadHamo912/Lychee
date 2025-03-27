@@ -33,16 +33,18 @@ import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
 import DiscountManagement from "./components/DiscountManagement";
-import PasswordReset from "./components/PasswordReset";
+import PasswordReset from "./pages/PasswordReset.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
-
+import NotFoundPage from "./pages/NotFound.jsx";
 import StorePage from "./pages/StorePage.jsx";
-
+import ContactAndSupport from "./pages/ContactAndSupport.jsx";
+import FAQ from "./pages/FAQ.jsx";
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
 import { dummyOrderData } from "./Data/dummyOrderData.js";
 import { dummyCoreData } from "./Data/dummyCoreData.js";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   /*dummy data for shopping cart */
@@ -69,6 +71,10 @@ function App() {
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/profilepage" element={<ProfilePage />} />
         <Route path="/orderhistory" element={<OrderHistory />} />
+        <Route path="/pagenotfound" element={<NotFoundPage />} />
+        <Route path="/contactandsupport" element={<ContactAndSupport />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route
           path="/productdetails"
           element={

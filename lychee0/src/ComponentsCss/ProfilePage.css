@@ -120,40 +120,75 @@
     color: #8B3C5D;
 }
 
-/* Tablet */
+/* Tablet: ≤ 992px */
 @media (max-width: 992px) {
     .profile-page-layout {
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         padding: 40px 20px;
     }
 
     .profile-box {
-        max-width: 300px;
+        width: 100%;
+        max-width: 420px;
+        padding: 30px;
     }
 
     .profile-extra-box {
-        max-width: 300px;
+        width: 100%;
         flex-direction: row;
         flex-wrap: wrap;
         gap: 20px;
-    }
-
-    .spending-box,
-    .orders-history-box {
-        max-width: 300px;
-    }
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-    .profile-extra-box {
-        flex-direction: column;
+        justify-content: center;
     }
 
     .spending-box,
     .orders-history-box {
         width: 100%;
+        max-width: 400px;
+        padding: 20px 24px;
+    }
+
+    .profile-field input {
+        width: 92%;
+    }
+}
+
+/* Mobile: ≤ 600px */
+@media (max-width: 600px) {
+    .profile-field input {
+        width: 92%;
+    }
+
+    .profile-page-layout {
+        padding: 30px 15px;
+    }
+
+    .profile-box {
+        padding: 25px;
+        max-width: 100%;
+    }
+
+    .profile-extra-box {
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        margin-right: 10%;
+    }
+
+    .spending-box,
+    .orders-history-box {
+        width: 100%;
+        padding: 18px;
+    }
+
+    .profile-box h1 {
+        font-size: 1.5rem;
+    }
+
+    .profile-btn {
+        font-size: 1rem;
+        padding: 10px;
     }
 }

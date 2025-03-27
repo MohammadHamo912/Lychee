@@ -5,7 +5,7 @@ import "../ComponentsCss/NavBar.css";
 function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSolid, setIsSolid] = useState(false);
-  const isLoggedIn = false;
+  const isLoggedIn = true;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -58,7 +58,7 @@ function NavBar() {
 
         <div className="auth-section">
           {isLoggedIn ? (
-            <Link to="/profile" className="nav-link profile-link">
+            <Link to="/dashboard" className="nav-link profile-link">
               <span className="profile-icon">P</span> Profile
             </Link>
           ) : (

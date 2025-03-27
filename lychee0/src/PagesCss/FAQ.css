@@ -1,0 +1,125 @@
+.faq-container {
+    max-width: 800px;
+    margin: 100px auto 40px;
+    padding: 40px 30px;
+    border-radius: 24px;
+    color: #670010;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.faq-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #8B3C5D;
+    font-size: 28px;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.faq-item {
+    background-color: #FFF5F7;
+    border: 1px solid #E3C6CB;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.faq-item:hover {
+    box-shadow: 0 4px 12px rgba(183, 110, 121, 0.15);
+    transform: translateY(-3px);
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-question h4 {
+    color: #8B3C5D;
+    font-size: 18px;
+    margin: 0;
+}
+
+.faq-icon {
+    color: #B76E79;
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.faq-answer {
+    margin-top: 15px;
+    font-size: 15px;
+    color: #A17A85;
+    line-height: 1.5;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .faq-container {
+        padding: 30px 20px;
+        margin: 80px 15px 30px;
+    }
+
+    .faq-container h2 {
+        font-size: 24px;
+    }
+
+    .faq-question h4 {
+        font-size: 16px;
+    }
+
+    .faq-answer {
+        font-size: 14px;
+    }
+
+    .faq-item {
+        padding: 18px;
+    }
+
+    .faq-icon {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .faq-container {
+        padding: 25px 15px;
+        margin: 60px 10px 20px;
+    }
+
+    .faq-container h2 {
+        font-size: 22px;
+    }
+
+    .faq-question {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .faq-icon {
+        align-self: flex-end;
+    }
+
+    .faq-item {
+        padding: 16px;
+    }
+}

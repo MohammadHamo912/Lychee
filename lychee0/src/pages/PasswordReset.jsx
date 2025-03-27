@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../ComponentsCss/PasswordReset.css'; // You can reuse your existing Auth styles
+import '../PagesCss/PasswordReset.css'; // You can reuse your existing Auth styles
 
 const PasswordReset = () => {
     const [email, setEmail] = useState('');

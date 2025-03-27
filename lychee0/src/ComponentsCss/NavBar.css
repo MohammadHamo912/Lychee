@@ -146,6 +146,7 @@
 }
 
 @media (max-width: 992px) {
+
   .desktop-nav,
   .auth-section {
     display: none;

@@ -10,6 +10,11 @@ body {
   min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
 }
 
 .auth-box {
@@ -22,6 +27,7 @@ body {
   width: 100%;
   max-width: 400px;
   border: 2px solid #d9b6a3;
+  overflow: hidden;
 }
 
 .auth-logo {
@@ -48,6 +54,10 @@ body {
   display: block;
 }
 
+#signUpBox {
+  margin-top: 200px;
+}
+
 .auth-box input::placeholder {
   color: #a9a9a9;
 }
@@ -68,10 +78,15 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 10px;
+  background-color: #fff5e1;
+  color: #670010;
+  border-style: solid;
 }
 
 .auth-box button:hover {
-  background: #b76e79;
+  background-color: #fff5e1;
+  color: #670010;
+  border-style: solid;
 }
 
 .google-btn {
@@ -121,6 +136,25 @@ body {
 
 .auth-box a:hover {
   text-decoration: underline;
+}
+
+.guest-btn {
+  margin-top: 15px;
+  width: 92%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px dashed #b76e79;
+  border-radius: 8px;
+  background: transparent;
+  color: #8b3c5d;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.guest-btn:hover {
+  background-color: #fff5e1;
+  color: #670010;
+  border-style: solid;
 }
 
 /* Tablet (<=768px) */
