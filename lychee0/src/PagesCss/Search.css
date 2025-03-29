@@ -1,9 +1,11 @@
+/* Page background and spacing */
 .search-page {
     background-color: #fff5e1;
     min-height: 100vh;
     padding-top: 90px;
 }
 
+/* Header section */
 .search-container {
     display: flex;
     flex-direction: column;
@@ -25,32 +27,40 @@
     font-size: 1.1rem;
 }
 
-.search-body {
+/* Main layout */
+.search-layout {
     display: flex;
-    gap: 30px;
     padding: 30px 40px;
+    position: relative;
+}
+
+/* Sticky/fixed filter panel */
+.filters-floating {
+    position: fixed;
+    top: 130px;
+    /* Adjust for navbar height */
+    left: 40px;
+    width: 250px;
+    z-index: 10;
 }
 
 .filter-panel {
-    width: 250px;
     background-color: #fff;
     border: 1px solid #e3c6cb;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 120px;
-    height: fit-content;
-    z-index: 1;
 }
 
+/* Product grid area */
 .search-results-section {
+    margin-left: 290px;
+    /* leave space for fixed sidebar */
     flex: 1;
-    display: flex;
-    flex-direction: column;
     width: 100%;
 }
 
+/* Results info */
 .results-header {
     display: flex;
     justify-content: space-between;
@@ -76,22 +86,7 @@
     margin-top: 5px;
 }
 
-.clear-filters {
-    background-color: transparent;
-    border: 2px dashed #b76e79;
-    color: #8b3c5d;
-    font-size: 0.9rem;
-    padding: 6px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.clear-filters:hover {
-    background-color: #ffe5e8;
-    border-style: solid;
-}
-
+/* Product grid */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -112,6 +107,7 @@
     }
 }
 
+/* Messages */
 .loading-text,
 .info-message {
     text-align: center;
@@ -127,28 +123,30 @@
     font-size: 1.2rem;
 }
 
-.no-results em {
-    color: #b76e79;
-    font-weight: bold;
+#minPrice{
+    width: 85%;
+}
+#maxPrice{
+    width: 85%;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
-    .search-body {
+    .search-layout {
         flex-direction: column;
         padding: 20px;
     }
 
-    .filter-panel {
-        width: 100%;
-        margin-bottom: 20px;
+    .filters-floating {
         position: relative;
         top: 0;
+        left: 0;
+        width: 100%;
+        margin-bottom: 20px;
     }
 
-    .results-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
+    .search-results-section {
+        margin-left: 0;
     }
 }
 
@@ -163,10 +161,5 @@
 
     .results-header h3 {
         font-size: 1.2rem;
-    }
-
-    .clear-filters {
-        font-size: 0.85rem;
-        padding: 5px 10px;
     }
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../ComponentsCss/FiltersPanel.css";
 
-const FilterPanel = ({ onApplyFilters }) => {
+const FiltersPanel = ({ onApplyFilters }) => {
   const [category, setCategory] = useState("all");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -10,9 +10,23 @@ const FilterPanel = ({ onApplyFilters }) => {
   const handleApply = () => {
     onApplyFilters({
       category,
-      minPrice,
-      maxPrice,
+      minPrice: minPrice ? parseFloat(minPrice) : null,
+      maxPrice: maxPrice ? parseFloat(maxPrice) : null,
       sortOption,
+    });
+  };
+
+  const handleReset = () => {
+    setCategory("all");
+    setMinPrice("");
+    setMaxPrice("");
+    setSortOption("none");
+
+    onApplyFilters({
+      category: "all",
+      minPrice: null,
+      maxPrice: null,
+      sortOption: "none",
     });
   };
 
@@ -21,8 +35,12 @@ const FilterPanel = ({ onApplyFilters }) => {
       <h3>Filters & Sorting</h3>
 
       <div className="filter-group">
-        <label>Category</label>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <label htmlFor="category">Category</label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
           <option value="all">All</option>
           <option value="beauty">Beauty</option>
           <option value="skincare">Skincare</option>
@@ -31,8 +49,9 @@ const FilterPanel = ({ onApplyFilters }) => {
       </div>
 
       <div className="filter-group">
-        <label>Min Price</label>
+        <label htmlFor="minPrice">Min Price</label>
         <input
+          id="minPrice"
           type="number"
           placeholder="e.g. 10"
           value={minPrice}
@@ -41,8 +60,9 @@ const FilterPanel = ({ onApplyFilters }) => {
       </div>
 
       <div className="filter-group">
-        <label>Max Price</label>
+        <label htmlFor="maxPrice">Max Price</label>
         <input
+          id="maxPrice"
           type="number"
           placeholder="e.g. 100"
           value={maxPrice}
@@ -51,8 +71,12 @@ const FilterPanel = ({ onApplyFilters }) => {
       </div>
 
       <div className="filter-group">
-        <label>Sort By</label>
-        <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+        <label htmlFor="sortOption">Sort By</label>
+        <select
+          id="sortOption"
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+        >
           <option value="none">None</option>
           <option value="priceLowToHigh">Price: Low to High</option>
           <option value="priceHighToLow">Price: High to Low</option>
@@ -60,11 +84,16 @@ const FilterPanel = ({ onApplyFilters }) => {
         </select>
       </div>
 
-      <button className="apply-button" onClick={handleApply}>
-        Apply Filters
-      </button>
+      <div className="filter-actions">
+        <button className="apply-button" onClick={handleApply}>
+          Apply Filters
+        </button>
+        <button className="reset-button" onClick={handleReset}>
+          Clear Filters
+        </button>
+      </div>
     </div>
   );
 };
 
-export default FilterPanel;
+export default FiltersPanel;

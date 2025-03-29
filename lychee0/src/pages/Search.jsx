@@ -14,7 +14,6 @@ const SearchPage = () => {
     const [filteredResults, setFilteredResults] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Handle URL query parameter
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const queryParam = searchParams.get("query");
@@ -31,11 +30,9 @@ const SearchPage = () => {
 
     const performSearch = (term) => {
         setLoading(true);
-
         const filtered = dummyProducts.filter((item) =>
             item.name?.toLowerCase().includes(term.toLowerCase())
         );
-
         setResults(filtered);
         setFilteredResults(filtered);
         setLoading(false);
@@ -48,18 +45,12 @@ const SearchPage = () => {
             updated = updated.filter((item) => item.category === filters.category);
         }
 
-        if (filters.minPrice != null) {
-            updated = updated.filter((item) => item.price >= filters.minPrice);
+        if (filters.minPrice) {
+            updated = updated.filter((item) => item.price >= parseFloat(filters.minPrice));
         }
 
-        if (filters.maxPrice != null) {
-            updated = updated.filter((item) => item.price <= filters.maxPrice);
-        }
-
-        if (filters.rating && filters.rating !== "all") {
-            updated = updated.filter(
-                (item) => Math.floor(item.rating) >= parseInt(filters.rating)
-            );
+        if (filters.maxPrice) {
+            updated = updated.filter((item) => item.price <= parseFloat(filters.maxPrice));
         }
 
         switch (filters.sortOption) {
@@ -91,18 +82,18 @@ const SearchPage = () => {
                 <SearchBar />
             </div>
 
-            <div className="search-body">
-                {query && results.length > 0 && (
-                    <FiltersPanel onApplyFilters={applyFilters} />
-                )}
+            <div className="search-layout">
+                <div className="filters-floating">
+                    {query && results.length > 0 && (
+                        <FiltersPanel onApplyFilters={applyFilters} />
+                    )}
+                </div>
 
                 <div className="search-results-section">
                     {loading && <p className="loading-text">Searching...</p>}
 
                     {!loading && !query && (
-                        <p className="info-message">
-                            Start typing above to find something!
-                        </p>
+                        <p className="info-message">Start typing above to find something!</p>
                     )}
 
                     {!loading && query && filteredResults.length > 0 && (
@@ -118,11 +109,9 @@ const SearchPage = () => {
                             </div>
 
                             <div className="product-grid">
-                                {filteredResults.map((product) =>
-                                    product ? (
-                                        <ProductCard key={product.id} product={product} />
-                                    ) : null
-                                )}
+                                {filteredResults.map((product) => (
+                                    <ProductCard key={product.id} product={product} />
+                                ))}
                             </div>
                         </>
                     )}
