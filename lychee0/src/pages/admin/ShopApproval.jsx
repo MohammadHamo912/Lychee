@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import '../ComponentsCss/ShopApproval.css';
+import { useNavigate } from 'react-router-dom';
+import '../../ComponentsCss/ShopApproval.css';
 
 const ShopApproval = () => {
+    const navigate = useNavigate();
+
     const [pendingShops, setPendingShops] = useState([
         { id: 1, name: 'Trendy Cosmetics', owner: 'Sarah Connor', email: 'sarah@trendy.com' },
         { id: 2, name: 'Glow Hub', owner: 'John Doe', email: 'john@glowhub.com' },
@@ -19,7 +22,12 @@ const ShopApproval = () => {
 
     return (
         <div className="shop-approval-container">
-            <h2>Shop Approval Requests</h2>
+            <div className="top-bar">
+                <button className="back-button" onClick={() => navigate('/admin')}>
+                    ← Back to Dashboard
+                </button>
+                <h2>Shop Approval Requests</h2>
+            </div>
 
             {pendingShops.length > 0 ? (
                 <div className="shop-list">
@@ -36,7 +44,7 @@ const ShopApproval = () => {
                     ))}
                 </div>
             ) : (
-                <p>No pending shops at the moment.</p>
+                <p className="no-pending">No pending shops at the moment.</p>
             )}
         </div>
     );

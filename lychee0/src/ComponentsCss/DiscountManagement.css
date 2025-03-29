@@ -1,16 +1,24 @@
+/* Container */
 .discount-management {
   max-width: 1200px;
   margin: 40px auto;
-  padding: 0 20px;
+  padding: 0 24px;
+  background-color: #fff5e1;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  font-family: 'Segoe UI', sans-serif;
+  color: #670010;
 }
 
+/* Page Title */
 .discount-title {
-  color: #8b3c5d;
   font-size: 2rem;
+  font-weight: bold;
   text-align: center;
-  margin-bottom: 30px;
+  margin: 30px 0;
 }
 
+/* Section Titles */
 .discount-form-section,
 .discount-list-section {
   margin-bottom: 40px;
@@ -18,110 +26,178 @@
 
 .discount-form-section h2,
 .discount-list-section h2 {
-  color: #8b3c5d;
   font-size: 1.5rem;
   margin-bottom: 20px;
+  color: #670010;
 }
 
+/* Form */
 .discount-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
-  background: #fff5e1;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  background-color: #fff;
+  border: 1px solid #d9b6a3;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
+/* Form Groups */
 .form-group {
   display: flex;
   flex-direction: column;
 }
 
 .form-group label {
-  color: #555;
-  margin-bottom: 5px;
-  font-weight: 500;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #670010;
+  font-size: 0.95rem;
 }
 
 .form-group input,
 .form-group select {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d9b6a3;
+  background-color: #fffdfc;
   font-size: 1rem;
+  color: #670010;
+  transition: border-color 0.3s ease;
 }
 
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #b76e79;
+  outline: none;
+}
+
+/* Submit Button */
 .submit-button {
-  background-color: #8b3c5d;
-  color: white;
+  grid-column: span 2;
+  padding: 12px 16px;
+  background-color: #670010;
+  color: #fff;
   border: none;
-  padding: 12px;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 10px;
+  font-weight: bold;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
   background-color: #b76e79;
 }
 
+/* Table */
 .discount-table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
 }
 
 .discount-table th,
 .discount-table td {
-  padding: 15px;
+  padding: 16px;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
 }
 
 .discount-table th {
-  background-color: #8b3c5d;
+  background-color: #670010;
   color: white;
+  font-weight: 600;
+}
+
+.discount-table td {
+  color: #5f4b51;
+  border-bottom: 1px solid #f0e0d7;
 }
 
 .discount-table tr:hover {
-  background-color: #f5f5f5;
+  background-color: #fff0ea;
 }
 
+/* Status Badge */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  display: inline-block;
+}
+
+.status-badge.active {
+  background-color: #d4edda;
+  color: #2e7d32;
+}
+
+.status-badge.inactive {
+  background-color: #f8d7da;
+  color: #9b1c25;
+}
+
+/* Action Buttons */
 .toggle-button,
 .delete-button {
-  padding: 6px 12px;
+  padding: 8px 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  margin-right: 10px;
-  font-size: 0.9rem;
+  margin-right: 8px;
+  transition: all 0.3s ease;
 }
 
 .toggle-button {
+  background-color: #ffc5c5;
+  color: #670010;
+  border: 1px solid #d9b6a3;
+}
+
+.toggle-button:hover {
   background-color: #b76e79;
   color: white;
 }
 
-.toggle-button:hover {
-  background-color: #8b3c5d;
-}
-
 .delete-button {
-  background-color: #721c24;
+  background-color: #e19a9a;
   color: white;
+  border: 1px solid #b76e79;
 }
 
 .delete-button:hover {
-  background-color: #501518;
+  background-color: #8b3c5d;
+  color: white;
 }
 
+/* Empty Message */
+.discount-list-section p {
+  text-align: center;
+  font-style: italic;
+  color: #8b3c5d;
+  margin-top: 20px;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .discount-form {
     grid-template-columns: 1fr;
+  }
+
+  .submit-button {
+    grid-column: span 1;
+  }
+
+  .discount-table th,
+  .discount-table td {
+    padding: 12px;
   }
 }

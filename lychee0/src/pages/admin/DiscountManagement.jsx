@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import "../ComponentsCss/DiscountManagement.css";
+import "../../ComponentsCss/DiscountManagement.css";
 
 const DiscountManagement = () => {
-  // State for form inputs
   const [formData, setFormData] = useState({
     code: "",
-    discountType: "percentage", // 'percentage' or 'fixed'
+    discountType: "percentage",
     value: "",
     startDate: "",
     endDate: "",
   });
 
-  // State for list of discounts (mock data for now)
   const [discounts, setDiscounts] = useState([
     {
       id: 1,
@@ -33,13 +31,11 @@ const DiscountManagement = () => {
     },
   ]);
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     const newDiscount = {
@@ -59,31 +55,24 @@ const DiscountManagement = () => {
       startDate: "",
       endDate: "",
     });
-    console.log("New discount added:", newDiscount);
-    // Future: Send to backend API
   };
 
-  // Toggle discount active status
   const toggleActive = (id) => {
     setDiscounts((prev) =>
-      prev.map((discount) =>
-        discount.id === id
-          ? { ...discount, active: !discount.active }
-          : discount
+      prev.map((d) =>
+        d.id === id ? { ...d, active: !d.active } : d
       )
     );
   };
 
-  // Delete a discount
   const deleteDiscount = (id) => {
-    setDiscounts((prev) => prev.filter((discount) => discount.id !== id));
+    setDiscounts((prev) => prev.filter((d) => d.id !== id));
   };
 
   return (
     <div className="discount-management">
       <h1 className="discount-title">Discount Management</h1>
 
-      {/* Create Discount Form */}
       <section className="discount-form-section">
         <h2>Create New Discount</h2>
         <form onSubmit={handleSubmit} className="discount-form">
@@ -99,6 +88,7 @@ const DiscountManagement = () => {
               required
             />
           </div>
+
           <div className="form-group">
             <label htmlFor="discountType">Discount Type</label>
             <select
@@ -111,6 +101,7 @@ const DiscountManagement = () => {
               <option value="fixed">Fixed Amount</option>
             </select>
           </div>
+
           <div className="form-group">
             <label htmlFor="value">Value</label>
             <input
@@ -125,6 +116,7 @@ const DiscountManagement = () => {
               required
             />
           </div>
+
           <div className="form-group">
             <label htmlFor="startDate">Start Date</label>
             <input
@@ -136,6 +128,7 @@ const DiscountManagement = () => {
               required
             />
           </div>
+
           <div className="form-group">
             <label htmlFor="endDate">End Date</label>
             <input
@@ -147,13 +140,13 @@ const DiscountManagement = () => {
               required
             />
           </div>
+
           <button type="submit" className="submit-button">
             Add Discount
           </button>
         </form>
       </section>
 
-      {/* Discount List */}
       <section className="discount-list-section">
         <h2>Existing Discounts</h2>
         {discounts.length === 0 ? (
@@ -165,8 +158,8 @@ const DiscountManagement = () => {
                 <th>Code</th>
                 <th>Type</th>
                 <th>Value</th>
-                <th>Start Date</th>
-                <th>End Date</th>
+                <th>Start</th>
+                <th>End</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -183,7 +176,17 @@ const DiscountManagement = () => {
                   </td>
                   <td>{discount.startDate}</td>
                   <td>{discount.endDate}</td>
-                  <td>{discount.active ? "Active" : "Inactive"}</td>
+                  <td>
+                    <span
+                      className={
+                        discount.active
+                          ? "status-badge active"
+                          : "status-badge inactive"
+                      }
+                    >
+                      {discount.active ? "Active" : "Inactive"}
+                    </span>
+                  </td>
                   <td>
                     <button
                       className="toggle-button"

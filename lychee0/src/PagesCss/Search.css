@@ -1,11 +1,15 @@
-/* Page background and spacing */
 .search-page {
     background-color: #fff5e1;
     min-height: 100vh;
     padding-top: 90px;
 }
 
-/* Header section */
+.search-main-content {
+    padding-bottom: 150px;
+    /* prevents overlap with footer */
+}
+
+/* Header */
 .search-container {
     display: flex;
     flex-direction: column;
@@ -27,40 +31,30 @@
     font-size: 1.1rem;
 }
 
-/* Main layout */
+/* Layout */
 .search-layout {
     display: flex;
+    align-items: flex-start;
+    gap: 30px;
     padding: 30px 40px;
-    position: relative;
 }
 
-/* Sticky/fixed filter panel */
-.filters-floating {
-    position: fixed;
+/* Sticky filter panel */
+.filters-wrapper {
+    position: sticky;
     top: 130px;
-    /* Adjust for navbar height */
-    left: 40px;
+    align-self: flex-start;
     width: 250px;
-    z-index: 10;
+    z-index: 2;
 }
 
-.filter-panel {
-    background-color: #fff;
-    border: 1px solid #e3c6cb;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* Product grid area */
+/* Results section */
 .search-results-section {
-    margin-left: 290px;
-    /* leave space for fixed sidebar */
     flex: 1;
     width: 100%;
 }
 
-/* Results info */
+/* Results header */
 .results-header {
     display: flex;
     justify-content: space-between;
@@ -114,6 +108,7 @@
     color: #8b3c5d;
     font-size: 1rem;
     margin-top: 40px;
+    margin-right: 25%;
 }
 
 .no-results {
@@ -123,21 +118,20 @@
     font-size: 1.2rem;
 }
 
-#minPrice{
-    width: 85%;
-}
-#maxPrice{
+/* Filter inputs */
+#minPrice,
+#maxPrice {
     width: 85%;
 }
 
-/* Responsive */
+/* Responsive styles */
 @media (max-width: 768px) {
     .search-layout {
         flex-direction: column;
         padding: 20px;
     }
 
-    .filters-floating {
+    .filters-wrapper {
         position: relative;
         top: 0;
         left: 0;
@@ -161,5 +155,10 @@
 
     .results-header h3 {
         font-size: 1.2rem;
+    }
+
+    #minPrice,
+    #maxPrice {
+        width: 92%;
     }
 }

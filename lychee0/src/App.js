@@ -11,6 +11,7 @@ import DummyHomePage from "./DummyFiles/DummyHomePage";
 import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
 import Search from "./pages/Search.jsx";
 import ProductDetails from "./pages/ProductDetailsPage.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 
 // Components
 import NavBar from "./components/NavBar"; // DONE
@@ -35,7 +36,8 @@ import Modal from "./components/Modal.jsx";
 import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
-import DiscountManagement from "./components/DiscountManagement";
+import DiscountManagement from "./pages/admin/DiscountManagement.jsx";
+import ShopApproval from "./pages/admin/ShopApproval.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import NotFoundPage from "./pages/NotFound.jsx";
 import StorePage from "./pages/StorePage.jsx";
@@ -43,7 +45,7 @@ import ContactAndSupport from "./pages/ContactAndSupport.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Sidebar from "./components/Sidebar.jsx";
-import SearchBar from "./components/SearchBar.jsx"; // Keep SearchBar separate
+import UserManagment from "./pages/admin/UserManagement.jsx"; // Keep SearchBar separate
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
@@ -62,7 +64,11 @@ function App() {
     <div>
       <Routes>
         <Route path="/dummyhomepage" element={<DummyHomePage />} />
+        <Route path="/admin/usermanagement" element={<UserManagment />} />
+        <Route path="/admin/shopapproval" element={<ShopApproval />} />
+        <Route path="/admin/discountmanagement" element={<DiscountManagement />} />
         <Route path="/" element={<div style={{ padding: 40 }}>Home Test</div>} />
+        <Route path="/admin" element={<AdminDashboard />} />
 
         {/*to test this type http://localhost:3000/product/{the id of the component } 
         example:

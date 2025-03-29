@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar";
 import FiltersPanel from "../components/FiltersPanel";
 import ProductCard from "../components/ProductCard";
 import dummyProducts from "../Data/dummyProducts";
+import Footer from "../components/Footer";
 import "../PagesCss/Search.css";
 
 const SearchPage = () => {
@@ -74,58 +75,64 @@ const SearchPage = () => {
         <div className="search-page">
             <NavBar />
 
-            <div className="search-container">
-                <div className="search-header-text">
-                    <h1>Search Lychee</h1>
-                    <p className="subtitle">Find products & stores you’ll love 💄</p>
+            <main className="search-main-content">
+                {/* Header */}
+                <div className="search-container">
+                    <div className="search-header-text">
+                        <h1>Search Lychee</h1>
+                        <p className="subtitle">Find products & stores you’ll love 💄</p>
+                    </div>
+                    <SearchBar />
                 </div>
-                <SearchBar />
-            </div>
 
-            <div className="search-layout">
-                <div className="filters-floating">
+                {/* Filters + Results Layout */}
+                <div className="search-layout">
                     {query && results.length > 0 && (
-                        <FiltersPanel onApplyFilters={applyFilters} />
-                    )}
-                </div>
-
-                <div className="search-results-section">
-                    {loading && <p className="loading-text">Searching...</p>}
-
-                    {!loading && !query && (
-                        <p className="info-message">Start typing above to find something!</p>
-                    )}
-
-                    {!loading && query && filteredResults.length > 0 && (
-                        <>
-                            <div className="results-header">
-                                <h3>
-                                    Results for "<span className="highlight">{query}</span>"
-                                </h3>
-                                <p className="results-count">
-                                    {filteredResults.length} result
-                                    {filteredResults.length !== 1 && "s"} found
-                                </p>
-                            </div>
-
-                            <div className="product-grid">
-                                {filteredResults.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                ))}
-                            </div>
-                        </>
-                    )}
-
-                    {!loading && query && filteredResults.length === 0 && (
-                        <div className="no-results">
-                            <p>
-                                No results found for "<strong>{query}</strong>" 😢
-                            </p>
-                            <p>Try different filters or search terms.</p>
+                        <div className="filters-wrapper">
+                            <FiltersPanel onApplyFilters={applyFilters} />
                         </div>
                     )}
+
+                    <div className="search-results-section">
+                        {loading && <p className="loading-text">Searching...</p>}
+
+                        {!loading && !query && (
+                            <p className="info-message">Start typing above to find something!</p>
+                        )}
+
+                        {!loading && query && filteredResults.length > 0 && (
+                            <>
+                                <div className="results-header">
+                                    <h3>
+                                        Results for "<span className="highlight">{query}</span>"
+                                    </h3>
+                                    <p className="results-count">
+                                        {filteredResults.length} result
+                                        {filteredResults.length !== 1 && "s"} found
+                                    </p>
+                                </div>
+
+                                <div className="product-grid">
+                                    {filteredResults.map((product) => (
+                                        <ProductCard key={product.id} product={product} />
+                                    ))}
+                                </div>
+                            </>
+                        )}
+
+                        {!loading && query && filteredResults.length === 0 && (
+                            <div className="no-results">
+                                <p>
+                                    No results found for "<strong>{query}</strong>" 😢
+                                </p>
+                                <p>Try different filters or search terms.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            </main>
+
+            <Footer />
         </div>
     );
 };
