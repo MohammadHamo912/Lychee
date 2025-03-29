@@ -61,8 +61,11 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="/dummyhomepage" element={<DummyHomePage />} />
-        <Route path="/" element={<div style={{ padding: 40 }}>Home Test</div>} />
+        <Route path="/homepage" element={<DummyHomePage />} />
+        <Route
+          path="/"
+          element={<div style={{ padding: 40 }}>Home Test</div>}
+        />
 
         {/*to test this type http://localhost:3000/product/{the id of the component } 
         example:
@@ -201,7 +204,10 @@ function App() {
             />
           }
         />
-        <Route path="*" element={<div style={{ padding: 40 }}>Not Found</div>} />
+        <Route
+          path="*"
+          element={<div style={{ padding: 40 }}>Not Found</div>}
+        />
       </Routes>
     </div>
   );
