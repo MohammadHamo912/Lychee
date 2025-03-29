@@ -20,7 +20,7 @@ const AdminDashboard = () => {
         {
             title: "🎁 Discount Management",
             description: "Create and manage platform-wide promotions.",
-            link: "/admin/discounts",
+            link: "/admin/discountmanagment",
         },
     ];
 

@@ -1,101 +1,36 @@
 .shop-approval-container {
-    padding: 40px 24px;
-    background: #FFF5E1;
+    background: #fff5e1;
     min-height: 100vh;
-    color: #8B3C5D;
+    width: 100vw;
+    padding: 100px 24px 40px;
+    /* extra top padding for navbar space */
     font-family: 'Segoe UI', sans-serif;
-}
-
-.shop-approval-container h2 {
-    text-align: center;
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-    color: #8B3C5D;
-}
-
-/* Card layout for pending shops */
-.shop-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-    justify-content: center;
-}
-
-.shop-card {
-    background: #ffffff;
-    border: 1px solid #D9B6A3;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
-    max-height: 200px;
-}
-
-.shop-card:hover {
-    box-shadow: 0 8px 20px rgba(183, 110, 121, 0.1);
-}
-
-.shop-card h3 {
-    font-size: 1.3rem;
-    color: #8B3C5D;
-    margin-bottom: 10px;
-}
-
-.shop-card p {
-    margin: 6px 0;
-    font-size: 0.95rem;
-    color: #5f4b51;
-}
-
-/* Action buttons */
-.shop-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 18px;
-}
-
-.shop-actions button {
-    flex: 1;
-    padding: 10px 14px;
-    border: none;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s;
-}
-
-.shop-actions .approve {
-    background-color: #ffc5c5;
     color: #670010;
-    border: 1px solid #d9b6a3;
-}
-
-.shop-actions .reject {
-    background-color: #f8d7da;
-    color: #8B3C5D;
-    border: 1px solid #d9b6a3;
-}
-
-.shop-actions button:hover {
-    background-color: #b76e79;
-    color: white;
-    transform: translateY(-2px);
+    box-sizing: border-box;
+    margin-left: 0px;
 }
 
 .top-bar {
     display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
     flex-wrap: wrap;
-    justify-content: space-around;
+    align-items: center;
+    justify-content: flex-start;
+    /* ✅ align left */
+    gap: 20px;
+    margin-bottom: 40px;
 }
 
+
+.top-bar h2 {
+    font-size: 1.8rem;
+    color: #8b3c5d;
+    margin: 0;
+}
+
+/* === BACK BUTTON === */
 .back-button {
-    background-color: #ffc5c5;
-    color: #670010;
+    background-color: #670010;
+    color: white;
     border: 1px solid #d9b6a3;
     padding: 10px 16px;
     border-radius: 12px;
@@ -110,10 +45,93 @@
     color: white;
 }
 
+/* === CARD GRID === */
+.shop-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+/* === SHOP CARD === */
+.shop-card {
+    background: #ffffff;
+    border: 1px solid #d9b6a3;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+    height: 200px;
+}
+
+.shop-card:hover {
+    box-shadow: 0 10px 20px rgba(183, 110, 121, 0.1);
+}
+
+.shop-card h3 {
+    font-size: 1.3rem;
+    color: #8b3c5d;
+    margin-bottom: 12px;
+}
+
+.shop-card p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #5f4b51;
+}
+
+/* === ACTION BUTTONS === */
+.shop-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.shop-actions button {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.approve {
+    background-color: #ffc5c5;
+    color: #670010;
+    border: 1px solid #d9b6a3;
+}
+
+.reject {
+    background-color: #f8d7da;
+    color: #8b3c5d;
+    border: 1px solid #d9b6a3;
+}
+
+.shop-actions button:hover {
+    background-color: #b76e79;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* === EMPTY STATE === */
 .no-pending {
     text-align: center;
     font-style: italic;
-    margin-top: 40px;
-    color: #8b3c5d;
+    margin-top: 60px;
     font-size: 1.1rem;
+    color: #8b3c5d;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .shop-actions {
+        flex-direction: column;
+    }
 }

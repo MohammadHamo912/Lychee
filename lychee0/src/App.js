@@ -67,7 +67,7 @@ function App() {
         <Route path="/admin/usermanagement" element={<UserManagment />} />
         <Route path="/admin/shopapproval" element={<ShopApproval />} />
         <Route
-          path="/admin/discountmanagement"
+          path="/admin/discountmanagment"
           element={<DiscountManagement />}
         />
         <Route

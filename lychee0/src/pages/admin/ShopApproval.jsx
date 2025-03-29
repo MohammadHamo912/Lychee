@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../ComponentsCss/ShopApproval.css';
+import NavBar from '../../components/NavBar';
 
 const ShopApproval = () => {
     const navigate = useNavigate();
@@ -11,22 +12,23 @@ const ShopApproval = () => {
     ]);
 
     const handleApprove = (id) => {
-        setPendingShops(pendingShops.filter(shop => shop.id !== id));
-        alert(`Shop ID ${id} approved!`);
+        setPendingShops(prev => prev.filter(shop => shop.id !== id));
+        alert(`✅ Shop ID ${id} approved!`);
     };
 
     const handleReject = (id) => {
-        setPendingShops(pendingShops.filter(shop => shop.id !== id));
-        alert(`Shop ID ${id} rejected.`);
+        setPendingShops(prev => prev.filter(shop => shop.id !== id));
+        alert(`❌ Shop ID ${id} rejected.`);
     };
 
     return (
         <div className="shop-approval-container">
+            <NavBar />
             <div className="top-bar">
                 <button className="back-button" onClick={() => navigate('/admin')}>
                     ← Back to Dashboard
                 </button>
-                <h2>Shop Approval Requests</h2>
+                <h2>🛍️ Shop Approval Requests</h2>
             </div>
 
             {pendingShops.length > 0 ? (
@@ -34,8 +36,8 @@ const ShopApproval = () => {
                     {pendingShops.map(shop => (
                         <div key={shop.id} className="shop-card">
                             <h3>{shop.name}</h3>
-                            <p>Owner: {shop.owner}</p>
-                            <p>Email: {shop.email}</p>
+                            <p><strong>Owner:</strong> {shop.owner}</p>
+                            <p><strong>Email:</strong> {shop.email}</p>
                             <div className="shop-actions">
                                 <button onClick={() => handleApprove(shop.id)} className="approve">Approve</button>
                                 <button onClick={() => handleReject(shop.id)} className="reject">Reject</button>

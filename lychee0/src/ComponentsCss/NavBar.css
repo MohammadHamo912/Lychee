@@ -1,32 +1,34 @@
-/* === NAVBAR === */
+/* === NAVBAR WRAPPER === */
 .navbar {
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   height: 65px;
   background: rgba(103, 0, 16, 0.7);
   backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 1000;
-  transition: background 0.3s;
+  transition: background 0.3s ease;
 }
+
+/* === INNER CONTAINER (Fixes alignment!) === */
+.navbar-inner {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 18px;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
 
 .navbar.solid {
   background-color: #670010;
   backdrop-filter: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* === INNER WRAPPER === */
-.navbar-inner {
-  max-width: 1200px;
-  width: 100%;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 /* === LOGO === */
