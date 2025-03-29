@@ -36,7 +36,7 @@
 }
 
 .profile-box h1 {
-    color: #8B3C5D;
+    color:#670010;
     font-size: 2rem;
     text-align: center;
     margin-bottom: 25px;
@@ -49,7 +49,7 @@
 }
 
 .profile-field label {
-    color: #8B3C5D;
+    color: #670010;
     margin-bottom: 5px;
     font-weight: bold;
 }
@@ -59,14 +59,14 @@
     border: 1px solid #D9B6A3;
     border-radius: 6px;
     background: #FFF5E1;
-    color: #8B3C5D;
+    color: #670010;
 }
 
 .profile-btn {
     margin-top: 15px;
     padding: 12px;
     width: 100%;
-    background: #8B3C5D;
+    background: #670010;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -94,14 +94,14 @@
 
 .spending-box h2,
 .orders-history-box h2 {
-    color: #8B3C5D;
+    color: #670010;
     margin-bottom: 15px;
 }
 
 .spending-box p {
     font-size: 1.7rem;
     font-weight: 700;
-    color: #B76E79;
+    color: #670010;
 }
 
 /* Orders list */
@@ -117,7 +117,7 @@
     border-radius: 8px;
     margin-bottom: 10px;
     font-size: 0.95rem;
-    color: #8B3C5D;
+    color: #670010;
 }
 
 /* Tablet: ≤ 992px */

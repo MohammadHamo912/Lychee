@@ -9,7 +9,7 @@
 }
 
 .reviews-container h2 {
-    color: #8b3c5d;
+    color: #670010;
     margin-bottom: 20px;
 }
 
@@ -49,13 +49,13 @@
 }
 
 .review-rating {
-    color: #b76e79;
+    color: #670010;
     font-size: 1.1rem;
     margin-bottom: 8px;
 }
 
 .review-text {
     font-size: 0.95rem;
-    color: #8b3c5d;
+    color: #670010;
     line-height: 1.4;
 }

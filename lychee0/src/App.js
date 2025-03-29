@@ -9,7 +9,8 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import DummyHomePage from "./DummyFiles/DummyHomePage";
 import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
-import ProductDetailsPage from "./pages/ProductDetailsPage.jsx";
+import Search from "./pages/Search.jsx";
+import ProductDetails from "./pages/ProductDetailsPage.jsx";
 
 // Components
 import NavBar from "./components/NavBar"; // DONE
@@ -35,14 +36,13 @@ import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
 import DiscountManagement from "./components/DiscountManagement";
+import PasswordReset from "./pages/PasswordReset.jsx";
 import NotFoundPage from "./pages/NotFound.jsx";
-import StorePage from "./pages/StorePage";
+import StorePage from "./pages/StorePage.jsx";
 import ContactAndSupport from "./pages/ContactAndSupport.jsx";
-import FAQ from "./pages/FAQ.jsx";
-import PasswordReset from "./pages/PasswordReset";
-import ProductDetails from "./components/ProductDetails";
-import Sidebar from "./components/Sidebar.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import FAQ from "./pages/FAQ.jsx";
+import Sidebar from "./components/Sidebar.jsx";
 import SearchBar from "./components/SearchBar.jsx"; // Keep SearchBar separate
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
@@ -62,13 +62,14 @@ function App() {
     <div>
       <Routes>
         <Route path="/dummyhomepage" element={<DummyHomePage />} />
-        <Route path="" element={<DummyHomePage />} />
-        <Route path="/product/:id" element={<ProductDetailsPage />} />{" "}
+        <Route path="/" element={<div style={{ padding: 40 }}>Home Test</div>} />
+
         {/*to test this type http://localhost:3000/product/{the id of the component } 
         example:
         http://localhost:3000/product/1
         */}
         <Route path="/category/:category" element={<ShopByCategory />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/signup" element={<SignUp />} />
@@ -89,21 +90,7 @@ function App() {
         <Route path="/contactandsupport" element={<ContactAndSupport />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route
-          path="/productdetails"
-          element={
-            <ProductDetails
-              product={{
-                id: 1,
-                name: "Lip Gloss",
-                imageUrl: lipgloss,
-                description: "This is a descreption",
-                price: 9.99,
-                shop_name: "",
-              }}
-            />
-          }
-        />
+        <Route path="/search" element={<Search />} />
         <Route
           path="/productcard"
           element={
@@ -214,6 +201,7 @@ function App() {
             />
           }
         />
+        <Route path="*" element={<div style={{ padding: 40 }}>Not Found</div>} />
       </Routes>
     </div>
   );

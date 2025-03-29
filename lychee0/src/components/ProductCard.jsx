@@ -1,30 +1,43 @@
 import React from "react";
-import "../ComponentsCss/ProductCard.css";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import "../ComponentsCss/ProductCard.css";
 import cartIcon from "../images/white-cart-icon.png";
 
 const ProductCard = ({ product, onAddToCart }) => {
-  // Destructure product details, including description and shop_name
+  const navigate = useNavigate();
   const { id, name, imageUrl, price, description, shop_name } = product;
 
+  const handleCardClick = () => {
+    navigate(`/product/${id}`);
+  };
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Prevent navigation
+    onAddToCart(product);
+  };
+
   return (
-    <div className="product-card">
+    <div className="product-card" onClick={handleCardClick}>
       <img
-        className="product-card-image"
         src={imageUrl}
-        alt={`Image of ${name}`}
+        alt={name}
+        className="product-card-image"
       />
+
       <div className="product-card-body">
         <h3 className="product-card-title">{name}</h3>
-        {shop_name && <p className="product-card-shop">Shop: {shop_name}</p>}
+        {shop_name && <p className="product-card-shop">Sold by: {shop_name}</p>}
         <p className="product-card-description">{description}</p>
+
         <div className="product-card-footer">
-          <p className="product-card-price">${price.toFixed(2)}</p>
+          <span className="product-card-price">${price.toFixed(2)}</span>
           <button
             className="product-card-button"
-            onClick={() => onAddToCart(product)}
+            onClick={handleAddToCart}
+            aria-label="Add to cart"
           >
-            <img src={cartIcon} alt="Add to Cart" className="cart-icon" />
+            <img src={cartIcon} alt="Cart icon" className="cart-icon" />
           </button>
         </div>
       </div>

@@ -1,133 +1,67 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../ComponentsCss/SearchBar.css";
+import "../ComponentsCss/SearchBar.css"; // Adjust path if needed
 
 const SearchBar = ({
-  placeholder = "Search products...",
   suggestions = [],
+  placeholder = "Search...",
+  disableActive = false,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [input, setInput] = useState("");
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const searchContainerRef = useRef(null);
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        searchContainerRef.current &&
-        !searchContainerRef.current.contains(event.target)
-      ) {
-        setShowSuggestions(false);
-        if (!searchTerm) {
-          setIsActive(false);
-        }
-      }
-    };
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setInput(value);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [searchTerm]);
-
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
+    if (!disableActive && value.length > 0) {
+      const filtered = suggestions.filter((item) =>
+        item.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredSuggestions(filtered);
+      setShowSuggestions(true);
+    } else {
       setFilteredSuggestions([]);
       setShowSuggestions(false);
-      return;
-    }
-
-    const filtered = suggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setFilteredSuggestions(filtered);
-    setShowSuggestions(true);
-  }, [searchTerm, suggestions]);
-
-  const handleFocus = () => {
-    setIsActive(true);
-    if (searchTerm.trim() !== "") {
-      setShowSuggestions(true);
     }
   };
 
-  const handleChange = (e) => {
-    setSearchTerm(e.target.value);
+  const handleSelect = (value) => {
+    setInput(value);
+    setShowSuggestions(false);
+    navigate(`/search?query=${encodeURIComponent(value)}`);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
-      setShowSuggestions(false);
+    if (input.trim()) {
+      navigate(`/search?query=${encodeURIComponent(input.trim())}`);
     }
   };
 
-  const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
-    setShowSuggestions(false);
-    navigate(`/search?query=${encodeURIComponent(suggestion)}`);
-  };
-
-  const handleClearSearch = () => {
-    setSearchTerm("");
-    setShowSuggestions(false);
-  };
-
   return (
-    <div
-      className={`search-container ${isActive ? "active" : ""}`}
-      ref={searchContainerRef}
-    >
+    <div className={`search-bar-wrapper ${disableActive ? "disabled" : ""}`}>
       <form onSubmit={handleSubmit} className="search-form">
         <input
           type="text"
-          className="search-input"
           placeholder={placeholder}
-          value={searchTerm}
+          value={input}
           onChange={handleChange}
-          onFocus={handleFocus}
+          className="search-input"
+          disabled={disableActive}
         />
-
-        {searchTerm && (
-          <button
-            type="button"
-            className="clear-button"
-            onClick={handleClearSearch}
-          >
-            ×
-          </button>
-        )}
-
-        <button type="submit" className="search-button">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
+        <button type="submit" className="search-button" disabled={disableActive}>
+          🔍
         </button>
       </form>
 
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <ul className="suggestions-list">
+      {!disableActive && showSuggestions && filteredSuggestions.length > 0 && (
+        <ul className="search-suggestions">
           {filteredSuggestions.map((suggestion, index) => (
-            <li
-              key={index}
-              className="suggestion-item"
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
+            <li key={index} onClick={() => handleSelect(suggestion)}>
               {suggestion}
             </li>
           ))}

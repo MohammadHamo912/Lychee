@@ -1,6 +1,5 @@
 .search-container {
   position: relative;
-  width: 100%;
   max-width: 500px;
   margin: 0 auto;
   transition: all 0.3s ease;

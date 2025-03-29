@@ -12,7 +12,7 @@
 
 .orders-history-container h2 {
     text-align: center;
-    color: #8B3C5D;
+    color: #670010;
     /* Deep Berry */
     margin-bottom: 20px;
 }
@@ -39,12 +39,12 @@
 
 .order-id {
     font-weight: bold;
-    color: #8B3C5D;
+    color: #670010;
 }
 
 .order-date,
 .order-total {
-    color: #B76E79;
+    color: #670010;
     /* Rose Gold */
     font-weight: bold;
 }
@@ -58,5 +58,5 @@
 .order-item {
     margin-bottom: 5px;
     font-size: 0.95rem;
-    color: #8B3C5D;
+    color: #670010;
 }

@@ -1,28 +1,33 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import "../ComponentsCss/ProductGrid.css";
 import dummyProducts from "../Data/dummyProducts";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import "../ComponentsCss/ProductGrid.css";
 
-const ProductGrid = ({ limit = dummyProducts.length }) => {
+const ProductGrid = ({ items, limit }) => {
+  const products = Array.isArray(items) && items.length > 0 ? items : dummyProducts;
+
   const handleAddToCart = (product) => {
     console.log("Added to cart:", product);
   };
 
-  const displayedProducts = dummyProducts.slice(0, limit); // Limit the number of products
+  const productsToShow = limit ? products.slice(0, limit) : products;
 
   return (
     <div className="product-grid-container">
       <div className="product-grid">
-        {displayedProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAddToCart={handleAddToCart}
-          />
-        ))}
+        {productsToShow.map((product) =>
+          product ? (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={handleAddToCart}
+            />
+          ) : null
+        )}
       </div>
-      {limit < dummyProducts.length && (
+
+      {limit && limit < products.length && (
         <div className="see-all-container">
           <Link to="/products" className="see-all-link">
             Click to See All Products

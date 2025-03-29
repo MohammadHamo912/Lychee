@@ -11,7 +11,7 @@
 }
 
 .wishlist-container h2 {
-    color: #8B3C5D;
+    color: #670010;
     /* Deep Berry */
     text-align: center;
     margin-bottom: 20px;
@@ -58,7 +58,7 @@
 
 .wishlist-item-name {
     font-size: 1.1rem;
-    color: #8B3C5D;
+    color: #670010;
     cursor: pointer;
     margin: 0 0 8px;
 }
@@ -66,13 +66,13 @@
 .wishlist-item-price {
     font-size: 1rem;
     font-weight: bold;
-    color: #B76E79;
+    color: #670010;
     /* Rose Gold */
     margin-bottom: 8px;
 }
 
 .price-drop-alert {
-    color: #B76E79;
+    color: #670010;
     font-size: 0.9rem;
     font-weight: bold;
     margin-bottom: 8px;
@@ -80,7 +80,7 @@
 
 .remove-wishlist-btn {
     padding: 8px 12px;
-    background: #8B3C5D;
+    background: #670010;
     /* Deep Berry */
     color: white;
     border: none;

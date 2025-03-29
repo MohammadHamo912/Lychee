@@ -10,6 +10,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  max-width: 300px;
 }
 
 .product-card:hover {
