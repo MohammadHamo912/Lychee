@@ -31,7 +31,7 @@ function NavBar() {
         <nav className="desktop-nav">
           <ul className="nav-links">
             <li>
-              <Link to="/" className="nav-link">
+              <Link to="/homepage" className="nav-link">
                 Home
               </Link>
             </li>
