@@ -1,7 +1,7 @@
 .dashboard-container {
     display: flex;
     min-height: 100vh;
-    background-color: #fff5e1;
+    background: #FFF5E1;
     margin-top: 90px;
 }
 

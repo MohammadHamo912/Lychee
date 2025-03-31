@@ -1,162 +1,139 @@
-/* Main container with a gradient white background for a fresh look */
 .dashboard-container {
-    padding: 40px 80px;
+    padding: 40px 20px;
     background: linear-gradient(135deg, #FFF5E1 0%, #ffffff 100%);
     min-height: 100vh;
     box-sizing: border-box;
     color: #8B3C5D;
-    /* Deep Berry for text */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Main heading */
 .dashboard-container h1 {
     text-align: center;
-    margin-bottom: 40px;
     font-size: 2rem;
-    letter-spacing: 1px;
+    margin-bottom: 30px;
 }
 
-/* Content layout: two columns */
-.dashboard-content {
+/* Grid layout */
+.dashboard-grid {
     display: flex;
+    flex-direction: column;
     gap: 40px;
-    justify-content: center;
-    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* Left column: Overview Card */
-.overview-column {
-    flex: 0 0 400px;
+/* Overview cards */
+.overview-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
 }
 
 .overview-card {
-    background: #ffffff;
+    background: #fff;
     border: 2px solid #D9B6A3;
-    border-radius: 12px;
-    padding: 30px;
+    border-radius: 16px;
+    padding: 30px 40px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex: 1 1 250px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease;
 }
 
 .overview-card:hover {
-    transform: scale(1.03);
+    transform: translateY(-4px);
 }
 
 .overview-card h2 {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
     color: #8B3C5D;
-    margin-bottom: 20px;
 }
 
 .overview-card p {
-    font-size: 1.1rem;
-    margin: 8px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #B76E79;
 }
 
-/* Right column: Sections for orders and products */
-.info-column {
-    flex: 1;
+/* Sections (Orders and Products) */
+.details-section {
     display: flex;
     flex-direction: column;
     gap: 40px;
 }
 
-/* Sections styling */
 .section {
-    background: #ffffff;
+    background: #fff;
     border: 2px solid #D9B6A3;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-}
-
-.section:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .section h2 {
+    font-size: 1.4rem;
     text-align: center;
     margin-bottom: 20px;
-    font-size: 1.6rem;
-    color: #8B3C5D;
 }
 
-/* Orders and products lists */
-.section ul {
+/* List styling */
+.item-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.section li {
+.item-list li {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    margin-bottom: 10px;
+    padding: 12px 16px;
     border-bottom: 1px solid #D9B6A3;
     cursor: pointer;
     transition: background 0.3s ease;
 }
 
-.section li:last-child {
+.item-list li:last-child {
     border-bottom: none;
 }
 
-.section li:hover {
-    background: rgba(183, 110, 121, 0.1);
+.item-list li:hover {
+    background: rgba(183, 110, 121, 0.08);
 }
 
 .order-id,
+.product-name {
+    font-weight: bold;
+    color: #8B3C5D;
+}
+
 .order-date,
 .order-total,
-.product-name,
-.product-price,
-.product-stock {
-    font-size: 0.95rem;
-}
-
-.order-id {
-    font-weight: bold;
-    color: #8B3C5D;
-}
-
-.order-date,
-.order-total {
-    color: #B76E79;
-    font-weight: bold;
-}
-
 .product-price {
     color: #B76E79;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .product-stock {
-    font-style: italic;
     color: #8B3C5D;
+    font-style: italic;
 }
 
-/* Responsive adjustments */
+.low-stock {
+    color: red;
+    font-weight: bold;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .dashboard-content {
+    .overview-cards {
         flex-direction: column;
         align-items: center;
-        gap: 20px;
     }
 
-    .overview-column,
-    .info-column {
-        width: 100%;
-    }
-
-    .overview-card {
-        width: 90%;
-    }
-
-    .section {
-        width: 90%;
+    .details-section {
+        flex-direction: column;
     }
 }

@@ -1,125 +1,299 @@
-/* Main container */
+/* === Main Container === */
 .product-management-container {
-    padding: 40px;
-    background: #FFF5E1;
+    padding: 40px 20px;
+    background-color: #FFF5E1;
+    /* Creamy white */
     min-height: 100vh;
-    color: #8B3C5D;
+    color: #670010;
+    /* Deep Berry */
+    box-sizing: border-box;
+    margin-top: 10px;
 }
 
-/* Form Card Container */
+/* === Heading === */
+.product-management-container h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+/* === Form Card === */
 .product-form-card {
-    max-width: 600px;
-    margin: 0 auto 40px;
-    background: #ffffff;
+    background-color: #fff;
+    border: 2px solid #D9B6A3;
+    /* Warm Taupe */
+    border-radius: 12px;
     padding: 25px;
-    border: 1px solid #D9B6A3;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 0 auto 40px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
 }
 
 .product-form-card h3 {
     text-align: center;
-    margin-bottom: 15px;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: #670010;
 }
 
-/* Form */
 .product-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
 }
+
+/* Group name & price inline */
+.form-inline-group {
+    display: flex;
+    gap: 16px;
+}
+
+.form-inline-group input {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #D9B6A3;
+    background-color: #FFF5E1;
+    color: #670010;
+}
+
 
 .product-form input,
 .product-form textarea {
-    padding: 10px;
-    border: 1px solid #D9B6A3;
-    border-radius: 6px;
+    padding: 10px 14px;
     font-size: 1rem;
-    background: #FFF5E1;
-    color: #8B3C5D;
-}
-
-.product-form input[type="file"] {
-    background: transparent;
-}
-
-/* Preview Image */
-.image-preview {
-    width: 100%;
-    max-height: 200px;
-    object-fit: contain;
-    margin-top: 10px;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid #D9B6A3;
+    background-color: #FFF5E1;
+    color: #670010;
 }
 
-/* Button */
-.product-form button {
-    padding: 12px;
-    background: #8B3C5D;
-    color: #FFF5E1;
-    border: none;
-    border-radius: 6px;
+.product-form textarea {
+    resize: vertical;
+    min-height: 80px;
+    width: 96%;
+}
+
+/* === File Upload Label === */
+.image-upload-label {
+    background: #670010;
+    /* Soft blush */
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    display: inline-block;
     cursor: pointer;
     transition: background 0.3s ease;
 }
 
-.product-form button:hover {
-    background: #B76E79;
+.image-upload-label input {
+    display: none;
 }
 
-/* Product List */
+.image-upload-label:hover {
+    background: #F4B6B6;
+}
+
+/* === Image Preview === */
+.preview-wrapper {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    border: 1px solid #D9B6A3;
+    object-fit: contain;
+}
+
+/* === Form Buttons === */
+.form-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.form-buttons button {
+    padding: 10px 16px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Submit Button */
+.form-buttons button[type="submit"] {
+    background-color: #670010;
+    color: #FFF5E1;
+}
+
+.form-buttons button[type="submit"]:hover {
+    background-color: #B76E79;
+    /* Rose Gold */
+}
+
+/* Cancel Button */
+.cancel-btn {
+    background-color: transparent;
+    border: 1.5px solid #8B3C5D;
+    color: #8B3C5D;
+}
+
+.cancel-btn:hover {
+    background-color: #FFC5C5;
+}
+
+/* === Product List Grid === */
 .product-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 24px;
     justify-content: center;
 }
 
-/* Product Card */
+/* === Product Card === */
 .product-card {
     width: 300px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border: 2px solid #D9B6A3;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease;
 }
 
 .product-card:hover {
     transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
+.product-card.editing {
+    border-color: #670010;
+    box-shadow: 0 0 10px rgba(183, 110, 121, 0.4);
+}
+
+/* === Product Image === */
 .product-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
 }
 
+/* === Product Details === */
 .product-details {
-    padding: 15px;
+    padding: 16px;
+    flex-grow: 1;
 }
 
+.product-details h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #8B3C5D;
+}
+
+.product-price {
+    color: #B76E79;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.product-desc {
+    font-size: 0.95rem;
+    color: #5c3c3c;
+    line-height: 1.4;
+}
+
+/* === Product Actions === */
 .product-actions {
     display: flex;
     justify-content: space-between;
-    padding: 10px 15px;
-    border-top: 1px solid #ddd;
+    padding: 10px 16px;
+    border-top: 1px solid #D9B6A3;
+    background-color: #FFF5E1;
 }
 
 .product-actions button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background: #8B3C5D;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background-color: #670010;
     color: #FFF5E1;
+    border: none;
+    cursor: pointer;
     transition: background 0.3s ease;
 }
 
 .product-actions button:hover {
-    background: #B76E79;
+    background-color: #B76E79;
+}
+
+/* === Category Filter === */
+.product-filter {
+    max-width: 700px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #670010;
+    font-weight: 500;
+}
+
+/* Reuse category-select */
+.category-select {
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #D9B6A3;
+    background-color: #FFF5E1;
+    color: #670010;
+    appearance: none;
+    flex: 1;
+}
+
+/* === Empty List Message === */
+.no-products {
+    text-align: center;
+    color: #8B3C5D;
+    font-size: 1.1rem;
+    margin-top: 30px;
+}
+
+.filters-wrapper {
+    position: sticky;
+    top: 130px;
+    align-self: flex-start;
+    width: 250px;
+    z-index: 2;
+}
+
+#minPrice,
+#maxPrice {
+    width: 85%;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .product-card {
+        width: 100%;
+    }
+
+    .product-form-card {
+        padding: 20px;
+    }
+
+    .product-form input,
+    .product-form textarea {
+        font-size: 0.95rem;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
 }

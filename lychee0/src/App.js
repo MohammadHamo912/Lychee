@@ -13,6 +13,7 @@ import Search from "./pages/Search.jsx";
 import ProductDetails from "./pages/ProductDetailsPage.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.jsx";
+import OwnerDashboard from "./pages/OwnerDashboard.jsx";
 // Components
 import NavBar from "./components/NavBar"; // DONE
 import ProductCard from "./components/ProductCard"; // DONE
@@ -23,6 +24,7 @@ import Footer from "./components/Footer"; // DONE
 import ShoppingCart from "./components/ShoppingCart"; // DONE
 import CheckoutForm from "./components/CheckoutForm"; // DONE
 import FiltersPanel from "./components/FiltersPanel";
+import ShopOwnerDashboard from "./components/ShopOwnerDashboard.jsx";
 import OrderSummary from "./components/OrderSummary.jsx";
 import OrderConfirmation from "./components/OrderConfirmation.jsx";
 import HeroSection from "./components/HeroSection.jsx"; // DONE
@@ -64,6 +66,8 @@ function App() {
     <div>
       <Routes>
         <Route path="shoppingcartpage" component={<ShoppingCartPage />}></Route>
+        <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
+        <Route path="/ownerdashboard" element={<OwnerDashboard />} />
         <Route path="/admin/usermanagement" element={<UserManagment />} />
         <Route path="/admin/shopapproval" element={<ShopApproval />} />
         <Route
