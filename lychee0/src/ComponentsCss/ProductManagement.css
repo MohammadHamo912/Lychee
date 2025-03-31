@@ -1,27 +1,21 @@
-/* === Main Container === */
 .product-management-container {
     padding: 40px 20px;
     background-color: #FFF5E1;
-    /* Creamy white */
     min-height: 100vh;
     color: #670010;
-    /* Deep Berry */
     box-sizing: border-box;
     margin-top: 10px;
 }
 
-/* === Heading === */
 .product-management-container h2 {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 30px;
 }
 
-/* === Form Card === */
 .product-form-card {
     background-color: #fff;
     border: 2px solid #D9B6A3;
-    /* Warm Taupe */
     border-radius: 12px;
     padding: 25px;
     max-width: 700px;
@@ -42,7 +36,6 @@
     gap: 16px;
 }
 
-/* Group name & price inline */
 .form-inline-group {
     display: flex;
     gap: 16px;
@@ -57,7 +50,6 @@
     background-color: #FFF5E1;
     color: #670010;
 }
-
 
 .product-form input,
 .product-form textarea {
@@ -75,15 +67,21 @@
     width: 96%;
 }
 
-/* === File Upload Label === */
+.category-select {
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #D9B6A3;
+    background-color: #FFF5E1;
+    color: #670010;
+}
+
 .image-upload-label {
     background: #670010;
-    /* Soft blush */
     color: white;
     padding: 10px 14px;
     border-radius: 8px;
     font-weight: 600;
-    text-align: center;
     display: inline-block;
     cursor: pointer;
     transition: background 0.3s ease;
@@ -97,7 +95,6 @@
     background: #F4B6B6;
 }
 
-/* === Image Preview === */
 .preview-wrapper {
     margin-top: 10px;
     text-align: center;
@@ -111,7 +108,6 @@
     object-fit: contain;
 }
 
-/* === Form Buttons === */
 .form-buttons {
     display: flex;
     gap: 12px;
@@ -127,7 +123,6 @@
     transition: background 0.3s ease;
 }
 
-/* Submit Button */
 .form-buttons button[type="submit"] {
     background-color: #670010;
     color: #FFF5E1;
@@ -135,10 +130,8 @@
 
 .form-buttons button[type="submit"]:hover {
     background-color: #B76E79;
-    /* Rose Gold */
 }
 
-/* Cancel Button */
 .cancel-btn {
     background-color: transparent;
     border: 1.5px solid #8B3C5D;
@@ -149,7 +142,6 @@
     background-color: #FFC5C5;
 }
 
-/* === Product List Grid === */
 .product-list {
     display: flex;
     flex-wrap: wrap;
@@ -157,7 +149,6 @@
     justify-content: center;
 }
 
-/* === Product Card === */
 .product-card {
     width: 300px;
     background-color: #fff;
@@ -180,14 +171,12 @@
     box-shadow: 0 0 10px rgba(183, 110, 121, 0.4);
 }
 
-/* === Product Image === */
 .product-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
 }
 
-/* === Product Details === */
 .product-details {
     padding: 16px;
     flex-grow: 1;
@@ -205,13 +194,17 @@
     margin-bottom: 6px;
 }
 
+.product-category {
+    font-size: 0.95rem;
+    color: #A97E7E;
+}
+
 .product-desc {
     font-size: 0.95rem;
     color: #5c3c3c;
     line-height: 1.4;
 }
 
-/* === Product Actions === */
 .product-actions {
     display: flex;
     justify-content: space-between;
@@ -234,30 +227,6 @@
     background-color: #B76E79;
 }
 
-/* === Category Filter === */
-.product-filter {
-    max-width: 700px;
-    margin: 0 auto 30px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #670010;
-    font-weight: 500;
-}
-
-/* Reuse category-select */
-.category-select {
-    padding: 10px 14px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #D9B6A3;
-    background-color: #FFF5E1;
-    color: #670010;
-    appearance: none;
-    flex: 1;
-}
-
-/* === Empty List Message === */
 .no-products {
     text-align: center;
     color: #8B3C5D;
@@ -265,20 +234,142 @@
     margin-top: 30px;
 }
 
-.filters-wrapper {
-    position: sticky;
-    top: 130px;
-    align-self: flex-start;
-    width: 250px;
-    z-index: 2;
+.filters-wrapper.horizontal-layout>.filter-panel {
+    display: flex !important;
+    flex-wrap: wrap;
+    flex-direction: row !important;
+    align-items: flex-end;
+    gap: 1rem;
+    background-color: #FFF5E1;
+    padding: 1rem;
+    border-radius: 12px;
 }
 
-#minPrice,
-#maxPrice {
-    width: 85%;
+.filters-wrapper.horizontal-layout .filter-group {
+    flex: 1 1 180px;
+    margin-bottom: 0 !important;
 }
 
-/* === Responsive === */
+.filters-wrapper.horizontal-layout .filter-actions {
+    flex: 1 1 100%;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-start;
+    margin-top: 1rem;
+
+}
+
+/* === Order Popup Styles === */
+.order-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.order-popup-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    position: relative;
+    color: #8B3C5D;
+    animation: fadeIn 0.3s ease;
+}
+
+.order-popup-content h3 {
+    margin-top: 0;
+    color: #8B3C5D;
+}
+
+.order-popup-content ul {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.order-popup-content li {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    color: #5c3c3c;
+}
+
+/* Close Button */
+.close-button {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #8B3C5D;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover {
+    color: #B76E79;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.order-popup-content ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.order-popup-content li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #FFF5E1;
+    border: 1px solid #D9B6A3;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #5c3c3c;
+}
+
+.order-popup-content li span.name {
+    flex: 2;
+    font-weight: 600;
+    color: #8B3C5D;
+}
+
+.order-popup-content li span.qty {
+    flex: 1;
+    text-align: center;
+}
+
+.order-popup-content li span.price {
+    flex: 1;
+    text-align: right;
+    font-weight: 500;
+    color: #B76E79;
+}
+
+
+
 @media (max-width: 768px) {
     .product-card {
         width: 100%;
@@ -294,6 +385,14 @@
     }
 
     .form-buttons {
+        flex-direction: column;
+    }
+
+    .filters-wrapper.horizontal-layout>.filter-panel {
+        flex-direction: column !important;
+    }
+
+    .filters-wrapper.horizontal-layout .filter-actions {
         flex-direction: column;
     }
 }

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "../ComponentsCss/FiltersPanel.css";
 
-const FiltersPanel = ({ onApplyFilters }) => {
-  const [category, setCategory] = useState("all");
+const FiltersPanel = ({ onApplyFilters, layout = "vertical", categories = [] }) => {
+  const [category, setCategory] = useState("All");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortOption, setSortOption] = useState("none");
@@ -17,23 +17,25 @@ const FiltersPanel = ({ onApplyFilters }) => {
   };
 
   const handleReset = () => {
-    setCategory("all");
+    setCategory("All");
     setMinPrice("");
     setMaxPrice("");
     setSortOption("none");
 
     onApplyFilters({
-      category: "all",
+      category: "All",
       minPrice: null,
       maxPrice: null,
       sortOption: "none",
     });
   };
 
-  return (
-    <div className="filter-panel">
-      <h3>Filters & Sorting</h3>
+  const isHorizontal = layout === "horizontal";
 
+  return (
+    <div
+      className={`filter-panel ${isHorizontal ? "horizontal-layout" : ""}`}
+    >
       <div className="filter-group">
         <label htmlFor="category">Category</label>
         <select
@@ -41,10 +43,10 @@ const FiltersPanel = ({ onApplyFilters }) => {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
-          <option value="all">All</option>
-          <option value="beauty">Beauty</option>
-          <option value="skincare">Skincare</option>
-          <option value="fragrance">Fragrance</option>
+          <option value="All">All</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
         </select>
       </div>
 

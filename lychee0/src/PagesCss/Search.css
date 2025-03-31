@@ -4,12 +4,6 @@
     padding-top: 90px;
 }
 
-.search-main-content {
-    padding-bottom: 150px;
-    /* prevents overlap with footer */
-}
-
-/* Header */
 .search-container {
     display: flex;
     flex-direction: column;
@@ -31,30 +25,29 @@
     font-size: 1.1rem;
 }
 
-/* Layout */
-.search-layout {
+.search-body {
     display: flex;
-    align-items: flex-start;
     gap: 30px;
     padding: 30px 40px;
 }
 
-/* Sticky filter panel */
-.filters-wrapper {
-    position: sticky;
-    top: 130px;
-    align-self: flex-start;
+.filter-panel {
     width: 250px;
-    z-index: 2;
+    background-color: #fff5e1;
+    padding: 20px;
+    position: sticky;
+    top: 120px;
+    height: fit-content;
+    z-index: 1;
 }
 
-/* Results section */
 .search-results-section {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     width: 100%;
 }
 
-/* Results header */
 .results-header {
     display: flex;
     justify-content: space-between;
@@ -80,7 +73,22 @@
     margin-top: 5px;
 }
 
-/* Product grid */
+.clear-filters {
+    background-color: transparent;
+    border: 2px dashed #b76e79;
+    color: #8b3c5d;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.clear-filters:hover {
+    background-color: #ffe5e8;
+    border-style: solid;
+}
+
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -101,14 +109,12 @@
     }
 }
 
-/* Messages */
 .loading-text,
 .info-message {
     text-align: center;
     color: #8b3c5d;
     font-size: 1rem;
     margin-top: 40px;
-    margin-right: 25%;
 }
 
 .no-results {
@@ -118,29 +124,28 @@
     font-size: 1.2rem;
 }
 
-/* Filter inputs */
-#minPrice,
-#maxPrice {
-    width: 85%;
+.no-results em {
+    color: #b76e79;
+    font-weight: bold;
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
-    .search-layout {
+    .search-body {
         flex-direction: column;
         padding: 20px;
     }
 
-    .filters-wrapper {
-        position: relative;
-        top: 0;
-        left: 0;
+    .filter-panel {
         width: 100%;
         margin-bottom: 20px;
+        position: relative;
+        top: 0;
     }
 
-    .search-results-section {
-        margin-left: 0;
+    .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
     }
 }
 
@@ -157,8 +162,8 @@
         font-size: 1.2rem;
     }
 
-    #minPrice,
-    #maxPrice {
-        width: 92%;
+    .clear-filters {
+        font-size: 0.85rem;
+        padding: 5px 10px;
     }
 }

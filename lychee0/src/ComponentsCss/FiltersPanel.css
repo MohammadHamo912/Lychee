@@ -1,12 +1,45 @@
+.filter-panel.horizontal-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #FFF5E1;
+  justify-content: flex-start;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.filter-group select,
+.filter-group input {
+  width: 100%;
+  max-width: 100%;
+  height: 45px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #8B3C5D;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #670010;
+  font-size: 1rem;
+}
+
 .filter-actions {
+  flex-basis: 100%;
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
+  justify-content: flex-start;
 }
 
 .apply-button,
 .reset-button {
-  padding: 0.5rem 1.2rem;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -14,7 +47,7 @@
 }
 
 .apply-button {
-  background-color: #8b3c5d;
+  background-color: #8B3C5D;
   color: white;
 }
 
@@ -23,6 +56,29 @@
   color: #333;
 }
 
-.filter-group{
-  margin-bottom: 10px;
+@media (max-width: 768px) {
+  .filter-panel {
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+
+  .filter-panel .filter-group {
+    margin-bottom: 12px;
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .filter-panel .filter-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
 }

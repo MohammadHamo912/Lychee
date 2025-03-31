@@ -1,3 +1,4 @@
+/* Container and heading */
 .order-management-container {
     padding: 40px;
     background: #FFF5E1;
@@ -11,49 +12,127 @@
     font-size: 2rem;
 }
 
-.order-list {
+/* Filter section */
+.filter-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    flex-direction: row;
+}
+
+.filter-bar label {
+    font-weight: 500;
+}
+
+.filter-bar select,
+.search-input {
+    padding: 8px 12px;
+    border: 1px solid #D9B6A3;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 1rem;
+    color: #8B3C5D;
+    max-width: 200px;
+}
+
+.search-input {
+    width: 220px;
+    height: 10px;
+}
+
+/* Grid for cards */
+.order-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 24px;
     justify-content: center;
 }
 
+/* Order card styles */
 .order-card {
-    width: 300px;
+    width: 260px;
     background: #ffffff;
     border: 2px solid #D9B6A3;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
     transition: transform 0.2s ease;
+    cursor: pointer;
 }
 
 .order-card:hover {
     transform: scale(1.02);
 }
 
-.order-details h3 {
-    margin-bottom: 10px;
+/* Header with badge */
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.order-details p {
-    margin: 5px 0;
+.status-badge {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
 }
 
+.status-processing .status-badge {
+    background-color: #f0a202;
+}
+
+.status-shipped .status-badge {
+    background-color: #3d9df6;
+}
+
+.status-delivered .status-badge {
+    background-color: #3cb371;
+}
+
+.status-cancelled .status-badge {
+    background-color: #e74c3c;
+}
+
+/* Info and item details */
+.order-info p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+}
+
+.order-items ul {
+    padding-left: 18px;
+    margin-top: 10px;
+}
+
+.order-items li {
+    font-size: 0.9rem;
+    color: #444;
+}
+
+/* Status dropdown */
 .order-status {
-    margin-top: 15px;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
 }
 
 .order-status label {
-    font-weight: bold;
-    margin-right: 10px;
+    font-weight: 500;
+    margin-bottom: 5px;
 }
 
 .order-status select {
-    padding: 5px 8px;
+    padding: 8px 12px;
     border: 1px solid #D9B6A3;
-    border-radius: 4px;
+    border-radius: 6px;
     background: #FFF5E1;
     color: #8B3C5D;
+    font-weight: 500;
     cursor: pointer;
 }

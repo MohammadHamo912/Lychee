@@ -13,12 +13,14 @@ const ProductManagement = () => {
             description: 'A high-quality lip gloss that adds shine and hydration.',
             imageUrl: '/images/lipgloss.jpeg',
             category: 'Makeup',
+            discount: 0,
         },
     ]);
 
     const [formData, setFormData] = useState({
         name: '',
         price: '',
+        discount: '',
         description: '',
         category: '',
         imageFile: null,
@@ -51,14 +53,18 @@ const ProductManagement = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const { name, price, description, imageFile, imageUrl, category } = formData;
+        const { name, price, discount, description, imageFile, imageUrl, category } = formData;
 
         if (!name || !price || !description || !category || (!imageFile && !editingProduct)) {
             alert('Please fill out all fields and upload an image.');
             return;
         }
 
-        const newProduct = { ...formData, price: parseFloat(price) };
+        const newProduct = {
+            ...formData,
+            price: parseFloat(price),
+            discount: parseFloat(discount) || 0,
+        };
 
         if (editingProduct) {
             setProducts((prev) =>
@@ -74,6 +80,7 @@ const ProductManagement = () => {
         setFormData({
             name: '',
             price: '',
+            discount: '',
             description: '',
             category: '',
             imageFile: null,
@@ -86,6 +93,7 @@ const ProductManagement = () => {
         setFormData({
             name: product.name,
             price: product.price,
+            discount: product.discount,
             description: product.description,
             category: product.category,
             imageFile: null,
@@ -105,6 +113,7 @@ const ProductManagement = () => {
         setFormData({
             name: '',
             price: '',
+            discount: '',
             description: '',
             category: '',
             imageFile: null,
@@ -169,6 +178,14 @@ const ProductManagement = () => {
                             onChange={handleInputChange}
                             required
                         />
+                        <input
+                            type="number"
+                            name="discount"
+                            step="0.01"
+                            placeholder="Discount %"
+                            value={formData.discount}
+                            onChange={handleInputChange}
+                        />
                     </div>
 
                     <select
@@ -215,8 +232,8 @@ const ProductManagement = () => {
                 </form>
             </div>
 
-            <div className="filters-wrapper">
-                <FiltersPanel onApplyFilters={applyFilters} initialFilters={filters} />
+            <div className="filters-wrapper horizontal-layout">
+                <FiltersPanel onApplyFilters={applyFilters} layout="horizontal" />
             </div>
 
             <div className="product-list">
@@ -232,7 +249,19 @@ const ProductManagement = () => {
                             <div className="product-details">
                                 <h3>{product.name}</h3>
                                 <p className="product-category">{product.category}</p>
-                                <p className="product-price">${product.price.toFixed(2)}</p>
+                                {product.discount > 0 ? (
+                                    <>
+                                        <p className="product-price">
+                                            <span className="original-price">${product.price.toFixed(2)}</span>{' '}
+                                            <span className="discounted-price">
+                                                ${(product.price * (1 - product.discount / 100)).toFixed(2)}
+                                            </span>
+                                        </p>
+                                        <p className="product-discount">Discount: {product.discount}%</p>
+                                    </>
+                                ) : (
+                                    <p className="product-price">${product.price.toFixed(2)}</p>
+                                )}
                                 <p className="product-desc">{product.description}</p>
                             </div>
                             <div className="product-actions">
