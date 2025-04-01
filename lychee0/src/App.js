@@ -41,6 +41,7 @@ import Pagination from "./components/Pagination";
 import DiscountManagement from "./pages/admin/DiscountManagement.jsx";
 import ShopApproval from "./pages/admin/ShopApproval.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
+import BlogAndBeauty from "./pages/BlogAndBeautyTips.jsx";
 import NotFoundPage from "./pages/NotFound.jsx";
 import StorePage from "./pages/StorePage.jsx";
 import ContactAndSupport from "./pages/ContactAndSupport.jsx";
@@ -67,6 +68,7 @@ function App() {
       <Routes>
         <Route path="shoppingcartpage" component={<ShoppingCartPage />}></Route>
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
+        <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
         <Route path="/ownerdashboard" element={<OwnerDashboard />} />
         <Route path="/admin/usermanagement" element={<UserManagment />} />
         <Route path="/admin/shopapproval" element={<ShopApproval />} />
