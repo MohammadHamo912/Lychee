@@ -1,6 +1,6 @@
 .dashboard-container {
     padding: 40px 20px;
-    background: linear-gradient(135deg, #FFF5E1 0%, #ffffff 100%);
+    background: #FFF5E1;
     min-height: 100vh;
     box-sizing: border-box;
     color: #8B3C5D;

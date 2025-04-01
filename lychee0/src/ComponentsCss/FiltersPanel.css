@@ -1,49 +1,60 @@
-.filter-panel.horizontal-layout {
-  display: flex;
+/* Force horizontal layout */
+.filter-panel.fixed-layout {
+  display: flex !important;
+  flex-direction: row !important;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 1rem;
-  padding: 1rem;
   background-color: #FFF5E1;
-  justify-content: flex-start;
+  padding: 1rem;
+  border-radius: 12px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
+/* Individual filter group */
 .filter-group {
+  flex: 1 1 180px;
   display: flex;
   flex-direction: column;
-  width: 160px;
-  flex-shrink: 0;
 }
 
-.filter-group select,
-.filter-group input {
-  width: 100%;
-  max-width: 100%;
-  height: 45px;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid #8B3C5D;
-  border-radius: 8px;
-  background-color: #fff;
+/* Labels and Inputs */
+.filter-group label {
+  font-weight: bold;
   color: #670010;
-  font-size: 1rem;
+  margin-bottom: 5px;
 }
 
+.filter-group input,
+.filter-group select {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #B76E79;
+  color: #670010;
+  background-color: #fff;
+  max-width: 230px;
+}
+
+/* Action Buttons */
 .filter-actions {
-  flex-basis: 100%;
+  flex: 1 1 100%;
   display: flex;
-  gap: 1rem;
+  flex-direction: row;
+  gap: 0.75rem;
   margin-top: 1rem;
-  justify-content: flex-start;
 }
 
 .apply-button,
 .reset-button {
-  padding: 10px 16px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  transition: background 0.3s ease;
 }
 
 .apply-button {
@@ -51,34 +62,33 @@
   color: white;
 }
 
+.apply-button:hover {
+  background-color: #B76E79;
+}
+
 .reset-button {
   background-color: #f2f2f2;
   color: #333;
 }
 
+.reset-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Prevent override on mobile */
 @media (max-width: 768px) {
-  .filter-panel {
-    flex-direction: column !important;
-    align-items: stretch;
+  .filter-panel.fixed-layout {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: flex-end !important;
   }
 
-  .filter-panel .filter-group {
-    margin-bottom: 12px;
-    flex: 1 1 auto;
-    width: 100%;
+  .filter-actions {
+    flex-direction: row !important;
   }
 
-  .filter-panel .filter-actions {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    width: 100%;
+  .apply-button,
+  .reset-button {
+    width: auto !important;
   }
-
-  .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
 }

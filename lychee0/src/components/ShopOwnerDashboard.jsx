@@ -51,19 +51,6 @@ const ShopOwnerDashboard = () => {
 
                 <div className="details-section">
                     <div className="section">
-                        <h2>Recent Orders</h2>
-                        <ul className="item-list">
-                            {recentOrders.map((order) => (
-                                <li key={order.id} onClick={() => handleViewOrder(order.id)}>
-                                    <span className="order-id">Order #{order.id}</span>
-                                    <span className="order-date">{order.date}</span>
-                                    <span className="order-total">${order.total.toFixed(2)}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="section">
                         <h2>Products</h2>
                         <ul className="item-list">
                             {products.map((product) => (
