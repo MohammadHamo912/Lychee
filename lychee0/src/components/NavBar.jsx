@@ -21,7 +21,9 @@ const NavBar = () => {
   return (
     <header className={`navbar ${isSolid ? "solid" : ""}`}>
       <div className="navbar-inner">
-        <Link to="/" className="logo">Lychee</Link>
+        <Link to="/" className="logo">
+          Lychee
+        </Link>
 
         <nav className="nav-links">
           <Link to="/homepage">Home</Link>
@@ -46,7 +48,10 @@ const NavBar = () => {
           )}
         </div>
 
-        <button className="mobile-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button
+          className="mobile-toggle"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
           ☰
         </button>
       </div>
