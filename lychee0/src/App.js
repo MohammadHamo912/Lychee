@@ -33,6 +33,7 @@ import TrendingProducts from "./components/TrendingProducts"; // DONE
 import StoreHighlights from "./components/StoreHighlights"; // DONE
 import ProfilePage from "./components/ProfilePage.jsx";
 import OrderHistory from "./components/OrderHistory.jsx";
+import SearchBar from "./components/SearchBar.jsx";
 import Breadcrumbs from "./components/Breadcrumbs";
 import Modal from "./components/Modal.jsx";
 import Toast from "./components/Toast";
@@ -49,6 +50,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import UserManagment from "./pages/admin/UserManagement.jsx"; // Keep SearchBar separate
+
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
@@ -66,7 +68,8 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="shoppingcartpage" component={<ShoppingCartPage />}></Route>
+        <Route path="shoppingcartpage" element={<ShoppingCartPage />} />
+
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
         <Route path="/ownerdashboard" element={<OwnerDashboard />} />
@@ -103,6 +106,7 @@ function App() {
         <Route path="/footer" element={<Footer />} />
         <Route path="/shops" element={<ShopGrid />} />
         <Route path="/filterspanel" element={<FiltersPanel />} />
+        <Route path="/searchbar" element={<SearchBar />} />
         <Route path="/herosection" element={<HeroSection />} />
         <Route path="/categorygrid" element={<CategoryGrid />} />
         <Route path="/trendingproducts" element={<TrendingProducts />} />

@@ -302,16 +302,19 @@
 .sort-options {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .sort-options label {
   color: #670010; /* Deep berry */
   font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  white-space: nowrap; /* Prevents text from wrapping */
 }
 
 .sort-select {
-  padding: 10px 16px;
+  padding: 10px 15px;
   border: 2px solid #b76e79; /* Rose gold */
   border-radius: 20px;
   background-color: #fff5e1; /* Cream */
