@@ -5,7 +5,6 @@ import "../ComponentsCss/NavBar.css";
 const NavBar = () => {
   const [isSolid, setIsSolid] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isLoggedIn = true;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +15,8 @@ const NavBar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const isLoggedIn = true; // Replace with real auth check if needed
 
   return (
     <header className={`navbar ${isSolid ? "solid" : ""}`}>
@@ -34,7 +35,8 @@ const NavBar = () => {
         <div className="nav-auth">
           {isLoggedIn ? (
             <Link to="/dashboard" className="profile-link">
-              <span className="profile-badge">P</span> Profile
+              <span className="profile-badge">P</span>
+              Profile
             </Link>
           ) : (
             <>
@@ -44,9 +46,9 @@ const NavBar = () => {
           )}
         </div>
 
-        <div className="mobile-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button className="mobile-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           ☰
-        </div>
+        </button>
       </div>
 
       {isMenuOpen && (

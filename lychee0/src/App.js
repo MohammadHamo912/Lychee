@@ -75,6 +75,7 @@ function App() {
         <Route path="/ownerdashboard" element={<OwnerDashboard />} />
         <Route path="/admin/usermanagement" element={<UserManagment />} />
         <Route path="/admin/shopapproval" element={<ShopApproval />} />
+        <Route path="/navbar" element={<NavBar />} />
         <Route
           path="/admin/discountmanagment"
           element={<DiscountManagement />}
@@ -102,7 +103,6 @@ function App() {
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/navbar" element={<NavBar />} />
         <Route path="/footer" element={<Footer />} />
         <Route path="/shops" element={<ShopGrid />} />
         <Route path="/filterspanel" element={<FiltersPanel />} />
