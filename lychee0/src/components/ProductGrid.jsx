@@ -5,7 +5,8 @@ import dummyProducts from "../Data/dummyProducts";
 import "../ComponentsCss/ProductGrid.css";
 
 const ProductGrid = ({ items, limit }) => {
-  const products = Array.isArray(items) && items.length > 0 ? items : dummyProducts;
+  const products =
+    Array.isArray(items) && items.length > 0 ? items : dummyProducts;
 
   const handleAddToCart = (product) => {
     console.log("Added to cart:", product);

@@ -7,7 +7,7 @@ import shop1Url from "./images/shop1SampleImage.png"; // Update path if necessar
 // Pages
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
-import DummyHomePage from "./DummyFiles/DummyHomePage";
+import HomePage from "./DummyFiles/DummyHomePage";
 import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
 import Search from "./pages/Search.jsx";
 import ProductDetails from "./pages/ProductDetailsPage.jsx";
@@ -50,6 +50,8 @@ import Dashboard from "./pages/Dashboard.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import UserManagment from "./pages/admin/UserManagement.jsx"; // Keep SearchBar separate
+import ReusableGrid from "./components/ReusableGrid.jsx";
+import ProdcutsSection from "./DummyFiles/TestingProductsGrid.jsx";
 
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
@@ -69,7 +71,6 @@ function App() {
     <div>
       <Routes>
         <Route path="shoppingcartpage" element={<ShoppingCartPage />} />
-
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
         <Route path="/ownerdashboard" element={<OwnerDashboard />} />
@@ -80,24 +81,17 @@ function App() {
           path="/admin/discountmanagment"
           element={<DiscountManagement />}
         />
-        <Route
-          path="/"
-          element={<div style={{ padding: 40 }}>Home Test</div>}
-        />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/homepage" element={<DummyHomePage />} />
-        <Route path="/dummyhomepage" element={<DummyHomePage />} />
-
-        <Route
-          path="/"
-          element={<div style={{ padding: 40 }}>Home Test</div>}
-        />
-
+        <Route path="/" element={<HomePage />} />
+        {/* Use HomePage as the default */}
+        <Route path="/homepage" element={<HomePage />} />
+        {/* Keep this if you want a separate /homepage */}
         {/*to test this type http://localhost:3000/product/{the id of the component } 
         example:
         http://localhost:3000/product/1
         */}
         <Route path="/category/:category" element={<ShopByCategory />} />
+
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/sidebar" element={<Sidebar />} />
@@ -120,6 +114,9 @@ function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/search" element={<Search />} />
+        <Route path="reusablegrid" element={<ReusableGrid />} />
+        <Route path="productsSection" element={<ProdcutsSection />} />
+
         <Route
           path="/productcard"
           element={

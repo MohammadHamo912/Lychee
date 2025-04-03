@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import NavBar from "./../components/NavBar";
 import Footer from "./../components/Footer";
 import SearchBar from "./../components/SearchBar";
@@ -9,9 +9,8 @@ import CategoryGrid from "./../components/CategoryGrid";
 import TrendingProducts from "./../components/TrendingProducts";
 import StoreHighlights from "./../components/StoreHighlights";
 import "../ComponentsCss/HomePage.css"; // New CSS file
-import "../ComponentsCss/FeaturedProducts.css"; // Existing CSS for Featured Products
-import dummyCategoriesWithCounts from "../Data/dummyCategories";
-import dummyProducts from "../Data/dummyProducts";
+import "../ComponentsCss/FeaturedProducts.css"; // Existing CSS for Featured
+
 // Mock data for the carousel
 const carouselSlides = [
   {
@@ -53,20 +52,17 @@ const searchSuggestions = [
 ];
 
 const HomePage = () => {
-  const products = dummyProducts || [];
-  const categories = dummyCategoriesWithCounts || [];
+  const storeHighlightsRef = useRef(null);
+  const scrollToStoreHighlights = () => {
+    storeHighlightsRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="home-page">
       <NavBar />
       <main className="main-content">
-        <HeroSection />
-        <div className="search-bar-section section">
-          <SearchBar
-            placeholder="Search for products, shops, or collections..."
-            suggestions={searchSuggestions}
-          />
-        </div>
+        <HeroSection scrollToStoreHighlights={scrollToStoreHighlights} />
+        {"Put the searchbar here"}
         <div className="carousel-section section">
           <Carousel slides={carouselSlides} />
         </div>
@@ -74,14 +70,21 @@ const HomePage = () => {
           <CategoryGrid />
         </div>
         <div className="featured-products section">
+          {" "}
+          {" Convert this to Products section"}
           <h2 className="section-title">Featured Products</h2>
           <ProductGrid limit={4} />
         </div>
-        <div className="trending-products-section section">
-          <TrendingProducts />
-        </div>
-        <div className="store-highlights-section section">
+
+        {"Convert this to shops grid"}
+        <div
+          ref={storeHighlightsRef}
+          className="store-highlights-section section"
+        >
           <StoreHighlights />
+        </div>
+        <div className="trending-products-section section">
+          <TrendingProducts /> {" Convert this to items grid"}
         </div>
       </main>
       <Footer />

@@ -19,11 +19,7 @@ const ProductCard = ({ product, onAddToCart }) => {
 
   return (
     <div className="product-card" onClick={handleCardClick}>
-      <img
-        src={imageUrl}
-        alt={name}
-        className="product-card-image"
-      />
+      <img src={imageUrl} alt={name} className="product-card-image" />
 
       <div className="product-card-body">
         <h3 className="product-card-title">{name}</h3>
