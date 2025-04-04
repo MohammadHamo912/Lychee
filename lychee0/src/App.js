@@ -9,7 +9,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import HomePage from "./DummyFiles/DummyHomePage";
 import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
-import Search from "./pages/Search.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
 import ProductDetails from "./pages/ProductDetailsPage.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.jsx";
@@ -36,6 +36,7 @@ import OrderHistory from "./components/OrderHistory.jsx";
 import SearchBar from "./components/SearchBar.jsx";
 import Breadcrumbs from "./components/Breadcrumbs";
 import Modal from "./components/Modal.jsx";
+import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
 import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
@@ -59,6 +60,8 @@ import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
 import { dummyOrderData } from "./Data/dummyOrderData.js";
 import { dummyCoreData } from "./Data/dummyCoreData.js";
+import dummyStores from "./Data/dummyStores";
+
 import DummyTestingCards from "./DummyFiles/DummyTestingCards.jsx";
 import dummyProducts from "./Data/dummyProducts.js";
 function App() {
@@ -84,6 +87,13 @@ function App() {
           element={<DiscountManagement />}
         />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/homepage" element={<DummyHomePage />} />
+
+        <Route
+          path="/"
+          element={<div style={{ padding: 40 }}>Home Test</div>}
+        />
+
         <Route path="/" element={<HomePage />} />
         {/* Use HomePage as the default */}
         <Route path="/homepage" element={<HomePage />} />
@@ -110,7 +120,7 @@ function App() {
         <Route path="/footer" element={<Footer />} />
         <Route path="/shops" element={<ShopGrid />} />
         <Route path="/filterspanel" element={<FiltersPanel />} />
-        <Route path="/searchbar" element={<SearchBar />} />
+        <Route path="/searchbar" element={<SearchBar searchType="store" />} />
         <Route path="/herosection" element={<HeroSection />} />
         <Route path="/categorygrid" element={<CategoryGrid />} />
         <Route path="/trendingproducts" element={<TrendingProducts />} />
@@ -123,7 +133,33 @@ function App() {
         <Route path="/contactandsupport" element={<ContactAndSupport />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/search" element={<Search />} />
+        <Route
+          path="/search-products"
+          element={
+            <SearchPage
+              searchType="products"
+              data={dummyProducts}
+              renderCard={(product) => <ProductCard product={product} />}
+            />
+          }
+        />
+
+        <Route
+          path="/search-stores"
+          element={
+            <SearchPage
+              searchType="stores"
+              data={dummyStores}
+              renderCard={(store) => (
+                <ShopCard
+                  shop={store}
+                  onViewShop={(s) => console.log("Viewing store:", s)}
+                />
+              )}
+            />
+          }
+        />
+
         <Route path="reusablegrid" element={<ReusableGrid />} />
         <Route path="productgrid" element={<ProductGrid />} />
 

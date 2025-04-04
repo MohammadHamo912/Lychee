@@ -1,3 +1,15 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  height: 100%;
+}
+
+body {
+  padding-top: 65px;
+}
+
 .navbar {
   position: fixed;
   top: 0;
@@ -7,24 +19,13 @@
   background-color: rgba(103, 0, 16, 0.9);
   backdrop-filter: blur(10px);
   z-index: 9999;
-  transition: background 0.3s ease;
-}
-
-.navbar.solid {
-  background-color: #670010;
-  backdrop-filter: none;
-}
-
-body {
-  padding-top: 65px;
-  margin: 0;
 }
 
 .navbar-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
   height: 100%;
+  padding: 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,9 +48,9 @@ body {
 .nav-links a,
 .nav-auth a {
   color: #fff5e1;
-  text-decoration: none;
   font-size: 16px;
-  transition: color 0.3s;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .nav-links a:hover,
@@ -58,16 +59,16 @@ body {
 }
 
 .cart-link {
+  position: relative;
   display: flex;
   align-items: center;
-  position: relative;
 }
 
 .cart-badge {
   position: absolute;
   top: -8px;
   right: -14px;
-  background: #b76e79;
+  background-color: #b76e79;
   color: white;
   font-size: 12px;
   width: 18px;
@@ -86,7 +87,7 @@ body {
 }
 
 .profile-badge {
-  background: #b76e79;
+  background-color: #b76e79;
   width: 26px;
   height: 26px;
   font-size: 14px;
@@ -112,21 +113,23 @@ body {
   top: 65px;
   left: 0;
   right: 0;
-  background: #fff5e1;
+  background-color: #fff5e1;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 20px;
   text-align: center;
+  z-index: 9998;
 }
 
 .mobile-menu a {
-  color: #8b3c5d;
   font-size: 18px;
+  color: #8b3c5d;
   text-decoration: none;
 }
 
 @media (max-width: 992px) {
+
   .nav-links,
   .nav-auth {
     display: none;

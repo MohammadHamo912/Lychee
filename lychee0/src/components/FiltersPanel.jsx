@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../ComponentsCss/FiltersPanel.css';
 
-const FiltersPanel = ({ onApplyFilters, categories = [] }) => {
+const FiltersPanel = ({ onApplyFilters, categories = ["Skincare", "Makeup", "Hair Care", "Fragrance"] }) => {
   const [category, setCategory] = useState('All');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -44,12 +44,12 @@ const FiltersPanel = ({ onApplyFilters, categories = [] }) => {
 
       <div className="filter-group">
         <label>Min Price</label>
-        <input type="number" placeholder="e.g. 10" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
+        <input id='minPrice' type="number" placeholder="e.g. 10" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
       </div>
 
       <div className="filter-group">
         <label>Max Price</label>
-        <input type="number" placeholder="e.g. 100" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
+        <input id='minPrice' type="number" placeholder="e.g. 100" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
       </div>
 
       <div className="filter-group">
