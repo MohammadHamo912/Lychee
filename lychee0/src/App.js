@@ -36,6 +36,7 @@ import OrderHistory from "./components/OrderHistory.jsx";
 import SearchBar from "./components/SearchBar.jsx";
 import Breadcrumbs from "./components/Breadcrumbs";
 import Modal from "./components/Modal.jsx";
+import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
 import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";

@@ -61,14 +61,11 @@ const HomePage = () => {
     <div className="home-page">
       <NavBar />
       <main className="main-content">
-<<<<<<< HEAD
         <HeroSection />
         <div className="search-bar-section section">
         </div>
-=======
         <HeroSection scrollToStoreHighlights={scrollToStoreHighlights} />
         {"Put the searchbar here"}
->>>>>>> b3489741160f9d657590e63835a44e3d97b2c6fa
         <div className="carousel-section section">
           <Carousel slides={carouselSlides} />
         </div>
