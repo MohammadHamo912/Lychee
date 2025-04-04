@@ -62,10 +62,6 @@ const HomePage = () => {
       <main className="main-content">
         <HeroSection />
         <div className="search-bar-section section">
-          <SearchBar
-            placeholder="Search for products, shops, or collections..."
-            suggestions={searchSuggestions}
-          />
         </div>
         <div className="carousel-section section">
           <Carousel slides={carouselSlides} />

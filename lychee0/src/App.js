@@ -86,7 +86,6 @@ function App() {
         />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/homepage" element={<DummyHomePage />} />
-        <Route path="/dummyhomepage" element={<DummyHomePage />} />
 
         <Route
           path="/"
