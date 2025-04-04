@@ -11,9 +11,9 @@ import HomePage from "./DummyFiles/DummyHomePage";
 import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import ProductDetails from "./pages/ProductDetailsPage.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
+import AdminDashboard from "./components/AdminDashboard.jsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.jsx";
-import OwnerDashboard from "./pages/OwnerDashboard.jsx";
+import OwnerDashboard from "./components/OwnerDashboard.jsx";
 // Components
 import NavBar from "./components/NavBar"; // DONE
 import ProductCard from "./components/ProductCard"; // DONE
@@ -40,8 +40,8 @@ import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
 import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
-import DiscountManagement from "./pages/admin/DiscountManagement.jsx";
-import ShopApproval from "./pages/admin/ShopApproval.jsx";
+import DiscountManagement from "./components/admin/DiscountManagement.jsx";
+import ShopApproval from "./components/admin/ShopApproval.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import BlogAndBeauty from "./pages/BlogAndBeautyTips.jsx";
 import NotFoundPage from "./pages/NotFound.jsx";
@@ -50,7 +50,7 @@ import ContactAndSupport from "./pages/ContactAndSupport.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Sidebar from "./components/Sidebar.jsx";
-import UserManagment from "./pages/admin/UserManagement.jsx"; // Keep SearchBar separate
+import UserManagment from "./components/admin/UserManagement.jsx"; // Keep SearchBar separate
 import ReusableGrid from "./components/ReusableGrid.jsx";
 import ProdcutsSection from "./DummyFiles/TestingProductsGrid.jsx";
 

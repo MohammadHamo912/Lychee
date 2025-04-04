@@ -42,8 +42,7 @@
     padding: 20px;
     position: sticky;
     top: 120px;
-    height: fit-content;
-    border: 1px solid #d9b6a3;
+    height: fit-content; 
     border-radius: 12px;
 }
 

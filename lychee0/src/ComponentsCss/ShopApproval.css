@@ -1,8 +1,5 @@
 .shop-approval-container {
     background: #fff5e1;
-    min-height: 100vh;
-    width: 100vw;
-    padding: 100px 24px 40px;
     /* extra top padding for navbar space */
     font-family: 'Segoe UI', sans-serif;
     color: #670010;
@@ -18,6 +15,7 @@
     /* ✅ align left */
     gap: 20px;
     margin-bottom: 40px;
+    margin-top: 40px;
 }
 
 

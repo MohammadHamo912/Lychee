@@ -3,7 +3,7 @@ import NavBar from "../components/NavBar";
 import ShopOwnerDashboard from "../components/ShopOwnerDashboard";
 import ProductManagement from "../components/ProductManagement";
 import OrderManagement from "../components/OrderManagement";
-import "../PagesCss/OwnerDashboard.css";
+import "../ComponentsCss/OwnerDashboard.css";
 
 const StoreOwnerDashboardPage = () => {
     const [activeTab, setActiveTab] = useState("dashboard");
