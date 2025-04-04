@@ -50,10 +50,7 @@ const SearchPage = ({ searchType = "products", data = [], renderCard }) => {
 
     if (searchType === "products") {
       // Category
-      if (
-        filters.category &&
-        filters.category.toLowerCase() !== "all"
-      ) {
+      if (filters.category && filters.category.toLowerCase() !== "all") {
         updated = updated.filter(
           (item) =>
             item.category &&
@@ -63,34 +60,24 @@ const SearchPage = ({ searchType = "products", data = [], renderCard }) => {
       }
 
       // Min Price
-      if (
-        filters.minPrice !== null &&
-        !isNaN(filters.minPrice)
-      ) {
+      if (filters.minPrice !== null && !isNaN(filters.minPrice)) {
         updated = updated.filter(
           (item) => item.price >= Number(filters.minPrice)
         );
       }
 
       // Max Price
-      if (
-        filters.maxPrice !== null &&
-        !isNaN(filters.maxPrice)
-      ) {
+      if (filters.maxPrice !== null && !isNaN(filters.maxPrice)) {
         updated = updated.filter(
           (item) => item.price <= Number(filters.maxPrice)
         );
       }
 
       // Rating
-      if (
-        filters.rating &&
-        filters.rating !== "all"
-      ) {
+      if (filters.rating && filters.rating !== "all") {
         updated = updated.filter(
           (item) =>
-            item.rating &&
-            Math.floor(item.rating) >= parseInt(filters.rating)
+            item.rating && Math.floor(item.rating) >= parseInt(filters.rating)
         );
       }
 
@@ -131,9 +118,7 @@ const SearchPage = ({ searchType = "products", data = [], renderCard }) => {
       <div className="search-container">
         <div className="search-header-text">
           <h1>Search Lychee</h1>
-          <p className="subtitle">
-            Find {searchType} you’ll love 💄
-          </p>
+          <p className="subtitle">Find {searchType} you’ll love 💄</p>
         </div>
         <SearchBar searchType={searchType} />
       </div>
@@ -147,9 +132,7 @@ const SearchPage = ({ searchType = "products", data = [], renderCard }) => {
         )}
 
         <div className="search-results-section">
-          {loading && (
-            <p className="loading-text">Searching...</p>
-          )}
+          {loading && <p className="loading-text">Searching...</p>}
 
           {!loading && !query && filteredResults.length === 0 && (
             <p className="info-message">
@@ -162,8 +145,7 @@ const SearchPage = ({ searchType = "products", data = [], renderCard }) => {
               <div className="results-header">
                 <div>
                   <h3>
-                    Results for "
-                    <span className="highlight">{query}</span>"
+                    Results for "<span className="highlight">{query}</span>"
                   </h3>
                   <p className="results-count">
                     {filteredResults.length} results found
@@ -190,8 +172,7 @@ const SearchPage = ({ searchType = "products", data = [], renderCard }) => {
           {!loading && query && filteredResults.length === 0 && (
             <div className="no-results">
               <p>
-                No results found for "
-                <strong>{query}</strong>" 😢
+                No results found for "<strong>{query}</strong>" 😢
               </p>
               <p>Try different filters or search terms</p>
             </div>

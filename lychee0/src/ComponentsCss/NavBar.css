@@ -129,7 +129,6 @@ body {
 }
 
 @media (max-width: 992px) {
-
   .nav-links,
   .nav-auth {
     display: none;
