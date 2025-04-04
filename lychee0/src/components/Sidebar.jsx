@@ -26,7 +26,7 @@ const Sidebar = ({
   return (
     <aside className="filters">
       <div className="filter-section">
-        <h3>Categories</h3>
+        <h3>Features</h3>
         {categoryOptions.map((cat) => (
           <label key={cat}>
             <input
