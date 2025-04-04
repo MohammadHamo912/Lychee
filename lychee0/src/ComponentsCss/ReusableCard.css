@@ -1,0 +1,157 @@
+/* ReusableCard.css */
+.reusable-card {
+  background: #fff;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 300px;
+}
+
+.reusable-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.reusable-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.reusable-card:hover .reusable-card-image {
+  transform: scale(1.05);
+}
+
+.reusable-card-body {
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.reusable-card-title {
+  font-size: 1.3rem;
+  margin: 0 0 8px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #670010;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* On hover, apply marquee animation */
+.reusable-card:hover .reusable-card-title {
+  animation: marquee 10s linear infinite;
+}
+
+/* Adjusted marquee keyframes */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  } /* Start at natural position */
+  100% {
+    transform: translateX(calc(-100% - 10px));
+  } /* Move full width plus a bit */
+}
+/* Optional: Pause animation on hover if you want users to read it */
+.reusable-card:hover .reusable-card-title {
+  animation-play-state: paused;
+}
+.reusable-card-subtitle {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reusable-card-description {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  color: #8b3c5d;
+}
+
+.reusable-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .reusable-card-image {
+    height: 180px;
+  }
+
+  .reusable-card-body {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reusable-card-image {
+    height: 160px;
+  }
+
+  .reusable-card-title {
+    font-size: 1.1rem;
+  }
+
+  .reusable-card-description {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reusable-card-image {
+    height: 150px;
+  }
+
+  .reusable-card-body {
+    padding: 12px;
+  }
+
+  .reusable-card-title {
+    font-size: 1rem;
+  }
+
+  .reusable-card-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

@@ -1,0 +1,39 @@
+/* ItemCard.css */
+/* Specific styling for the item theme that extends ReusableCard */
+
+.item-theme {
+  background: #f0f8ff;
+}
+
+.item-card-category {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3498db;
+  padding: 3px 8px;
+  background-color: rgba(52, 152, 219, 0.1);
+  border-radius: 4px;
+}
+
+.item-card-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.item-card-button:hover {
+  background: #2980b9;
+  transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .item-card-button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}

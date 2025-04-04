@@ -64,9 +64,7 @@
 }
 
 .category-card:hover .category-overlay {
-  background: linear-gradient(to top,
-      rgba(183, 110, 121, 0.9),
-      transparent);
+  background: linear-gradient(to top, rgba(183, 110, 121, 0.9), transparent);
 }
 
 .category-name {

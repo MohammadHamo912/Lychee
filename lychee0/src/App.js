@@ -17,7 +17,7 @@ import OwnerDashboard from "./pages/OwnerDashboard.jsx";
 // Components
 import NavBar from "./components/NavBar"; // DONE
 import ProductCard from "./components/ProductCard"; // DONE
-import ProductGrid from "./components/ProductGrid"; // DONE
+import ProductGrid from "./components/ProductGrid.jsx"; // DONE
 import ShopCard from "./components/ShopCard"; // DONE
 import ShopGrid from "./components/ShopGrid"; // DONE
 import Footer from "./components/Footer"; // DONE
@@ -51,14 +51,15 @@ import FAQ from "./pages/FAQ.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import UserManagment from "./pages/admin/UserManagement.jsx"; // Keep SearchBar separate
 import ReusableGrid from "./components/ReusableGrid.jsx";
-import ProdcutsSection from "./DummyFiles/TestingProductsGrid.jsx";
-
+import ReusableCard from "./components/ReusableCard.jsx";
+import TestingProductCard from "./DummyFiles/TestingReusableCard.jsx";
+import TestingItemCard from "./DummyFiles/TestingItemCard.jsx";
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
 import { dummyOrderData } from "./Data/dummyOrderData.js";
 import { dummyCoreData } from "./Data/dummyCoreData.js";
-
+import DummyTestingCards from "./DummyFiles/DummyTestingCards.jsx";
 import dummyProducts from "./Data/dummyProducts.js";
 function App() {
   /*dummy data for shopping cart */
@@ -70,6 +71,7 @@ function App() {
   return (
     <div>
       <Routes>
+        <Route path="dummytesting" element={<DummyTestingCards />} />
         <Route path="shoppingcartpage" element={<ShoppingCartPage />} />
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
@@ -91,7 +93,15 @@ function App() {
         http://localhost:3000/product/1
         */}
         <Route path="/category/:category" element={<ShopByCategory />} />
-
+        <Route
+          path="testingreusablecard"
+          element={<TestingProductCard product={dummyProducts[0]} />}
+        />
+        <Route
+          path="testingitemcard"
+          element={<TestingItemCard item={dummyProducts[1]} />}
+        />
+        <Route path="reusablecard" element={<ReusableCard />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/sidebar" element={<Sidebar />} />
@@ -115,7 +125,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/search" element={<Search />} />
         <Route path="reusablegrid" element={<ReusableGrid />} />
-        <Route path="productsSection" element={<ProdcutsSection />} />
+        <Route path="productgrid" element={<ProductGrid />} />
 
         <Route
           path="/productcard"

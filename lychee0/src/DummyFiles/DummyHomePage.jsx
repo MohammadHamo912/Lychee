@@ -3,14 +3,12 @@ import NavBar from "./../components/NavBar";
 import Footer from "./../components/Footer";
 import SearchBar from "./../components/SearchBar";
 import Carousel from "./../components/Carousel";
-import ProductGrid from "./../components/ProductGrid";
+import ProductGrid from "./../components/ProductGrid.jsx";
 import HeroSection from "./../components/HeroSection";
 import CategoryGrid from "./../components/CategoryGrid";
 import TrendingProducts from "./../components/TrendingProducts";
 import StoreHighlights from "./../components/StoreHighlights";
 import "../ComponentsCss/HomePage.css"; // New CSS file
-import "../ComponentsCss/FeaturedProducts.css"; // Existing CSS for Featured
-
 // Mock data for the carousel
 const carouselSlides = [
   {
@@ -69,11 +67,9 @@ const HomePage = () => {
         <div className="category-grid-section section">
           <CategoryGrid />
         </div>
-        <div className="featured-products section">
-          {" "}
-          {" Convert this to Products section"}
-          <h2 className="section-title">Featured Products</h2>
-          <ProductGrid limit={4} />
+
+        <div className="product-grid-section section">
+          <ProductGrid />
         </div>
 
         {"Convert this to shops grid"}

@@ -1,10 +1,21 @@
 .reusable-grid-container {
   max-width: 1200px;
   margin: 0 auto;
+  margin-bottom: 40px;
+  padding: 0 20px;
+  color: #670010;
 }
 
 .reusable-grid-header {
   padding: 20px 20px 0;
+  color: #670010;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .reusable-grid {
@@ -13,18 +24,6 @@
   gap: 30px;
   padding: 40px 20px;
   animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .view-all-container {
@@ -57,6 +56,7 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
     padding: 20px;
+    font-size: 2rem;
   }
 
   .view-all-link {
@@ -68,5 +68,17 @@
 @media (max-width: 480px) {
   .reusable-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

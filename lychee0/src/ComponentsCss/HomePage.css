@@ -1,6 +1,7 @@
 .home-page {
   background-color: #fff; /* White background for main content */
   min-height: 100vh; /* Ensure full height */
+  color: #670010;
 }
 
 .main-content {
