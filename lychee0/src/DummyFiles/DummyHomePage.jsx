@@ -63,6 +63,7 @@ const HomePage = () => {
       <main className="main-content">
         <HeroSection />
         <div className="search-bar-section section">
+          <SearchBar searchType="stores" />
         </div>
         <HeroSection scrollToStoreHighlights={scrollToStoreHighlights} />
         {"Put the searchbar here"}

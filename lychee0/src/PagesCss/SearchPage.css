@@ -1,9 +1,11 @@
+/* === Global Page Styling === */
 .search-page {
     background-color: #fff5e1;
     min-height: 100vh;
-    padding-top: 90px;
+    font-family: "Segoe UI", sans-serif;
 }
 
+/* === Header Section === */
 .search-container {
     display: flex;
     flex-direction: column;
@@ -16,7 +18,7 @@
 
 .search-header-text h1 {
     font-size: 2.2rem;
-    color: #670010;
+    color: #8b3c5d;
     margin-bottom: 10px;
 }
 
@@ -25,22 +27,27 @@
     font-size: 1.1rem;
 }
 
+/* === Main Body === */
 .search-body {
     display: flex;
-    gap: 30px;
+    flex-direction: row;
+    gap: 32px;
     padding: 30px 40px;
 }
 
+/* === Filters Panel === */
 .filter-panel {
-    width: 250px;
     background-color: #fff5e1;
+    max-width: 260px;
     padding: 20px;
     position: sticky;
     top: 120px;
     height: fit-content;
-    z-index: 1;
+    border: 1px solid #d9b6a3;
+    border-radius: 12px;
 }
 
+/* === Search Results Section === */
 .search-results-section {
     flex: 1;
     display: flex;
@@ -48,6 +55,7 @@
     width: 100%;
 }
 
+/* === Results Header === */
 .results-header {
     display: flex;
     justify-content: space-between;
@@ -58,8 +66,8 @@
 }
 
 .results-header h3 {
-    color: #670010;
     font-size: 1.4rem;
+    color: #8b3c5d;
 }
 
 .results-header .highlight {
@@ -69,10 +77,11 @@
 
 .results-count {
     font-size: 0.95rem;
-    color: #8b3c5d;
+    color: #a17a85;
     margin-top: 5px;
 }
 
+/* === Clear Filters Button === */
 .clear-filters {
     background-color: transparent;
     border: 2px dashed #b76e79;
@@ -89,26 +98,43 @@
     border-style: solid;
 }
 
+/* === Product Grid === */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 30px;
     padding-top: 10px;
     animation: fadeIn 0.4s ease-in-out;
+    width: 100%;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* === Product Card Styling (assumed inside ProductCard component) === */
+.product-card {
+    background-color: #ffffff;
+    border: 1px solid #d9b6a3;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* === Messages === */
 .loading-text,
 .info-message {
     text-align: center;
@@ -124,11 +150,25 @@
     font-size: 1.2rem;
 }
 
-.no-results em {
+.no-results strong {
     color: #b76e79;
     font-weight: bold;
 }
 
+/* === Animation === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === Responsive === */
 @media (max-width: 768px) {
     .search-body {
         flex-direction: column;
@@ -137,9 +177,13 @@
 
     .filter-panel {
         width: 100%;
-        margin-bottom: 20px;
         position: relative;
         top: 0;
+        margin-bottom: 20px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 
     .results-header {
@@ -165,5 +209,9 @@
     .clear-filters {
         font-size: 0.85rem;
         padding: 5px 10px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 }
