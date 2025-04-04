@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../ComponentsCss/UserManagement.css';
-import EditUserModal from '../../components/EditUserModal';
-import NavBar from '../../components/NavBar';
+import EditUserModal from '../EditUserModal';
+import NavBar from '../NavBar';
 
 const UserManagement = () => {
   const navigate = useNavigate();
