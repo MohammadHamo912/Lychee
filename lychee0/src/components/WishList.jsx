@@ -1,9 +1,9 @@
 // src/components/Wishlist.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import '../ComponentsCss/WishList.css';
 
-const Wishlist = ({ wishlistItems, onRemoveFromWishlist, onViewProduct }) => {
+const Wishlist = ({ wishlistItems, onRemoveFromWishlist, onViewProduct, onAddToCart }) => {
   return (
     <div className="wishlist-container">
       <h2>Your Wishlist</h2>
@@ -29,12 +29,20 @@ const Wishlist = ({ wishlistItems, onRemoveFromWishlist, onViewProduct }) => {
                     Price dropped from ${item.originalPrice.toFixed(2)}!
                   </p>
                 )}
-                <button
-                  className="remove-wishlist-btn"
-                  onClick={() => onRemoveFromWishlist(item.id)}
-                >
-                  Remove
-                </button>
+                <div className="wishlist-buttons">
+                  <button
+                    className="add-cart-btn"
+                    onClick={() => onAddToCart(item)}
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    className="remove-wishlist-btn"
+                    onClick={() => onRemoveFromWishlist(item.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
             </li>
           ))}
@@ -58,6 +66,54 @@ Wishlist.propTypes = {
   ).isRequired,
   onRemoveFromWishlist: PropTypes.func.isRequired,
   onViewProduct: PropTypes.func.isRequired,
+  onAddToCart: PropTypes.func.isRequired,
 };
 
-export default Wishlist;
+// === Dummy Wrapper for Demo ===
+const WishlistDemo = () => {
+  const [wishlistItems, setWishlistItems] = useState([
+    {
+      id: 1,
+      name: 'Rose Glow Lipstick',
+      imageUrl: 'https://via.placeholder.com/100x100?text=Lipstick',
+      price: 12.99,
+      originalPrice: 18.99,
+    },
+    {
+      id: 2,
+      name: 'Silky Touch Foundation',
+      imageUrl: 'https://via.placeholder.com/100x100?text=Foundation',
+      price: 24.5,
+    },
+    {
+      id: 3,
+      name: 'Blush Palette',
+      imageUrl: 'https://via.placeholder.com/100x100?text=Blush',
+      price: 14.99,
+      originalPrice: 20.0,
+    },
+  ]);
+
+  const handleRemoveFromWishlist = (id) => {
+    setWishlistItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleViewProduct = (product) => {
+  };
+
+  const handleAddToCart = (product) => {
+    alert(`Added to cart: ${product.name}`);
+    setWishlistItems(prev => prev.filter(item => item.id !== product.id));
+  };
+
+  return (
+    <Wishlist
+      wishlistItems={wishlistItems}
+      onRemoveFromWishlist={handleRemoveFromWishlist}
+      onViewProduct={handleViewProduct}
+      onAddToCart={handleAddToCart}
+    />
+  );
+};
+
+export default WishlistDemo;

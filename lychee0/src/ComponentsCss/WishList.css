@@ -67,7 +67,6 @@
     font-size: 1rem;
     font-weight: bold;
     color: #670010;
-    /* Rose Gold */
     margin-bottom: 8px;
 }
 
@@ -78,18 +77,42 @@
     margin-bottom: 8px;
 }
 
+.wishlist-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Shared button base */
+.add-cart-btn,
 .remove-wishlist-btn {
-    padding: 8px 12px;
-    background: #670010;
-    /* Deep Berry */
-    color: white;
+    padding: 6px 12px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.2s ease;
+}
+
+/* Add to Cart button */
+.add-cart-btn {
+    background-color: #8B3C5D;
+    /* Deep Berry */
+    color: #fff;
+}
+
+.add-cart-btn:hover {
+    background-color: #732c4a;
+}
+
+/* Remove button */
+.remove-wishlist-btn {
+    background-color: #D9B6A3;
+    /* Warm Taupe */
+    color: #4a2c2c;
 }
 
 .remove-wishlist-btn:hover {
-    background: #B76E79;
-    /* Rose Gold */
+    background-color: #c89b8b;
 }

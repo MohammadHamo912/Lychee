@@ -29,9 +29,11 @@ const ProfilePage = () => {
     };
 
     const totalSpending = dummyOrders.reduce((sum, order) => sum + order.total, 0);
+    const totalPoints = Math.floor(totalSpending); // 1 point per $1 spent
 
     return (
         <div className="profile-page-layout">
+            {/* LEFT - Profile Form */}
             <div className="profile-box">
                 <h1>My Profile</h1>
 
@@ -113,21 +115,16 @@ const ProfilePage = () => {
                 )}
             </div>
 
+            {/* RIGHT - Info Cards */}
             <div className="profile-extra-box">
                 <div className="spending-box">
                     <h2>Total Spending</h2>
                     <p>${totalSpending.toFixed(2)}</p>
                 </div>
 
-                <div className="orders-history-box">
-                    <h2>Order History</h2>
-                    <ul>
-                        {dummyOrders.map((order) => (
-                            <li key={order.id}>
-                                #{order.id} • {order.date} • ${order.total.toFixed(2)}
-                            </li>
-                        ))}
-                    </ul>
+                <div className="spending-box">
+                    <h2>Total Points</h2>
+                    <p>{totalPoints} pts</p>
                 </div>
             </div>
         </div>

@@ -39,12 +39,12 @@ const Dashboard = ({ userRole = "storeOwner" }) => {
                 return [
                     { key: "dashboard", title: "📊 Dashboard", content: <ShopOwnerDashboard /> },
                     { key: "products", title: "📦 Products", content: <ProductManagement /> },
-                    { key: "orders", title: "🧾 Orders", content: <OrderManagement /> },
+                    { key: "orders", title: "🧾 Orders", content: <OrderManagement role="storeowner"/> },
                 ];
             default: // customer
                 return [
                     { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
-                    { key: "orders", title: "📦 My Orders", content: <OrdersHistory /> },
+                    { key: "orders", title: "📦 My Orders", content: <OrderManagement role="customer"/> },
                     { key: "wishlist", title: "❤️ Wishlist", content: <Wishlist /> },
                     { key: "reviews", title: "⭐ My Reviews", content: <ShowMyReviews /> },
                 ];
@@ -73,7 +73,7 @@ const Dashboard = ({ userRole = "storeOwner" }) => {
                             className={`sidebar-tab ${activeTab === tab.key ? "active" : ""}`}
                             onClick={() =>
                                 typeof tab.content === "function"
-                                    ? tab.content() // navigate if admin
+                                    ? tab.content()
                                     : setActiveTab(tab.key)
                             }
                         >

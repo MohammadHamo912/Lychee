@@ -1,10 +1,10 @@
+/* === Main Container === */
 .product-management-container {
     padding: 40px 20px;
     background-color: #FFF5E1;
     min-height: 100vh;
     color: #670010;
     box-sizing: border-box;
-    margin-top: 10px;
 }
 
 .product-management-container h2 {
@@ -13,6 +13,7 @@
     margin-bottom: 30px;
 }
 
+/* === Form Card === */
 .product-form-card {
     background-color: #fff;
     border: 2px solid #D9B6A3;
@@ -39,34 +40,15 @@
 .form-inline-group {
     display: flex;
     gap: 16px;
+    flex-wrap: wrap;
 }
 
 .form-inline-group input {
     flex: 1;
-    padding: 10px 14px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #D9B6A3;
-    background-color: #FFF5E1;
-    color: #670010;
 }
 
 .product-form input,
-.product-form textarea {
-    padding: 10px 14px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #D9B6A3;
-    background-color: #FFF5E1;
-    color: #670010;
-}
-
-.product-form textarea {
-    resize: vertical;
-    min-height: 80px;
-    width: 96%;
-}
-
+.product-form textarea,
 .category-select {
     padding: 10px 14px;
     font-size: 1rem;
@@ -74,6 +56,13 @@
     border: 1px solid #D9B6A3;
     background-color: #FFF5E1;
     color: #670010;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.product-form textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
 .image-upload-label {
@@ -92,7 +81,7 @@
 }
 
 .image-upload-label:hover {
-    background: #F4B6B6;
+    background: #B76E79;
 }
 
 .preview-wrapper {
@@ -142,11 +131,93 @@
     background-color: #FFC5C5;
 }
 
-.product-list {
+/* === Sidebar + Grid Layout === */
+.product-content-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* Sidebar filters */
+.filters-sidebar {
+    flex: 0 0 250px;
+    background: #fff;
+    border: 2px solid #D9B6A3;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Inside filters-sidebar only, not duplicated in the component */
+.filters-sidebar .filter-panel {
+    background: transparent;
+    padding: 0;
+}
+
+/* FiltersPanel inner structure */
+.filters-sidebar .filter-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.filters-sidebar .filter-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #8B3C5D;
+}
+
+.filters-sidebar input,
+.filters-sidebar select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #D9B6A3;
+    background: #FFF5E1;
+    color: #4a2c2c;
+}
+
+.filters-sidebar .filter-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.filters-sidebar .filter-actions button {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.filters-sidebar .apply-button {
+    background-color: #8B3C5D;
+    color: #FFF5E1;
+}
+
+.filters-sidebar .apply-button:hover {
+    background-color: #732c4a;
+}
+
+.filters-sidebar .reset-button {
+    background-color: #fff;
+    color: #8B3C5D;
+    border: 1px solid #D9B6A3;
+}
+
+.filters-sidebar .reset-button:hover {
+    background-color: #FFE3E3;
+}
+
+/* Product cards layout */
+.product-grid {
+    flex: 1;
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .product-card {
@@ -205,6 +276,17 @@
     line-height: 1.4;
 }
 
+.product-features {
+    margin: 8px 0;
+    padding-left: 18px;
+    color: #5c3c3c;
+    font-size: 0.9rem;
+}
+
+.product-features li {
+    margin-bottom: 4px;
+}
+
 .product-actions {
     display: flex;
     justify-content: space-between;
@@ -234,53 +316,17 @@
     margin-top: 30px;
 }
 
-.filters-wrapper.horizontal-layout>.filter-panel {
-    display: flex !important;
-    flex-wrap: wrap;
-    flex-direction: row !important;
-    align-items: flex-end;
-    gap: 1rem;
-    background-color: #FFF5E1;
-    padding: 1rem;
-    border-radius: 12px;
-}
-
-.filters-wrapper.horizontal-layout .filter-group {
-    flex: 1 1 180px;
-    margin-bottom: 0 !important;
-}
-
-.filters-wrapper.horizontal-layout .filter-actions {
-    flex: 1 1 100%;
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-start;
-    margin-top: 1rem;
-}
-
-/* Remove or update this if you want to keep it horizontal at all screen sizes */
-@media (max-width: 768px) {
-
-    /* DELETE this block if horizontal layout should stay at all sizes */
-    .filter-panel.fixed-layout {
+/* === Responsive === */
+@media (max-width: 900px) {
+    .product-content-layout {
         flex-direction: column;
-        align-items: stretch;
     }
 
-    /* OR override only if inside horizontal-layout */
-    .filters-wrapper.horizontal-layout .filter-panel {
-        flex-direction: row !important;
-        flex-wrap: wrap;
-        align-items: flex-end;
+    .filters-sidebar {
+        width: 100%;
     }
 
-    .filters-wrapper.horizontal-layout .filter-actions {
-        flex-direction: row !important;
-        justify-content: flex-start;
-    }
-
-    .filters-wrapper.horizontal-layout .apply-button,
-    .filters-wrapper.horizontal-layout .reset-button {
-        width: auto !important;
+    .product-grid {
+        justify-content: center;
     }
 }
