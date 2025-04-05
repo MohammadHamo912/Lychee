@@ -53,8 +53,7 @@ import Sidebar from "./components/Sidebar.jsx";
 import UserManagment from "./components/admin/UserManagement.jsx"; // Keep SearchBar separate
 import ReusableGrid from "./components/ReusableGrid.jsx";
 import ReusableCard from "./components/ReusableCard.jsx";
-import TestingProductCard from "./DummyFiles/TestingReusableCard.jsx";
-import TestingItemCard from "./DummyFiles/TestingItemCard.jsx";
+import ItemCard from "./components/ItemCard.jsx";
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
@@ -62,7 +61,6 @@ import { dummyOrderData } from "./Data/dummyOrderData.js";
 import { dummyCoreData } from "./Data/dummyCoreData.js";
 import dummyStores from "./Data/dummyStores";
 
-import DummyTestingCards from "./DummyFiles/DummyTestingCards.jsx";
 import dummyProducts from "./Data/dummyProducts.js";
 function App() {
   /*dummy data for shopping cart */
@@ -74,7 +72,6 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="dummytesting" element={<DummyTestingCards />} />
         <Route path="shoppingcartpage" element={<ShoppingCartPage />} />
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
@@ -104,13 +101,15 @@ function App() {
         */}
         <Route path="/category/:category" element={<ShopByCategory />} />
         <Route
-          path="testingreusablecard"
-          element={<TestingProductCard product={dummyProducts[0]} />}
+          path="itemcard"
+          element={
+            <ItemCard
+              item={dummyProducts[0]}
+              onAddToCart={(p) => console.log("Add to cart:", p)}
+            />
+          }
         />
-        <Route
-          path="testingitemcard"
-          element={<TestingItemCard item={dummyProducts[1]} />}
-        />
+
         <Route path="reusablecard" element={<ReusableCard />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/storepage" element={<StorePage />} />

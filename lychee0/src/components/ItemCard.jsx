@@ -1,27 +1,27 @@
-// ProductCard.js
+// ItemCard.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReusableCard from "./../components/ReusableCard";
 import cartIcon from "../images/white-cart-icon.png";
-import "./ProductCard.css"; // For product-specific styling
+import "../ComponentsCss/ItemCard.css"; // For product-specific styling
 
-const TestingProductCard = ({ product, onAddToCart }) => {
+const ItemCard = ({ item, onAddToCart }) => {
   const navigate = useNavigate();
-  const { id, name, imageUrl, price, description, shop_name } = product;
+  const { id, name, imageUrl, price, description, shop_name } = item;
 
   const handleCardClick = () => {
-    navigate(`/product/${id}`);
+    navigate(`/item/${id}`);
   };
 
   const handleAddToCart = (e) => {
     e.stopPropagation(); // Prevent navigation
-    onAddToCart(product);
+    onAddToCart(item);
   };
 
   const AddToCartButton = (
     <button
-      className="product-card-button"
+      className="item-card-button"
       onClick={handleAddToCart}
       aria-label="Add to cart"
     >
@@ -30,7 +30,7 @@ const TestingProductCard = ({ product, onAddToCart }) => {
   );
 
   const PriceElement = (
-    <span className="product-card-price">${price.toFixed(2)}</span>
+    <span className="item-card-price">${price.toFixed(2)}</span>
   );
 
   return (
@@ -43,13 +43,13 @@ const TestingProductCard = ({ product, onAddToCart }) => {
       footerLeft={PriceElement}
       footerRight={AddToCartButton}
       onClick={handleCardClick}
-      className="product-theme"
+      className="item-theme"
     />
   );
 };
 
-TestingProductCard.propTypes = {
-  product: PropTypes.shape({
+ItemCard.propTypes = {
+  item: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
@@ -60,4 +60,4 @@ TestingProductCard.propTypes = {
   onAddToCart: PropTypes.func.isRequired,
 };
 
-export default TestingProductCard;
+export default ItemCard;

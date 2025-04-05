@@ -1,22 +1,22 @@
-/* ProductCard.css */
-/* Specific styling for the product theme that extends ReusableCard */
+/* ItemCard.css */
+/* Specific styling for the item theme that extends ReusableCard */
 
-.product-theme {
+.item-theme {
   background: #fff5e1;
 }
 
-.product-theme .reusable-card-subtitle {
+.item-theme .reusable-card-subtitle {
   color: #b76e79;
 }
 
-.product-card-price {
+.item-card-price {
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
   color: #670010;
 }
 
-.product-card-button {
+.item-card-button {
   background: #670010;
   border: 2px solid #b76e79;
   border-radius: 50px;
@@ -29,7 +29,7 @@
   transition: all 0.3s ease;
 }
 
-.product-card-button:hover {
+.item-card-button:hover {
   background: #b76e79;
   transform: scale(1.1);
   border-color: #670010;
@@ -41,7 +41,7 @@
 }
 
 @media (max-width: 480px) {
-  .product-card-button {
+  .item-card-button {
     width: 40px;
     height: 40px;
   }

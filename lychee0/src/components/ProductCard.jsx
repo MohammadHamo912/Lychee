@@ -1,56 +1,56 @@
+// ProductCard.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import "../ComponentsCss/ProductCard.css";
-import cartIcon from "../images/white-cart-icon.png";
+import ReusableCard from "./../components/ReusableCard";
+import "./../ComponentsCss/ProductCard.css"; // For Product-specific styling
 
-const ProductCard = ({ product, onAddToCart }) => {
+const ProductCard = ({ product, onAction }) => {
   const navigate = useNavigate();
-  const { id, name, imageUrl, price, description, shop_name } = product;
+  const { id, name, imageUrl, description, category } = product;
 
   const handleCardClick = () => {
     navigate(`/product/${id}`);
   };
 
-  const handleAddToCart = (e) => {
+  const handleAction = (e) => {
     e.stopPropagation(); // Prevent navigation
-    onAddToCart(product);
+    onAction(product);
   };
 
+  const ActionButton = (
+    <button className="product-card-button" onClick={handleAction}>
+      Find Best Price
+    </button>
+  );
+
+  const CategoryLabel = category ? (
+    <span className="product-card-category">{category}</span>
+  ) : null;
+
   return (
-    <div className="product-card" onClick={handleCardClick}>
-      <img src={imageUrl} alt={name} className="product-card-image" />
-
-      <div className="product-card-body">
-        <h3 className="product-card-title">{name}</h3>
-        {shop_name && <p className="product-card-shop">Sold by: {shop_name}</p>}
-        <p className="product-card-description">{description}</p>
-
-        <div className="product-card-footer">
-          <span className="product-card-price">${price.toFixed(2)}</span>
-          <button
-            className="product-card-button"
-            onClick={handleAddToCart}
-            aria-label="Add to cart"
-          >
-            <img src={cartIcon} alt="Cart icon" className="cart-icon" />
-          </button>
-        </div>
-      </div>
-    </div>
+    <ReusableCard
+      image={imageUrl}
+      imageAlt={name}
+      title={name}
+      description={description}
+      footerLeft={CategoryLabel}
+      footerRight={ActionButton}
+      onClick={handleCardClick}
+      className="product-theme"
+    />
   );
 };
 
 ProductCard.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    name: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    shop_name: PropTypes.string,
+    category: PropTypes.string,
   }).isRequired,
-  onAddToCart: PropTypes.func.isRequired,
+  onAction: PropTypes.func.isRequired,
 };
 
 export default ProductCard;
