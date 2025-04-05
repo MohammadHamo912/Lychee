@@ -4,17 +4,17 @@ import ReusableGrid from "./../components/ReusableGrid";
 import ProductCard from "./../components/ProductCard";
 import dummyProducts from "../Data/dummyProducts";
 
-const ProductGrid = () => {
+const ProductGrid = ({ limit, header }) => {
   const handleAddToCart = (product) => {
     console.log("Added to cart:", product);
   };
 
   return (
     <ReusableGrid
-      headerContent={<h2>Featured Products</h2>}
+      headerContent={<h2>{header}</h2>}
       items={dummyProducts}
       CardComponent={ProductCard}
-      limit={6}
+      limit={limit}
       cardProps={{ onAddToCart: handleAddToCart }}
       viewAllLink="/products"
       viewAllText="See All Products"

@@ -62,6 +62,8 @@ import { dummyCoreData } from "./Data/dummyCoreData.js";
 import dummyStores from "./Data/dummyStores";
 
 import dummyProducts from "./Data/dummyProducts.js";
+import ItemGrid from "./components/ItemGrid.jsx";
+
 function App() {
   /*dummy data for shopping cart */
   const { cartItems, updateQuantity, removeItem, applyPromo } = useCart();
@@ -85,6 +87,7 @@ function App() {
         />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/homepage" element={<DummyHomePage />} />
+        <Route path="itemgrid" element={<ItemGrid />} />
 
         <Route
           path="/"

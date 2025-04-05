@@ -8,6 +8,7 @@ import HeroSection from "./../components/HeroSection";
 import CategoryGrid from "./../components/CategoryGrid";
 import TrendingProducts from "./../components/TrendingProducts";
 import StoreHighlights from "./../components/StoreHighlights";
+import ItemGrid from "../components/ItemGrid.jsx";
 import "../ComponentsCss/HomePage.css"; // New CSS file
 // Mock data for the carousel
 const carouselSlides = [
@@ -73,7 +74,7 @@ const HomePage = () => {
         </div>
 
         <div className="product-grid-section section">
-          <ProductGrid />
+          <ProductGrid limit={6} header={"Featured Products"} />
         </div>
 
         {"Convert this to shops grid"}
@@ -84,7 +85,8 @@ const HomePage = () => {
           <StoreHighlights />
         </div>
         <div className="trending-products-section section">
-          <TrendingProducts /> {" Convert this to items grid"}
+          <ItemGrid limit={3} header={"Trending Items"} />
+          <ItemGrid limit={3} header={"Top-Selling Items"} />
         </div>
       </main>
       <Footer />
