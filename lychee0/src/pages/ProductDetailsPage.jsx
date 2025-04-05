@@ -37,7 +37,7 @@ const ProductDetailsPage = () => {
   return (
     <div className="product-details-page">
       <NavBar />
-      <main className="main-content">
+      <main className="main-content-product-detials-page">
         {product ? (
           <ProductDetails
             product={product}

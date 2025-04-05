@@ -128,7 +128,7 @@ const ShopByCategoryPage = () => {
   return (
     <div className="shop-by-category">
       <NavBar />
-      <main className="main-content">
+      <main className="main-content-shop-by-category-page">
         <div className="breadcrumbs">
           <Breadcrumbs paths={dummyCoreData.breadcrumbPaths} />
         </div>

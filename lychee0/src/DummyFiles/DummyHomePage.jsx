@@ -65,11 +65,12 @@ const HomePage = () => {
         <div className="search-bar-section section">
           <SearchBar searchType="stores" />
         </div>
-        <div className="carousel-section section">
-          <Carousel slides={carouselSlides} />
-        </div>
+
         <div className="category-grid-section section">
           <CategoryGrid />
+        </div>
+        <div className="carousel-section section">
+          <Carousel slides={carouselSlides} />
         </div>
 
         <div className="product-grid-section section">
