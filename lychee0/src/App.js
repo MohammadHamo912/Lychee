@@ -53,7 +53,9 @@ import Sidebar from "./components/Sidebar.jsx";
 import UserManagment from "./components/admin/UserManagement.jsx"; // Keep SearchBar separate
 import ReusableGrid from "./components/ReusableGrid.jsx";
 import ReusableCard from "./components/ReusableCard.jsx";
+import StoresGrid from "./components/StoreGrid.jsx";
 import ItemCard from "./components/ItemCard.jsx";
+import StoreCard from "./components/StoreCard.jsx";
 // dummy imports
 import { useCart } from "./Data/dummyCartData.js";
 import { useCartCheckout } from "./Data/dummyCheckoutData.js";
@@ -111,6 +113,21 @@ function App() {
               onAddToCart={(p) => console.log("Add to cart:", p)}
             />
           }
+        />
+
+        <Route
+          path="storesgrid"
+          element={
+            <StoresGrid
+              title="Trending Stores"
+              limit={3}
+              viewAllLink="/all-stores"
+            />
+          }
+        />
+        <Route
+          path="storecard"
+          element={<StoreCard store={dummyStores[0]} />}
         />
 
         <Route path="reusablecard" element={<ReusableCard />} />

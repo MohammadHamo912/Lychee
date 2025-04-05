@@ -31,9 +31,9 @@ const ReusableCard = ({
 
       <div className="reusable-card-body">
         {title && <h3 className="reusable-card-title">{title}</h3>}
-        {subtitle && <p className="reusable-card-subtitle">{subtitle}</p>}
+        {subtitle && <div className="reusable-card-subtitle">{subtitle}</div>}
         {description && (
-          <p className="reusable-card-description">{description}</p>
+          <div className="reusable-card-description">{description}</div>
         )}
 
         {children}

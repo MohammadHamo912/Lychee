@@ -7,6 +7,7 @@ import ProductGrid from "./../components/ProductGrid.jsx";
 import HeroSection from "./../components/HeroSection";
 import CategoryGrid from "./../components/CategoryGrid";
 import TrendingProducts from "./../components/TrendingProducts";
+import StoresGrid from "../components/StoreGrid.jsx";
 import StoreHighlights from "./../components/StoreHighlights";
 import ItemGrid from "../components/ItemGrid.jsx";
 import "../ComponentsCss/HomePage.css"; // New CSS file
@@ -51,21 +52,19 @@ const searchSuggestions = [
 ];
 
 const HomePage = () => {
-  const storeHighlightsRef = useRef(null);
-  const scrollToStoreHighlights = () => {
-    storeHighlightsRef.current?.scrollIntoView({ behavior: "smooth" });
+  const StoresGridRef = useRef(null);
+  const scrollToStoresGrid = () => {
+    StoresGridRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <div className="home-page">
       <NavBar />
       <main className="main-content">
-        <HeroSection />
+        <HeroSection scrollToStoresGrid={scrollToStoresGrid} />
         <div className="search-bar-section section">
           <SearchBar searchType="stores" />
         </div>
-        <HeroSection scrollToStoreHighlights={scrollToStoreHighlights} />
-        {"Put the searchbar here"}
         <div className="carousel-section section">
           <Carousel slides={carouselSlides} />
         </div>
@@ -77,12 +76,8 @@ const HomePage = () => {
           <ProductGrid limit={6} header={"Featured Products"} />
         </div>
 
-        {"Convert this to shops grid"}
-        <div
-          ref={storeHighlightsRef}
-          className="store-highlights-section section"
-        >
-          <StoreHighlights />
+        <div ref={StoresGridRef} className="store-grid-section section">
+          <StoresGrid />
         </div>
         <div className="trending-products-section section">
           <ItemGrid limit={3} header={"Trending Items"} />
