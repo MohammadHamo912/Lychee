@@ -40,8 +40,8 @@ import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
 import Toast from "./components/Toast";
 import Spinner from "./components/Spinner";
 import Pagination from "./components/Pagination";
-import DiscountManagement from "./components/admin/DiscountManagement.jsx";
-import ShopApproval from "./components/admin/ShopApproval.jsx";
+import DiscountManagement from "./components/DiscountManagement.jsx";
+import ShopApproval from "./components/ShopApproval.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import BlogAndBeauty from "./pages/BlogAndBeautyTips.jsx";
 import NotFoundPage from "./pages/NotFound.jsx";
@@ -50,7 +50,7 @@ import ContactAndSupport from "./pages/ContactAndSupport.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Sidebar from "./components/Sidebar.jsx";
-import UserManagment from "./components/admin/UserManagement.jsx"; // Keep SearchBar separate
+import UserManagment from "./components/UserManagement.jsx"; // Keep SearchBar separate
 import ReusableGrid from "./components/ReusableGrid.jsx";
 import ReusableCard from "./components/ReusableCard.jsx";
 import StoresGrid from "./components/StoreGrid.jsx";

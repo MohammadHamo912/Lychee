@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../ComponentsCss/UserManagement.css';
-import EditUserModal from '../EditUserModal';
-import NavBar from '../NavBar';
+import '../ComponentsCss/UserManagement.css';
+import EditUserModal from './EditUserModal';
+import NavBar from './NavBar';
 
 const UserManagement = () => {
   const navigate = useNavigate();
@@ -36,12 +36,8 @@ const UserManagement = () => {
 
   return (
     <div className="user-management-page">
-      <NavBar />
       <div className="user-management-container">
         <div className="top-bar">
-          <button className="back-button" onClick={() => navigate('/admin')}>
-            ← Back to Dashboard
-          </button>
           <h2>👥 User Management</h2>
         </div>
 

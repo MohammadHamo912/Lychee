@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../ComponentsCss/ShopApproval.css';
-import NavBar from '../../components/NavBar';
+import '../ComponentsCss/ShopApproval.css';
+import NavBar from './NavBar';
 
 const ShopApproval = () => {
     const navigate = useNavigate();
@@ -23,11 +23,7 @@ const ShopApproval = () => {
 
     return (
         <div className="shop-approval-container">
-            <NavBar />
             <div className="top-bar">
-                <button className="back-button" onClick={() => navigate('/admin')}>
-                    ← Back to Dashboard
-                </button>
                 <h2>🛍️ Shop Approval Requests</h2>
             </div>
 

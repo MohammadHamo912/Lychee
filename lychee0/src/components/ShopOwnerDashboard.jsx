@@ -23,15 +23,7 @@ const ShopOwnerDashboard = () => {
         totalProducts: 50,
     });
 
-    const [profileForm, setProfileForm] = useState({
-        storeName: storeInfo.storeName,
-        email: storeInfo.email,
-        description: storeInfo.description,
-        address: storeInfo.address,
-        categories: storeInfo.categories,
-        password: storeInfo.password,
-    });
-
+    const [profileForm, setProfileForm] = useState({ ...storeInfo });
     const [saveMessage, setSaveMessage] = useState('');
 
     const [products] = useState([
@@ -40,15 +32,72 @@ const ShopOwnerDashboard = () => {
         { id: 3, name: 'Foundation', price: 29.99, stock: 2 },
     ]);
 
-    const [salesData] = useState([
-        { date: 'Mar 1', total: 350 },
-        { date: 'Mar 2', total: 180 },
-        { date: 'Mar 3', total: 420 },
-        { date: 'Mar 4', total: 300 },
-        { date: 'Mar 5', total: 280 },
-        { date: 'Mar 6', total: 500 },
-        { date: 'Mar 7', total: 620 },
+    const [reviews] = useState([
+        {
+            id: 1,
+            productName: 'Shimmering Rose Lip Gloss',
+            rating: 4,
+            comment: 'Really smooth and glossy. Love the Rose tint!',
+            customer: 'Sarah Connor',
+            date: '2024-03-01',
+        },
+        {
+            id: 2,
+            productName: 'Mascara Max Volume',
+            rating: 5,
+            comment: 'Amazing volume and lasts all day!',
+            customer: 'John Doe',
+            date: '2024-02-28',
+        },
     ]);
+
+    const averageRating = reviews.length
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : 0;
+    const roundedRating = Math.round(averageRating);
+
+    const [timeframe, setTimeframe] = useState('7days');
+    const salesDataSets = {
+        '7days': [
+            { date: 'Apr 1', total: 120 },
+            { date: 'Apr 2', total: 220 },
+            { date: 'Apr 3', total: 180 },
+            { date: 'Apr 4', total: 300 },
+            { date: 'Apr 5', total: 250 },
+            { date: 'Apr 6', total: 310 },
+            { date: 'Apr 7', total: 400 },
+        ],
+        '6months': [
+            { date: 'Nov', total: 3200 },
+            { date: 'Dec', total: 4100 },
+            { date: 'Jan', total: 3800 },
+            { date: 'Feb', total: 3600 },
+            { date: 'Mar', total: 4800 },
+            { date: 'Apr', total: 5200 },
+        ],
+        '2023': [
+            { date: 'Jan', total: 3100 },
+            { date: 'Feb', total: 2900 },
+            { date: 'Mar', total: 3500 },
+            { date: 'Apr', total: 3000 },
+            { date: 'May', total: 4200 },
+            { date: 'Jun', total: 4600 },
+            { date: 'Jul', total: 3900 },
+            { date: 'Aug', total: 4300 },
+            { date: 'Sep', total: 4100 },
+            { date: 'Oct', total: 4700 },
+            { date: 'Nov', total: 4900 },
+            { date: 'Dec', total: 5000 },
+        ],
+        '2024': [
+            { date: 'Jan', total: 3900 },
+            { date: 'Feb', total: 3700 },
+            { date: 'Mar', total: 4200 },
+            { date: 'Apr', total: 4400 },
+        ],
+    };
+
+    const currentSalesData = salesDataSets[timeframe] || [];
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -63,54 +112,6 @@ const ShopOwnerDashboard = () => {
         setSaveMessage('Profile information updated successfully!');
         setTimeout(() => setSaveMessage(''), 3000);
     };
-
-    const handleManageProduct = (productId) => {
-        alert(`Managing Product #${productId}`);
-    };
-
-    const [timeframe, setTimeframe] = useState('7days');
-
-    const salesDataSets = {
-        '7days': [
-            { date: 'Apr 1', total: 120 },
-            { date: 'Apr 2', total: 220 },
-            { date: 'Apr 3', total: 180 },
-            { date: 'Apr 4', total: 300 },
-            { date: 'Apr 5', total: 250 },
-            { date: 'Apr 6', total: 310 },
-            { date: 'Apr 7', total: 400 }
-        ],
-        '6months': [
-            { date: 'Nov', total: 3200 },
-            { date: 'Dec', total: 4100 },
-            { date: 'Jan', total: 3800 },
-            { date: 'Feb', total: 3600 },
-            { date: 'Mar', total: 4800 },
-            { date: 'Apr', total: 5200 }
-        ],
-        '2023': [
-            { date: 'Jan', total: 3100 },
-            { date: 'Feb', total: 2900 },
-            { date: 'Mar', total: 3500 },
-            { date: 'Apr', total: 3000 },
-            { date: 'May', total: 4200 },
-            { date: 'Jun', total: 4600 },
-            { date: 'Jul', total: 3900 },
-            { date: 'Aug', total: 4300 },
-            { date: 'Sep', total: 4100 },
-            { date: 'Oct', total: 4700 },
-            { date: 'Nov', total: 4900 },
-            { date: 'Dec', total: 5000 }
-        ],
-        '2024': [
-            { date: 'Jan', total: 3900 },
-            { date: 'Feb', total: 3700 },
-            { date: 'Mar', total: 4200 },
-            { date: 'Apr', total: 4400 }
-        ]
-    };
-
-    const currentSalesData = salesDataSets[timeframe] || [];
 
     return (
         <div className="dashboard-container">
@@ -129,9 +130,19 @@ const ShopOwnerDashboard = () => {
                         <h2>Total Products</h2>
                         <p>{storeInfo.totalProducts}</p>
                     </div>
+                    <div className="overview-card">
+                        <h2>Store Rating</h2>
+                        <div className="store-rating">
+                            <div className="stars">
+                                {'★'.repeat(roundedRating)}
+                                {'☆'.repeat(5 - roundedRating)}
+                            </div>
+                            <p>{averageRating.toFixed(1)} / 5</p>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Sales Chart with Timeframe Selector */}
+                {/* Sales Chart */}
                 <div className="sales-chart-container">
                     <div className="sales-chart-header">
                         <h2>Sales Overview</h2>
@@ -164,7 +175,7 @@ const ShopOwnerDashboard = () => {
                     </ResponsiveContainer>
                 </div>
 
-                {/* Profile Edit Form */}
+                {/* Profile Edit */}
                 <div className="profile-section">
                     <h2>Edit Store Profile</h2>
                     <form className="profile-form" onSubmit={(e) => e.preventDefault()}>

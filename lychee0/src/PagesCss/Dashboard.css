@@ -1,7 +1,8 @@
 .dashboard-container {
     display: flex;
     flex-direction: row;
-    align-items: flex-start; /* important: prevents stretching */
+    align-items: flex-start;
+    /* important: prevents stretching */
 }
 
 .dashboard-sidebar {
@@ -9,12 +10,15 @@
     background-color: #fff5e1;
     border-right: 1px solid #d9b6a3;
     position: sticky;
-    top: 25%; /* ✅ makes it stick to top when scrolling */
-    height: 50vh; /* ✅ full viewport height */
+    top: 25%;
+    /* ✅ makes it stick to top when scrolling */
+    height: 50vh;
+    /* ✅ full viewport height */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    align-items: center; /* center tabs horizontally */
+    align-items: center;
+    /* center tabs horizontally */
 }
 
 #sidebar-title {

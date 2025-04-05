@@ -1,0 +1,104 @@
+.store-panel-container {
+    padding: 40px 20px;
+    background: #FFF5E1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 1000px;
+    margin: auto;
+    color: #8B3C5D;
+}
+
+/* Section Titles */
+.reviews-section h2,
+.social-links-section h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    color: #670010;
+}
+
+/* Reviews */
+.review-card {
+    background: #fff;
+    border: 2px solid #D9B6A3;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.review-card h4 {
+    margin: 0 0 6px;
+    color: #8B3C5D;
+}
+
+.rating {
+    font-size: 1.2rem;
+    color: #f0a202;
+    margin-bottom: 6px;
+}
+
+.comment {
+    font-style: italic;
+    margin-bottom: 4px;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: #6f4b4b;
+}
+
+.no-reviews {
+    font-style: italic;
+    color: #A97E7E;
+}
+
+/* Social Links */
+.social-links-section {
+    background: #fff;
+    border: 2px solid #D9B6A3;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.social-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.social-form label {
+    font-weight: 500;
+    color: #8B3C5D;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.social-form input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #D9B6A3;
+    background: #FFF5E1;
+    color: #4a2c2c;
+    font-size: 1rem;
+}
+
+.social-form button {
+    align-self: flex-end;
+    margin-top: 10px;
+    padding: 10px 16px;
+    background-color: #8B3C5D;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.social-form button:hover {
+    background-color: #732c4a;
+}

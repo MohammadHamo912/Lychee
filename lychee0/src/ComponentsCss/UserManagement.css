@@ -1,13 +1,11 @@
 .user-management-page {
     background-color: #fff5e1;
     min-height: 100vh;
-    padding-top: 80px;
 }
 
 .user-management-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 32px 24px;
     font-family: 'Segoe UI', sans-serif;
     color: #670010;
 }
@@ -71,6 +69,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    height: 15px;
 }
 
 .filter-group button {

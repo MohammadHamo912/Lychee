@@ -111,22 +111,29 @@ const OrderManagement = ({ role = 'storeowner' }) => {
                     className="search-input"
                 />
 
-                <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="search-input"
-                    title="Start Date"
-                />
+                <div className="date-group">
+                    <label htmlFor="start-date">From:</label>
+                    <input
+                        type="date"
+                        id="start-date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="search-input"
+                    />
+                </div>
 
-                <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="search-input"
-                    title="End Date"
-                />
+                <div className="date-group">
+                    <label htmlFor="end-date">To:</label>
+                    <input
+                        type="date"
+                        id="end-date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="search-input"
+                    />
+                </div>
             </div>
+
 
             <div className="order-grid">
                 {filteredOrders.map(order => (

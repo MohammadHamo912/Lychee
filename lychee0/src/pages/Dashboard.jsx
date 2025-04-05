@@ -1,50 +1,42 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import ProfilePage from "../components/ProfilePage";
-import OrdersHistory from "../components/OrderHistory";
 import ShowMyReviews from "../components/ShowMyReviews";
 import Wishlist from "../components/WishList";
 import ShopOwnerDashboard from "../components/ShopOwnerDashboard.jsx";
 import ProductManagement from "../components/ProductManagement";
 import OrderManagement from "../components/OrderManagement";
+import StoreReviewAndSocial from "../components/StoreReviewAndSocial.jsx";
+import UserManagement from "../components/UserManagement";
+import ShopApproval from "../components/ShopApproval";
+import DiscountManagement from "../components/DiscountManagement.jsx";
+import AdminOverview from "../components/AdminOverview";
 import "../PagesCss/Dashboard.css";
 
-const Dashboard = ({ userRole = "storeOwner" }) => {
-    const navigate = useNavigate();
+const Dashboard = ({ userRole = "admin" }) => {
     const [activeTab, setActiveTab] = useState("default");
 
-    // Define sidebar + content based on role
     const getTabsByRole = () => {
         switch (userRole) {
             case "admin":
                 return [
-                    {
-                        key: "users",
-                        title: "👥 User Management",
-                        content: () => navigate("/admin/usermanagement"),
-                    },
-                    {
-                        key: "shops",
-                        title: "🛍️ Shop Approval",
-                        content: () => navigate("/admin/shopapproval"),
-                    },
-                    {
-                        key: "discounts",
-                        title: "🎁 Discount Management",
-                        content: () => navigate("/admin/discountmanagment"),
-                    },
+                    { key: "overview", title: "📊 Overview", content: <AdminOverview /> },
+                    { key: "users", title: "👥 User Management", content: <UserManagement /> },
+                    { key: "shops", title: "🛍️ Shop Approval", content: <ShopApproval /> },
+                    { key: "orders", title: "🧾 Orders", content: <OrderManagement role="admin" /> },
+                    { key: "discounts", title: "🎁 Discount Management", content: <DiscountManagement /> },
                 ];
             case "storeOwner":
                 return [
                     { key: "dashboard", title: "📊 Dashboard", content: <ShopOwnerDashboard /> },
                     { key: "products", title: "📦 Products", content: <ProductManagement /> },
-                    { key: "orders", title: "🧾 Orders", content: <OrderManagement role="storeowner"/> },
+                    { key: "orders", title: "🧾 Orders", content: <OrderManagement role="storeowner" /> },
+                    { key: "reviewsAndSocial", title: "🌐 Social", content: <StoreReviewAndSocial /> },
                 ];
             default: // customer
                 return [
                     { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
-                    { key: "orders", title: "📦 My Orders", content: <OrderManagement role="customer"/> },
+                    { key: "orders", title: "📦 My Orders", content: <OrderManagement role="customer" /> },
                     { key: "wishlist", title: "❤️ Wishlist", content: <Wishlist /> },
                     { key: "reviews", title: "⭐ My Reviews", content: <ShowMyReviews /> },
                 ];
@@ -71,11 +63,7 @@ const Dashboard = ({ userRole = "storeOwner" }) => {
                         <div
                             key={tab.key}
                             className={`sidebar-tab ${activeTab === tab.key ? "active" : ""}`}
-                            onClick={() =>
-                                typeof tab.content === "function"
-                                    ? tab.content()
-                                    : setActiveTab(tab.key)
-                            }
+                            onClick={() => setActiveTab(tab.key)}
                         >
                             {tab.title}
                         </div>
@@ -83,7 +71,7 @@ const Dashboard = ({ userRole = "storeOwner" }) => {
                 </aside>
 
                 <main className="dashboard-content">
-                    {typeof currentTab.content === "function" ? null : currentTab.content}
+                    {currentTab.content}
                 </main>
             </div>
         </div>
