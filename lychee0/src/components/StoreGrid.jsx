@@ -4,14 +4,13 @@ import ReusableGrid from "./ReusableGrid";
 import StoreCard from "./StoreCard";
 import dummyStores from "./../Data/dummyStores"; // Adjust the import path as needed
 import "./../ComponentsCss/StoreGrid.css";
+let stores = dummyStores;
 
-const StoresGrid = ({
-  stores = dummyStores,
-  title = "Featured Stores",
-  limit = 3,
-  viewAllLink = "/stores",
-}) => {
+const StoresGrid = ({ title = "Featured Stores", limit }) => {
   // Create header content for the grid
+  const handleItemSelect = (item) => {
+    console.log("Item selected:", item);
+  };
   const headerContent = (
     <div>
       <h2>{title}</h2>
@@ -35,7 +34,8 @@ const StoresGrid = ({
       items={stores}
       CardComponent={StoreCard}
       limit={limit}
-      viewAllLink={viewAllLink}
+      cardProps={{ onItemSelect: handleItemSelect }}
+      viewAllLink="/stores"
       viewAllText="View All Stores"
       className="stores-grid"
       itemPropName="store" // This matches the prop name in StoreCardComponent

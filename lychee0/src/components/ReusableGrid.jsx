@@ -36,10 +36,19 @@ const ReusableGrid = ({
 
   return (
     <div className="reusable-grid-container" style={gridContainerStyle}>
-      {headerContent && (
-        <div className="reusable-grid-header">{headerContent}</div>
-      )}
+      <div className="reusable-grid-header-container">
+        {headerContent && (
+          <div className="reusable-grid-header">{headerContent}</div>
+        )}
 
+        {limit && viewAllLink && items.length > limit && (
+          <div className="view-all-top">
+            <Link to={viewAllLink} className="view-all-link">
+              {viewAllText}
+            </Link>
+          </div>
+        )}
+      </div>
       <div className={`reusable-grid ${className}`} style={gridStyle}>
         {itemsToShow.map((item, index) => {
           if (!item) return null;
@@ -54,14 +63,6 @@ const ReusableGrid = ({
           return <CardComponent {...dynamicProps} />;
         })}
       </div>
-
-      {limit && viewAllLink && items.length > limit && (
-        <div className="view-all-container">
-          <Link to={viewAllLink} className="view-all-link">
-            {viewAllText}
-          </Link>
-        </div>
-      )}
     </div>
   );
 };

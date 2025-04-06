@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./../ComponentsCss/HeroSection.css"; // Import the CSS file
+import SearchBar from "./SearchBar";
 
 const HeroSection = ({ scrollToStoresGrid }) => {
   return (
@@ -17,6 +18,9 @@ const HeroSection = ({ scrollToStoresGrid }) => {
         <Link to="/categories " className="hero-button-secondary">
           View Categories
         </Link>
+      </div>
+      <div className="hero-section-search-bar">
+        <SearchBar searchType="store" />
       </div>
 
       {/* Featured promotion banner */}

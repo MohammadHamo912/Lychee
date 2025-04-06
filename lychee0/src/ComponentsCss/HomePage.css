@@ -6,21 +6,12 @@
 
 .main-content {
   margin: 0;
-  padding: 0 30px 0 30px;
+  padding: 5px 30px 5px 30px;
   overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .section {
   margin-bottom: 60px; /* Consistent spacing between sections */
-}
-
-/* Specific Section Adjustments */
-.search-bar-section {
-  margin-top: 40px; /* Extra space after HeroSection */
-}
-
-/* Animations */
-.section {
   animation: fadeIn 1s ease-in-out;
 }
 

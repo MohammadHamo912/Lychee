@@ -1,6 +1,6 @@
 import React from "react";
 import ShopCard from "./ShopCard";
-import "../ComponentsCss/ShopGrid.css";
+import "./ArchievedShopGrid.css";
 
 // Import the images from src/images
 import shop1SampleImage from "../images/shop1SampleImage.png";

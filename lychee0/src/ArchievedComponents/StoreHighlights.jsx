@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Use Link instead of <a>
 import ShopCard from "./ShopCard";
-import "../ComponentsCss/StoreHighlights.css";
+import "./StoreHighlights.css";
 
 const StoreHighlights = () => {
   const featuredStores = [

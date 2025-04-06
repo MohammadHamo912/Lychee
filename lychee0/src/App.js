@@ -19,7 +19,6 @@ import NavBar from "./components/NavBar"; // DONE
 import ProductCard from "./components/ProductCard"; // DONE
 import ProductGrid from "./components/ProductGrid.jsx"; // DONE
 import ShopCard from "./components/ShopCard"; // DONE
-import ShopGrid from "./components/ShopGrid"; // DONE
 import Footer from "./components/Footer"; // DONE
 import ShoppingCart from "./components/ShoppingCart"; // DONE
 import CheckoutForm from "./components/CheckoutForm"; // DONE
@@ -29,8 +28,7 @@ import OrderSummary from "./components/OrderSummary.jsx";
 import OrderConfirmation from "./components/OrderConfirmation.jsx";
 import HeroSection from "./components/HeroSection.jsx"; // DONE
 import CategoryGrid from "./components/CategoryGrid"; // DONE
-import TrendingProducts from "./components/TrendingProducts"; // DONE
-import StoreHighlights from "./components/StoreHighlights"; // DONE
+
 import ProfilePage from "./components/ProfilePage.jsx";
 import OrderHistory from "./components/OrderHistory.jsx";
 import SearchBar from "./components/SearchBar.jsx";
@@ -62,7 +60,6 @@ import { useCartCheckout } from "./Data/dummyCheckoutData.js";
 import { dummyOrderData } from "./Data/dummyOrderData.js";
 import { dummyCoreData } from "./Data/dummyCoreData.js";
 import dummyStores from "./Data/dummyStores";
-
 import dummyProducts from "./Data/dummyProducts.js";
 import ItemGrid from "./components/ItemGrid.jsx";
 
@@ -137,13 +134,11 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/footer" element={<Footer />} />
-        <Route path="/shops" element={<ShopGrid />} />
         <Route path="/filterspanel" element={<FiltersPanel />} />
         <Route path="/searchbar" element={<SearchBar searchType="store" />} />
         <Route path="/herosection" element={<HeroSection />} />
         <Route path="/categorygrid" element={<CategoryGrid />} />
-        <Route path="/trendingproducts" element={<TrendingProducts />} />
-        <Route path="/storehighlights" element={<StoreHighlights />} />
+
         <Route path="/discountmanagement" element={<DiscountManagement />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/profilepage" element={<ProfilePage />} />

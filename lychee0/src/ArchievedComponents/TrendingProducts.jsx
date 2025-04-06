@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import "../ComponentsCss/TrendingProducts.css";
+import "./TrendingProducts.css";
 import dummyProducts from "../Data/dummyProducts"; // Dummy data
 
 const TrendingProducts = () => {

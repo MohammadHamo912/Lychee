@@ -1,14 +1,11 @@
 import React, { useRef } from "react";
 import NavBar from "./../components/NavBar";
 import Footer from "./../components/Footer";
-import SearchBar from "./../components/SearchBar";
 import Carousel from "./../components/Carousel";
 import ProductGrid from "./../components/ProductGrid.jsx";
 import HeroSection from "./../components/HeroSection";
 import CategoryGrid from "./../components/CategoryGrid";
-import TrendingProducts from "./../components/TrendingProducts";
 import StoresGrid from "../components/StoreGrid.jsx";
-import StoreHighlights from "./../components/StoreHighlights";
 import ItemGrid from "../components/ItemGrid.jsx";
 import "../ComponentsCss/HomePage.css"; // New CSS file
 // Mock data for the carousel
@@ -62,9 +59,6 @@ const HomePage = () => {
       <NavBar />
       <main className="main-content">
         <HeroSection scrollToStoresGrid={scrollToStoresGrid} />
-        <div className="search-bar-section section">
-          <SearchBar searchType="stores" />
-        </div>
 
         <div className="category-grid-section section">
           <CategoryGrid />
@@ -74,15 +68,15 @@ const HomePage = () => {
         </div>
 
         <div className="product-grid-section section">
-          <ProductGrid limit={6} header={"Featured Products"} />
+          <ProductGrid limit={4} header={"Featured Products"} />
         </div>
 
         <div ref={StoresGridRef} className="store-grid-section section">
-          <StoresGrid />
+          <StoresGrid limit={4} />
         </div>
         <div className="trending-products-section section">
-          <ItemGrid limit={3} header={"Trending Items"} />
-          <ItemGrid limit={3} header={"Top-Selling Items"} />
+          <ItemGrid limit={4} header={"Trending Items"} />
+          <ItemGrid limit={4} header={"Top-Selling Items"} />
         </div>
       </main>
       <Footer />
