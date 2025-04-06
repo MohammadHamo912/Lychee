@@ -1,91 +1,114 @@
-.filter-panel.fixed-layout {
+.filters-panel {
   display: flex;
   flex-direction: column;
-  background-color: #FFF5E1;
+  background-color: #fff5e1;
+  border: 1px solid #d9b6a3;
   border-radius: 12px;
-  width: 100%;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(139, 60, 93, 0.1);
+  gap: 20px;
+  height: fit-content;
 }
 
-/* Individual filter group */
+/* Filter group styling */
 .filter-group {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  margin: 30px;
 }
 
-/* Labels and Inputs */
 .filter-group label {
   font-weight: bold;
-  color: #670010;
-  padding-top: 20px;
+  color: #8b3c5d;
+  margin-bottom: 6px;
 }
 
-.filter-group input,
-.filter-group select {
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #B76E79;
-  color: #670010;
-  background-color: #fff;
-  max-width: 260px;
+.filter-group input::placeholder {
+  color: #a9a9a9;
 }
 
-/* Action Buttons */
+/* Remove hard-coded width */
+#minPrice,
+#maxPrice {
+  width: 100% !important;
+  /* ⛔️ overrides any old hard width */
+  box-sizing: border-box;
+}
+
+/* Ensure all inputs/selects behave responsively */
+.filters-sidebar input,
+.filters-sidebar select {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #D9B6A3;
+  background: #FFF5E1;
+  color: #4a2c2c;
+  box-sizing: border-box;
+  /* ✅ important */
+  display: block;
+}
+
+
+/* Action buttons */
 .filter-actions {
-  flex: 1 1 100%;
   display: flex;
-  flex-direction: row;
-  gap: 0.75rem;
-  max-width: 260px;
+  gap: 12px;
+  justify-content: space-between;
 }
 
 .apply-button,
 .reset-button {
-  padding: 0.5rem 1.2rem;
+  flex: 1;
+  padding: 10px 16px;
   font-size: 1rem;
   font-weight: bold;
-  border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease;
-  margin-top: 20px;
+  transition: background-color 0.3s ease;
+  border: none;
+  margin-top: 30px;
 }
 
 .apply-button {
-  background-color: #8B3C5D;
+  background-color: #8b3c5d;
   color: white;
 }
 
 .apply-button:hover {
-  background-color: #B76E79;
+  background-color: #b76e79;
 }
 
 .reset-button {
-  background-color: #f2f2f2;
-  color: #333;
+  background-color: #fff;
+  color: #8b3c5d;
+  border: 2px solid #8b3c5d;
 }
 
 .reset-button:hover {
-  background-color: #e0e0e0;
+  background-color: #ffc5c5;
+  border-color: #b76e79;
 }
 
-#minPrice {
-  max-width: 230px;
-}
-
-/* Prevent override on mobile */
+/* Mobile layout */
 @media (max-width: 768px) {
-  .filter-panel.fixed-layout {
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    align-items: flex-end !important;
+  .filters-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .filter-group {
+    flex: 1 1 45%;
+    min-width: 140px;
   }
 
   .filter-actions {
-    flex-direction: row !important;
+    flex: 1 1 100%;
   }
 
   .apply-button,
   .reset-button {
-    width: auto !important;
+    width: 48%;
   }
 }
