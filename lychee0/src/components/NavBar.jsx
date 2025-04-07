@@ -30,7 +30,7 @@ const NavBar = () => {
 
           {/* Desktop Nav Links */}
           <nav className="nav-links">
-            <Link to="/homepage">Home</Link>
+            <Link to="/">Home</Link>
             <Link to="/shops">Shops</Link>
             <Link to="/products">Products</Link>
             <Link to="/category">Categories</Link>
@@ -67,7 +67,7 @@ const NavBar = () => {
         {/* Mobile Menu Content */}
         {isMenuOpen && (
           <div className="mobile-menu">
-            <Link to="/homepage">Home</Link>
+            <Link to="/">Home</Link>
             <Link to="/shops">Shops</Link>
             <Link to="/products">Products</Link>
             <Link to="/category">Categories</Link>
