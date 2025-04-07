@@ -95,8 +95,8 @@ const Dashboard = ({ userRole = "admin" }) => {
             {userRole === "admin"
               ? "Admin Panel"
               : userRole === "storeOwner"
-              ? "Store Panel"
-              : "My Account"}
+                ? "Store Panel"
+                : "My Account"}
           </h2>
 
           {tabs.map((tab) => (

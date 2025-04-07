@@ -45,25 +45,23 @@ const FiltersPanel = ({
       </div>
 
       <div className="filter-group">
-        <label htmlFor="minPrice">Min Price</label>
-        <input
-          type="number"
-          id="minPrice"
-          placeholder="e.g. 10"
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-        />
-      </div>
-
-      <div className="filter-group">
-        <label htmlFor="maxPrice">Max Price</label>
-        <input
-          type="number"
-          id="maxPrice"
-          placeholder="e.g. 100"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-        />
+        <label htmlFor="minPrice">Price Range</label>
+        <div className="price-inputs">
+          <input
+            type="number"
+            id="minPrice"
+            placeholder="Min"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+          />
+          <input
+            type="number"
+            id="maxPrice"
+            placeholder="Max"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="filter-group">

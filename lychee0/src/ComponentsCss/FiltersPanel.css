@@ -8,6 +8,7 @@
   box-shadow: 0 2px 10px rgba(139, 60, 93, 0.1);
   gap: 20px;
   height: fit-content;
+  max-width: 300px;
 }
 
 /* Filter group styling */
@@ -30,9 +31,9 @@
 /* Remove hard-coded width */
 #minPrice,
 #maxPrice {
-  width: 100% !important;
-  /* ⛔️ overrides any old hard width */
+  width: 100px;
   box-sizing: border-box;
+  height: 40px;
 }
 
 /* Ensure all inputs/selects behave responsively */
@@ -68,6 +69,7 @@
   transition: background-color 0.3s ease;
   border: none;
   margin-top: 30px;
+  margin-left: 12%;
 }
 
 .apply-button {
@@ -88,6 +90,24 @@
 .reset-button:hover {
   background-color: #ffc5c5;
   border-color: #b76e79;
+}
+
+.price-inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+}
+
+.price-inputs input {
+  flex: 1;
+  height: 40px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d9b6a3;
+  background: #fff5e1;
+  color: #4a2c2c;
+  box-sizing: border-box;
 }
 
 /* Mobile layout */
