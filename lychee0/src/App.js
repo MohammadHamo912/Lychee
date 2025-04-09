@@ -15,6 +15,7 @@ import ShoppingCartPage from "./pages/ShoppingCartPage.jsx";
 import OwnerDashboard from "./components/OwnerDashboard.jsx";
 import AllStoresPage from "./pages/AllStoresPage.jsx";
 import ProductListingPage from "./pages/AllProductsPage.jsx";
+import CategoriesPage from "./pages/Categories.jsx";
 
 // Components
 import NavBar from "./components/NavBar"; // DONE
@@ -77,7 +78,7 @@ function App() {
     <div>
       <Routes>
         <Route path="/productlistingpage" element={<ProductListingPage />} />
-
+        <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/allstorespage" element={<AllStoresPage />} />
         <Route path="/shoppingcartpage" element={<ShoppingCartPage />} />
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />

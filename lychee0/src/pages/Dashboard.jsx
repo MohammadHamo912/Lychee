@@ -13,7 +13,7 @@ import DiscountManagement from "../components/DiscountManagement.jsx";
 import AdminOverview from "../components/AdminOverview";
 import "../PagesCss/Dashboard.css";
 
-const Dashboard = ({ userRole = "admin" }) => {
+const Dashboard = ({ userRole = "storeOwner" }) => {
   const [activeTab, setActiveTab] = useState("default");
 
   const getTabsByRole = () => {

@@ -35,7 +35,7 @@ const NavBar = () => {
             <Link to="/">Home</Link>
             <Link to="/shops">Shops</Link>
             <Link to="/products">Products</Link>
-            <Link to="/category">Categories</Link>
+            <Link to="/categories">Categories</Link>
             <Link to="/shoppingcart" className="cart-link">
               Cart <span className="cart-badge">5</span>
             </Link>
@@ -72,7 +72,7 @@ const NavBar = () => {
             <Link to="/">Home</Link>
             <Link to="/shops">Shops</Link>
             <Link to="/products">Products</Link>
-            <Link to="/category">Categories</Link>
+            <Link to="/categories">Categories</Link>
             <Link to="/shoppingcart">Cart</Link>
             {isLoggedIn ? (
               <Link to="/dashboard">Profile</Link>

@@ -1,10 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 
 .hero-container {
-  background-image: linear-gradient(
-      rgba(255, 245, 225, 0.5),
-      /* Reduced opacity for a softer effect */ rgba(255, 245, 225, 0.7)
-        /* Increased opacity for balance */
+  background-image: linear-gradient(rgba(255, 245, 225, 0.5),
+      /* Reduced opacity for a softer effect */
+      rgba(255, 245, 225, 0.7)
+      /* Increased opacity for balance */
     ),
     url("./../images/heroSectionBackground.jpg");
   background-size: cover;
@@ -12,12 +12,16 @@
   padding: 20px 0;
   text-align: center;
   min-width: 100vw;
-  margin-left: -30px; /* Negate the parent padding */
+  margin-left: -30px;
+  /* Negate the parent padding */
   padding-bottom: 250px;
+  height: 70vh;
+  margin-top: -10px;
 }
 
 .hero-title {
-  color: #670010; /* Deep Berry color from your palette */
+  color: #670010;
+  /* Deep Berry color from your palette */
   font-size: 2.5rem;
   margin-bottom: 20px;
 }
@@ -52,7 +56,8 @@
 }
 
 .hero-button-primary:hover {
-  background-color: #b76e79; /* Rose Gold from your palette */
+  background-color: #b76e79;
+  /* Rose Gold from your palette */
 }
 
 .hero-button-secondary {
@@ -108,12 +113,15 @@
 .hero-section-search-bar {
   display: flex;
   justify-content: center;
-  margin-top: 70px; /* Space between buttons and search bar */
+  margin-top: 70px;
+  /* Space between buttons and search bar */
   width: 100%;
-  max-width: 600px; /* Adjust based on your design preference */
+  max-width: 600px;
+  /* Adjust based on your design preference */
   margin-left: auto;
   margin-right: auto;
 }
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .hero-title {
