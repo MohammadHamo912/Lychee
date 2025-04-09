@@ -1,7 +1,7 @@
-.filter-panel.fixed-layout {
+.filter-panel .fixed-layout {
   display: flex;
   flex-direction: column;
-  background-color: #FFF5E1;
+  background-color: #fff5e1;
   border-radius: 12px;
   width: 100%;
 }
@@ -23,7 +23,7 @@
 .filter-group select {
   font-size: 1rem;
   border-radius: 8px;
-  border: 1px solid #B76E79;
+  border: 1px solid #b76e79;
   color: #670010;
   background-color: #fff;
   max-width: 260px;
@@ -51,12 +51,12 @@
 }
 
 .apply-button {
-  background-color: #8B3C5D;
+  background-color: #8b3c5d;
   color: white;
 }
 
 .apply-button:hover {
-  background-color: #B76E79;
+  background-color: #b76e79;
 }
 
 .reset-button {

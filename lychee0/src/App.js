@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import lipgloss from "./images/lipgloss.jpeg"; // Update path if necessary
 import shop1Url from "./images/shop1SampleImage.png"; // Update path if necessary
 
 // Pages
@@ -14,6 +13,7 @@ import ProductDetails from "./pages/ProductDetailsPage.jsx";
 import AdminDashboard from "./components/AdminDashboard.jsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.jsx";
 import OwnerDashboard from "./components/OwnerDashboard.jsx";
+import AllStoresPage from "./pages/AllStoresPage.jsx";
 // Components
 import NavBar from "./components/NavBar"; // DONE
 import ProductCard from "./components/ProductCard"; // DONE
@@ -73,6 +73,7 @@ function App() {
   return (
     <div>
       <Routes>
+        <Route path="allstorespage" element={<AllStoresPage />} />
         <Route path="shoppingcartpage" element={<ShoppingCartPage />} />
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />

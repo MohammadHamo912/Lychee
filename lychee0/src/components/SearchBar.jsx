@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import "../ComponentsCss/SearchBar.css";
 
-const SearchBar = ({ searchType = "products", disableActive = false }) => {
+const SearchBar = ({ searchType = "stores", disableActive = false }) => {
   const [term, setTerm] = useState("");
   const navigate = useNavigate();
 
