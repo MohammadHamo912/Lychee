@@ -7,7 +7,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
   overflow-y: scroll;
@@ -28,20 +27,17 @@ body {
   max-width: 400px;
   border: 2px solid #d9b6a3;
   overflow: hidden;
-}
-
-.auth-logo {
-  width: 80px;
-  margin-bottom: 15px;
+  margin-top: 140px;
 }
 
 .auth-box h2 {
-  color: #8b3c5d;
+  color: #670010;
   font-size: 2rem;
   margin-bottom: 20px;
 }
 
-.auth-box input {
+.auth-box input,
+.auth-box textarea {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
@@ -49,22 +45,25 @@ body {
   border-radius: 8px;
   font-size: 1rem;
   background: #fff5e1;
-  color: #8b3c5d;
-  text-align: left;
+  color: #670010;
+  font-family: inherit;
   display: block;
+  transition: all 0.25s ease-in-out;
 }
 
-#signUpBox {
-  margin-top: 200px;
+.auth-box textarea {
+  width: 94%;
 }
 
-.auth-box input::placeholder {
-  color: #a9a9a9;
-}
-
-.auth-box input:focus {
+.auth-box input:focus,
+.auth-box textarea:focus {
   outline: none;
   border: 2px solid #b76e79;
+}
+
+.auth-box input::placeholder,
+.auth-box textarea::placeholder {
+  color: #a9a9a9;
 }
 
 .auth-box button {
@@ -73,20 +72,73 @@ body {
   font-size: 1rem;
   border: none;
   border-radius: 8px;
-  background: #8b3c5d;
-  color: white;
+  background: #fff5e1;
+  color: #670010;
+  font-weight: bold;
+  border: 2px solid #670010;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 10px;
-  background-color: #fff5e1;
-  color: #670010;
-  border-style: solid;
 }
 
 .auth-box button:hover {
+  background-color: #ffc5c5;
+  border-color: #b76e79;
+}
+
+.role-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.role-toggle button {
   background-color: #fff5e1;
   color: #670010;
-  border-style: solid;
+  font-weight: bold;
+  border: 2px solid #b76e79;
+  border-radius: 30px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.role-toggle button.active {
+  background-color: #b76e79;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.role-toggle button:hover {
+  background-color: #ffc5c5;
+  color: #670010;
+}
+
+.file-label {
+  display: block;
+  font-weight: bold;
+  color: #670010;
+  margin: 10px 0 5px;
+  text-align: left;
+}
+
+.auth-box input[type="file"] {
+  margin: 10px 0;
+  background: #fff5e1;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #8b3c5d;
+}
+
+.error {
+  color: #b30000;
+  font-size: 0.85rem;
+  text-align: left;
+  margin-top: -8px;
+  margin-bottom: 8px;
 }
 
 .google-btn {
@@ -102,7 +154,6 @@ body {
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-  text-decoration: none;
 }
 
 .google-btn:hover {
@@ -110,22 +161,17 @@ body {
   border-color: #b76e79;
 }
 
-.google-btn svg {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
 .google-btn span {
   font-size: 1rem;
   font-weight: bold;
-  color: #8b3c5d;
+  color: #670010;
+  margin-left: 20px;
 }
 
 .auth-box p {
   margin-top: 12px;
   font-size: 1.1rem;
-  color: #8b3c5d;
+  color: #670010;
 }
 
 .auth-box a {
@@ -138,26 +184,7 @@ body {
   text-decoration: underline;
 }
 
-.guest-btn {
-  margin-top: 15px;
-  width: 92%;
-  padding: 12px;
-  font-size: 1rem;
-  border: 2px dashed #b76e79;
-  border-radius: 8px;
-  background: transparent;
-  color: #8b3c5d;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-}
-
-.guest-btn:hover {
-  background-color: #fff5e1;
-  color: #670010;
-  border-style: solid;
-}
-
-/* Tablet (<=768px) */
+/* Tablet */
 @media (max-width: 768px) {
   .auth-container {
     padding: 40px 15px;
@@ -169,18 +196,10 @@ body {
 
   .auth-box h2 {
     font-size: 1.7rem;
-    margin-bottom: 18px;
-  }
-
-  .auth-box input,
-  .auth-box button,
-  .google-btn {
-    padding: 10px;
-    font-size: 0.95rem;
   }
 }
 
-/* Mobile (<=480px) */
+/* Mobile */
 @media (max-width: 480px) {
   .auth-container {
     padding: 20px 10px;
@@ -197,11 +216,7 @@ body {
   .auth-box input,
   .auth-box button,
   .google-btn {
-    padding: 8px;
+    padding: 10px;
     font-size: 0.9rem;
-  }
-
-  .google-btn {
-    border-radius: 25px;
   }
 }

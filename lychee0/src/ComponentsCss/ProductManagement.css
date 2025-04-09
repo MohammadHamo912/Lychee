@@ -141,24 +141,20 @@
 /* Sidebar filters */
 .filters-sidebar {
     flex: 0 0 250px;
-    background: #fff;
-    border: 2px solid #D9B6A3;
-    border-radius: 12px;
+    background: #FFF5E1;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 /* Inside filters-sidebar only, not duplicated in the component */
 .filters-sidebar .filter-panel {
-    background: transparent;
     padding: 0;
 }
 
 /* FiltersPanel inner structure */
 .filters-sidebar .filter-group {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 16px;
+    flex-direction: row;
+    margin: 28px;
 }
 
 .filters-sidebar .filter-group label {

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import '../ComponentsCss/FiltersPanel.css';
 
-const FiltersPanel = ({ onApplyFilters, categories = ["Skincare", "Makeup", "Hair Care", "Fragrance"] }) => {
+const FiltersPanel = ({
+  onApplyFilters,
+  categories = ['Skincare', 'Makeup', 'Hair Care', 'Fragrance'],
+}) => {
   const [category, setCategory] = useState('All');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -21,7 +24,6 @@ const FiltersPanel = ({ onApplyFilters, categories = ["Skincare", "Makeup", "Hai
     setMinPrice('');
     setMaxPrice('');
     setSortOption('none');
-
     onApplyFilters({
       category: 'All',
       minPrice: null,
@@ -31,10 +33,10 @@ const FiltersPanel = ({ onApplyFilters, categories = ["Skincare", "Makeup", "Hai
   };
 
   return (
-    <div className="filter-panel fixed-layout">
+    <div className="filters-panel">
       <div className="filter-group">
-        <label>Category</label>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <label htmlFor="category">Category</label>
+        <select id="category" value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="All">All</option>
           {categories.map((cat) => (
             <option key={cat} value={cat}>{cat}</option>
@@ -43,18 +45,28 @@ const FiltersPanel = ({ onApplyFilters, categories = ["Skincare", "Makeup", "Hai
       </div>
 
       <div className="filter-group">
-        <label>Min Price</label>
-        <input id='minPrice' type="number" placeholder="e.g. 10" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
+        <label htmlFor="minPrice">Price Range</label>
+        <div className="price-inputs">
+          <input
+            type="number"
+            id="minPrice"
+            placeholder="Min"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+          />
+          <input
+            type="number"
+            id="maxPrice"
+            placeholder="Max"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="filter-group">
-        <label>Max Price</label>
-        <input id='minPrice' type="number" placeholder="e.g. 100" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
-      </div>
-
-      <div className="filter-group">
-        <label>Sort By</label>
-        <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+        <label htmlFor="sortOption">Sort By</label>
+        <select id="sortOption" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
           <option value="none">None</option>
           <option value="priceLowToHigh">Price: Low to High</option>
           <option value="priceHighToLow">Price: High to Low</option>
