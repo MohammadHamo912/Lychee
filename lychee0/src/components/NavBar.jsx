@@ -26,7 +26,9 @@ const NavBar = () => {
       <header className="navbar" style={{ opacity }}>
         <div className="navbar-inner">
           {/* Logo */}
-          <Link to="/" className="logo">Lychee</Link>
+          <Link to="/" className="logo">
+            Lychee
+          </Link>
 
           {/* Desktop Nav Links */}
           <nav className="nav-links">

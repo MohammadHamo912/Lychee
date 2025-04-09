@@ -14,6 +14,8 @@ import AdminDashboard from "./components/AdminDashboard.jsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.jsx";
 import OwnerDashboard from "./components/OwnerDashboard.jsx";
 import AllStoresPage from "./pages/AllStoresPage.jsx";
+import ProductListingPage from "./pages/AllProductsPage.jsx";
+
 // Components
 import NavBar from "./components/NavBar"; // DONE
 import ProductCard from "./components/ProductCard"; // DONE
@@ -74,8 +76,10 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="allstorespage" element={<AllStoresPage />} />
-        <Route path="shoppingcartpage" element={<ShoppingCartPage />} />
+        <Route path="/productlistingpage" element={<ProductListingPage />} />
+
+        <Route path="/allstorespage" element={<AllStoresPage />} />
+        <Route path="/shoppingcartpage" element={<ShoppingCartPage />} />
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
         <Route path="/ownerdashboard" element={<OwnerDashboard />} />
@@ -284,10 +288,7 @@ function App() {
             />
           }
         />
-        <Route
-          path="*"
-          element={<NotFound />}
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

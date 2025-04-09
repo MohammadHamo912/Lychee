@@ -35,7 +35,7 @@ const StoresGrid = ({ title = "Featured Stores", limit }) => {
       CardComponent={StoreCard}
       limit={limit}
       cardProps={{ onItemSelect: handleItemSelect }}
-      viewAllLink="/stores"
+      viewAllLink="/allstorespage"
       viewAllText="View All Stores"
       className="stores-grid"
       itemPropName="store" // This matches the prop name in StoreCardComponent

@@ -16,7 +16,7 @@ const ProductGrid = ({ limit, header }) => {
       CardComponent={ProductCard}
       limit={limit}
       cardProps={{ onAddToCart: handleAddToCart }}
-      viewAllLink="/products"
+      viewAllLink="/productlistingpage"
       viewAllText="See All Products"
     />
   );

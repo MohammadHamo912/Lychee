@@ -179,7 +179,8 @@ const Sidebar = ({
       {/* Sort Option */}
       <div className="filter-section">
         <label>Sort By</label>
-        <select id="sortBy"
+        <select
+          id="sortBy"
           value={filters.sortOption}
           onChange={(e) => handleChange("sortOption", e.target.value)}
         >
