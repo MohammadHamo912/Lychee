@@ -33,8 +33,8 @@ const NavBar = () => {
           {/* Desktop Nav Links */}
           <nav className="nav-links">
             <Link to="/">Home</Link>
-            <Link to="/shops">Shops</Link>
-            <Link to="/products">Products</Link>
+            <Link to="/allstorespage">Shops</Link>
+            <Link to="/productlistingpage">Products</Link>
             <Link to="/categories">Categories</Link>
             <Link to="/shoppingcart" className="cart-link">
               Cart <span className="cart-badge">5</span>

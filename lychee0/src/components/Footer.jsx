@@ -1,24 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "../ComponentsCss/Footer.css";
 
 const Footer = () => {
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(`Subscribed with email: ${email}`);
-    setEmail("");
-    // Add backend integration here if needed
-  };
-
   return (
     <footer className="site-footer">
       <div className="footer-container">
         <div className="footer-section brand-section">
           <h3 className="footer-heading">Lychee</h3>
           <p className="footer-tagline">
-            Premium handcrafted products from independent artisans.
+            Enhancing Beauty, Elevating Confidence.
           </p>
           <div className="social-links">
             <a
@@ -113,28 +104,6 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-
-        <div className="footer-section newsletter-section">
-          <h4 className="footer-heading">Join Our Community</h4>
-          <p>
-            Sign up for the latest trends, artisan stories, and exclusive
-            offers.
-          </p>
-          <form onSubmit={handleSubmit} className="newsletter-form">
-            <input
-              type="email"
-              placeholder="Your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="newsletter-input"
-              aria-label="Email for newsletter"
-            />
-            <button type="submit" className="newsletter-button">
-              Subscribe
-            </button>
-          </form>
-        </div>
       </div>
 
       <div className="footer-bottom">
@@ -146,12 +115,6 @@ const Footer = () => {
             <Link to="/privacy">Privacy Policy</Link>
             <Link to="/terms">Terms of Service</Link>
             <Link to="/accessibility">Accessibility</Link>
-          </div>
-          <div className="payment-methods">
-            <span className="payment-icon">Visa</span>
-            <span className="payment-icon">MasterCard</span>
-            <span className="payment-icon">Amex</span>
-            <span className="payment-icon">PayPal</span>
           </div>
         </div>
       </div>
