@@ -36,7 +36,7 @@ const NavBar = () => {
             <Link to="/allstorespage">Shops</Link>
             <Link to="/productlistingpage">Products</Link>
             <Link to="/categories">Categories</Link>
-            <Link to="/shoppingcart" className="cart-link">
+            <Link to="/shoppingcartpage" className="cart-link">
               Cart <span className="cart-badge">5</span>
             </Link>
           </nav>

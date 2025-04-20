@@ -16,8 +16,8 @@ import OwnerDashboard from "./components/OwnerDashboard.jsx";
 import AllStoresPage from "./pages/AllStoresPage.jsx";
 import ProductListingPage from "./pages/AllProductsPage.jsx";
 import CategoriesPage from "./pages/Categories.jsx";
-
-// Components
+import ProductPage from "./pages/ProductPage.jsx"; // Components
+import productdetailsComponent from "./components/ProductDetails.jsx";
 import NavBar from "./components/NavBar"; // DONE
 import ProductCard from "./components/ProductCard"; // DONE
 import ProductGrid from "./components/ProductGrid.jsx"; // DONE
@@ -73,10 +73,34 @@ function App() {
   const { cart, calculateCartTotal, handleCheckoutSubmit } = useCartCheckout();
 
   /*dummy for checkout */
+  const myProduct = {
+    name: "Velvet Matte Lipstick",
+    brand: "BlushGlow",
+    price: 25.99,
+    salePrice: 20.99,
+    // ... any other fields you want to override
+  };
+
+  // Handlers for interactivity
+  const handleAddToCart = (item) => {
+    console.log("Added to cart:", item);
+    // Add your cart logic here (e.g., update global state)
+  };
+
+  const handleBuyNow = (item) => {
+    console.log("Buying now:", item);
+    // Add your buy now logic here (e.g., redirect to checkout)
+  };
+
+  const handleWishlistToggle = (id, isWishlisted) => {
+    console.log(`Wishlist ${isWishlisted ? "added" : "removed"} for ID: ${id}`);
+    // Add your wishlist logic here (e.g., API call or state update)
+  };
 
   return (
     <div>
       <Routes>
+        <Route path="/productpage/:id" element={<ProductPage />}></Route>
         <Route path="/productlistingpage" element={<ProductListingPage />} />
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/allstorespage" element={<AllStoresPage />} />
@@ -230,6 +254,18 @@ function App() {
               discount={10}
               total={1045}
               onProceedToPayment={() => console.log("Proceed to payment")}
+            />
+          }
+        />
+        <Route
+          path="/productdetailscomponent"
+          element={
+            <productdetailsComponent
+              product={myProduct}
+              onAddToCart={handleAddToCart}
+              onBuyNow={handleBuyNow}
+              onWishlistToggle={handleWishlistToggle}
+              defaultImage="/images/placeholder.jpg"
             />
           }
         />

@@ -205,8 +205,9 @@ const ProductDetails = ({ product = {} }) => {
         <div className="product-actions">
           <div className="stock-status">
             <span
-              className={`status-indicator ${finalProduct.inStock ? "in-stock" : "out-of-stock"
-                }`}
+              className={`status-indicator ${
+                finalProduct.inStock ? "in-stock" : "out-of-stock"
+              }`}
             ></span>
             <span className="status-text">
               {finalProduct.inStock ? "In Stock" : "Out of Stock"}
@@ -298,29 +299,33 @@ const ProductDetails = ({ product = {} }) => {
         <div className="product-tabs">
           <div className="tabs-header">
             <button
-              className={`tab-button ${activeTab === "description" ? "active" : ""
-                }`}
+              className={`tab-button ${
+                activeTab === "description" ? "active" : ""
+              }`}
               onClick={() => setActiveTab("description")}
             >
               Description
             </button>
             <button
-              className={`tab-button ${activeTab === "howToUse" ? "active" : ""
-                }`}
+              className={`tab-button ${
+                activeTab === "howToUse" ? "active" : ""
+              }`}
               onClick={() => setActiveTab("howToUse")}
             >
               How to Use
             </button>
             <button
-              className={`tab-button ${activeTab === "ingredients" ? "active" : ""
-                }`}
+              className={`tab-button ${
+                activeTab === "ingredients" ? "active" : ""
+              }`}
               onClick={() => setActiveTab("ingredients")}
             >
               Ingredients
             </button>
             <button
-              className={`tab-button ${activeTab === "reviews" ? "active" : ""
-                }`}
+              className={`tab-button ${
+                activeTab === "reviews" ? "active" : ""
+              }`}
               onClick={() => setActiveTab("reviews")}
             >
               Reviews ({finalProduct.reviews.length})
