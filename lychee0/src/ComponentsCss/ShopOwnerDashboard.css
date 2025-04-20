@@ -4,7 +4,7 @@
   background: #fff5e1;
   min-height: 100vh;
   box-sizing: border-box;
-  color: #8b3c5d;
+  color: #670010;
   display: flex;
   flex-direction: column;
   font-family: "Segoe UI", sans-serif;
@@ -46,7 +46,7 @@
 .overview-card h2 {
   font-size: 1.4rem;
   margin-bottom: 12px;
-  color: #8b3c5d;
+  color: #670010;
 }
 
 .overview-card p {
@@ -62,14 +62,14 @@
   border-radius: 16px;
   padding: 30px 40px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  max-width: 700px;
+  width: 500px;
   margin: 0 auto;
 }
 
 .profile-section h2 {
   font-size: 1.5rem;
   margin-bottom: 20px;
-  color: #8b3c5d;
+  color: #670010;
   text-align: center;
 }
 
@@ -82,7 +82,7 @@
 
 .profile-form label {
   font-weight: 600;
-  color: #8b3c5d;
+  color: #670010;
   font-size: 1rem;
 }
 
@@ -108,7 +108,7 @@
 
 .profile-form button {
   padding: 10px 16px;
-  background-color: #8b3c5d;
+  background-color: #670010;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -182,7 +182,7 @@
 
 .product-name {
   font-weight: bold;
-  color: #8b3c5d;
+  color: #670010;
 }
 
 .product-price {
@@ -191,7 +191,7 @@
 }
 
 .product-stock {
-  color: #8b3c5d;
+  color: #670010;
   font-style: italic;
 }
 
@@ -209,7 +209,7 @@
 }
 
 .sales-chart-container h2 {
-  color: #8b3c5d;
+  color: #670010;
   font-size: 1.4rem;
   margin-bottom: 20px;
   text-align: center;
@@ -236,7 +236,7 @@
 }
 
 .sales-chart-container h2 {
-  color: #8b3c5d;
+  color: #670010;
   /* Deep Berry */
   font-size: 1.4rem;
   margin: 0;
@@ -248,14 +248,18 @@
   border-radius: 6px;
   background-color: #fff5e1;
   /* Creamy White */
-  color: #8b3c5d;
+  color: #670010;
   font-size: 1rem;
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
 
+#saveButton{
+  width: 100%;
+}
+
 .timeframe-select:focus {
-  border-color: #b76e79;
+  border-color: #670010;
   /* Rose Gold */
   outline: none;
   box-shadow: 0 0 4px rgba(183, 110, 121, 0.3);

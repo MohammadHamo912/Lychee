@@ -5,50 +5,28 @@ import '../ComponentsCss/ProductManagement.css';
 const categories = ['Makeup', 'Skincare', 'Fragrance', 'Hair', 'Other'];
 
 const ProductManagement = () => {
-    const [products, setProducts] = useState([
-        {
-            id: 1,
-            name: "Shimmering Rose Lip Gloss",
-            category: "Makeup",
-            imageUrl: "/images/lipgloss.jpeg",
-            images: ["/images/lipgloss.jpeg"],
-            description: "30ml - Adds a glossy shine with a rose tint",
-            price: 9.99,
-            originalPrice: 12.99,
-            shop_name: "Awesome Store",
-            rating: 4.5,
-            reviews: 87,
-            discount: "23%",
-            isNew: true,
-            isBestseller: false,
-            features: ["Long-lasting shine", "Hydrating formula", "Non-sticky"],
-            howToUse: "Apply evenly to lips with the applicator.",
-            ingredients: "Castor Oil, Silica, Rose Extract",
-            shades: ["Rose", "Pink", "Nude"],
-            inStock: true,
-        },
-    ]);
+    const [products, setProducts] = useState([]);
+    const [editingProduct, setEditingProduct] = useState(null);
+    const [filters, setFilters] = useState({ category: 'All', minPrice: '', maxPrice: '', sortOption: '' });
+    const [filteredResults, setFilteredResults] = useState([]);
 
     const [formData, setFormData] = useState({
         name: '',
         price: '',
-        originalPrice: '',
-        description: '',
+        discount: '',
         category: '',
         imageFile: null,
         imageUrl: '',
-        features: '',
-        howToUse: '',
-        ingredients: '',
-        shades: '',
+        features: [],
+        newFeature: '',
+        shades: [],
+        newShade: '',
         shop_name: 'Awesome Store',
         rating: 0,
         reviews: 0,
+        barcode: '',
+        brandName: ''
     });
-
-    const [editingProduct, setEditingProduct] = useState(null);
-    const [filters, setFilters] = useState({ category: 'All', minPrice: '', maxPrice: '', sortOption: '' });
-    const [filteredResults, setFilteredResults] = useState([]);
 
     useEffect(() => {
         applyFilters(filters);
@@ -70,82 +48,102 @@ const ProductManagement = () => {
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const {
-            name, price, originalPrice, description, imageFile, imageUrl, category,
-            features, howToUse, ingredients, shades
-        } = formData;
-
-        if (!name || !price || !description || !category || (!imageFile && !editingProduct)) {
-            alert('Please fill out all required fields and upload an image.');
-            return;
+    const addFeature = () => {
+        const feature = formData.newFeature.trim();
+        if (feature && !formData.features.includes(feature)) {
+            setFormData((prev) => ({
+                ...prev,
+                features: [...prev.features, feature],
+                newFeature: '',
+            }));
         }
+    };
 
-        const parsedShades = shades ? shades.split(',').map(s => s.trim()) : null;
-        const parsedFeatures = features ? features.split('\n').map(f => f.trim()).filter(Boolean) : [];
+    const removeFeature = (f) => {
+        setFormData((prev) => ({
+            ...prev,
+            features: prev.features.filter((item) => item !== f),
+        }));
+    };
 
-        const discount = originalPrice && parseFloat(originalPrice) > parseFloat(price)
-            ? `${Math.round((1 - price / originalPrice) * 100)}%`
-            : null;
-
-        const newProduct = {
-            ...formData,
-            price: parseFloat(price),
-            originalPrice: originalPrice ? parseFloat(originalPrice) : null,
-            discount,
-            features: parsedFeatures,
-            shades: parsedShades,
-            reviews: parseInt(formData.reviews),
-            rating: parseFloat(formData.rating),
-        };
-
-        if (editingProduct) {
-            setProducts((prev) =>
-                prev.map((prod) =>
-                    prod.id === editingProduct.id ? { ...editingProduct, ...newProduct } : prod
-                )
-            );
-            setEditingProduct(null);
-        } else {
-            setProducts((prev) => [...prev, { ...newProduct, id: Date.now() }]);
+    const addShade = () => {
+        const shade = formData.newShade.trim();
+        if (shade && !formData.shades.includes(shade)) {
+            setFormData((prev) => ({
+                ...prev,
+                shades: [...prev.shades, shade],
+                newShade: '',
+            }));
         }
+    };
 
-        resetForm();
+    const removeShade = (s) => {
+        setFormData((prev) => ({
+            ...prev,
+            shades: prev.shades.filter((item) => item !== s),
+        }));
     };
 
     const resetForm = () => {
         setFormData({
             name: '',
             price: '',
-            originalPrice: '',
-            description: '',
+            discount: '',
             category: '',
             imageFile: null,
             imageUrl: '',
-            features: '',
-            howToUse: '',
-            ingredients: '',
-            shades: '',
+            features: [],
+            newFeature: '',
+            shades: [],
+            newShade: '',
             shop_name: 'Awesome Store',
             rating: 0,
             reviews: 0,
+            barcode: '',
+            brandName: '',
         });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const { name, price, description, imageUrl, category } = formData;
+
+        if (!name || !price || !description || !category || !imageUrl) {
+            alert('Please fill all required fields.');
+            return;
+        }
+
+        const newProduct = {
+            ...formData,
+            id: editingProduct ? editingProduct.id : Date.now(),
+            price: parseFloat(formData.price),
+            originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
+            discount: formData.originalPrice
+                ? `${Math.round((1 - formData.price / formData.originalPrice) * 100)}%`
+                : null,
+        };
+
+        if (editingProduct) {
+            setProducts((prev) =>
+                prev.map((p) => (p.id === editingProduct.id ? newProduct : p))
+            );
+            setEditingProduct(null);
+        } else {
+            setProducts((prev) => [...prev, newProduct]);
+        }
+
+        resetForm();
     };
 
     const handleEditProduct = (product) => {
         setEditingProduct(product);
-        setFormData({
-            ...product,
-            features: product.features?.join('\n') || '',
-            shades: product.shades?.join(', ') || '',
-        });
+        setFormData({ ...product, newFeature: '', newShade: '' });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDeleteProduct = (id) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
-            setProducts(products.filter((prod) => prod.id !== id));
+            setProducts((prev) => prev.filter((p) => p.id !== id));
         }
     };
 
@@ -157,114 +155,132 @@ const ProductManagement = () => {
     const applyFilters = (filters) => {
         let updated = [...products];
 
-        if (filters.category && filters.category !== 'All') {
-            updated = updated.filter((item) => item.category === filters.category);
+        if (filters.category !== 'All') {
+            updated = updated.filter((p) => p.category === filters.category);
         }
-
         if (filters.minPrice) {
-            updated = updated.filter((item) => item.price >= parseFloat(filters.minPrice));
+            updated = updated.filter((p) => p.price >= parseFloat(filters.minPrice));
         }
-
         if (filters.maxPrice) {
-            updated = updated.filter((item) => item.price <= parseFloat(filters.maxPrice));
+            updated = updated.filter((p) => p.price <= parseFloat(filters.maxPrice));
         }
-
-        switch (filters.sortOption) {
-            case 'priceLowToHigh':
-                updated.sort((a, b) => a.price - b.price);
-                break;
-            case 'priceHighToLow':
-                updated.sort((a, b) => b.price - a.price);
-                break;
-            case 'nameAZ':
-                updated.sort((a, b) => a.name.localeCompare(b.name));
-                break;
-            default:
-                break;
+        if (filters.sortOption === 'priceLowToHigh') {
+            updated.sort((a, b) => a.price - b.price);
+        }
+        if (filters.sortOption === 'priceHighToLow') {
+            updated.sort((a, b) => b.price - a.price);
+        }
+        if (filters.sortOption === 'nameAZ') {
+            updated.sort((a, b) => a.name.localeCompare(b.name));
         }
 
         setFilteredResults(updated);
     };
 
     return (
-        <div className="product-management-container">
+        <div className="pm-container">
             <h2>Product Management</h2>
 
-            <div className="product-form-card">
+            {/* Product Form */}
+            <div className="pm-form-card">
                 <h3>{editingProduct ? 'Edit Product' : 'Add New Product'}</h3>
-                <form className="product-form" onSubmit={handleSubmit}>
-                    <div className="form-inline-group">
-                        <input type="text" name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange} required />
-                        <input type="number" name="price" step="0.01" placeholder="Price" value={formData.price} onChange={handleInputChange} required />
-                        <input type="number" name="originalPrice" step="0.01" placeholder="Original Price" value={formData.originalPrice} onChange={handleInputChange} />
+                <form className="pm-form" onSubmit={handleSubmit}>
+                    <div className="pm-form-group">
+                        <input name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange} required />
+                        <input name="price" placeholder="Price" type="number" value={formData.price} onChange={handleInputChange} required />
+                        <input name="discount" placeholder="Discount" type="number" value={formData.discount} onChange={handleInputChange} />
                     </div>
 
-                    <select name="category" value={formData.category} onChange={handleInputChange} className="category-select" required>
-                        <option value="">Choose a category</option>
+                    <select name="category" value={formData.category} onChange={handleInputChange} required>
+                        <option value="">Select Category</option>
                         {categories.map((cat) => (
                             <option key={cat} value={cat}>{cat}</option>
                         ))}
                     </select>
-
-                    <textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} required />
-                    <textarea name="features" placeholder="Features (one per line)" value={formData.features} onChange={handleInputChange} />
-                    <input type="text" name="shades" placeholder="Shades (comma-separated)" value={formData.shades} onChange={handleInputChange} />
-                    <input type="text" name="ingredients" placeholder="Ingredients" value={formData.ingredients} onChange={handleInputChange} />
-                    <textarea name="howToUse" placeholder="How to Use" value={formData.howToUse} onChange={handleInputChange} />
-
-                    <label className="image-upload-label">
-                        Upload Image
-                        <input type="file" accept="image/*" onChange={handleImageChange} />
-                    </label>
-
-                    {formData.imageUrl && (
-                        <div className="preview-wrapper">
-                            <img src={formData.imageUrl} alt="Preview" className="image-preview" />
+                    {/* Features */}
+                    <div className="pm-list-group">
+                        <label>Features</label>
+                        <div className="pm-inline-add">
+                            <input type="text" placeholder="Add feature..." value={formData.newFeature} onChange={(e) => setFormData({ ...formData, newFeature: e.target.value })} />
+                            <button type="button" onClick={addFeature}>Add</button>
                         </div>
-                    )}
+                        <ul className="pm-pill-list">
+                            {formData.features.map((f, i) => (
+                                <li key={i} className="pm-pill">{f}<span onClick={() => removeFeature(f)}>&times;</span></li>
+                            ))}
+                        </ul>
+                    </div>
 
-                    <div className="form-buttons">
-                        <button type="submit">{editingProduct ? 'Update Product' : 'Add Product'}</button>
-                        {editingProduct && (
-                            <button type="button" className="cancel-btn" onClick={handleCancelEdit}>Cancel</button>
+                    {/* Shades */}
+                    <div className="pm-list-group">
+                        <label>Shades</label>
+                        <div className="pm-inline-add">
+                            <input type="text" placeholder="Add shade..." value={formData.newShade} onChange={(e) => setFormData({ ...formData, newShade: e.target.value })} />
+                            <button type="button" onClick={addShade}>Add</button>
+                        </div>
+                        <ul className="pm-pill-list">
+                            {formData.shades.map((s, i) => (
+                                <li key={i} className="pm-pill">{s}<span onClick={() => removeShade(s)}>&times;</span></li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Barcode & Brand */}
+                    <div className="pm-form-group">
+                        <input type="text" name="barcode" placeholder="Barcode" value={formData.barcode} onChange={handleInputChange} />
+                        <input type="text" name="brandName" placeholder="Brand Name" value={formData.brandName} onChange={handleInputChange} />
+                    </div>
+
+                    {/* Image Upload + Buttons */}
+                    <div className="pm-inline-buttons">
+                        <label className="pm-image-upload">
+                            Upload Image
+                            <input type="file" accept="image/*" onChange={handleImageChange} />
+                        </label>
+
+                        {formData.imageUrl && (
+                            <img src={formData.imageUrl} alt="Preview" className="pm-image-preview" />
                         )}
+
+                        <div className="pm-button-group">
+                            <button type="submit">{editingProduct ? 'Update' : 'Add'} Product</button>
+                            {editingProduct && <button type="button" className="pm-cancel-btn" onClick={handleCancelEdit}>Cancel</button>}
+                        </div>
                     </div>
                 </form>
             </div>
 
-            {/* Sidebar + Grid */}
-            <div className="product-content-layout">
-                <div className="filters-sidebar">
+            {/* Filter + Product List */}
+            <div className="pm-layout">
+                <div className="pm-sidebar">
                     <FiltersPanel onApplyFilters={applyFilters} categories={categories} />
                 </div>
 
-                <div className="product-grid">
+                <div className="pm-grid">
                     {filteredResults.length === 0 ? (
-                        <p className="no-products">No products found.</p>
+                        <p className="pm-empty">No products found.</p>
                     ) : (
                         filteredResults.map((product) => (
-                            <div key={product.id} className={`product-card ${editingProduct?.id === product.id ? 'editing' : ''}`}>
-                                <img src={product.imageUrl} alt={product.name} className="product-image" />
-                                <div className="product-details">
-                                    <h3>{product.name}</h3>
-                                    <p className="product-category">{product.category}</p>
-                                    <p className="product-price">
+                            <div key={product.id} className="pm-card">
+                                <img src={product.imageUrl} alt={product.name} className="pm-card-img" />
+                                <div className="pm-card-body">
+                                    <h4>{product.name}</h4>
+                                    <p className="pm-cat">{product.category}</p>
+                                    <p className="pm-price">
                                         ${product.price.toFixed(2)}
                                         {product.originalPrice && product.originalPrice > product.price && (
-                                            <span style={{ textDecoration: 'line-through', marginLeft: 6, fontSize: '0.9rem', color: '#B76E79' }}>
-                                                ${product.originalPrice.toFixed(2)}
-                                            </span>
+                                            <span className="pm-old-price">${product.originalPrice.toFixed(2)}</span>
                                         )}
                                     </p>
-                                    <p className="product-desc">{product.description}</p>
-                                    {product.features?.length > 0 && (
-                                        <ul className="product-features">
-                                            {product.features.map((f, idx) => <li key={idx}>{f}</li>)}
-                                        </ul>
+                                    <p>{product.description}</p>
+                                    {product.features.length > 0 && (
+                                        <ul>{product.features.map((f, i) => <li key={i}>{f}</li>)}</ul>
                                     )}
-                                    {product.shades && <p><strong>Shades:</strong> {product.shades.join(', ')}</p>}
+                                    {product.shades.length > 0 && (
+                                        <p><strong>Shades:</strong> {product.shades.join(', ')}</p>
+                                    )}
                                 </div>
-                                <div className="product-actions">
+                                <div className="pm-card-actions">
                                     <button onClick={() => handleEditProduct(product)}>Edit</button>
                                     <button onClick={() => handleDeleteProduct(product.id)}>Delete</button>
                                 </div>

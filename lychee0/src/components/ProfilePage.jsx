@@ -9,7 +9,8 @@ const dummyOrders = [
 
 const ProfilePage = () => {
     const [userData, setUserData] = useState({
-        fullName: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         email: 'john@example.com',
         phone: '1234567890',
         address: '123 Main Street',
@@ -37,15 +38,27 @@ const ProfilePage = () => {
             <div className="profile-box">
                 <h1>My Profile</h1>
 
-                <div className="profile-field">
-                    <label>Full Name</label>
-                    <input
-                        type="text"
-                        name="fullName"
-                        value={userData.fullName}
-                        onChange={handleChange}
-                        disabled={!editing}
-                    />
+                <div className="profile-field" id='name'>
+                    <div class="profile-name">
+                        <label>First Name</label>
+                        <input
+                            type="text"
+                            name="firstName"
+                            value={userData.firstName}
+                            onChange={handleChange}
+                            disabled={!editing}
+                        />
+                    </div>
+                    <div class="profile-name" id='lastName'>
+                        <label>Last Name</label>
+                        <input
+                            type="text"
+                            name="lastName"
+                            value={userData.lastName}
+                            onChange={handleChange}
+                            disabled={!editing}
+                        />
+                    </div>
                 </div>
 
                 <div className="profile-field">
@@ -65,17 +78,6 @@ const ProfilePage = () => {
                         type="text"
                         name="phone"
                         value={userData.phone}
-                        onChange={handleChange}
-                        disabled={!editing}
-                    />
-                </div>
-
-                <div className="profile-field">
-                    <label>Address</label>
-                    <input
-                        type="text"
-                        name="address"
-                        value={userData.address}
                         onChange={handleChange}
                         disabled={!editing}
                     />
@@ -125,6 +127,10 @@ const ProfilePage = () => {
                 <div className="spending-box">
                     <h2>Total Points</h2>
                     <p>{totalPoints} pts</p>
+                </div>
+
+                <div className="spending-Box">
+                    <button id='promote'>Become a Store Owner</button>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "../ComponentsCss/ShowMyReviews.css";
 
-const mockReviews = [
+const initialReviews = [
     {
         id: 1,
         product: "Lychee Lip Tint",
@@ -26,11 +26,18 @@ const mockReviews = [
 ];
 
 const Reviews = () => {
+    const [reviews, setReviews] = useState(initialReviews);
+
+    const handleDelete = (id) => {
+        const updatedReviews = reviews.filter((review) => review.id !== id);
+        setReviews(updatedReviews);
+    };
+
     return (
         <div className="reviews-container">
             <h2>My Reviews</h2>
             <div className="reviews-list">
-                {mockReviews.map((review) => (
+                {reviews.map((review) => (
                     <div key={review.id} className="review-card">
                         <div className="review-header">
                             <h4>{review.product}</h4>
@@ -40,6 +47,12 @@ const Reviews = () => {
                             {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
                         </div>
                         <p className="review-text">{review.review}</p>
+                        <button
+                            className="delete-btn"
+                            onClick={() => handleDelete(review.id)}
+                        >
+                            Delete Review
+                        </button>
                     </div>
                 ))}
             </div>

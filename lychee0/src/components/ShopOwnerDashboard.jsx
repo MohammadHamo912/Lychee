@@ -15,7 +15,11 @@ const ShopOwnerDashboard = () => {
         storeName: 'Awesome Store',
         email: 'owner@example.com',
         description: 'We sell the best beauty products.',
-        address: '123 Main St, Beauty City',
+        address: {
+            city: 'Beauty City',
+            street: '123 Main St',
+            building: 'Block A',
+        },
         categories: 'Makeup, Skincare',
         password: 'secret123',
         totalSales: 12345.67,
@@ -101,13 +105,25 @@ const ShopOwnerDashboard = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setProfileForm((prev) => ({ ...prev, [name]: value }));
+
+        if (['city', 'street', 'building'].includes(name)) {
+            setProfileForm((prev) => ({
+                ...prev,
+                address: {
+                    ...prev.address,
+                    [name]: value,
+                },
+            }));
+        } else {
+            setProfileForm((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSaveProfile = () => {
         setStoreInfo((prev) => ({
             ...prev,
             ...profileForm,
+            address: { ...profileForm.address },
         }));
         setSaveMessage('Profile information updated successfully!');
         setTimeout(() => setSaveMessage(''), 3000);
@@ -198,30 +214,33 @@ const ShopOwnerDashboard = () => {
                             />
                         </label>
                         <label>
-                            Password:
+                            City:
                             <input
-                                type="password"
-                                name="password"
-                                value={profileForm.password}
+                                type="text"
+                                name="city"
+                                value={profileForm.address.city}
                                 onChange={handleInputChange}
+                                required
                             />
                         </label>
                         <label>
-                            Address:
+                            Street:
                             <input
                                 type="text"
-                                name="address"
-                                value={profileForm.address}
+                                name="street"
+                                value={profileForm.address.street || ''}
                                 onChange={handleInputChange}
+                                placeholder="Optional"
                             />
                         </label>
                         <label>
-                            Categories (comma-separated):
+                            Building:
                             <input
                                 type="text"
-                                name="categories"
-                                value={profileForm.categories}
+                                name="building"
+                                value={profileForm.address.building || ''}
                                 onChange={handleInputChange}
+                                placeholder="Optional"
                             />
                         </label>
                         <label>
@@ -233,7 +252,7 @@ const ShopOwnerDashboard = () => {
                                 onChange={handleInputChange}
                             ></textarea>
                         </label>
-                        <button type="button" onClick={handleSaveProfile}>
+                        <button id='saveButton' type="button" onClick={handleSaveProfile}>
                             Save Changes
                         </button>
                         {saveMessage && (

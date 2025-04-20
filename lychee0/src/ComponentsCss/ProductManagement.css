@@ -1,5 +1,5 @@
-/* === Main Container === */
-.product-management-container {
+/* === Container & Title === */
+.pm-container {
     padding: 40px 20px;
     background-color: #FFF5E1;
     min-height: 100vh;
@@ -7,15 +7,15 @@
     box-sizing: border-box;
 }
 
-.product-management-container h2 {
+.pm-container h2 {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 30px;
 }
 
-/* === Form Card === */
-.product-form-card {
-    background-color: #fff;
+/* === Form Section === */
+.pm-form-card {
+    background: #fff;
     border: 2px solid #D9B6A3;
     border-radius: 12px;
     padding: 25px;
@@ -24,32 +24,33 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
 }
 
-.product-form-card h3 {
+.pm-form-card h3 {
     text-align: center;
     font-size: 1.4rem;
-    margin-bottom: 20px;
     color: #670010;
+    margin-bottom: 20px;
 }
 
-.product-form {
+.pm-form {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.form-inline-group {
+.pm-form-group {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
 }
 
-.form-inline-group input {
+.pm-form-group input {
     flex: 1;
 }
 
-.product-form input,
-.product-form textarea,
-.category-select {
+/* Input / Select / Textarea Styling */
+.pm-form input,
+.pm-form select,
+.pm-form textarea {
     padding: 10px 14px;
     font-size: 1rem;
     border-radius: 8px;
@@ -60,12 +61,74 @@
     box-sizing: border-box;
 }
 
-.product-form textarea {
+.pm-form textarea {
     resize: vertical;
     min-height: 80px;
 }
 
-.image-upload-label {
+/* Feature & Shade Lists */
+.pm-list-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pm-inline-add {
+    display: flex;
+    gap: 10px;
+}
+
+.pm-inline-add input {
+    flex: 1;
+}
+
+.pm-inline-add button {
+    background-color: #670010;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.pm-inline-add button:hover {
+    background-color: #B76E79;
+}
+
+.pm-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.pm-pill {
+    background-color: #FFE3E3;
+    color: #670010;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pm-pill span {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Inline Upload + Buttons */
+.pm-inline-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.pm-image-upload {
     background: #670010;
     color: white;
     padding: 10px 14px;
@@ -74,141 +137,77 @@
     display: inline-block;
     cursor: pointer;
     transition: background 0.3s ease;
+    flex-shrink: 0;
 }
 
-.image-upload-label input {
-    display: none;
-}
-
-.image-upload-label:hover {
+.pm-image-upload:hover {
     background: #B76E79;
 }
 
-.preview-wrapper {
-    margin-top: 10px;
-    text-align: center;
+.pm-image-upload input {
+    display: none;
 }
 
-.image-preview {
-    max-width: 100%;
-    max-height: 200px;
+.pm-image-preview {
+    max-height: 100px;
     border-radius: 8px;
-    border: 1px solid #D9B6A3;
+    margin-left: 12px;
     object-fit: contain;
 }
 
-.form-buttons {
+.pm-button-group {
     display: flex;
     gap: 12px;
-    margin-top: 10px;
+    flex: 1;
+    justify-content: flex-end;
 }
 
-.form-buttons button {
+.pm-button-group button {
     padding: 10px 16px;
     font-size: 1rem;
     border-radius: 8px;
     border: none;
     cursor: pointer;
+    width: 100%;
     transition: background 0.3s ease;
 }
 
-.form-buttons button[type="submit"] {
+.pm-button-group button[type="submit"],
+.pm-button-group button:not(.pm-cancel-btn) {
     background-color: #670010;
     color: #FFF5E1;
 }
 
-.form-buttons button[type="submit"]:hover {
+.pm-button-group button:hover {
     background-color: #B76E79;
 }
 
-.cancel-btn {
-    background-color: transparent;
-    border: 1.5px solid #8B3C5D;
+.pm-cancel-btn {
+    background: transparent;
     color: #8B3C5D;
+    border: 1.5px solid #8B3C5D;
 }
 
-.cancel-btn:hover {
-    background-color: #FFC5C5;
+.pm-cancel-btn:hover {
+    background: #FFE3E3;
 }
 
-/* === Sidebar + Grid Layout === */
-.product-content-layout {
+/* === Product Layout === */
+.pm-layout {
     display: flex;
     gap: 24px;
     align-items: flex-start;
 }
 
-/* Sidebar filters */
-.filters-sidebar {
+/* Filters Panel */
+.pm-sidebar {
     flex: 0 0 250px;
     background: #FFF5E1;
     padding: 20px;
 }
 
-/* Inside filters-sidebar only, not duplicated in the component */
-.filters-sidebar .filter-panel {
-    padding: 0;
-}
-
-/* FiltersPanel inner structure */
-.filters-sidebar .filter-group {
-    display: flex;
-    flex-direction: row;
-    margin: 28px;
-}
-
-.filters-sidebar .filter-group label {
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #8B3C5D;
-}
-
-.filters-sidebar input,
-.filters-sidebar select {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #D9B6A3;
-    background: #FFF5E1;
-    color: #4a2c2c;
-}
-
-.filters-sidebar .filter-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.filters-sidebar .filter-actions button {
-    flex: 1;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.filters-sidebar .apply-button {
-    background-color: #8B3C5D;
-    color: #FFF5E1;
-}
-
-.filters-sidebar .apply-button:hover {
-    background-color: #732c4a;
-}
-
-.filters-sidebar .reset-button {
-    background-color: #fff;
-    color: #8B3C5D;
-    border: 1px solid #D9B6A3;
-}
-
-.filters-sidebar .reset-button:hover {
-    background-color: #FFE3E3;
-}
-
-/* Product cards layout */
-.product-grid {
+/* Product Grid */
+.pm-grid {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
@@ -216,74 +215,68 @@
     justify-content: flex-start;
 }
 
-.product-card {
+.pm-empty {
+    text-align: center;
+    color: #8B3C5D;
+    font-size: 1.1rem;
+    margin-top: 30px;
+}
+
+/* Product Card */
+.pm-card {
     width: 300px;
     background-color: #fff;
     border: 2px solid #D9B6A3;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.product-card:hover {
+.pm-card:hover {
     transform: scale(1.02);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-.product-card.editing {
-    border-color: #670010;
-    box-shadow: 0 0 10px rgba(183, 110, 121, 0.4);
-}
-
-.product-image {
+.pm-card-img {
     width: 100%;
     height: 200px;
     object-fit: cover;
 }
 
-.product-details {
+.pm-card-body {
     padding: 16px;
     flex-grow: 1;
 }
 
-.product-details h3 {
+.pm-card-body h4 {
     font-size: 1.2rem;
-    margin-bottom: 8px;
     color: #8B3C5D;
+    margin-bottom: 8px;
 }
 
-.product-price {
-    color: #B76E79;
-    font-weight: bold;
-    margin-bottom: 6px;
-}
-
-.product-category {
+.pm-cat {
     font-size: 0.95rem;
     color: #A97E7E;
 }
 
-.product-desc {
-    font-size: 0.95rem;
-    color: #5c3c3c;
-    line-height: 1.4;
+.pm-price {
+    font-weight: bold;
+    color: #B76E79;
+    margin-bottom: 6px;
 }
 
-.product-features {
-    margin: 8px 0;
-    padding-left: 18px;
-    color: #5c3c3c;
+.pm-old-price {
+    margin-left: 6px;
     font-size: 0.9rem;
+    text-decoration: line-through;
+    color: #b76e79;
 }
 
-.product-features li {
-    margin-bottom: 4px;
-}
-
-.product-actions {
+/* Card Actions */
+.pm-card-actions {
     display: flex;
     justify-content: space-between;
     padding: 10px 16px;
@@ -291,7 +284,7 @@
     background-color: #FFF5E1;
 }
 
-.product-actions button {
+.pm-card-actions button {
     padding: 8px 14px;
     border-radius: 6px;
     background-color: #670010;
@@ -301,28 +294,35 @@
     transition: background 0.3s ease;
 }
 
-.product-actions button:hover {
+.pm-card-actions button:hover {
     background-color: #B76E79;
-}
-
-.no-products {
-    text-align: center;
-    color: #8B3C5D;
-    font-size: 1.1rem;
-    margin-top: 30px;
 }
 
 /* === Responsive === */
 @media (max-width: 900px) {
-    .product-content-layout {
+    .pm-layout {
         flex-direction: column;
     }
 
-    .filters-sidebar {
+    .pm-sidebar {
         width: 100%;
     }
 
-    .product-grid {
+    .pm-grid {
         justify-content: center;
+    }
+
+    .pm-inline-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pm-button-group {
+        flex-direction: column;
+        justify-content: stretch;
+    }
+
+    .pm-button-group button {
+        width: 100%;
     }
 }
