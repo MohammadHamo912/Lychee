@@ -58,7 +58,7 @@ body {
 .auth-box input:focus,
 .auth-box textarea:focus {
   outline: none;
-  border: 2px solid #b76e79;
+  border: 2px solid #670010;
 }
 
 .auth-box input::placeholder,
@@ -81,9 +81,17 @@ body {
   margin-top: 10px;
 }
 
+.auth-box form button {
+  background-color: #670010;
+}
+
 .auth-box button:hover {
   background-color: #ffc5c5;
-  border-color: #b76e79;
+  border-color: #670010;
+}
+
+#guest-btn {
+  background-color: #670010;
 }
 
 .role-toggle {
@@ -97,7 +105,7 @@ body {
   background-color: #fff5e1;
   color: #670010;
   font-weight: bold;
-  border: 2px solid #b76e79;
+  border: 2px solid #670010;
   border-radius: 30px;
   padding: 8px 16px;
   cursor: pointer;
@@ -105,7 +113,7 @@ body {
 }
 
 .role-toggle button.active {
-  background-color: #b76e79;
+  background-color: #670010;
   color: white;
   transform: scale(1.05);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -130,7 +138,7 @@ body {
   padding: 6px;
   border-radius: 6px;
   font-size: 0.95rem;
-  color: #8b3c5d;
+  color: #670010;
 }
 
 .error {
@@ -158,7 +166,7 @@ body {
 
 .google-btn:hover {
   background: #fff5e1;
-  border-color: #b76e79;
+  border-color: #670010;
 }
 
 .google-btn span {
@@ -168,6 +176,16 @@ body {
   margin-left: 20px;
 }
 
+/* Auth.css */
+.name-row {
+  display: flex;
+  gap: 10px;
+}
+
+.name-row input {
+  flex: 1;
+}
+
 .auth-box p {
   margin-top: 12px;
   font-size: 1.1rem;
@@ -175,7 +193,7 @@ body {
 }
 
 .auth-box a {
-  color: #b76e79;
+  color: #670010;
   font-weight: bold;
   text-decoration: none;
 }

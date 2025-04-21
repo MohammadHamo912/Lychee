@@ -115,7 +115,7 @@ const ProfilePage = () => {
                         Edit Profile
                     </button>
                 )}
-            </div>
+            </div> 
 
             {/* RIGHT - Info Cards */}
             <div className="profile-extra-box">

@@ -14,7 +14,7 @@
   font-size: 1.6rem;
   font-weight: 600;
   margin-bottom: 20px;
-  color: #670010;
+  color: #670010; 
 }
 
 /* === Form Layout === */
@@ -59,6 +59,10 @@
   background-color: #fffdfc;
   color: #670010;
   transition: border 0.3s ease;
+}
+
+#active{
+  font-size: 12px;
 }
 
 .form-field input:focus,
@@ -152,8 +156,7 @@ input:-webkit-autofill {
 .action-button {
   padding: 8px 14px;
   border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
   border: none;
   transition: background-color 0.3s ease;

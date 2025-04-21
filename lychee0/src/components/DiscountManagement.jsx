@@ -199,7 +199,7 @@ const DiscountManagement = () => {
                   <td>
                     <div className="action-buttons">
                       <button
-                        className="action-button activate-btn"
+                        className="action-button activate-btn" id="active"
                         onClick={() => toggleActive(discount.id)}
                       >
                         {discount.active ? "Deactivate" : "Activate"}

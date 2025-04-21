@@ -20,7 +20,7 @@
 
 .filter-group label {
   font-weight: bold;
-  color: #8b3c5d;
+  color: #670010;
   margin-bottom: 6px;
 }
 
@@ -72,7 +72,7 @@
 }
 
 .apply-button {
-  background-color: #8b3c5d;
+  background-color: #670010;
   color: white;
 }
 
@@ -82,13 +82,13 @@
 
 .reset-button {
   background-color: #fff;
-  color: #8b3c5d;
-  border: 2px solid #8b3c5d;
+  color: #670010;
+  border: 2px solid #670010;
 }
 
 .reset-button:hover {
   background-color: #ffc5c5;
-  border-color: #b76e79;
+  border-color: #670010;
 }
 
 .price-inputs {

@@ -89,7 +89,6 @@ const FiltersPanel = ({
         <button className="apply-button" onClick={handleApply}>
           Apply Filters
         </button>
-        a
         <button className="reset-button" onClick={handleReset}>
           Clear Filters
         </button>

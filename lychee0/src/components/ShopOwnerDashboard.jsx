@@ -25,6 +25,7 @@ const ShopOwnerDashboard = () => {
         totalSales: 12345.67,
         totalOrders: 150,
         totalProducts: 50,
+        logoUrl: '', // 🆕 Store logo
     });
 
     const [profileForm, setProfileForm] = useState({ ...storeInfo });
@@ -119,11 +120,23 @@ const ShopOwnerDashboard = () => {
         }
     };
 
+    const handleLogoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const logoPreviewUrl = URL.createObjectURL(file);
+            setProfileForm((prev) => ({
+                ...prev,
+                logoUrl: logoPreviewUrl,
+            }));
+        }
+    };
+
     const handleSaveProfile = () => {
         setStoreInfo((prev) => ({
             ...prev,
             ...profileForm,
             address: { ...profileForm.address },
+            logoUrl: profileForm.logoUrl,
         }));
         setSaveMessage('Profile information updated successfully!');
         setTimeout(() => setSaveMessage(''), 3000);
@@ -252,7 +265,28 @@ const ShopOwnerDashboard = () => {
                                 onChange={handleInputChange}
                             ></textarea>
                         </label>
-                        <button id='saveButton' type="button" onClick={handleSaveProfile}>
+
+                        {/* Logo Upload */}
+                        <label>
+                            Store Logo:
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleLogoChange}
+                            />
+                        </label>
+
+                        {profileForm.logoUrl && (
+                            <div className="logo-preview">
+                                <img
+                                    src={profileForm.logoUrl}
+                                    alt="Store Logo"
+                                    style={{ height: '80px', borderRadius: '8px', marginTop: '10px' }}
+                                />
+                            </div>
+                        )}
+
+                        <button id="saveButton" type="button" onClick={handleSaveProfile}>
                             Save Changes
                         </button>
                         {saveMessage && (

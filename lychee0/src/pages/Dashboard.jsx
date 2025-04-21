@@ -14,7 +14,7 @@ import AdminOverview from "../components/AdminOverview";
 import "../PagesCss/Dashboard.css";
 
 // customer , admin, storeOwner
-const Dashboard = ({ userRole = "storeOwner" }) => {
+const Dashboard = ({ userRole = "admin" }) => {
   const [activeTab, setActiveTab] = useState("default");
 
   const getTabsByRole = () => {
@@ -97,8 +97,8 @@ const Dashboard = ({ userRole = "storeOwner" }) => {
             {userRole === "admin"
               ? "Admin Panel"
               : userRole === "storeOwner"
-              ? "Store Panel"
-              : "My Account"}
+                ? "Store Panel"
+                : "My Account"}
           </h2>
 
           {tabs.map((tab) => (

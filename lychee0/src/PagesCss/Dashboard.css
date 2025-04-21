@@ -41,5 +41,6 @@
 
 .dashboard-content {
     flex: 1;
-    padding: 30px;
+    padding-left: 50px;
+    margin-top: -50px;
 }

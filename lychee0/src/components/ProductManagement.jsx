@@ -13,7 +13,7 @@ const ProductManagement = () => {
     const [formData, setFormData] = useState({
         name: '',
         price: '',
-        discount: '',
+        originalPrice: '',
         category: '',
         imageFile: null,
         imageUrl: '',
@@ -25,7 +25,8 @@ const ProductManagement = () => {
         rating: 0,
         reviews: 0,
         barcode: '',
-        brandName: ''
+        brandName: '',
+        stock: ''
     });
 
     useEffect(() => {
@@ -88,7 +89,7 @@ const ProductManagement = () => {
         setFormData({
             name: '',
             price: '',
-            discount: '',
+            originalPrice: '',
             category: '',
             imageFile: null,
             imageUrl: '',
@@ -101,14 +102,15 @@ const ProductManagement = () => {
             reviews: 0,
             barcode: '',
             brandName: '',
+            stock: ''
         });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const { name, price, description, imageUrl, category } = formData;
+        const { name, price, imageUrl, category, stock } = formData;
 
-        if (!name || !price || !description || !category || !imageUrl) {
+        if (!name || !price || !category || !imageUrl || !stock) {
             alert('Please fill all required fields.');
             return;
         }
@@ -118,9 +120,11 @@ const ProductManagement = () => {
             id: editingProduct ? editingProduct.id : Date.now(),
             price: parseFloat(formData.price),
             originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-            discount: formData.originalPrice
-                ? `${Math.round((1 - formData.price / formData.originalPrice) * 100)}%`
-                : null,
+            stock: parseInt(formData.stock, 10),
+            discount:
+                formData.originalPrice && formData.price
+                    ? `${Math.round((1 - formData.price / formData.originalPrice) * 100)}%`
+                    : null,
         };
 
         if (editingProduct) {
@@ -188,7 +192,8 @@ const ProductManagement = () => {
                     <div className="pm-form-group">
                         <input name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange} required />
                         <input name="price" placeholder="Price" type="number" value={formData.price} onChange={handleInputChange} required />
-                        <input name="discount" placeholder="Discount" type="number" value={formData.discount} onChange={handleInputChange} />
+                        <input name="originalPrice" placeholder="Original Price" type="number" value={formData.originalPrice} onChange={handleInputChange} />
+                        <input name="stock" placeholder="Stock Quantity" type="number" value={formData.stock} onChange={handleInputChange} required />
                     </div>
 
                     <select name="category" value={formData.category} onChange={handleInputChange} required>
@@ -197,6 +202,7 @@ const ProductManagement = () => {
                             <option key={cat} value={cat}>{cat}</option>
                         ))}
                     </select>
+
                     {/* Features */}
                     <div className="pm-list-group">
                         <label>Features</label>
@@ -272,7 +278,8 @@ const ProductManagement = () => {
                                             <span className="pm-old-price">${product.originalPrice.toFixed(2)}</span>
                                         )}
                                     </p>
-                                    <p>{product.description}</p>
+                                    {product.discount && <p><strong>Discount:</strong> {product.discount}</p>}
+                                    <p><strong>Stock:</strong> {product.stock}</p>
                                     {product.features.length > 0 && (
                                         <ul>{product.features.map((f, i) => <li key={i}>{f}</li>)}</ul>
                                     )}
