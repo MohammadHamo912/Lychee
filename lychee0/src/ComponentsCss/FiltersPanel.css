@@ -69,6 +69,7 @@
   border: none;
   margin-top: 30px;
   margin-left: 12%;
+  width: 75%;
 }
 
 .apply-button {
@@ -79,6 +80,31 @@
 .apply-button:hover {
   background-color: #b76e79;
 }
+
+.star-filter {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+  margin-bottom: 6px;
+}
+
+#stars {
+  margin-bottom: 50px;
+}
+
+.star {
+  font-size: 1.1rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.star:hover,
+.star.selected {
+  color: #f5b301;
+}
+
 
 .reset-button {
   background-color: #fff;

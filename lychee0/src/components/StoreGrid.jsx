@@ -2,8 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ReusableGrid from "./ReusableGrid";
 import StoreCard from "./StoreCard";
-import dummyStores from "./../Data/dummyStores"; // Adjust the import path as needed
-import "./../ComponentsCss/StoreGrid.css";
+import dummyStores from "./../Data/dummyStores";
 let stores = dummyStores;
 
 const StoresGrid = ({ title = "Featured Stores", limit }) => {
@@ -35,7 +34,7 @@ const StoresGrid = ({ title = "Featured Stores", limit }) => {
       CardComponent={StoreCard}
       limit={limit}
       cardProps={{ onItemSelect: handleItemSelect }}
-      viewAllLink="/allstorespage"
+      viewAllLink="/allstorespage" 
       viewAllText="View All Stores"
       className="stores-grid"
       itemPropName="store" // This matches the prop name in StoreCardComponent

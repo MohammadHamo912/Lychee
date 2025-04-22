@@ -56,7 +56,7 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      <NavBar />
+      <NavBar /> 
       <main className="main-content">
         <HeroSection scrollToStoresGrid={scrollToStoresGrid} />
 
@@ -65,14 +65,14 @@ const HomePage = () => {
         </div>
         <div className="carousel-section section">
           <Carousel slides={carouselSlides} />
-        </div>
+        </div> 
 
         <div className="product-grid-section section">
           <ProductGrid limit={4} header={"Featured Products"} />
         </div>
 
         <div ref={StoresGridRef} className="store-grid-section section">
-          <StoresGrid limit={4} />
+          <StoresGrid limit={3} />
         </div>
         <div className="trending-products-section section">
           <ItemGrid limit={4} header={"Trending Items"} />

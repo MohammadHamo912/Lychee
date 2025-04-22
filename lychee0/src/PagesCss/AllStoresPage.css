@@ -1,4 +1,3 @@
-/* StoresPage.css */
 .stores-page {
   min-height: 100vh;
   display: flex;
@@ -12,7 +11,8 @@
   padding: 80px 24px 60px;
   text-align: center;
   color: #fff5e1;
-  margin-top: -10px; /* To account for fixed navbar */
+  margin-top: -10px;
+  /* To account for fixed navbar */
 }
 
 .stores-hero-content {
@@ -130,6 +130,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -137,6 +138,10 @@
 
 .loading-spinner p {
   font-size: 1.1rem;
+}
+
+.search-container {
+  background-color: #670010;
 }
 
 /* No results state */

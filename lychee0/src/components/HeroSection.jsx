@@ -20,7 +20,7 @@ const HeroSection = ({ scrollToStoresGrid }) => {
         </Link>
       </div>
       <div className="hero-section-search-bar">
-        <SearchBar searchType="store" />
+        <SearchBar searchType="product" />
       </div>
 
       {/* Featured promotion banner */}

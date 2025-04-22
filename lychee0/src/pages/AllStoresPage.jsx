@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SearchBar from "../components/SearchBar";
-import FiltersPanel from "../components/FiltersPanel";
+import StoreFiltersPanel from "../components/StoreFiltersPanel";
 import ReusableGrid from "../components/ReusableGrid";
 import StoreCard from "../components/StoreCard";
 import Footer from "../components/Footer";
@@ -13,122 +13,95 @@ const AllStoresPage = () => {
   const [searchParams] = useSearchParams();
   const initialQuery = searchParams.get("query") || "";
 
-  const [stores, setStores] = useState(dummyStores);
-  const [filteredStores, setFilteredStores] = useState(dummyStores);
+  const [stores] = useState(dummyStores);
+  const [filteredStores, setFilteredStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState(initialQuery);
+  const [activeFilters, setActiveFilters] = useState({
+    category: "All",
+    reviewStars: null,
+    sortOption: "none",
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [storeCategories, setStoreCategories] = useState([
-    "Beauty",
-    "Skincare",
-    "Makeup",
-    "Luxury",
-    "Korean",
-    "Organic",
-  ]);
 
-  // Apply search from URL on initial load
+  const storeCategories = [
+    "Beauty", "Skincare", "Makeup", "Luxury", "Korean", "Organic",
+  ];
+
   useEffect(() => {
-    if (initialQuery) {
-      handleSearch(initialQuery);
-    }
-  }, []);
+    applyFiltersAndSearch(initialQuery, activeFilters);
+  }, [initialQuery, stores]);
 
-  // Handle search from SearchBar
   const handleSearch = (term) => {
-    setIsLoading(true);
     setSearchTerm(term);
-
-    if (!term.trim()) {
-      setFilteredStores(stores);
-      setIsLoading(false);
-      return;
-    }
-
-    const searchResults = stores.filter(
-      (store) =>
-        store.name.toLowerCase().includes(term.toLowerCase()) ||
-        store.description.toLowerCase().includes(term.toLowerCase()) ||
-        store.categories.some((cat) =>
-          cat.toLowerCase().includes(term.toLowerCase())
-        )
-    );
-
-    setTimeout(() => {
-      setFilteredStores(searchResults);
-      setIsLoading(false);
-    }, 300); // Small delay to show loading state
+    applyFiltersAndSearch(term, activeFilters);
   };
 
-  // Handle filter application
   const handleApplyFilters = (filters) => {
+    setActiveFilters(filters);
+    applyFiltersAndSearch(searchTerm, filters);
+  };
+
+  const applyFiltersAndSearch = (search = "", filters = {}) => {
     setIsLoading(true);
+    const { category, reviewStars, sortOption } = filters;
 
-    let results = [...stores];
+    let result = [...stores];
 
-    // Filter by category
-    if (filters.category && filters.category !== "All") {
-      results = results.filter(
-        (store) =>
-          store.categories && store.categories.includes(filters.category)
+    // Category filtering
+    if (category && category !== "All") {
+      result = result.filter((store) =>
+        store.categories?.some(
+          (cat) => cat.toLowerCase() === category.toLowerCase()
+        )
       );
     }
 
-    // Apply price filters if the stores have price ranges
-    if (filters.minPrice) {
-      results = results.filter((store) => {
-        // Assuming stores have a minPrice or averagePrice property
-        const storePrice = store.minPrice || store.averagePrice || 0;
-        return storePrice >= filters.minPrice;
-      });
+    // Review filtering
+    if (reviewStars !== null) {
+      result = result.filter(
+        (store) => Math.floor(store.rating || 0) === reviewStars
+      );
     }
 
-    if (filters.maxPrice) {
-      results = results.filter((store) => {
-        // Assuming stores have a maxPrice or averagePrice property
-        const storePrice = store.maxPrice || store.averagePrice || Infinity;
-        return storePrice <= filters.maxPrice;
-      });
-    }
-
-    // Apply sorting
-    if (filters.sortOption !== "none") {
-      switch (filters.sortOption) {
-        case "nameAZ":
-          results.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-        case "priceHighToLow":
-          results.sort((a, b) => (b.averagePrice || 0) - (a.averagePrice || 0));
-          break;
-        case "priceLowToHigh":
-          results.sort((a, b) => (a.averagePrice || 0) - (b.averagePrice || 0));
-          break;
-        default:
-          break;
-      }
-    }
-
-    // Apply current search term if exists
-    if (searchTerm.trim()) {
-      results = results.filter(
+    // Search filtering
+    if (search.trim()) {
+      const lowerSearch = search.toLowerCase();
+      result = result.filter(
         (store) =>
-          store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          store.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          store.categories.some((cat) =>
-            cat.toLowerCase().includes(searchTerm.toLowerCase())
+          store.name.toLowerCase().includes(lowerSearch) ||
+          store.description.toLowerCase().includes(lowerSearch) ||
+          store.categories?.some((cat) =>
+            cat.toLowerCase().includes(lowerSearch)
           )
       );
     }
 
+    // Sorting
+    switch (sortOption) {
+      case "nameAZ":
+        result.sort((a, b) =>
+          a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+        );
+        break;
+      case "mostReviewed":
+        result.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+        break;
+      case "leastReviewed":
+        result.sort((a, b) => (a.reviewCount || 0) - (b.reviewCount || 0));
+        break;
+      default:
+        break;
+    }
+
     setTimeout(() => {
-      setFilteredStores(results);
+      setFilteredStores(result);
       setIsLoading(false);
     }, 300);
   };
 
-  // Clear search and filters
   const handleClearSearch = () => {
     setSearchTerm("");
-    setFilteredStores(stores);
+    applyFiltersAndSearch("", activeFilters);
   };
 
   return (
@@ -138,10 +111,7 @@ const AllStoresPage = () => {
       <div className="stores-hero">
         <div className="stores-hero-content">
           <h1>Discover Beauty Stores</h1>
-          <p>
-            Find your favorite beauty brands and unique products from around the
-            world
-          </p>
+          <p>Find your favorite beauty brands and unique products from around the world</p>
           <div className="search-container">
             <SearchBar searchType="stores" onSearch={handleSearch} />
           </div>
@@ -151,7 +121,7 @@ const AllStoresPage = () => {
       <div className="stores-content">
         <div className="stores-sidebar">
           <h2>Filter Stores</h2>
-          <FiltersPanel
+          <StoreFiltersPanel
             onApplyFilters={handleApplyFilters}
             categories={storeCategories}
           />
@@ -160,8 +130,7 @@ const AllStoresPage = () => {
         <div className="stores-main">
           <div className="stores-results-header">
             <h2>
-              All Stores{" "}
-              {filteredStores.length > 0 && `(${filteredStores.length})`}
+              All Stores {filteredStores.length > 0 && `(${filteredStores.length})`}
             </h2>
             {searchTerm && (
               <div className="search-results-info">

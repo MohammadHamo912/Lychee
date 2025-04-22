@@ -5,8 +5,9 @@
   margin-bottom: 20px;
 }
 
-.stores-grid {
+.stores-grid { 
   padding-top: 20px !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 /* Override the card description height for store descriptions */
