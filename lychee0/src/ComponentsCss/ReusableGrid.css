@@ -9,6 +9,10 @@
   gap: 24px;
 }
 
+.reusable-grid-container.all-store-page {
+  min-width: 1000px;
+}
+
 /* === Grid Header (Title + View All Link) === */
 .reusable-grid-header-container {
   display: flex;

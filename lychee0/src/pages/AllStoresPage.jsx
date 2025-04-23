@@ -3,10 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SearchBar from "../components/SearchBar";
 import StoreFiltersPanel from "../components/StoreFiltersPanel";
-import ReusableGrid from "../components/ReusableGrid";
 import StoreCard from "../components/StoreCard";
 import Footer from "../components/Footer";
 import dummyStores from "../Data/dummyStores";
+import StoreGrid from "../components/StoreGrid";
 import "../PagesCss/AllStoresPage.css";
 
 const AllStoresPage = () => {
@@ -24,7 +24,12 @@ const AllStoresPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const storeCategories = [
-    "Beauty", "Skincare", "Makeup", "Luxury", "Korean", "Organic",
+    "Beauty",
+    "Skincare",
+    "Makeup",
+    "Luxury",
+    "Korean",
+    "Organic",
   ];
 
   useEffect(() => {
@@ -111,7 +116,10 @@ const AllStoresPage = () => {
       <div className="stores-hero">
         <div className="stores-hero-content">
           <h1>Discover Beauty Stores</h1>
-          <p>Find your favorite beauty brands and unique products from around the world</p>
+          <p>
+            Find your favorite beauty brands and unique products from around the
+            world
+          </p>
           <div className="search-container">
             <SearchBar searchType="stores" onSearch={handleSearch} />
           </div>
@@ -130,7 +138,8 @@ const AllStoresPage = () => {
         <div className="stores-main">
           <div className="stores-results-header">
             <h2>
-              All Stores {filteredStores.length > 0 && `(${filteredStores.length})`}
+              All Stores{" "}
+              {filteredStores.length > 0 && `(${filteredStores.length})`}
             </h2>
             {searchTerm && (
               <div className="search-results-info">
@@ -146,14 +155,7 @@ const AllStoresPage = () => {
               <p>Loading stores...</p>
             </div>
           ) : filteredStores.length > 0 ? (
-            <ReusableGrid
-              items={filteredStores}
-              CardComponent={StoreCard}
-              itemPropName="store"
-              className="stores-grid"
-              gridStyle={{ gap: "30px" }}
-              showViewAll={false}
-            />
+            <StoreGrid title={""} header={""} className={"all-store-page"} />
           ) : (
             <div className="no-results">
               <h3>No stores found</h3>

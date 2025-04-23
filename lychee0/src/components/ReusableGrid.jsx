@@ -10,7 +10,7 @@ const ReusableGrid = ({
   limit,
   cardProps = {},
   viewAllLink,
-  viewAllText = "View All", 
+  viewAllText = "View All",
   className = "",
   gridContainerStyle = {},
   gridStyle = {},
@@ -19,9 +19,14 @@ const ReusableGrid = ({
   const itemsToShow = limit ? items.slice(0, limit) : items;
 
   return (
-    <div className={`reusable-grid-container ${className}`} style={gridContainerStyle}>
+    <div
+      className={`reusable-grid-container ${className}`}
+      style={gridContainerStyle}
+    >
       <div className="reusable-grid-header-container">
-        {headerContent && <h2 className="reusable-grid-header">{headerContent}</h2>}
+        {headerContent && (
+          <h2 className="reusable-grid-header">{headerContent}</h2>
+        )}
         {limit && viewAllLink && items.length > limit && (
           <Link to={viewAllLink} className="view-all-link">
             {viewAllText}

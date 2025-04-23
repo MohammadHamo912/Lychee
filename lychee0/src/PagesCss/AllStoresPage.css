@@ -8,7 +8,7 @@
 /* Hero section with search */
 .stores-hero {
   background-color: #670010;
-  padding: 80px 24px 60px;
+  padding: 60px 24px 60px;
   text-align: center;
   color: #fff5e1;
   margin-top: -10px;
@@ -42,7 +42,7 @@
 .stores-content {
   display: flex;
   max-width: 1200px;
-  margin: 40px auto;
+  margin: 40px;
   padding: 0 24px;
   gap: 40px;
   flex: 1;
@@ -60,7 +60,7 @@
 }
 
 .stores-main {
-  flex: 1;
+  flex: auto;
 }
 
 /* Results header with store count and search info */
