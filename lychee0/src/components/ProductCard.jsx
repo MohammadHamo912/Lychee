@@ -14,8 +14,7 @@ const ProductCard = ({ product, onAction }) => {
   };
 
   const handleAction = (e) => {
-    e.stopPropagation(); // Prevent navigation
-    onAction(product);
+    alert("Coming Soon");
   };
 
   const ActionButton = (

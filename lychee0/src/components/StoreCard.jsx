@@ -47,7 +47,7 @@ const StoreCard = ({ store }) => {
   const footerLeft = <span className="store-location">{store.location}</span>;
   const footerRight = (
     <Link
-      to={`/store/${store.id}`}
+      to={`/StorePage/${store.id}`}
       className="view-store-btn"
       onClick={(e) => e.stopPropagation()}
     >
@@ -64,7 +64,7 @@ const StoreCard = ({ store }) => {
       description={descriptionWithCategories}
       footerLeft={footerLeft}
       footerRight={footerRight}
-      onClick={() => (window.location.href = `/store/${store.id}`)}
+      onClick={() => (window.location.href = `/StorePage/${store.id}`)}
       data-store-id={store.id}
       className="item-theme"
     />

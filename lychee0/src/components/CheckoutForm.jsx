@@ -133,18 +133,16 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
     <div className="checkout-form-container">
       <div className="checkout-steps">
         <div
-          className={`step ${currentStep === 1 ? "active" : ""} ${
-            currentStep > 1 ? "completed" : ""
-          }`}
+          className={`step ${currentStep === 1 ? "active" : ""} ${currentStep > 1 ? "completed" : ""
+            }`}
           onClick={() => currentStep > 1 && setCurrentStep(1)}
         >
           <span className="step-number">1</span>
           <span className="step-title">Shipping</span>
         </div>
         <div
-          className={`step ${currentStep === 2 ? "active" : ""} ${
-            currentStep > 2 ? "completed" : ""
-          }`}
+          className={`step ${currentStep === 2 ? "active" : ""} ${currentStep > 2 ? "completed" : ""
+            }`}
           onClick={() => currentStep > 2 && setCurrentStep(2)}
         >
           <span className="step-number">2</span>
@@ -313,7 +311,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
             </div>
 
             <div className="form-buttons">
-              <Link to="/shoppingcart" className="secondary-button">
+              <Link to="/shoppingcartpage" className="secondary-button">
                 Back to Cart
               </Link>
               <button
@@ -516,9 +514,8 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
             <h3>Payment Method</h3>
             <div className="payment-methods">
               <div
-                className={`payment-method ${
-                  formData.paymentMethod === "creditCard" ? "selected" : ""
-                }`}
+                className={`payment-method ${formData.paymentMethod === "creditCard" ? "selected" : ""
+                  }`}
                 onClick={() =>
                   setFormData({ ...formData, paymentMethod: "creditCard" })
                 }
@@ -539,9 +536,8 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                 </div>
               </div>
               <div
-                className={`payment-method ${
-                  formData.paymentMethod === "paypal" ? "selected" : ""
-                }`}
+                className={`payment-method ${formData.paymentMethod === "paypal" ? "selected" : ""
+                  }`}
                 onClick={() =>
                   setFormData({ ...formData, paymentMethod: "paypal" })
                 }

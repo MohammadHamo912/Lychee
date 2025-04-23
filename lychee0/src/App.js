@@ -1,8 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import shop1Url from "./images/shop1SampleImage.png"; // Update path if necessary
-
 // Pages
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
@@ -11,38 +9,14 @@ import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import ProductDetails from "./pages/ProductDetailsPage.jsx";
 import AdminDashboard from "./components/AdminDashboard.jsx";
+import CheckOut from "./components/CheckoutForm.jsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.jsx";
 import OwnerDashboard from "./components/OwnerDashboard.jsx";
 import AllStoresPage from "./pages/AllStoresPage.jsx";
 import ProductListingPage from "./pages/AllProductsPage.jsx";
 import CategoriesPage from "./pages/Categories.jsx";
-import ProductPage from "./pages/ProductPage.jsx"; // Components
-import productdetailsComponent from "./components/ProductDetails.jsx";
-import NavBar from "./components/NavBar"; // DONE
-import ProductCard from "./components/ProductCard"; // DONE
-import ProductGrid from "./components/ProductGrid.jsx"; // DONE
-import ShopCard from "./components/ShopCard"; // DONE
-import Footer from "./components/Footer"; // DONE
-import ShoppingCart from "./components/ShoppingCart"; // DONE
-import CheckoutForm from "./components/CheckoutForm"; // DONE
-import FiltersPanel from "./components/FiltersPanel";
+import ProductPage from "./pages/ProductPage.jsx";
 import ShopOwnerDashboard from "./components/ShopOwnerDashboard.jsx";
-import OrderSummary from "./components/OrderSummary.jsx";
-import OrderConfirmation from "./components/OrderConfirmation.jsx";
-import HeroSection from "./components/HeroSection.jsx"; // DONE
-import CategoryGrid from "./components/CategoryGrid"; // DONE
-
-import ProfilePage from "./components/ProfilePage.jsx";
-import OrderHistory from "./components/OrderHistory.jsx";
-import SearchBar from "./components/SearchBar.jsx";
-import Breadcrumbs from "./components/Breadcrumbs";
-import Modal from "./components/Modal.jsx";
-import DummyHomePage from "./DummyFiles/DummyHomePage.jsx";
-import Toast from "./components/Toast";
-import Spinner from "./components/Spinner";
-import Pagination from "./components/Pagination";
-import DiscountManagement from "./components/DiscountManagement.jsx";
-import ShopApproval from "./components/ShopApproval.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import BlogAndBeauty from "./pages/BlogAndBeautyTips.jsx";
 import NotFoundPage from "./pages/NotFound.jsx";
@@ -50,57 +24,17 @@ import StorePage from "./pages/StorePage.jsx";
 import ContactAndSupport from "./pages/ContactAndSupport.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import FAQ from "./pages/FAQ.jsx";
-import Sidebar from "./components/Sidebar.jsx";
-import UserManagment from "./components/UserManagement.jsx"; // Keep SearchBar separate
-import ReusableGrid from "./components/ReusableGrid.jsx";
-import ReusableCard from "./components/ReusableCard.jsx";
-import StoresGrid from "./components/StoreGrid.jsx";
-import ItemCard from "./components/ItemCard.jsx";
-import StoreCard from "./components/StoreCard.jsx";
-// dummy imports
-import { useCart } from "./Data/dummyCartData.js";
-import { useCartCheckout } from "./Data/dummyCheckoutData.js";
-import { dummyOrderData } from "./Data/dummyOrderData.js";
-import { dummyCoreData } from "./Data/dummyCoreData.js";
-import dummyStores from "./Data/dummyStores";
 import dummyProducts from "./Data/dummyProducts.js";
-import ItemGrid from "./components/ItemGrid.jsx";
-import NotFound from "./pages/NotFound.jsx";
+import ProductCard from "./components/ProductCard.jsx";
 
 function App() {
-  /*dummy data for shopping cart */
-  const { cartItems, updateQuantity, removeItem, applyPromo } = useCart();
-  const { cart, calculateCartTotal, handleCheckoutSubmit } = useCartCheckout();
-
-  /*dummy for checkout */
-  const myProduct = {
-    name: "Velvet Matte Lipstick",
-    brand: "BlushGlow",
-    price: 25.99,
-    salePrice: 20.99,
-    // ... any other fields you want to override
-  };
-
-  // Handlers for interactivity
-  const handleAddToCart = (item) => {
-    console.log("Added to cart:", item);
-    // Add your cart logic here (e.g., update global state)
-  };
-
-  const handleBuyNow = (item) => {
-    console.log("Buying now:", item);
-    // Add your buy now logic here (e.g., redirect to checkout)
-  };
-
-  const handleWishlistToggle = (id, isWishlisted) => {
-    console.log(`Wishlist ${isWishlisted ? "added" : "removed"} for ID: ${id}`);
-    // Add your wishlist logic here (e.g., API call or state update)
-  };
-
   return (
     <div>
       <Routes>
-        <Route path="/productpage/:id" element={<ProductPage />}></Route>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/productpage/:id" element={<ProductPage />} />
         <Route path="/productlistingpage" element={<ProductListingPage />} />
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/allstorespage" element={<AllStoresPage />} />
@@ -108,71 +42,16 @@ function App() {
         <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
         <Route path="/ownerdashboard" element={<OwnerDashboard />} />
-        <Route path="/admin/usermanagement" element={<UserManagment />} />
-        <Route path="/admin/shopapproval" element={<ShopApproval />} />
-        <Route path="/navbar" element={<NavBar />} />
-        <Route
-          path="/admin/discountmanagment"
-          element={<DiscountManagement />}
-        />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/" element={<DummyHomePage />} />
-        <Route path="itemgrid" element={<ItemGrid />} />
-
-        <Route path="/" element={<HomePage />} />
-        {/* Use HomePage as the default */}
-        <Route path="/homepage" element={<HomePage />} />
-        {/* Keep this if you want a separate /homepage */}
-        {/*to test this type http://localhost:3000/product/{the id of the component } 
-        example:
-        http://localhost:3000/product/1
-        */}
         <Route path="/category/:category" element={<ShopByCategory />} />
-        <Route
-          path="itemcard"
-          element={
-            <ItemCard
-              item={dummyProducts[0]}
-              onAddToCart={(p) => console.log("Add to cart:", p)}
-            />
-          }
-        />
-
-        <Route
-          path="storesgrid"
-          element={
-            <StoresGrid
-              title="Trending Stores"
-              limit={3}
-              viewAllLink="/all-stores"
-            />
-          }
-        />
-        <Route
-          path="storecard"
-          element={<StoreCard store={dummyStores[0]} />}
-        />
-
-        <Route path="reusablecard" element={<ReusableCard />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/storepage" element={<StorePage />} />
-        <Route path="/sidebar" element={<Sidebar />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/footer" element={<Footer />} />
-        <Route path="/filterspanel" element={<FiltersPanel />} />
-        <Route path="/searchbar" element={<SearchBar searchType="store" />} />
-        <Route path="/herosection" element={<HeroSection />} />
-        <Route path="/categorygrid" element={<CategoryGrid />} />
-
-        <Route path="/discountmanagement" element={<DiscountManagement />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
-        <Route path="/profilepage" element={<ProfilePage />} />
-        <Route path="/orderhistory" element={<OrderHistory />} />
-        <Route path="/pagenotfound" element={<NotFoundPage />} />
-        <Route path="/contactandsupport" element={<ContactAndSupport />} />
+        <Route path="/contact" element={<ContactAndSupport />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/checkout" element={<CheckOut />} />
+        <Route path="*" element={<NotFoundPage />} />
         <Route
           path="/search-products"
           element={
@@ -183,149 +62,6 @@ function App() {
             />
           }
         />
-
-        <Route
-          path="/search-stores"
-          element={
-            <SearchPage
-              searchType="stores"
-              data={dummyStores}
-              renderCard={(store) => (
-                <ShopCard
-                  shop={store}
-                  onViewShop={(s) => console.log("Viewing store:", s)}
-                />
-              )}
-            />
-          }
-        />
-
-        <Route path="reusablegrid" element={<ReusableGrid />} />
-        <Route path="productgrid" element={<ProductGrid />} />
-
-        <Route
-          path="/productcard"
-          element={
-            <ProductCard
-              product={dummyProducts[0]}
-              onAddToCart={(p) => console.log("Add to cart:", p)}
-            />
-          }
-        />
-        <Route path="/products" element={<ProductGrid />} />
-        <Route
-          path="/shopcard"
-          element={
-            <ShopCard
-              shop={{ id: 1, name: "Loreal", logoUrl: shop1Url }}
-              onViewShop={(shop) => console.log("Viewing shop:", shop)}
-              featured={false}
-            />
-          }
-        />
-        <Route
-          path="/shoppingcart"
-          element={
-            <ShoppingCart
-              cartItems={cartItems}
-              updateQuantity={updateQuantity}
-              removeItem={removeItem}
-              applyPromo={applyPromo}
-            />
-          }
-        />
-        <Route
-          path="/checkout"
-          element={
-            <CheckoutForm
-              onSubmit={handleCheckoutSubmit}
-              cartTotal={calculateCartTotal()}
-            />
-          }
-        />
-        <Route
-          path="/ordersummary"
-          element={
-            <OrderSummary
-              cartItems={cartItems}
-              subtotal={1000}
-              tax={30}
-              shipping={25}
-              discount={10}
-              total={1045}
-              onProceedToPayment={() => console.log("Proceed to payment")}
-            />
-          }
-        />
-        <Route
-          path="/productdetailscomponent"
-          element={
-            <productdetailsComponent
-              product={myProduct}
-              onAddToCart={handleAddToCart}
-              onBuyNow={handleBuyNow}
-              onWishlistToggle={handleWishlistToggle}
-              defaultImage="/images/placeholder.jpg"
-            />
-          }
-        />
-        <Route
-          path="/orderconfirmation"
-          element={
-            <OrderConfirmation
-              orderNumber={dummyOrderData.orderNumber}
-              orderDate={dummyOrderData.orderDate}
-              shippingAddress={dummyOrderData.shippingAddress}
-              billingAddress={dummyOrderData.billingAddress}
-              paymentMethod={dummyOrderData.paymentMethod}
-              items={dummyOrderData.items}
-              subtotal={dummyOrderData.subtotal}
-              tax={dummyOrderData.tax}
-              shipping={dummyOrderData.shipping}
-              discount={dummyOrderData.discount}
-              total={dummyOrderData.total}
-            />
-          }
-        />
-        <Route
-          path="/breadcrumbs"
-          element={<Breadcrumbs paths={dummyCoreData.breadcrumbPaths} />}
-        />
-        <Route
-          path="/modal"
-          element={
-            <Modal
-              isOpen={true} // Always open for testing
-              onClose={() => console.log("Modal closed")}
-              title="Test Modal"
-            >
-              <p>This is a test modal content.</p>
-            </Modal>
-          }
-        />
-        <Route
-          path="/toast"
-          element={
-            <Toast
-              message={dummyCoreData.toastMessage}
-              type={dummyCoreData.toastType}
-              onClose={() => console.log("Toast closed")}
-              duration={3000}
-            />
-          }
-        />
-        <Route path="/spinner" element={<Spinner size={60} />} />
-        <Route
-          path="/pagination"
-          element={
-            <Pagination
-              currentPage={dummyCoreData.currentPage}
-              totalPages={dummyCoreData.totalPages}
-              onPageChange={(page) => console.log("Page changed to:", page)}
-            />
-          }
-        />
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

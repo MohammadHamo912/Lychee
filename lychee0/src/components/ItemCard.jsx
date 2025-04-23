@@ -15,8 +15,7 @@ const ItemCard = ({ item, onAddToCart }) => {
   };
 
   const handleAddToCart = (e) => {
-    e.stopPropagation(); // Prevent navigation
-    onAddToCart(item);
+    alert("Item Added to cart");
   };
 
   const AddToCartButton = (

@@ -16,8 +16,6 @@ const ItemGrid = ({ limit, header }) => {
       CardComponent={ItemCard}
       limit={limit}
       cardProps={{ onItemSelect: handleItemSelect }}
-      viewAllLink="/items"
-      viewAllText="Browse All Items"
       itemPropName="item" // This is the key change - passing "item" instead of "product"
       className="items-grid" // Optional custom class for styling specific to items
       // You can also add custom styling if needed

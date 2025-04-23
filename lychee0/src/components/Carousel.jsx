@@ -37,6 +37,10 @@ const Carousel = ({ slides }) => {
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
+  const handleHREF = (e) => {
+    alert("Coming Soon");
+  }
+
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
 
@@ -79,7 +83,7 @@ const Carousel = ({ slides }) => {
                 <h2>{slide.title}</h2>
                 <p>{slide.description}</p>
                 {slide.buttonText && slide.buttonLink && (
-                  <Link to={slide.buttonLink} className="slide-button">
+                  <Link onClick={handleHREF} className="slide-button">
                     {slide.buttonText}
                   </Link>
                 )}
