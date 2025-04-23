@@ -4,6 +4,12 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import "./../PagesCss/ShoppingCart.css";
 import { motion } from "framer-motion";
+import product1Image from "../images/product1Image.jpg";
+import product2Image from "../images/product2Image.jpg";
+import product3Image from "../images/product3Image.jpg";
+import product4Image from "../images/product4Image.jpg";
+import product5Image from "../images/product5Image.jpg";
+import product6Image from "../images/product6Image.jpg";
 
 const ShoppingCartPage = () => {
   // State for cart items
@@ -26,7 +32,7 @@ const ShoppingCartPage = () => {
           variants: "Color: Ocean Blue | Size: Medium",
           price: 24.99,
           quantity: 2,
-          imageUrl: "https://via.placeholder.com/150?text=Ceramic+Mug",
+          imageUrl: product1Image,
         },
         {
           id: 2,
@@ -35,7 +41,7 @@ const ShoppingCartPage = () => {
           variants: "Scent: Lavender & Honey",
           price: 12.5,
           quantity: 1,
-          imageUrl: "https://via.placeholder.com/150?text=Soap+Bar",
+          imageUrl: product2Image,
         },
         {
           id: 3,
@@ -44,7 +50,7 @@ const ShoppingCartPage = () => {
           variants: "Style: Bohemian | Size: Large",
           price: 89.95,
           quantity: 1,
-          imageUrl: "https://via.placeholder.com/150?text=Wall+Hanging",
+          imageUrl: product3Image,
         },
       ]);
 
@@ -367,25 +373,6 @@ const ShoppingCartPage = () => {
                   </svg>
                   <span>Secure Checkout</span>
                 </div>
-
-                <div className="payment-methods">
-                  <img
-                    src="https://via.placeholder.com/40x25?text=Visa"
-                    alt="Visa"
-                  />
-                  <img
-                    src="https://via.placeholder.com/40x25?text=MC"
-                    alt="MasterCard"
-                  />
-                  <img
-                    src="https://via.placeholder.com/40x25?text=Amex"
-                    alt="American Express"
-                  />
-                  <img
-                    src="https://via.placeholder.com/40x25?text=PayPal"
-                    alt="PayPal"
-                  />
-                </div>
               </div>
 
               <div className="need-help">
@@ -410,10 +397,7 @@ const ShoppingCartPage = () => {
 
           <div className="shopping-actions">
             <Link to="/" className="continue-shopping">
-              <svg viewBox="0 0 24 24" width="18" height="18">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-              </svg>
-              <span>Continue Shopping</span>
+              Continue Shopping
             </Link>
           </div>
 
@@ -424,8 +408,9 @@ const ShoppingCartPage = () => {
                 <div key={i} className="recommended-item">
                   <div className="recommended-image">
                     <img
-                      src={`https://via.placeholder.com/150?text=Product+${i}`}
+                      src={product4Image}
                       alt={`Recommended product ${i}`}
+                      style={{ width: "100px", height: "100px" }}
                     />
                   </div>
                   <h3 className="recommended-name">Handcrafted Product {i}</h3>

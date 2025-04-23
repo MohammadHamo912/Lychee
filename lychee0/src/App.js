@@ -17,6 +17,7 @@ import ProductListingPage from "./pages/AllProductsPage.jsx";
 import CategoriesPage from "./pages/Categories.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import ShopOwnerDashboard from "./components/ShopOwnerDashboard.jsx";
+import ItemPage from "./pages/ItemPage.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import BlogAndBeauty from "./pages/BlogAndBeautyTips.jsx";
 import NotFoundPage from "./pages/NotFound.jsx";
@@ -45,6 +46,7 @@ function App() {
         <Route path="/ownerdashboard" element={<OwnerDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/category/:category" element={<ShopByCategory />} />
+        <Route path="/item/:item" element={<ItemPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
