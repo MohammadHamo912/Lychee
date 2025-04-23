@@ -55,16 +55,16 @@ const Footer = () => {
           <h4 className="footer-heading">Shop</h4>
           <ul className="footer-links">
             <li>
-              <Link to="/shops">All Shops</Link>
+              <Link to="/allstorespage">All Shops</Link>
             </li>
             <li>
-              <Link to="/collections">Collections</Link>
+              <Link to="/productlistingpage">All Products</Link>
             </li>
             <li>
-              <Link to="/featured">Featured Products</Link>
+              <Link to="/">Featured Products</Link>
             </li>
             <li>
-              <Link to="/sale">Sales & Discounts</Link>
+              <Link to="/">Sales & Discounts</Link>
             </li>
           </ul>
         </div>
@@ -76,10 +76,10 @@ const Footer = () => {
               <Link to="/faq">FAQ</Link>
             </li>
             <li>
-              <Link to="/shipping">Shipping Information</Link>
+              <Link to="/faq">Shipping Information</Link>
             </li>
             <li>
-              <Link to="/returns">Returns & Exchanges</Link>
+              <Link to="/faq">Returns & Exchanges</Link>
             </li>
             <li>
               <Link to="/contact">Contact Us</Link>
@@ -91,16 +91,7 @@ const Footer = () => {
           <h4 className="footer-heading">About</h4>
           <ul className="footer-links">
             <li>
-              <Link to="/about">Our Story</Link>
-            </li>
-            <li>
-              <Link to="/artisans">Our Artisans</Link>
-            </li>
-            <li>
-              <Link to="/sustainability">Sustainability</Link>
-            </li>
-            <li>
-              <Link to="/careers">Careers</Link>
+              <Link to="/blogAndBeauty">Blogs</Link>
             </li>
           </ul>
         </div>
