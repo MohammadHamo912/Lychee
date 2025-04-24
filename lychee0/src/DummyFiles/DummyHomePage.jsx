@@ -72,7 +72,7 @@ const HomePage = () => {
         </div>
 
         <div ref={StoresGridRef} className="store-grid-section section">
-          <StoresGrid limit={3} />
+          <StoresGrid limit={4} />
         </div>
         <div className="trending-products-section section">
           <ItemGrid limit={4} header={"Trending Items"} />

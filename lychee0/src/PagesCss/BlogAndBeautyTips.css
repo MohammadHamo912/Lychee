@@ -1,10 +1,10 @@
+/* === General Layout === */
 .blog-page {
     background-color: #FFF5E1;
     color: #5c3c3c;
     font-family: 'Segoe UI', sans-serif;
 }
 
-/* --- Blog Header (Featured Post) --- */
 .blog-header {
     height: 400px;
     background-size: cover;
@@ -26,54 +26,47 @@
     color: white;
     font-size: 2.5rem;
     text-align: center;
-    padding: 0 20px;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Content Wrapper --- */
+/* === Blog Section === */
 .blog-content-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
     padding: 0 40px 60px;
 }
 
-/* --- Article Grid --- */
+.blog-section-title {
+    font-size: 1.6rem;
+    color: #670010;
+    margin: 30px 0 20px;
+}
+
+/* === Blog Grid === */
 .blog-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 24px;
 }
 
-/* --- Article Card --- */
 .article-card {
     background: #fff;
     border: 1px solid #D9B6A3;
     border-radius: 12px;
-    overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-}
-
-.article-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.07);
 }
 
 .article-card img {
     width: 100%;
     height: 180px;
     object-fit: cover;
-    transition: transform 0.3s ease;
 }
 
 .article-card h3 {
     font-size: 1.1rem;
     margin: 12px;
-    color: #8B3C5D;
+    color: #670010;
 }
 
 .article-card p {
@@ -83,35 +76,270 @@
 }
 
 .read-more {
-    display: block;
-    text-align: right;
-    margin: 0 12px 16px;
     color: #B76E79;
     font-weight: bold;
+    margin-top: 10px;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .read-more:hover {
+    color: #670010;
     text-decoration: underline;
-    color: #8B3C5D;
 }
 
-#featuredExcerpt {
+/* === Add Blog Tip Button === */
+.add-tip-button {
+    background-color: #670010;
+    color: #FFF5E1;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.add-tip-button:hover {
+    background-color: #670010;
+}
+
+/* === Store Tips Grid === */
+.store-tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.store-tip-card {
+    background: #FFF5E1;
+    border: 1px solid #D9B6A3;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.store-tip-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.store-tip-card h3 {
+    color: #5c3c3c;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+}
+
+.store-tip-card p {
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.store-tip-card .read-more {
+    font-size: 0.9rem;
+    color: #B76E79;
+    font-weight: bold;
+    background-color: #fff;
+    border: 1px solid #D9B6A3;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+.store-tip-card .read-more:hover {
+    background-color: #FFF0EB;
+    color: white;
+    border-color: #670010;
+}
+
+/* === Modal === */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    min-width: 600px;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px 24px;
+    width: 90%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;
+    animation: fadeInModal 0.3s ease-out;
+    text-align: left;
+    min-width: 600px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    color: #670010;
+    font-weight: 700;
+    margin: 0;
+}
+
+.close-button {
+    background-color: transparent;
+    color: #670010;
+    border: 2px solid #8B3C5D;
+    font-size: 1rem;
+    border-radius: 50px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 100px;
+}
+
+.close-button:hover {
+    background-color: #670010;
     color: #fff;
 }
 
-/* --- Responsive --- */
+.modal-details {
+    font-size: 0.95rem;
+    color: #5c3c3c;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.modal-details .label {
+    font-weight: 600;
+    color: #670010;
+}
+
+.modal-body {
+    font-size: 1rem;
+    color: #4d3d3d;
+    line-height: 1.7;
+    border-top: 1px solid #e8cfc1;
+    padding-top: 20px;
+    margin-top: 10px;
+}
+
+/* === Modal Form Fields === */
+.modal-content input,
+.modal-content textarea {
+    width: 88%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 2px solid #D9B6A3;
+    margin-bottom: 14px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+    color: #5c3c3c;
+}
+
+.modal-content input::placeholder,
+.modal-content textarea::placeholder {
+    color: #670010;
+    opacity: 0.7;
+    font-size: 0.95rem;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    border-color: #670010;
+    box-shadow: 0 0 0 2px rgba(139, 60, 93, 0.2);
+    outline: none;
+}
+
+.modal-content .submit-button {
+    background-color: #670010;
+    color: #FFF5E1;
+    padding: 12px;
+    border: none;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content .submit-button:hover {
+    background-color: #670010;
+}
+
+/* === Animation === */
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === Accessibility Focus === */
+button:focus,
+input:focus,
+textarea:focus {
+    outline: 2px solid #670010;
+    outline-offset: 2px;
+}
+
+/* === Responsive === */
 @media (max-width: 768px) {
-    .blog-header {
-        height: 300px;
+    .blog-section-title {
+        font-size: 1.3rem;
     }
 
-    .blog-header h1 {
-        font-size: 1.8rem;
+    .article-card h3,
+    .store-tip-card h3 {
+        font-size: 1rem;
     }
 
-    .blog-content-wrapper {
-        padding: 0 20px 40px;
+    .read-more {
+        font-size: 0.85rem;
+    }
+
+    .modal-content {
+        padding: 20px 16px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .modal-details,
+    .modal-body {
+        font-size: 0.95rem;
     }
 }
