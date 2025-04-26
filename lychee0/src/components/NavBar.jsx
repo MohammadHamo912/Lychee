@@ -19,7 +19,7 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isLoggedIn = true; // Replace with actual authentication logic
+  const isLoggedIn = false; // Replace with actual authentication logic
 
   return (
     <>
@@ -50,8 +50,12 @@ const NavBar = () => {
               </Link>
             ) : (
               <>
-                <Link id="login" to="/login">Login</Link>
-                <Link id="signUp" to="/signup">Sign Up</Link>
+                <Link id="login" to="/login">
+                  Login
+                </Link>
+                <Link id="signUp" to="/signup">
+                  Sign Up
+                </Link>
               </>
             )}
           </div>
