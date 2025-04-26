@@ -1,4 +1,4 @@
-/*package com.mohammad.lychee.lychee.service.impl;
+package com.mohammad.lychee.lychee.service.impl;
 
 import com.mohammad.lychee.lychee.model.Wishlist;
 import com.mohammad.lychee.lychee.repository.WishlistRepository;
@@ -27,7 +27,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public boolean isItemInWishlist(Integer userId, Integer productVariantId) {
-        Optional<Wishlist> wishlistItem = wishlistRepository.findById(userId, productVariantId);
+        Optional<Wishlist> wishlistItem = wishlistRepository.findByUserIdAndProductVariantId(userId, productVariantId);
         return wishlistItem.isPresent();
     }
 
@@ -36,15 +36,16 @@ public class WishlistServiceImpl implements WishlistService {
     public void addItemToWishlist(Wishlist wishlistItem) {
         // Check if item already in wishlist
         if (!isItemInWishlist(wishlistItem.getUserId(), wishlistItem.getProductVariantId())) {
-            wishlistRepository.save(wishlistItem);
+            wishlistRepository.addWishlistItem(wishlistItem.getUserId(), wishlistItem.getProductVariantId());
         }
         // If already in wishlist, do nothing (idempotent operation)
     }
 
+
     @Override
     @Transactional
     public void removeItemFromWishlist(Integer userId, Integer productVariantId) {
-        wishlistRepository.delete(userId, productVariantId);
+        wishlistRepository.removeWishlistItem(userId, productVariantId);
     }
 
     @Override
@@ -52,4 +53,4 @@ public class WishlistServiceImpl implements WishlistService {
     public void clearWishlist(Integer userId) {
         wishlistRepository.deleteAllByUserId(userId);
     }
-}*/
+}

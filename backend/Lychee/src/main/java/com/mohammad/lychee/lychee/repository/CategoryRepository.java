@@ -11,4 +11,5 @@ public interface CategoryRepository {
     List<Category> findRootCategories();
     Category save(Category category);
     void delete(Integer id);
+    List<Category> findSubcategories(Integer parentId);
 }

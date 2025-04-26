@@ -13,4 +13,5 @@ public interface OrderItemRepository {
     void softDelete(Integer orderId, Integer itemId);
     List<OrderItem> findByItemId(Integer itemId);
     List<OrderItem> findByShippingStatus(String shippingStatus);
+    Optional<OrderItem> findByOrderIdAndItemId(Integer orderId, Integer itemId);
 }

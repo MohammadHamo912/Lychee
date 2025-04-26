@@ -3,6 +3,7 @@ package com.mohammad.lychee.lychee.repository.impl;
 import com.mohammad.lychee.lychee.model.OrderItem;
 import com.mohammad.lychee.lychee.repository.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -110,4 +111,16 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
         String sql = "SELECT * FROM OrderItem WHERE shipping_status = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderItemRowMapper, shippingStatus);
     }
+
+    @Override
+    public Optional<OrderItem> findByOrderIdAndItemId(Integer orderId, Integer itemId) {
+        try {
+            String sql = "SELECT * FROM OrderItem WHERE order_id = ? AND item_id = ?";
+            OrderItem orderItem = jdbcTemplate.queryForObject(sql, orderItemRowMapper, orderId, itemId);
+            return Optional.ofNullable(orderItem);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
 }

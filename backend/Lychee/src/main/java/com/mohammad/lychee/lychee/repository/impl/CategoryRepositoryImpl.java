@@ -121,4 +121,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         String sql = "DELETE FROM Category WHERE Category_ID = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public List<Category> findSubcategories(Integer parentId) {
+        String sql = "SELECT * FROM Category WHERE parent_ID = ?";
+        return jdbcTemplate.query(sql, categoryRowMapper, parentId);
+    }
+
 }

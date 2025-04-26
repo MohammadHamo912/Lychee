@@ -1,4 +1,4 @@
-/*package com.mohammad.lychee.lychee.service.impl;
+package com.mohammad.lychee.lychee.service.impl;
 
 import com.mohammad.lychee.lychee.model.ShoppingCartItem;
 import com.mohammad.lychee.lychee.repository.ShoppingCartItemRepository;
@@ -27,14 +27,14 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
     @Override
     public Optional<ShoppingCartItem> getCartItem(Integer userId, Integer itemId) {
-        return shoppingCartItemRepository.findById(userId, itemId);
+        return shoppingCartItemRepository.findByUserIdAndItemId(userId, itemId);
     }
 
     @Override
     @Transactional
     public ShoppingCartItem addItemToCart(ShoppingCartItem cartItem) {
         // Check if item already in cart
-        Optional<ShoppingCartItem> existingItem = shoppingCartItemRepository.findById(
+        Optional<ShoppingCartItem> existingItem = shoppingCartItemRepository.findByUserIdAndItemId(
                 cartItem.getUserId(), cartItem.getItemId());
 
         if (existingItem.isPresent()) {
@@ -45,14 +45,14 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
             return item;
         } else {
             // Add new item to cart
-            return shoppingCartItemRepository.save(cartItem);
+            return shoppingCartItemRepository.update(cartItem);
         }
     }
 
     @Override
     @Transactional
     public ShoppingCartItem updateCartItemQuantity(Integer userId, Integer itemId, Integer quantity) {
-        Optional<ShoppingCartItem> cartItemOptional = shoppingCartItemRepository.findById(userId, itemId);
+        Optional<ShoppingCartItem> cartItemOptional = shoppingCartItemRepository.findByUserIdAndItemId(userId, itemId);
         if (cartItemOptional.isEmpty()) {
             throw new IllegalArgumentException("Cart item not found for user ID " + userId + " and item ID " + itemId);
         }
@@ -66,7 +66,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
     @Override
     @Transactional
     public void removeItemFromCart(Integer userId, Integer itemId) {
-        shoppingCartItemRepository.delete(userId, itemId);
+        shoppingCartItemRepository.deleteByUserIdAndItemId(userId, itemId);
     }
 
     @Override
@@ -74,4 +74,4 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
     public void clearCart(Integer userId) {
         shoppingCartItemRepository.deleteAllByUserId(userId);
     }
-}*/
+}

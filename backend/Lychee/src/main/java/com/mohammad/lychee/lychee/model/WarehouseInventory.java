@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class WarehouseInventory {
     private int warehouseInventoryId;
-    private int orderId;
+    private int orderItemId;
     private int itemId;
     private String status;
     private LocalDateTime receivedAt;
@@ -15,7 +15,7 @@ public class WarehouseInventory {
     public WarehouseInventory(int warehouseInventoryId, int orderId, int itemId, String status,
                               LocalDateTime receivedAt, LocalDateTime shippedAt) {
         this.warehouseInventoryId = warehouseInventoryId;
-        this.orderId = orderId;
+        this.orderItemId = orderItemId;
         this.itemId = itemId;
         this.status = status;
         this.receivedAt = receivedAt;
@@ -32,12 +32,12 @@ public class WarehouseInventory {
         this.warehouseInventoryId = warehouseInventoryId;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public int getOrderItemId() {
+        return orderItemId;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrderItemId(int orderItemId) {
+        this.orderItemId = orderItemId;
     }
 
     public int getItemId() {
@@ -71,4 +71,5 @@ public class WarehouseInventory {
     public void setShippedAt(LocalDateTime shippedAt) {
         this.shippedAt = shippedAt;
     }
+
 }

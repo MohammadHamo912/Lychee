@@ -13,4 +13,5 @@ public interface PaymentTransactionRepository {
     PaymentTransaction save(PaymentTransaction paymentTransaction);
     void update(PaymentTransaction paymentTransaction);
     void updateStatus(Integer paymentTransactionId, String status);
+    void softDelete(Integer paymentTransactionId);
 }
