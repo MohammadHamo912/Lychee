@@ -58,6 +58,10 @@ body {
   color: #b76e79;
 }
 
+#signUp {
+  margin-left: 30px;
+}
+
 .cart-link {
   position: relative;
   display: flex;
@@ -129,6 +133,7 @@ body {
 }
 
 @media (max-width: 992px) {
+
   .nav-links,
   .nav-auth {
     display: none;
