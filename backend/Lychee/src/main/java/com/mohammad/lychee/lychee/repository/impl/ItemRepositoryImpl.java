@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -64,6 +65,17 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
+    public Optional<Item> findByName(String name) {
+        try {
+            String sql = "SELECT * FROM Item WHERE Item_Name = ? AND deleted_at IS NULL";
+            Item item = jdbcTemplate.queryForObject(sql, itemRowMapper, name);
+            return Optional.ofNullable(item);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Item> findByStoreId(Integer storeId) {
         String sql = "SELECT * FROM Item WHERE Store_ID = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, itemRowMapper, storeId);
@@ -73,6 +85,12 @@ public class ItemRepositoryImpl implements ItemRepository {
     public List<Item> findByProductVariantId(Integer productVariantId) {
         String sql = "SELECT * FROM Item WHERE Product_Variant_ID = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, itemRowMapper, productVariantId);
+    }
+
+    @Override
+    public List<Item> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
+        String sql = "SELECT * FROM Item WHERE price BETWEEN ? AND ?";
+        return jdbcTemplate.query(sql, itemRowMapper, minPrice,maxPrice);
     }
 
     @Override

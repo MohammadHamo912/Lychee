@@ -68,6 +68,11 @@ public class StoreRepositoryImpl implements StoreRepository {
     }
 
     @Override
+    public List<Store> findByNameContaining(String name){
+        String sql = "SELECT * FROM Store WHERE ShopName = ? AND deleted_at IS NULL";
+        return jdbcTemplate.query(sql,storeRowMapper,name);
+    }
+    @Override
     public Store save(Store store) {
         return update(store);
         /*

@@ -60,6 +60,17 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public Optional<Product> findByName(String name){
+        try {
+            String sql = "SELECT * FROM Product WHERE Product_Name = ? AND deleted_at IS NULL";
+            Product product = jdbcTemplate.queryForObject(sql, productRowMapper, name);
+            return Optional.ofNullable(product);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Optional<Product> findByBarcode(String barcode) {
         try {
             String sql = "SELECT * FROM Product WHERE barcode = ? AND deleted_at IS NULL";

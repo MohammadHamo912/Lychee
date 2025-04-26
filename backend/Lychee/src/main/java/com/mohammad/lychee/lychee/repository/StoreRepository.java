@@ -8,6 +8,8 @@ public interface StoreRepository {
     List<Store> findAll();
     Optional<Store> findById(Integer id);
     List<Store> findByShopOwnerId(Integer shopOwnerId);
+
+    List<Store> findByNameContaining(String name);
     Store save(Store store);
     void delete(Integer id);
     void softDelete(Integer id);

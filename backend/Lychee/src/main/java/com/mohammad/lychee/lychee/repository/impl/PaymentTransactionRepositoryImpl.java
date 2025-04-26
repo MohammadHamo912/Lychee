@@ -1,0 +1,121 @@
+package com.mohammad.lychee.lychee.repository.impl;
+
+
+import com.mohammad.lychee.lychee.model.PaymentTransaction;
+import com.mohammad.lychee.lychee.repository.PaymentTransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+@Repository
+public class PaymentTransactionRepositoryImpl implements PaymentTransactionRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public PaymentTransactionRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final RowMapper<PaymentTransaction> paymentTransactionRowMapper = (rs, rowNum) -> {
+        PaymentTransaction paymentTransaction = new PaymentTransaction();
+        paymentTransaction.setPaymentTransactionId(rs.getInt("payment_transaction_id"));
+        paymentTransaction.setOrderId(rs.getInt("order_id"));
+        paymentTransaction.setPaymentMethodId(rs.getInt("payment_method_id"));
+        paymentTransaction.setAmount(rs.getBigDecimal("amount"));
+        paymentTransaction.setStatus(rs.getString("status"));
+        paymentTransaction.setTransactionReference(rs.getString("transaction_reference"));
+        paymentTransaction.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+        return paymentTransaction;
+    };
+
+    @Override
+    public List<PaymentTransaction> findAll() {
+        String sql = "SELECT * FROM PaymentTransaction";
+        return jdbcTemplate.query(sql, paymentTransactionRowMapper);
+    }
+
+    @Override
+    public Optional<PaymentTransaction> findById(Integer paymentTransactionId) {
+        String sql = "SELECT * FROM PaymentTransaction WHERE payment_transaction_id = ?";
+        List<PaymentTransaction> transactions = jdbcTemplate.query(sql, paymentTransactionRowMapper, paymentTransactionId);
+        return transactions.isEmpty() ? Optional.empty() : Optional.of(transactions.get(0));
+    }
+
+    @Override
+    public List<PaymentTransaction> findByOrderId(Integer orderId) {
+        String sql = "SELECT * FROM PaymentTransaction WHERE order_id = ?";
+        return jdbcTemplate.query(sql, paymentTransactionRowMapper, orderId);
+    }
+
+    @Override
+    public List<PaymentTransaction> findByPaymentMethodId(Integer paymentMethodId) {
+        String sql = "SELECT * FROM PaymentTransaction WHERE payment_method_id = ?";
+        return jdbcTemplate.query(sql, paymentTransactionRowMapper, paymentMethodId);
+    }
+
+    @Override
+    public List<PaymentTransaction> findByStatus(String status) {
+        String sql = "SELECT * FROM PaymentTransaction WHERE status = ?";
+        return jdbcTemplate.query(sql, paymentTransactionRowMapper, status);
+    }
+
+    @Override
+    public PaymentTransaction save(PaymentTransaction paymentTransaction) {
+        String sql = "INSERT INTO PaymentTransaction (order_id, payment_method_id, amount, status, transaction_reference) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, paymentTransaction.getOrderId());
+            ps.setInt(2, paymentTransaction.getPaymentMethodId());
+            ps.setBigDecimal(3, paymentTransaction.getAmount());
+            ps.setString(4, paymentTransaction.getStatus());
+
+            if (paymentTransaction.getTransactionReference() != null) {
+                ps.setString(5, paymentTransaction.getTransactionReference());
+            } else {
+                ps.setNull(5, java.sql.Types.VARCHAR);
+            }
+
+            return ps;
+        }, keyHolder);
+
+        paymentTransaction.setPaymentTransactionId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        return paymentTransaction;
+    }
+
+    @Override
+    public void update(PaymentTransaction paymentTransaction) {
+        String sql = "UPDATE PaymentTransaction SET order_id = ?, payment_method_id = ?, amount = ?, " +
+                "status = ?, transaction_reference = ? WHERE payment_transaction_id = ?";
+
+        jdbcTemplate.update(sql,
+                paymentTransaction.getOrderId(),
+                paymentTransaction.getPaymentMethodId(),
+                paymentTransaction.getAmount(),
+                paymentTransaction.getStatus(),
+                paymentTransaction.getTransactionReference(),
+                paymentTransaction.getPaymentTransactionId()
+        );
+    }
+
+    @Override
+    public void updateStatus(Integer paymentTransactionId, String status) {
+        String sql = "UPDATE PaymentTransaction SET status = ? WHERE payment_transaction_id = ?";
+        jdbcTemplate.update(sql, status, paymentTransactionId);
+    }
+}
