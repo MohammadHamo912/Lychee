@@ -404,7 +404,7 @@ const ShoppingCartPage = () => {
           <div className="recommended-products">
             <h2 className="recommendations-title">You might also like</h2>
             <div className="recommended-grid">
-              {[1, 2, 3, 4].map((i) => (
+              {[1].map((i) => (
                 <div key={i} className="recommended-item">
                   <div className="recommended-image">
                     <img

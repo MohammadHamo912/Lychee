@@ -1,101 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import "../PagesCss/ProductPage.css";
-import productImg from "../images/mascara.png"; // Default image
-import dummyProducts from "../Data/dummyProducts";
+import "../PagesCss/ItemPage.css"; // You can rename this later to ItemPage.css if you want
+import productImg from "../images/mascara.png";
+import dummyItems from "../Data/dummyItems";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 
-const ProductPage = () => {
+const ItemPage = () => {
   const { id } = useParams();
-  const product = dummyProducts.find((p) => p.id === parseInt(id));
+  const product = dummyItems.find((item) => item.id === parseInt(id));
 
-  // Product interaction states
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [activeTab, setActiveTab] = useState("description");
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
 
-  // Update document title
-  useEffect(() => {
-    document.title = product
-      ? `${product.name} | Lychee`
-      : "Product Not Found | Lychee";
-  }, [product]);
-
-  const handleQuantityChange = (delta) => {
-    const newQuantity = Math.max(1, quantity + delta);
-    setQuantity(newQuantity);
-  };
-
-  const showTemporaryNotification = (message) => {
-    setNotificationMessage(message);
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
-  };
-
-  const handleAddToCart = () => {
-    console.log("Added to cart:", { ...product, quantity });
-    showTemporaryNotification(
-      `${quantity} ${product?.name || "Product"} added to your cart`
-    );
-  };
-
-  const handleBuyNow = () => {
-    console.log("Finding best price for:", product);
-    showTemporaryNotification(
-      `Finding best price for ${product?.name || "Product"}`
-    );
-  };
-
-  const toggleWishlist = () => {
-    const newWishlistState = !isWishlisted;
-    setIsWishlisted(newWishlistState);
-    console.log(
-      `Wishlist ${newWishlistState ? "added" : "removed"} for ID: ${id}`
-    );
-    showTemporaryNotification(
-      isWishlisted
-        ? `${product?.name || "Product"} removed from wishlist`
-        : `${product?.name || "Product"} added to wishlist`
-    );
-  };
-
-  // Default product data if none provided
   const defaultProduct = {
     name: "Glossy Lip Shine",
     brand: "Lychee Beauty",
+    shop_name: "Lychee Official Store",
     price: 19.99,
     salePrice: 16.99,
-    description:
-      "A luxurious lip gloss that adds a radiant shine and subtle color to your lips, crafted with natural ingredients.",
+    description: "A luxurious lip gloss that adds radiant shine and subtle color to your lips.",
     features: [
-      "Long-lasting formula for up to 8 hours of wear",
-      "Made with 95% natural ingredients",
-      "Hydrating formula with botanical oils",
-      "Non-sticky texture for comfortable wear",
-      "Cruelty-free and vegan",
+      "Long-lasting up to 8 hours",
+      "95% natural ingredients",
+      "Botanical oils for hydration",
+      "Non-sticky texture",
+      "Cruelty-free & vegan"
     ],
-    howToUse:
-      "Apply to clean, dry lips. For a more intense effect, apply two coats, allowing the first coat to dry before applying the second.",
-    ingredients:
-      "Ricinus Communis (Castor) Seed Oil, Octyldodecanol, Silica, Hydrogenated Polyisobutene, Ethylhexyl Palmitate, Mica, Parfum (Fragrance), Tocopheryl Acetate, Helianthus Annuus (Sunflower) Seed Oil, Calendula Officinalis Flower Extract",
+    howToUse: "Apply to clean, dry lips. For stronger color, apply two coats.",
+    ingredients: "Castor Oil, Octyldodecanol, Silica, Hydrogenated Polyisobutene, Mica, Fragrance, Vitamin E",
     reviews: [
-      {
-        id: 1,
-        user: "Sophia L.",
-        rating: 5,
-        date: "March 15, 2025",
-        text: "Loved the texture and shine! This has become my everyday go-to lip product.",
-      },
-      {
-        id: 2,
-        user: "Amelia T.",
-        rating: 4,
-        date: "March 2, 2025",
-        text: "Perfect for everyday wear. I wish it lasted just a bit longer, but the color payoff is amazing.",
-      },
+      { id: 1, user: "Sophia L.", rating: 5, date: "March 15, 2025", text: "Loved the shine! It’s my daily go-to." },
+      { id: 2, user: "Amelia T.", rating: 4, date: "March 2, 2025", text: "Great color payoff, could last longer." },
     ],
     rating: 4.5,
     shades: ["Rose Petal", "Sunset Glow", "Berry Bliss", "Clear Shine"],
@@ -104,39 +43,60 @@ const ProductPage = () => {
 
   const finalProduct = product || defaultProduct;
 
-  const renderRatingStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  useEffect(() => {
+    document.title = finalProduct.name ? `${finalProduct.name} | Lychee` : "Item Not Found | Lychee";
+  }, [finalProduct.name]);
 
-    return (
-      <div className="stars-container">
-        {[...Array(fullStars)].map((_, i) => (
-          <span key={`full-${i}`} className="star full-star">
-            ★
-          </span>
-        ))}
-        {hasHalfStar && <span className="star half-star">★</span>}
-        {[...Array(emptyStars)].map((_, i) => (
-          <span key={`empty-${i}`} className="star empty-star">
-            ☆
-          </span>
-        ))}
-      </div>
+  const handleQuantityChange = (delta) => {
+    setQuantity(prev => Math.max(1, prev + delta));
+  };
+
+  const handleInputQuantity = (e) => {
+    const value = Math.max(1, parseInt(e.target.value) || 1);
+    setQuantity(value);
+  };
+
+  const showTemporaryNotification = (message) => {
+    setNotificationMessage(message);
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 2500);
+  };
+
+  const handleAddToCart = () => {
+    console.log("Added to cart:", { ...finalProduct, quantity });
+    showTemporaryNotification(`${quantity} x ${finalProduct.name} added to your cart`);
+  };
+
+  const toggleWishlist = () => {
+    setIsWishlisted(prev => !prev);
+    showTemporaryNotification(
+      !isWishlisted
+        ? `${finalProduct.name} added to wishlist`
+        : `${finalProduct.name} removed from wishlist`
     );
   };
 
-  // Helper function to generate colors for shade options
   const getShadeColor = (shadeName) => {
-    const colorMap = {
+    const shades = {
       "Rose Petal": "#f5a0a0",
       "Sunset Glow": "#ff9966",
       "Berry Bliss": "#aa5080",
       "Clear Shine": "#f0f0f0",
-      // Add more shade colors as needed
     };
+    return shades[shadeName] || "#b76e79";
+  };
 
-    return colorMap[shadeName] || "#b76e79";
+  const renderRatingStars = (rating) => {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    const empty = 5 - full - (half ? 1 : 0);
+    return (
+      <div className="stars-container">
+        {[...Array(full)].map((_, i) => <span key={`full-${i}`} className="star">★</span>)}
+        {half && <span className="star half-star">★</span>}
+        {[...Array(empty)].map((_, i) => <span key={`empty-${i}`} className="star empty-star">☆</span>)}
+      </div>
+    );
   };
 
   if (!product && id) {
@@ -145,14 +105,9 @@ const ProductPage = () => {
         <NavBar />
         <main className="main-content">
           <div className="not-found">
-            <h2>Product Not Found</h2>
-            <p>
-              We couldn't find a product with ID {id}. It might have been
-              removed or doesn't exist.
-            </p>
-            <Link to="/shop" className="back-to-shop">
-              Back to Shop
-            </Link>
+            <h2>Item Not Found</h2>
+            <p>Item ID {id} does not exist or has been removed.</p>
+            <Link to="/shop" className="back-to-shop">Back to Shop</Link>
           </div>
         </main>
         <Footer />
@@ -163,100 +118,76 @@ const ProductPage = () => {
   return (
     <div className="product-page">
       <NavBar />
-
       <main className="main-content">
         <div className="product-details-container">
+
           {showNotification && (
             <div className="notification">
-              <span>{notificationMessage}</span>
+              {notificationMessage}
             </div>
           )}
 
-          {/* Left Side - Image Gallery */}
+          {/* Image Gallery */}
           <div className="product-gallery">
             <div className="main-image-wrapper">
-              <img
-                src={productImg}
-                alt={finalProduct.name}
-                className="product-image"
-              />
+              <img src={productImg} alt={finalProduct.name} className="product-image" />
               {finalProduct.salePrice && <div className="sale-badge">SALE</div>}
-              <button
-                className={`wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
-                onClick={toggleWishlist}
-                aria-label={
-                  isWishlisted ? "Remove from wishlist" : "Add to wishlist"
-                }
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill={isWishlisted ? "#b76e79" : "none"}
-                  stroke={isWishlisted ? "#b76e79" : "#670010"}
-                  strokeWidth="2"
-                >
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
+              <button className={`wishlist-btn ${isWishlisted ? "wishlisted" : ""}`} onClick={toggleWishlist}>
+                ❤️
               </button>
             </div>
 
             <div className="image-thumbnails">
-              {/* This would normally map through product images */}
               {[1, 2, 3].map((i) => (
                 <div key={i} className="thumbnail-wrapper">
-                  <img
-                    src={productImg}
-                    alt={`${finalProduct.name} view ${i}`}
-                    className="thumbnail-image"
-                  />
+                  <img src={productImg} alt={`${finalProduct.name} view ${i}`} className="thumbnail-image" />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Side - Product Details */}
+          {/* Product Info */}
           <div className="product-info-block">
             <div className="product-header">
               <div className="brand-badge">{finalProduct.brand}</div>
               <h1 className="product-title">{finalProduct.name}</h1>
 
+              {/* STORE NAME */}
+              {finalProduct.shop_name && (
+                <Link
+                  to={`/store/${id}`}
+                  className="shop-name-link"
+                >
+                  Sold by: <span>{finalProduct.shop_name}</span>
+                </Link>
+              )}
+
+
               <div className="product-rating">
                 {renderRatingStars(finalProduct.rating)}
-                <span className="rating-count">
-                  ({finalProduct.reviews.length} reviews)
-                </span>
+                <span className="rating-count">({finalProduct.reviews.length} reviews)</span>
               </div>
 
               <div className="product-price-container">
                 {finalProduct.salePrice ? (
                   <>
-                    <span className="original-price">
-                      ${finalProduct.price.toFixed(2)}
-                    </span>
-                    <span className="sale-price">
-                      ${finalProduct.salePrice.toFixed(2)}
-                    </span>
+                    <span className="original-price">${finalProduct.price.toFixed(2)}</span>
+                    <span className="sale-price">${finalProduct.salePrice.toFixed(2)}</span>
                   </>
                 ) : (
-                  <span className="product-price">
-                    ${finalProduct.price.toFixed(2)}
-                  </span>
+                  <span className="product-price">${finalProduct.price.toFixed(2)}</span>
                 )}
               </div>
             </div>
 
-            {finalProduct.shades && finalProduct.shades.length > 0 && (
+            {/* Shades */}
+            {finalProduct.shades?.length > 0 && (
               <div className="product-variants">
-                <h3 className="variants-title">Shades</h3>
+                <h3 className="variants-title">Available Shades</h3>
                 <div className="shade-options">
                   {finalProduct.shades.map((shade, idx) => (
                     <button key={idx} className="shade-option" title={shade}>
-                      <span
-                        className="shade-circle"
-                        style={{ backgroundColor: getShadeColor(shade) }}
-                      ></span>
+                      <span className="shade-circle" style={{ backgroundColor: getShadeColor(shade) }}></span>
                       <span className="shade-name">{shade}</span>
                     </button>
                   ))}
@@ -264,223 +195,74 @@ const ProductPage = () => {
               </div>
             )}
 
+            {/* Actions */}
             <div className="product-actions">
               <div className="stock-status">
-                <span
-                  className={`status-indicator ${
-                    finalProduct.inStock ? "in-stock" : "out-of-stock"
-                  }`}
-                ></span>
-                <span className="status-text">
-                  {finalProduct.inStock ? "In Stock" : "Out of Stock"}
-                </span>
+                <span className={`status-indicator ${finalProduct.inStock ? "in-stock" : "out-of-stock"}`}></span>
+                {finalProduct.inStock ? "In Stock" : "Out of Stock"}
               </div>
 
               <div className="quantity-control">
-                <button
-                  className="quantity-btn"
-                  onClick={() => handleQuantityChange(-1)}
-                  disabled={quantity <= 1}
-                >
-                  −
-                </button>
+                <button className="quantity-btn" onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1}>−</button>
                 <input
                   type="number"
-                  min="1"
                   value={quantity}
-                  onChange={(e) =>
-                    setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-                  }
+                  min="1"
+                  onChange={handleInputQuantity}
                   className="quantity-input"
                 />
-                <button
-                  className="quantity-btn"
-                  onClick={() => handleQuantityChange(1)}
-                >
-                  +
-                </button>
+                <button className="quantity-btn" onClick={() => handleQuantityChange(1)}>+</button>
               </div>
 
-              <div className="button-group">
-                <button
-                  className="add-to-cart-btn"
-                  onClick={handleAddToCart}
-                  disabled={!finalProduct.inStock}
-                >
-                  Add to Cart
-                </button>
-                <button
-                  className="buy-now-btn"
-                  onClick={handleBuyNow}
-                  disabled={!finalProduct.inStock}
-                >
-                  Find Best Price
-                </button>
-              </div>
+
+              <button className="add-to-cart-btn" onClick={handleAddToCart} disabled={!finalProduct.inStock}>
+                Add to Cart
+              </button>
             </div>
 
-            <div className="product-meta">
-              <div className="shipping-info">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="1" y="3" width="15" height="13"></rect>
-                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                </svg>
-                <span>Free shipping on orders over $35</span>
-              </div>
-              <div className="returns-info">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 2v6h6"></path>
-                  <path d="M3 13a9 9 0 1 0 3-7.7L3 8"></path>
-                </svg>
-                <span>30-day hassle-free returns</span>
-              </div>
-            </div>
-
+            {/* Tabs */}
             <div className="product-tabs">
               <div className="tabs-header">
-                <button
-                  className={`tab-button ${
-                    activeTab === "description" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("description")}
-                >
-                  Description
-                </button>
-                <button
-                  className={`tab-button ${
-                    activeTab === "howToUse" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("howToUse")}
-                >
-                  How to Use
-                </button>
-                <button
-                  className={`tab-button ${
-                    activeTab === "ingredients" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("ingredients")}
-                >
-                  Ingredients
-                </button>
-                <button
-                  className={`tab-button ${
-                    activeTab === "reviews" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("reviews")}
-                >
-                  Reviews ({finalProduct.reviews.length})
-                </button>
+                {["description", "howToUse", "ingredients", "reviews"].map((tab) => (
+                  <button key={tab} className={`tab-button ${activeTab === tab ? "active" : ""}`} onClick={() => setActiveTab(tab)}>
+                    {tab === "description" && "Description"}
+                    {tab === "howToUse" && "How to Use"}
+                    {tab === "ingredients" && "Ingredients"}
+                    {tab === "reviews" && `Reviews (${finalProduct.reviews.length})`}
+                  </button>
+                ))}
               </div>
 
               <div className="tab-content">
                 {activeTab === "description" && (
-                  <div className="description-tab">
-                    <p>{finalProduct.description}</p>
-                    {finalProduct.features && (
-                      <div className="features-list">
-                        <h4>Features</h4>
-                        <ul>
-                          {finalProduct.features.map((feature, idx) => (
-                            <li key={idx}>{feature}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
+                  <div><p>{finalProduct.description}</p><ul>{finalProduct.features.map((f, idx) => <li key={idx}>{f}</li>)}</ul></div>
                 )}
-
                 {activeTab === "howToUse" && (
-                  <div className="how-to-use-tab">
-                    <h4>Application</h4>
-                    <p>{finalProduct.howToUse}</p>
-                  </div>
+                  <div><p>{finalProduct.howToUse}</p></div>
                 )}
-
                 {activeTab === "ingredients" && (
-                  <div className="ingredients-tab">
-                    <h4>Full Ingredients List</h4>
-                    <p>{finalProduct.ingredients}</p>
-                  </div>
+                  <div><p>{finalProduct.ingredients}</p></div>
                 )}
-
                 {activeTab === "reviews" && (
-                  <div className="reviews-tab">
-                    <div className="reviews-summary">
-                      <div className="average-rating">
-                        <span className="big-rating">
-                          {finalProduct.rating.toFixed(1)}
-                        </span>
-                        <div className="rating-stars-large">
-                          {renderRatingStars(finalProduct.rating)}
-                        </div>
-                        <span className="total-reviews">
-                          Based on {finalProduct.reviews.length} reviews
-                        </span>
+                  <div>
+                    {finalProduct.reviews.map((r) => (
+                      <div key={r.id}>
+                        <strong>{r.user}</strong> — {r.date}
+                        {renderRatingStars(r.rating)}
+                        <p>{r.text}</p>
                       </div>
-                    </div>
-
-                    <div className="reviews-list">
-                      {finalProduct.reviews &&
-                      finalProduct.reviews.length > 0 ? (
-                        finalProduct.reviews.map((review) => (
-                          <div key={review.id} className="review-item">
-                            <div className="review-header">
-                              <div className="reviewer-info">
-                                <strong className="reviewer-name">
-                                  {review.user}
-                                </strong>
-                                <span className="review-date">
-                                  {review.date}
-                                </span>
-                              </div>
-                              <div className="reviewer-rating">
-                                {renderRatingStars(review.rating)}
-                              </div>
-                            </div>
-                            <p className="review-text">{review.text}</p>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="no-reviews">
-                          No reviews yet. Be the first to share your thoughts!
-                        </p>
-                      )}
-                    </div>
-
-                    <button className="write-review-btn">Write a Review</button>
+                    ))}
                   </div>
                 )}
               </div>
             </div>
+
           </div>
         </div>
       </main>
-
       <Footer />
     </div>
   );
 };
 
-export default ProductPage;
+export default ItemPage;

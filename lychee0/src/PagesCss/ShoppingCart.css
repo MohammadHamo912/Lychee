@@ -312,6 +312,16 @@
   color: white;
 }
 
+.quick-add-btn {
+  width: 100px;
+  height: 50px;
+  font-weight: bold;
+  border: 3px solid #8b3c5d;
+  border-radius: 12px;
+  background-color: #fff5e1;
+  color: #670010;
+}
+
 .summary-row span {
   color: white;
 }
@@ -358,6 +368,7 @@
   align-items: center;
   display: flex;
 }
+
 .continue-shopping {
   background-color: #670010;
   display: flex;
