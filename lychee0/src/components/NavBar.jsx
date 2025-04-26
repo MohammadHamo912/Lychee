@@ -50,8 +50,8 @@ const NavBar = () => {
               </Link>
             ) : (
               <>
-                <Link to="/login">Login</Link>
-                <Link to="/signup">Sign Up</Link>
+                <Link id="login" to="/login">Login</Link>
+                <Link id="signUp" to="/signup">Sign Up</Link>
               </>
             )}
           </div>
