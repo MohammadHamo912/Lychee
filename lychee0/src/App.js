@@ -7,7 +7,6 @@ import Login from "./pages/Login";
 import HomePage from "./DummyFiles/DummyHomePage";
 import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
-import ProductDetails from "./pages/ProductDetailsPage.jsx";
 import AdminDashboard from "./components/AdminDashboard.jsx";
 import CheckOut from "./components/CheckoutForm.jsx";
 import ShoppingCartPage from "./pages/ShoppingCartPage.jsx";
