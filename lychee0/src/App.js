@@ -36,7 +36,7 @@ function App() {
         <Route path="/Lychee" element={<HomePage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/productpage/:id" element={<ProductPage />} />
+        <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/productlistingpage" element={<ProductListingPage />} />
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/allstorespage" element={<AllStoresPage />} />
@@ -47,7 +47,6 @@ function App() {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/category/:category" element={<ShopByCategory />} />
         <Route path="/item/:item" element={<ItemPage />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/contact" element={<ContactAndSupport />} />

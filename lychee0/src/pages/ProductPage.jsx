@@ -200,23 +200,6 @@ const ProductPage = () => {
                   ({finalProduct.reviews.length} reviews)
                 </span>
               </div>
-
-              <div className="product-price-container">
-                {finalProduct.salePrice ? (
-                  <>
-                    <span className="original-price">
-                      ${finalProduct.price.toFixed(2)}
-                    </span>
-                    <span className="sale-price">
-                      ${finalProduct.salePrice.toFixed(2)}
-                    </span>
-                  </>
-                ) : (
-                  <span className="product-price">
-                    ${finalProduct.price.toFixed(2)}
-                  </span>
-                )}
-              </div>
             </div>
 
             {finalProduct.shades && finalProduct.shades.length > 0 && (
@@ -236,16 +219,14 @@ const ProductPage = () => {
               </div>
             )}
 
-            <div className="product-actions">
-              <div className="button-group">
-                <button
-                  className="buy-now-btn"
-                  onClick={handleBuyNow}
-                  disabled={!finalProduct.inStock}
-                >
-                  Find Best Price
-                </button>
-              </div>
+            <div className="button-group">
+              <button
+                className="buy-now-btn"
+                onClick={handleBuyNow}
+                disabled={!finalProduct.inStock}
+              >
+                Find Best Price
+              </button>
             </div>
 
             <div className="product-meta">
@@ -290,33 +271,29 @@ const ProductPage = () => {
             <div className="product-tabs">
               <div className="tabs-header">
                 <button
-                  className={`tab-button ${
-                    activeTab === "description" ? "active" : ""
-                  }`}
+                  className={`tab-button ${activeTab === "description" ? "active" : ""
+                    }`}
                   onClick={() => setActiveTab("description")}
                 >
                   Description
                 </button>
                 <button
-                  className={`tab-button ${
-                    activeTab === "howToUse" ? "active" : ""
-                  }`}
+                  className={`tab-button ${activeTab === "howToUse" ? "active" : ""
+                    }`}
                   onClick={() => setActiveTab("howToUse")}
                 >
                   How to Use
                 </button>
                 <button
-                  className={`tab-button ${
-                    activeTab === "ingredients" ? "active" : ""
-                  }`}
+                  className={`tab-button ${activeTab === "ingredients" ? "active" : ""
+                    }`}
                   onClick={() => setActiveTab("ingredients")}
                 >
                   Ingredients
                 </button>
                 <button
-                  className={`tab-button ${
-                    activeTab === "reviews" ? "active" : ""
-                  }`}
+                  className={`tab-button ${activeTab === "reviews" ? "active" : ""
+                    }`}
                   onClick={() => setActiveTab("reviews")}
                 >
                   Reviews ({finalProduct.reviews.length})
@@ -372,7 +349,7 @@ const ProductPage = () => {
 
                     <div className="reviews-list">
                       {finalProduct.reviews &&
-                      finalProduct.reviews.length > 0 ? (
+                        finalProduct.reviews.length > 0 ? (
                         finalProduct.reviews.map((review) => (
                           <div key={review.id} className="review-item">
                             <div className="review-header">

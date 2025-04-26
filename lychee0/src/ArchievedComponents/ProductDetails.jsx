@@ -1,6 +1,6 @@
 // src/components/ProductDetails.jsx
 import React, { useState } from "react";
-import "../ComponentsCss/ProductDetails.css";
+import "./ProductDetails.css";
 import productImg from "../images/mascara.png"; // Default image
 
 const ProductDetails = ({ product = {} }) => {
@@ -166,23 +166,6 @@ const ProductDetails = ({ product = {} }) => {
               ({finalProduct.reviews.length} reviews)
             </span>
           </div>
-
-          <div className="product-price-container">
-            {finalProduct.salePrice ? (
-              <>
-                <span className="original-price">
-                  ${finalProduct.price.toFixed(2)}
-                </span>
-                <span className="sale-price">
-                  ${finalProduct.salePrice.toFixed(2)}
-                </span>
-              </>
-            ) : (
-              <span className="product-price">
-                ${finalProduct.price.toFixed(2)}
-              </span>
-            )}
-          </div>
         </div>
 
         {finalProduct.shades && finalProduct.shades.length > 0 && (
@@ -201,60 +184,21 @@ const ProductDetails = ({ product = {} }) => {
             </div>
           </div>
         )}
-
-        <div className="product-actions">
-          <div className="stock-status">
-            <span
-              className={`status-indicator ${
-                finalProduct.inStock ? "in-stock" : "out-of-stock"
-              }`}
-            ></span>
-            <span className="status-text">
-              {finalProduct.inStock ? "In Stock" : "Out of Stock"}
-            </span>
-          </div>
-
-          <div className="quantity-control">
-            <button
-              className="quantity-btn"
-              onClick={() => handleQuantityChange(-1)}
-              disabled={quantity <= 1}
-            >
-              −
-            </button>
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={(e) =>
-                setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-              }
-              className="quantity-input"
-            />
-            <button
-              className="quantity-btn"
-              onClick={() => handleQuantityChange(1)}
-            >
-              +
-            </button>
-          </div>
-
-          <div className="button-group">
-            <button
-              className="add-to-cart-btn"
-              onClick={handleAddToCart}
-              disabled={!finalProduct.inStock}
-            >
-              Add to Cart
-            </button>
-            <button
-              className="buy-now-btn"
-              onClick={handleBuyNow}
-              disabled={!finalProduct.inStock}
-            >
-              Find Best Price
-            </button>
-          </div>
+        <div className="button-group">
+          <button
+            className="add-to-cart-btn"
+            onClick={handleAddToCart}
+            disabled={!finalProduct.inStock}
+          >
+            Add to Cart
+          </button>
+          <button
+            className="buy-now-btn"
+            onClick={handleBuyNow}
+            disabled={!finalProduct.inStock}
+          >
+            Find Best Price
+          </button>
         </div>
 
         <div className="product-meta">
@@ -299,33 +243,29 @@ const ProductDetails = ({ product = {} }) => {
         <div className="product-tabs">
           <div className="tabs-header">
             <button
-              className={`tab-button ${
-                activeTab === "description" ? "active" : ""
-              }`}
+              className={`tab-button ${activeTab === "description" ? "active" : ""
+                }`}
               onClick={() => setActiveTab("description")}
             >
               Description
             </button>
             <button
-              className={`tab-button ${
-                activeTab === "howToUse" ? "active" : ""
-              }`}
+              className={`tab-button ${activeTab === "howToUse" ? "active" : ""
+                }`}
               onClick={() => setActiveTab("howToUse")}
             >
               How to Use
             </button>
             <button
-              className={`tab-button ${
-                activeTab === "ingredients" ? "active" : ""
-              }`}
+              className={`tab-button ${activeTab === "ingredients" ? "active" : ""
+                }`}
               onClick={() => setActiveTab("ingredients")}
             >
               Ingredients
             </button>
             <button
-              className={`tab-button ${
-                activeTab === "reviews" ? "active" : ""
-              }`}
+              className={`tab-button ${activeTab === "reviews" ? "active" : ""
+                }`}
               onClick={() => setActiveTab("reviews")}
             >
               Reviews ({finalProduct.reviews.length})

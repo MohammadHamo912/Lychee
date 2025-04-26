@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import ProductDetails from "../components/ProductDetails";
+import ProductDetails from "../ArchievedComponents/ProductDetails";
 import dummyProducts from "../Data/dummyProducts";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
