@@ -67,6 +67,12 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
         );
         return sci;
     }
+    @Override
+    public ShoppingCartItem update(ShoppingCartItem item) {
+        String sql = "UPDATE shopping_cart_item SET quantity = ?, updated_at = NOW() WHERE user_id = ? AND product_variant_id = ?";
+        jdbcTemplate.update(sql, item.getQuantity(), item.getUserId(), item.getProductVariantId());
+        return item;
+    }
 
     @Override
     public void deleteByUserIdAndItemId(Integer userId, Integer itemId) {

@@ -71,4 +71,8 @@ public class ShoppingCartItem {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+
+    public Object getProductVariantId() {
+        return itemId;
+    }
 }

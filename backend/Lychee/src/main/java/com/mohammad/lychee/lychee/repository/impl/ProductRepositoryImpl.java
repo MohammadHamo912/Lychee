@@ -91,14 +91,13 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product save(Product product) {
-        return update(product);
-/*
-        if (product.getProductId() == null) {
+        if (product.getProductId() == 0) {
             return insert(product);
         } else {
             return update(product);
         }
-*/    }
+    }
+
 
     private Product insert(Product product) {
         String sql = "INSERT INTO Product (barcode, name, description) VALUES (?, ?, ?)";

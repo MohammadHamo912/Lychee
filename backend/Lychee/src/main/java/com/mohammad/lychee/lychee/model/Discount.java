@@ -51,4 +51,5 @@ public class Discount {
     public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
+
 }

@@ -118,4 +118,11 @@ public class PaymentTransactionRepositoryImpl implements PaymentTransactionRepos
         String sql = "UPDATE PaymentTransaction SET status = ? WHERE payment_transaction_id = ?";
         jdbcTemplate.update(sql, status, paymentTransactionId);
     }
+    @Override
+    public void softDelete(Integer id) {
+        // Your implementation logic, e.g.:
+        String sql = "UPDATE payment_transaction SET deleted = true WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
 }

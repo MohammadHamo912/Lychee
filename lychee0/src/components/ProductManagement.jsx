@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import FiltersPanel from '../components/FiltersPanel';
 import '../ComponentsCss/ProductManagement.css';
+import { getAllProducts, createProduct } from '../api/products';
 
 const categories = ['Makeup', 'Skincare', 'Fragrance', 'Hair', 'Other'];
 
 const ProductManagement = () => {
     const [products, setProducts] = useState([]);
+    const [filteredResults, setFilteredResults] = useState([]);
     const [editingProduct, setEditingProduct] = useState(null);
     const [filters, setFilters] = useState({ category: 'All', minPrice: '', maxPrice: '', sortOption: '' });
-    const [filteredResults, setFilteredResults] = useState([]);
 
     const [formData, setFormData] = useState({
         name: '',
-        price: '',
-        originalPrice: '',
+        description: '',
         category: '',
         imageFile: null,
         imageUrl: '',
@@ -21,17 +21,18 @@ const ProductManagement = () => {
         newFeature: '',
         shades: [],
         newShade: '',
-        shop_name: 'Awesome Store',
-        rating: 0,
-        reviews: 0,
         barcode: '',
         brandName: '',
-        stock: ''
     });
 
     useEffect(() => {
-        applyFilters(filters);
-    }, [products, filters]);
+        getAllProducts().then((data) => {
+            console.log("🚀 Backend response:", data);
+            setProducts(data);
+            setFilteredResults(data);
+        });
+    }, []);
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -88,8 +89,7 @@ const ProductManagement = () => {
     const resetForm = () => {
         setFormData({
             name: '',
-            price: '',
-            originalPrice: '',
+            description: '',
             category: '',
             imageFile: null,
             imageUrl: '',
@@ -97,46 +97,31 @@ const ProductManagement = () => {
             newFeature: '',
             shades: [],
             newShade: '',
-            shop_name: 'Awesome Store',
-            rating: 0,
-            reviews: 0,
             barcode: '',
             brandName: '',
-            stock: ''
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const { name, price, imageUrl, category, stock } = formData;
+        const { name, description, barcode } = formData;
 
-        if (!name || !price || !category || !imageUrl || !stock) {
-            alert('Please fill all required fields.');
+        if (!name) {
+            alert('Name is required.');
             return;
         }
 
-        const newProduct = {
-            ...formData,
-            id: editingProduct ? editingProduct.id : Date.now(),
-            price: parseFloat(formData.price),
-            originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-            stock: parseInt(formData.stock, 10),
-            discount:
-                formData.originalPrice && formData.price
-                    ? `${Math.round((1 - formData.price / formData.originalPrice) * 100)}%`
-                    : null,
-        };
+        const newProduct = { name, description, barcode };
 
-        if (editingProduct) {
-            setProducts((prev) =>
-                prev.map((p) => (p.id === editingProduct.id ? newProduct : p))
-            );
-            setEditingProduct(null);
-        } else {
-            setProducts((prev) => [...prev, newProduct]);
+        try {
+            const saved = await createProduct(newProduct);
+            const updatedList = [...products, saved];
+            setProducts(updatedList);
+            setFilteredResults(updatedList);
+            resetForm();
+        } catch (error) {
+            alert('Failed to create product.');
         }
-
-        resetForm();
     };
 
     const handleEditProduct = (product) => {
@@ -147,7 +132,9 @@ const ProductManagement = () => {
 
     const handleDeleteProduct = (id) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
-            setProducts((prev) => prev.filter((p) => p.id !== id));
+            const updated = products.filter((p) => (p.productId ?? p.id) !== id);
+            setProducts(updated);
+            setFilteredResults(updated);
         }
     };
 
@@ -157,28 +144,8 @@ const ProductManagement = () => {
     };
 
     const applyFilters = (filters) => {
-        let updated = [...products];
-
-        if (filters.category !== 'All') {
-            updated = updated.filter((p) => p.category === filters.category);
-        }
-        if (filters.minPrice) {
-            updated = updated.filter((p) => p.price >= parseFloat(filters.minPrice));
-        }
-        if (filters.maxPrice) {
-            updated = updated.filter((p) => p.price <= parseFloat(filters.maxPrice));
-        }
-        if (filters.sortOption === 'priceLowToHigh') {
-            updated.sort((a, b) => a.price - b.price);
-        }
-        if (filters.sortOption === 'priceHighToLow') {
-            updated.sort((a, b) => b.price - a.price);
-        }
-        if (filters.sortOption === 'nameAZ') {
-            updated.sort((a, b) => a.name.localeCompare(b.name));
-        }
-
-        setFilteredResults(updated);
+        // Filtering logic is disabled for now
+        setFilteredResults(products);
     };
 
     return (
@@ -191,63 +158,29 @@ const ProductManagement = () => {
                 <form className="pm-form" onSubmit={handleSubmit}>
                     <div className="pm-form-group">
                         <input name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange} required />
-                        <input name="price" placeholder="Price" type="number" value={formData.price} onChange={handleInputChange} required />
-                        <input name="originalPrice" placeholder="Original Price" type="number" value={formData.originalPrice} onChange={handleInputChange} />
-                        <input name="stock" placeholder="Stock Quantity" type="number" value={formData.stock} onChange={handleInputChange} required />
+                        <input name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} />
                     </div>
 
-                    <select name="category" value={formData.category} onChange={handleInputChange} required>
+                    <select name="category" value={formData.category} onChange={handleInputChange}>
                         <option value="">Select Category</option>
                         {categories.map((cat) => (
                             <option key={cat} value={cat}>{cat}</option>
                         ))}
                     </select>
 
-                    {/* Features */}
-                    <div className="pm-list-group">
-                        <label>Features</label>
-                        <div className="pm-inline-add">
-                            <input type="text" placeholder="Add feature..." value={formData.newFeature} onChange={(e) => setFormData({ ...formData, newFeature: e.target.value })} />
-                            <button type="button" onClick={addFeature}>Add</button>
-                        </div>
-                        <ul className="pm-pill-list">
-                            {formData.features.map((f, i) => (
-                                <li key={i} className="pm-pill">{f}<span onClick={() => removeFeature(f)}>&times;</span></li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Shades */}
-                    <div className="pm-list-group">
-                        <label>Shades</label>
-                        <div className="pm-inline-add">
-                            <input type="text" placeholder="Add shade..." value={formData.newShade} onChange={(e) => setFormData({ ...formData, newShade: e.target.value })} />
-                            <button type="button" onClick={addShade}>Add</button>
-                        </div>
-                        <ul className="pm-pill-list">
-                            {formData.shades.map((s, i) => (
-                                <li key={i} className="pm-pill">{s}<span onClick={() => removeShade(s)}>&times;</span></li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Barcode & Brand */}
                     <div className="pm-form-group">
-                        <input type="text" name="barcode" placeholder="Barcode" value={formData.barcode} onChange={handleInputChange} />
-                        <input type="text" name="brandName" placeholder="Brand Name" value={formData.brandName} onChange={handleInputChange} />
+                        <input name="barcode" placeholder="Barcode" value={formData.barcode} onChange={handleInputChange} />
+                        <input name="brandName" placeholder="Brand Name" value={formData.brandName} onChange={handleInputChange} />
                     </div>
 
-                    {/* Image Upload + Buttons */}
                     <div className="pm-inline-buttons">
                         <label className="pm-image-upload">
                             Upload Image
                             <input type="file" accept="image/*" onChange={handleImageChange} />
                         </label>
-
                         {formData.imageUrl && (
                             <img src={formData.imageUrl} alt="Preview" className="pm-image-preview" />
                         )}
-
                         <div className="pm-button-group">
                             <button type="submit">{editingProduct ? 'Update' : 'Add'} Product</button>
                             {editingProduct && <button type="button" className="pm-cancel-btn" onClick={handleCancelEdit}>Cancel</button>}
@@ -267,29 +200,16 @@ const ProductManagement = () => {
                         <p className="pm-empty">No products found.</p>
                     ) : (
                         filteredResults.map((product) => (
-                            <div key={product.id} className="pm-card">
-                                <img src={product.imageUrl} alt={product.name} className="pm-card-img" />
+                            <div key={product.productId ?? product.id} className="pm-card">
+                                <img src={product.imageUrl || '/placeholder.jpg'} alt={product.name} className="pm-card-img" />
                                 <div className="pm-card-body">
                                     <h4>{product.name}</h4>
-                                    <p className="pm-cat">{product.category}</p>
-                                    <p className="pm-price">
-                                        ${product.price.toFixed(2)}
-                                        {product.originalPrice && product.originalPrice > product.price && (
-                                            <span className="pm-old-price">${product.originalPrice.toFixed(2)}</span>
-                                        )}
-                                    </p>
-                                    {product.discount && <p><strong>Discount:</strong> {product.discount}</p>}
-                                    <p><strong>Stock:</strong> {product.stock}</p>
-                                    {product.features.length > 0 && (
-                                        <ul>{product.features.map((f, i) => <li key={i}>{f}</li>)}</ul>
-                                    )}
-                                    {product.shades.length > 0 && (
-                                        <p><strong>Shades:</strong> {product.shades.join(', ')}</p>
-                                    )}
+                                    <p>{product.description}</p>
+                                    <p><strong>Barcode:</strong> {product.barcode}</p>
                                 </div>
                                 <div className="pm-card-actions">
                                     <button onClick={() => handleEditProduct(product)}>Edit</button>
-                                    <button onClick={() => handleDeleteProduct(product.id)}>Delete</button>
+                                    <button onClick={() => handleDeleteProduct(product.productId ?? product.id)}>Delete</button>
                                 </div>
                             </div>
                         ))
