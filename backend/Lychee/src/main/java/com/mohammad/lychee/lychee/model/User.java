@@ -12,13 +12,12 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
-    private Integer defaultAddressId;
 
     public User() {}
 
     public User(int userId, String role, String name, String email, String passwordHash,
                 String phone, LocalDateTime createdAt, LocalDateTime updatedAt,
-                LocalDateTime deletedAt, Integer defaultAddressId) {
+                LocalDateTime deletedAt) {
         this.userId = userId;
         this.role = role;
         this.name = name;
@@ -28,7 +27,6 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
-        this.defaultAddressId = defaultAddressId;
     }
 
     // Getters and setters 👇
@@ -105,11 +103,5 @@ public class User {
         this.deletedAt = deletedAt;
     }
 
-    public Integer getDefaultAddressId() {
-        return defaultAddressId;
-    }
 
-    public void setDefaultAddressId(Integer defaultAddressId) {
-        this.defaultAddressId = defaultAddressId;
-    }
 }

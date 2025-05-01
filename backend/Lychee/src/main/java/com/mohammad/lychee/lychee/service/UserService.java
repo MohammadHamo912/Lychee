@@ -13,5 +13,4 @@ public interface UserService {
     void softDeleteUser(Integer userId);
     boolean verifyPassword(String email, String password);
     void updatePassword(Integer userId, String newPassword);
-    void setDefaultAddress(Integer userId, Integer addressId);
 }

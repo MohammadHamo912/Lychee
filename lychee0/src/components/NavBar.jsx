@@ -19,7 +19,7 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isLoggedIn = false; // Replace with actual authentication logic
+  const isLoggedIn = true; // Replace with actual authentication logic
 
   return (
     <>

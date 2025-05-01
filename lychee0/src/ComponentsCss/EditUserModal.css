@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,20 +16,20 @@
   padding: 20px;
   width: 300px;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
 .modal-content h3 {
   margin-bottom: 15px;
-  color: #8B3C5D;
+  color: #8b3c5d;
 }
 
 .modal-content input {
   width: 90%;
   padding: 8px;
   margin-bottom: 10px;
-  border: 1px solid #D9B6A3;
+  border: 1px solid #d9b6a3;
   border-radius: 5px;
 }
 
@@ -49,9 +49,9 @@
 }
 
 .modal-actions button:first-child {
-  background: #8B3C5D;
+  background: #670010;
 }
 
 .modal-actions button.cancel {
-  background: #B76E79;
+  background: #8b3c5d;
 }

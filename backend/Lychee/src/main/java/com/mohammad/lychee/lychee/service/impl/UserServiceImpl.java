@@ -92,16 +92,4 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    @Transactional
-    public void setDefaultAddress(Integer userId, Integer addressId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("User with ID " + userId + " does not exist");
-        }
-
-        User user = userOptional.get();
-        user.setDefaultAddressId(addressId);
-        userRepository.save(user);
-    }
 }

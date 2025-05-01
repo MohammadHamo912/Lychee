@@ -43,10 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
         user.setDeletedAt(rs.getTimestamp("deleted_at") != null ?
                 rs.getTimestamp("deleted_at").toLocalDateTime() : null);
 
-        Integer defaultAddressId = rs.getInt("default_address_id");
-        if (!rs.wasNull()) {
-            user.setDefaultAddressId(defaultAddressId);
-        }
+
 
         return user;
     };
@@ -81,18 +78,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        return update(user);
-/*  check this
-        if (user.getUserId() == null) {
+        if (user.getUserId() == 0) {
             return insert(user);
-        } else {
-            return update(user);
-        }*/
+        }// else
+        return update(user);
+
     }
 
     private User insert(User user) {
-        String sql = "INSERT INTO User (role, name, email, password_hash, phone, default_address_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO User (role, name, email, password_hash, phone) " +
+                "VALUES (?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -104,12 +99,6 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(4, user.getPasswordHash());
             ps.setString(5, user.getPhone());
 
-            if (user.getDefaultAddressId() != null) {
-                ps.setInt(6, user.getDefaultAddressId());
-            } else {
-                ps.setNull(6, java.sql.Types.INTEGER);
-            }
-
             return ps;
         }, keyHolder);
 
@@ -119,7 +108,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private User update(User user) {
         String sql = "UPDATE User SET role = ?, name = ?, email = ?, password_hash = ?, " +
-                "phone = ?, default_address_id = ?, updated_at = ? WHERE User_ID = ?";
+                "phone = ?, updated_at = ? WHERE User_ID = ?";
 
         jdbcTemplate.update(sql,
                 user.getRole(),
@@ -127,7 +116,6 @@ public class UserRepositoryImpl implements UserRepository {
                 user.getEmail(),
                 user.getPasswordHash(),
                 user.getPhone(),
-                user.getDefaultAddressId(),
                 Timestamp.valueOf(LocalDateTime.now()),
                 user.getUserId());
 
