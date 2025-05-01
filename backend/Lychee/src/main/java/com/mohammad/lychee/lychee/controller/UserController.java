@@ -64,29 +64,4 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{userId}/active/{status}")
-    public ResponseEntity<User> setUserActiveStatus(
-            @PathVariable Integer userId,
-            @PathVariable boolean status) {
-        try {
-            Optional<User> userOptional = userService.getUserById(userId);
-            if (userOptional.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            User user = userOptional.get();
-            if (status) {
-                // If activating, make sure deletedAt is null
-                user.setDeletedAt(null);
-            } else {
-                // If deactivating, soft delete the user
-                userService.softDeleteUser(userId);
-            }
-
-            User updatedUser = userService.updateUser(user);
-            return ResponseEntity.ok(updatedUser);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
 }
