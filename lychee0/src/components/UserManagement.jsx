@@ -177,7 +177,7 @@ const UserManagement = () => {
 
         <div className="controls">
           <div className="filter-group">
-            {["all", "customer", "store owner"].map((role) => (
+            {["all", "customer", "shopowner"].map((role) => (
               <button
                 key={role}
                 className={filter === role ? "active" : ""}
