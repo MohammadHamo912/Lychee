@@ -8,7 +8,7 @@ import ProductManagement from "../components/ProductManagement";
 import OrderManagement from "../components/OrderManagement";
 import StoreReviewAndSocial from "../components/StoreReviewAndSocial.jsx";
 import UserManagement from "../components/UserManagement";
-import ShopApproval from "../components/ShopApproval";
+import ShopApproval from "../components/ShopManagement.jsx";
 import DiscountManagement from "../components/DiscountManagement.jsx";
 import AdminOverview from "../components/AdminOverview";
 import "../PagesCss/Dashboard.css";
@@ -29,7 +29,7 @@ const Dashboard = ({ userRole = "admin" }) => {
           },
           {
             key: "shops",
-            title: "🛍️ Shop Approval",
+            title: "🛍️ Store Management",
             content: <ShopApproval />,
           },
           {
