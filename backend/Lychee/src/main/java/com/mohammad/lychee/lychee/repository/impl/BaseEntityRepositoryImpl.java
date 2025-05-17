@@ -1,7 +1,7 @@
-package com.mohammad.lychee.lychee.repository.impl;
+/*package com.mohammad.lychee.lychee.repository.impl;
 
-import com.mohammad.lychee.lychee.model.User;
-import com.mohammad.lychee.lychee.repository.UserRepository;
+import com.mohammad.lychee.lychee.model.BaseEntity;
+import com.mohammad.lychee.lychee.repository.BaseEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,42 +19,28 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class BaseEntityRepositoryImpl<T extends BaseEntity> implements BaseEntityRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public BaseEntityRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<User> userRowMapper = (rs, rowNum) -> {
-        User user = new User(
-            rs.getInt("User_ID"),
-                rs.getString("role"),
-                rs.getString("name"),
-                rs.getString("email"),
-                rs.getString("password_hash"),
-                rs.getString("phone"),
-                rs.getTimestamp("created_at") != null ?
-                        rs.getTimestamp("created_at").toLocalDateTime() : null,
-                rs.getTimestamp("updated_at") != null ?
-                        rs.getTimestamp("updated_at").toLocalDateTime() : (null),
-                rs.getTimestamp("deleted_at") != null ?
-                        rs.getTimestamp("deleted_at").toLocalDateTime() : null
-                );
-
-        return user;
+    private final RowMapper<T> userRowMapper = (rs, rowNum) -> {
+        T entity = (T) new BaseEntity("",0);
+        return entity;
     };
 
     @Override
-    public List<User> findAll() {
+    public List<T> findAll() {
         String sql = "SELECT * FROM User WHERE deleted_at IS NULL";
         return jdbcTemplate.query(sql, userRowMapper);
     }
 
     @Override
-    public Optional<User> findById(Integer id) {
+    public Optional<T> findById(Integer id) {
         try {
             String sql = "SELECT * FROM User WHERE User_ID = ? AND deleted_at IS NULL";
             User user = jdbcTemplate.queryForObject(sql, userRowMapper, id);
@@ -65,26 +51,18 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        try {
-            String sql = "SELECT * FROM User WHERE email = ? AND deleted_at IS NULL";
-            User user = jdbcTemplate.queryForObject(sql, userRowMapper, email);
-            return Optional.ofNullable(user);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public User save(User user) {
-        if (user.getUserId() == 0) {
-            return insert(user);
+    public T save(T entity) {
+        if (entity.getId() == 0) {
+            return insert(entity);
         }// else
-        return update(user);
+        return update(entity);
 
+        return null;
     }
 
-    private User insert(User user) {
+
+    private T insert(T entity) {
+
         String sql = "INSERT INTO User (role, name, email, password_hash, phone) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
@@ -138,4 +116,4 @@ public class UserRepositoryImpl implements UserRepository {
         String sql = "SELECT * FROM User WHERE role = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, userRowMapper, role);
     }
-}
+}*/

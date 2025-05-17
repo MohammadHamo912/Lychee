@@ -2,7 +2,7 @@ package com.mohammad.lychee.lychee.model;
 
 import java.time.LocalDateTime;
 
-public class User {
+public class User { //extends BaseEntity
     private int userId;
     private String role;
     private String name;
@@ -13,11 +13,10 @@ public class User {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    public User() {}
-
     public User(int userId, String role, String name, String email, String passwordHash,
                 String phone, LocalDateTime createdAt, LocalDateTime updatedAt,
                 LocalDateTime deletedAt) {
+       // super("User",userId);
         this.userId = userId;
         this.role = role;
         this.name = name;
@@ -29,7 +28,7 @@ public class User {
         this.deletedAt = deletedAt;
     }
 
-    // Getters and setters 👇
+    // Getters and setters
 
     public int getUserId() {
         return userId;
