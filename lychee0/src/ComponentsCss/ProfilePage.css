@@ -1,211 +1,185 @@
 /* Profile Page Layout */
 .profile-page-layout {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    padding: 60px;
-    background: #FFF5E1;
-    min-height: 100vh;
-    justify-content: center;
-    align-items: flex-start;
-    box-sizing: border-box;
-    width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 60px;
+  background: #fff5e1;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  width: 90%;
 }
 
 /* Shared Card Styling */
 .card-box {
-    background: rgba(255, 197, 197, 0.25);
-    border: 2px solid #D9B6A3;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
+  background: rgba(255, 197, 197, 0.25);
+  border: 2px solid #d9b6a3;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
 }
 
 .card-box:hover {
-    transform: translateY(-4px);
+  transform: translateY(-4px);
 }
 
 /* LEFT - Profile Form */
 .profile-box {
-    composes: card-box;
-    width: 420px;
-    padding: 40px;
-    flex-shrink: 0;
+  composes: card-box;
+  width: 420px;
+  padding: 40px;
+  flex-shrink: 0;
 }
 
 .profile-box h1 {
-    color: #670010;
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 25px;
+  color: #670010;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 25px;
 }
 
 .profile-field {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-    max-width: 96%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  max-width: 96%;
 }
 
 .profile-field label {
-    color: #670010;
-    margin-bottom: 5px;
-    font-weight: bold;
+  color: #670010;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .profile-field input {
-    padding: 12px;
-    border: 1px solid #D9B6A3;
-    border-radius: 6px;
-    background: #FFF5E1;
-    color: #670010;
-    width: 100%;
+  padding: 12px;
+  border: 1px solid #d9b6a3;
+  border-radius: 6px;
+  background: #fff5e1;
+  color: #670010;
+  width: 100%;
 }
 
 /* Name fields in row */
 #name {
-    display: flex;
-    gap: 40px;
-    flex-direction: row;
+  display: flex;
+  gap: 40px;
+  flex-direction: row;
 }
 
 .profile-name {
-    flex: 1;
+  flex: 1;
 }
 
 /* Submit Button */
 .profile-btn {
-    margin-top: 15px;
-    padding: 12px;
-    width: 100%;
-    background: #670010;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.3s;
+  margin-top: 15px;
+  padding: 12px;
+  width: 100%;
+  background: #670010;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s;
 }
 
 .profile-btn:hover {
-    background: #B76E79;
-    transform: scale(1.02);
-}
-
-/* Promote Button */
-#promote {
-    justify-content: center;
-    background-color: #670010;
-    color: white;
-    width: 70%;
-    height: 50px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-#promote:hover {
-    background-color: #B76E79;
-    transform: scale(1.02);
+  background: #b76e79;
+  transform: scale(1.02);
 }
 
 /* Accessibility: Focus Styles */
 .profile-field input:focus,
 .profile-btn:focus,
-#promote:focus {
-    outline: 2px solid #B76E79;
-    outline-offset: 2px;
-}
 
 /* RIGHT - Info Cards */
 .profile-extra-box {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    flex: 1;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1;
 }
 
 .spending-box {
-    composes: card-box;
-    padding: 25px 30px;
+  composes: card-box;
+  padding: 25px 30px;
 }
 
 .spending-box h2 {
-    color: #670010;
-    margin-bottom: 15px;
+  color: #670010;
+  margin-bottom: 15px;
 }
 
 .spending-box p {
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: #670010;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #670010;
 }
 
 /* Tablet: ≤ 992px */
 @media (max-width: 992px) {
-    .profile-page-layout {
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 40px 20px;
-    }
+  .profile-page-layout {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 20px;
+  }
 
-    .profile-box {
-        width: 100%;
-        max-width: 420px;
-        padding: 30px;
-    }
+  .profile-box {
+    width: 100%;
+    max-width: 420px;
+    padding: 30px;
+  }
 
-    .profile-extra-box {
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
-    }
+  .profile-extra-box {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
 
-    .spending-box {
-        width: 100%;
-        max-width: 400px;
-        padding: 20px 24px;
-    }
+  .spending-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px 24px;
+  }
 }
 
 /* Mobile: ≤ 600px */
 @media (max-width: 600px) {
-    .profile-page-layout {
-        padding: 30px 15px;
-    }
+  .profile-page-layout {
+    padding: 30px 15px;
+  }
 
-    .profile-box {
-        padding: 25px;
-        max-width: 100%;
-    }
+  .profile-box {
+    padding: 25px;
+    max-width: 100%;
+  }
 
-    .profile-extra-box {
-        flex-direction: column;
-        gap: 20px;
-        align-items: center;
-        margin-right: 10%;
-    }
+  .profile-extra-box {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-right: 10%;
+  }
 
-    .spending-box {
-        width: 100%;
-        padding: 18px;
-    }
+  .spending-box {
+    width: 100%;
+    padding: 18px;
+  }
 
-    .profile-box h1 {
-        font-size: 1.5rem;
-    }
+  .profile-box h1 {
+    font-size: 1.5rem;
+  }
 
-    .profile-btn {
-        font-size: 1rem;
-        padding: 10px;
-    }
-
-    #promote {
-        width: 100%;
-    }
+  .profile-btn {
+    font-size: 1rem;
+    padding: 10px;
+  }
 }

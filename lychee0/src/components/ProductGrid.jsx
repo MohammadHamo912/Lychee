@@ -2,9 +2,8 @@
 import React from "react";
 import ReusableGrid from "./../components/ReusableGrid";
 import ProductCard from "./../components/ProductCard";
-import dummyProducts from "../Data/dummyProducts";
 
-const ProductGrid = ({ limit, header }) => {
+const ProductGrid = ({ limit, header, products }) => {
   const handleAddToCart = (product) => {
     console.log("Added to cart:", product);
   };
@@ -12,7 +11,7 @@ const ProductGrid = ({ limit, header }) => {
   return (
     <ReusableGrid
       headerContent={<h2>{header}</h2>}
-      items={dummyProducts}
+      items={products}
       CardComponent={ProductCard}
       limit={limit}
       cardProps={{ onAddToCart: handleAddToCart }}

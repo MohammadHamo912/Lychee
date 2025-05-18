@@ -21,21 +21,21 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
 
     private RowMapper<ProductVariant> productVariantRowMapper = (rs, rowNum) -> {
         ProductVariant productVariant = new ProductVariant();
-        productVariant.setProductVariantId(rs.getInt("product_variant_id"));
-        productVariant.setVariantType(rs.getString("variant_type"));
+        productVariant.setProductVariantId(rs.getInt("Product_Variant_ID"));
+        productVariant.setVariantType(rs.getString("variantType"));
         // Add more properties here as per your schema
         return productVariant;
     };
 
     @Override
     public List<ProductVariant> findAll() {
-        String sql = "SELECT * FROM ProductVariant WHERE deleted_at IS NULL";
+        String sql = "SELECT * FROM productvariant WHERE deleted_at IS NULL";
         return jdbcTemplate.query(sql, productVariantRowMapper);
     }
 
     @Override
     public Optional<ProductVariant> findById(Integer productVariantId) {
-        String sql = "SELECT * FROM ProductVariant WHERE product_variant_id = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM productvariant WHERE Product_Variant_ID = ? AND deleted_at IS NULL";
         try {
             ProductVariant productVariant = jdbcTemplate.queryForObject(sql, productVariantRowMapper, productVariantId);
             return Optional.ofNullable(productVariant);
@@ -46,7 +46,7 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
 
     @Override
     public List<ProductVariant> findByProductId(Integer productId) {
-        String sql = "SELECT * FROM ProductVariant WHERE product_id = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM productvariant WHERE Product_ID = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, productVariantRowMapper, productId);
     }
 
@@ -62,13 +62,13 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
 
     @Override
     public List<ProductVariant> findByVariantType(String variantType) {
-        String sql = "SELECT * FROM ProductVariant WHERE variant_type = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM productvariant WHERE variantType = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, productVariantRowMapper, variantType);
     }
 
     @Override
     public void softDelete(Integer productVariantId) {
-        String sql = "UPDATE ProductVariant SET deleted_at = NOW() WHERE product_variant_id = ?";
+        String sql = "UPDATE productvariant SET deleted_at = NOW() WHERE Product_Variant_ID = ?";
         jdbcTemplate.update(sql, productVariantId);
     }
 }

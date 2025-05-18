@@ -29,7 +29,7 @@ const Dashboard = ({ userRole = "admin" }) => {
           },
           {
             key: "shops",
-            title: "🛍️ Shop Approval",
+            title: "🛍️ Shop Approval", // change this to store management
             content: <ShopApproval />,
           },
           {

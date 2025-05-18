@@ -22,7 +22,7 @@ public class StoreController {
         return storeService.getAllStores();
     }
 
-    @GetMapping("/{storeId}")
+    @GetMapping("/{storeId}") 
     public ResponseEntity<Store> getStoreById(@PathVariable Integer storeId){
         Optional<Store> store = storeService.getStoreById(storeId);
         return store.map(ResponseEntity::ok)

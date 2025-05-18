@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:8081/api/stores";
-//const ADDRESS_API_URL = "http://localhost:8081/api/addresses";
 
 // Get all stores
 export const getAllStores = async () => {
@@ -68,18 +67,6 @@ export const deleteStore = async (storeId) => {
     throw error;
   }
 };
-
-// Get store statistics
-export const getStoreStats = async (storeId) => {
-  try {
-    const response = await axios.get(`${API_URL}/${storeId}/stats`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching statistics for store ${storeId}:`, error);
-    throw error;
-  }
-};
-
 // Get store products
 export const getStoreProducts = async (storeId) => {
   try {
@@ -87,17 +74,6 @@ export const getStoreProducts = async (storeId) => {
     return response.data;
   } catch (error) {
     console.error(`Error fetching products for store ${storeId}:`, error);
-    throw error;
-  }
-};
-
-// Get store reviews
-export const getStoreReviews = async (storeId) => {
-  try {
-    const response = await axios.get(`${API_URL}/${storeId}/reviews`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching reviews for store ${storeId}:`, error);
     throw error;
   }
 };
@@ -132,40 +108,3 @@ export const uploadStoreLogo = async (storeId, file) => {
     throw error;
   }
 };
-/*
-// Get address by ID
-export const getAddressById = async (addressId) => {
-  try {
-    const response = await axios.get(`${ADDRESS_API_URL}/${addressId}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching address ${addressId}:`, error);
-    throw error;
-  }
-};
-
-// Create new address
-export const createAddress = async (addressData) => {
-  try {
-    const response = await axios.post(ADDRESS_API_URL, addressData);
-    return response.data;
-  } catch (error) {
-    console.error("Error creating address:", error);
-    throw error;
-  }
-};
-
-// Update address
-export const updateAddress = async (addressId, addressData) => {
-  try {
-    const response = await axios.put(
-      `${ADDRESS_API_URL}/${addressId}`,
-      addressData
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`Error updating address ${addressId}:`, error);
-    throw error;
-  }
-};
-*/

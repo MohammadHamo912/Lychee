@@ -23,6 +23,9 @@
   flex-shrink: 0; /* Prevent footer from shrinking */
 }
 
+.search-container {
+  background-color: #fff5e1;
+}
 /* Store Page Layout */
 .store-page {
   background-color: #fff5e1; /* Cream background */
