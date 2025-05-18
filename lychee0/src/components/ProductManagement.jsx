@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import FiltersPanel from '../components/FiltersPanel';
 import '../ComponentsCss/ProductManagement.css';
-import { getAllProducts, createProduct } from '../api/products';
+import {
+    getAllProducts,
+    createProduct,
+    createProductVariant,
+    createItem,
+} from '../api/products';
 
 const categories = ['Makeup', 'Skincare', 'Fragrance', 'Hair', 'Other'];
 
@@ -23,16 +28,17 @@ const ProductManagement = () => {
         newShade: '',
         barcode: '',
         brandName: '',
+        price: '',
+        stockQuantity: '',
+        discount: '',
     });
 
     useEffect(() => {
         getAllProducts().then((data) => {
-            console.log("🚀 Backend response:", data);
             setProducts(data);
             setFilteredResults(data);
         });
     }, []);
-
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -99,28 +105,58 @@ const ProductManagement = () => {
             newShade: '',
             barcode: '',
             brandName: '',
+            price: '',
+            stockQuantity: '',
+            discount: '',
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { name, description, barcode } = formData;
+        const {
+            name, description, barcode, brandName, shades,
+            price, stockQuantity, discount, imageUrl
+        } = formData;
 
-        if (!name) {
-            alert('Name is required.');
+        if (!name || !shades.length || !price) {
+            alert('Product name, at least one shade, and price are required.');
             return;
         }
 
-        const newProduct = { name, description, barcode };
-
         try {
-            const saved = await createProduct(newProduct);
-            const updatedList = [...products, saved];
-            setProducts(updatedList);
-            setFilteredResults(updatedList);
+            const product = await createProduct({ name, description, barcode, brandName });
+            const createdVariants = [];
+
+            for (const shade of shades) {
+                const variant = await createProductVariant({
+                    productId: product.id,
+                    variantType: 'shade',
+                    variantValue: shade,
+                });
+                createdVariants.push(variant);
+            }
+
+            const storeId = 1; // Replace with real store ID based on logged-in shop owner
+
+            for (const variant of createdVariants) {
+                await createItem({
+                    storeId,
+                    productVariantId: variant.id,
+                    price: parseFloat(price),
+                    stockQuantity: parseInt(stockQuantity) || 0,
+                    discount: parseFloat(discount) || 0,
+                    imageUrl,
+                });
+            }
+
+            alert('Product and items created successfully.');
             resetForm();
+            const data = await getAllProducts();
+            setProducts(data);
+            setFilteredResults(data);
         } catch (error) {
-            alert('Failed to create product.');
+            alert('Failed to create product and items.');
+            console.error(error);
         }
     };
 
@@ -144,15 +180,13 @@ const ProductManagement = () => {
     };
 
     const applyFilters = (filters) => {
-        // Filtering logic is disabled for now
-        setFilteredResults(products);
+        setFilteredResults(products); // Filtering logic pending
     };
 
     return (
         <div className="pm-container">
             <h2>Product Management</h2>
 
-            {/* Product Form */}
             <div className="pm-form-card">
                 <h3>{editingProduct ? 'Edit Product' : 'Add New Product'}</h3>
                 <form className="pm-form" onSubmit={handleSubmit}>
@@ -173,6 +207,24 @@ const ProductManagement = () => {
                         <input name="brandName" placeholder="Brand Name" value={formData.brandName} onChange={handleInputChange} />
                     </div>
 
+                    <div className="pm-form-group">
+                        <input name="price" type="number" placeholder="Price (₪)" value={formData.price} onChange={handleInputChange} />
+                        <input name="stockQuantity" type="number" placeholder="Stock" value={formData.stockQuantity} onChange={handleInputChange} />
+                        <input name="discount" type="number" placeholder="Discount (%)" value={formData.discount} onChange={handleInputChange} />
+                    </div>
+
+                    {/* Shades */}
+                    <div className="pm-form-group">
+                        <input name="newShade" placeholder="Add Shade" value={formData.newShade} onChange={handleInputChange} />
+                        <button type="button" onClick={addShade}>Add Shade</button>
+                        <div className="pm-chip-container">
+                            {formData.shades.map((shade) => (
+                                <span key={shade} className="pm-chip" onClick={() => removeShade(shade)}>{shade} ✕</span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Image upload */}
                     <div className="pm-inline-buttons">
                         <label className="pm-image-upload">
                             Upload Image
@@ -189,7 +241,6 @@ const ProductManagement = () => {
                 </form>
             </div>
 
-            {/* Filter + Product List */}
             <div className="pm-layout">
                 <div className="pm-sidebar">
                     <FiltersPanel onApplyFilters={applyFilters} categories={categories} />

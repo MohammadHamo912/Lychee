@@ -26,6 +26,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import dummyProducts from "./Data/dummyProducts.js";
 import ProductCard from "./components/ProductCard.jsx";
+import PrivateRoute from "./pages/PrivateRoute.jsx";
 
 function App() {
   return (
@@ -40,17 +41,21 @@ function App() {
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/allstorespage" element={<AllStoresPage />} />
         <Route path="/shoppingcartpage" element={<ShoppingCartPage />} />
-        <Route path="/shopownerdashboard" element={<ShopOwnerDashboard />} />
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
-        <Route path="/ownerdashboard" element={<OwnerDashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/category/:category" element={<ShopByCategory />} />
         <Route path="/item/:item" element={<ItemPage />} />
         <Route path="/storepage" element={<StorePage />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/contact" element={<ContactAndSupport />} />
         <Route path="/faq" element={<FAQ />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute roles={["admin", "storeowner", "customer"]}>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
         <Route path="/checkout" element={<CheckOut />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route
