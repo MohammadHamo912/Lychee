@@ -1,7 +1,11 @@
 import axios from "axios";
 
+// BASE URLs for different entities
 const BASE_URL = "http://localhost:8081/api/products";
+const VARIANT_URL = "http://localhost:8081/api/product-variants";
+const ITEM_URL = "http://localhost:8081/api/items";
 
+// Fetch all products
 export const getAllProducts = async () => {
   try {
     const response = await axios.get(BASE_URL);
@@ -12,6 +16,7 @@ export const getAllProducts = async () => {
   }
 };
 
+// Get product by ID
 export const getProductById = async (id) => {
   try {
     const response = await axios.get(`${BASE_URL}/${id}`);
@@ -22,6 +27,7 @@ export const getProductById = async (id) => {
   }
 };
 
+// Get product by barcode
 export const getProductByBarcode = async (barcode) => {
   try {
     const response = await axios.get(`${BASE_URL}/barcode/${barcode}`);
@@ -32,6 +38,7 @@ export const getProductByBarcode = async (barcode) => {
   }
 };
 
+// Search products by name
 export const searchProductByName = async (name) => {
   try {
     const response = await axios.get(`${BASE_URL}/name/${name}`);
@@ -42,6 +49,7 @@ export const searchProductByName = async (name) => {
   }
 };
 
+// Get products by category
 export const getProductsByCategory = async (categoryId) => {
   try {
     const response = await axios.get(`${BASE_URL}/category/${categoryId}`);
@@ -52,6 +60,7 @@ export const getProductsByCategory = async (categoryId) => {
   }
 };
 
+// Create a new product
 export const createProduct = async (product) => {
   try {
     const response = await axios.post(BASE_URL, product);
@@ -62,6 +71,29 @@ export const createProduct = async (product) => {
   }
 };
 
+// Create a product variant (e.g. shade)
+export const createProductVariant = async (variant) => {
+  try {
+    const response = await axios.post(VARIANT_URL, variant);
+    return response.data;
+  } catch (err) {
+    console.error("Failed to create product variant:", err);
+    throw err;
+  }
+};
+
+// Create an item (store-specific product variant listing)
+export const createItem = async (item) => {
+  try {
+    const response = await axios.post(ITEM_URL, item);
+    return response.data;
+  } catch (err) {
+    console.error("Failed to create item:", err);
+    throw err;
+  }
+};
+
+// Update an existing product
 export const updateProduct = async (product) => {
   try {
     const response = await axios.put(BASE_URL, product);
@@ -72,6 +104,7 @@ export const updateProduct = async (product) => {
   }
 };
 
+// Delete a product by ID
 export const deleteProduct = async (id) => {
   try {
     await axios.delete(`${BASE_URL}/${id}`);

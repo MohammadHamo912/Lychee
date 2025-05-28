@@ -3,36 +3,40 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
-import "../PagesCss/Auth.css";
+import axios from "axios";
 import NavBar from "../components/NavBar";
+import { useUser } from "../context/UserContext"; // ✅ context hook
+import "../PagesCss/Auth.css";
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
-  password: yup
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+  password: yup.string().min(6, "Password too short").required("Password is required"),
 });
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useUser(); // ✅ use context to update global user state
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
-  const navigate = useNavigate();
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post("http://localhost:8081/api/users/login", data);
+      const user = response.data;
 
-  const onSubmit = (data) => {
-    console.log("User logged in:", data);
-    navigate("/dashboard");
-  };
+      login(user); // ✅ context login function
+      alert(`Welcome, ${user.name}`);
 
-  const handleGuestLogin = () => {
-    console.log("Guest login");
-    navigate("/dashboard");
+      // Redirect based on role (optional refinement)
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Invalid email or password.");
+    }
   };
 
   return (
@@ -42,31 +46,15 @@ const Login = () => {
         <div className="auth-box">
           <h2>Login</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <input
-              type="email"
-              placeholder="Email"
-              {...register("email")}
-            />
+            <input placeholder="Email" {...register("email")} />
             <p className="error">{errors.email?.message}</p>
 
-            <input
-              type="password"
-              placeholder="Password"
-              {...register("password")}
-            />
+            <input type="password" placeholder="Password" {...register("password")} />
             <p className="error">{errors.password?.message}</p>
 
             <button type="submit">Login</button>
           </form>
-
-          {/* Guest Login Button */}
-          <button id="guest-btn" onClick={handleGuestLogin}>
-            Continue as Guest
-          </button>
-
-          <p>
-            Don’t have an account? <a href="/signup">Sign Up</a>
-          </p>
+          <p>Don’t have an account? <a href="/signup">Sign Up</a></p>
         </div>
       </div>
     </>

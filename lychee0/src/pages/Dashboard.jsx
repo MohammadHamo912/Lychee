@@ -1,20 +1,24 @@
 import React, { useState } from "react";
+import "../PagesCss/Dashboard.css";
+import { useUser } from "../context/UserContext";
+
+// Components by role
 import NavBar from "../components/NavBar";
 import ProfilePage from "../components/ProfilePage";
 import ShowMyReviews from "../components/ShowMyReviews";
 import Wishlist from "../components/WishList";
-import ShopOwnerDashboard from "../components/ShopOwnerDashboard.jsx";
+import ShopOwnerDashboard from "../components/ShopOwnerDashboard";
 import ProductManagement from "../components/ProductManagement";
 import OrderManagement from "../components/OrderManagement";
-import StoreReviewAndSocial from "../components/StoreReviewAndSocial.jsx";
+import StoreReviewAndSocial from "../components/StoreReviewAndSocial";
 import UserManagement from "../components/UserManagement";
-import ShopApproval from "../components/ShopManagement.jsx";
-import DiscountManagement from "../components/DiscountManagement.jsx";
+import ShopApproval from "../components/ShopManagement";
+import DiscountManagement from "../components/DiscountManagement";
 import AdminOverview from "../components/AdminOverview";
-import "../PagesCss/Dashboard.css";
 
-// customer , admin, storeOwner
-const Dashboard = ({ userRole = "customer" }) => {
+const Dashboard = () => {
+  const { user } = useUser();
+  const userRole = user?.role || "customer";
   const [activeTab, setActiveTab] = useState("default");
 
   const getTabsByRole = () => {
@@ -30,7 +34,7 @@ const Dashboard = ({ userRole = "customer" }) => {
           {
             key: "shops",
             title: "🛍️ Store Management",
-            content: <ShopApproval />, // this is the store management
+            content: <ShopApproval />,
           },
           {
             key: "orders",
@@ -43,7 +47,7 @@ const Dashboard = ({ userRole = "customer" }) => {
             content: <DiscountManagement />,
           },
         ];
-      case "storeOwner":
+      case "storeowner":
         return [
           { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
           {
@@ -96,7 +100,7 @@ const Dashboard = ({ userRole = "customer" }) => {
           <h2 className="sidebar-title">
             {userRole === "admin"
               ? "Admin Panel"
-              : userRole === "storeOwner"
+              : userRole === "storeowner"
               ? "Store Panel"
               : "My Account"}
           </h2>
