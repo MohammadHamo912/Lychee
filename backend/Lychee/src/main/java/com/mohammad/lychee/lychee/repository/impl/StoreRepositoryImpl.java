@@ -41,6 +41,8 @@ public class StoreRepositoryImpl implements StoreRepository {
                 rs.getTimestamp("updated_at").toLocalDateTime() : null);
         store.setDeletedAt(rs.getTimestamp("deleted_at") != null ?
                 rs.getTimestamp("deleted_at").toLocalDateTime() : null);
+        store.setLogo_url(rs.getString("logo_url") != null ?
+                rs.getString("logo_url") : null );
         return store;
     };
 
@@ -108,7 +110,7 @@ public class StoreRepositoryImpl implements StoreRepository {
     }
 
     private Store update(Store store) {
-        String sql = "UPDATE Store SET ShopOwner_ID = ?, Address_ID = ?, name = ?, description = ?, " +
+        String sql = "UPDATE Store SET ShopOwner_ID = ?, Address_ID = ?, name = ?, description = ?,logo_url = ?, " +
                 "updated_at = ? WHERE Store_ID = ?";
 
         jdbcTemplate.update(sql,
@@ -116,6 +118,7 @@ public class StoreRepositoryImpl implements StoreRepository {
                 store.getAddressId(),
                 store.getName(),
                 store.getDescription(),
+                store.getLogo_url(),
                 Timestamp.valueOf(LocalDateTime.now()),
                 store.getStoreId());
 

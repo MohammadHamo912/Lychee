@@ -5,15 +5,15 @@ import SearchBar from "../components/SearchBar";
 import StoreFiltersPanel from "../components/StoreFiltersPanel";
 import StoreCard from "../components/StoreCard";
 import Footer from "../components/Footer";
-import dummyStores from "../Data/dummyStores";
 import StoreGrid from "../components/StoreGrid";
+import { getAllStores } from "../api/stores";
 import "../PagesCss/AllStoresPage.css";
 
 const AllStoresPage = () => {
   const [searchParams] = useSearchParams();
   const initialQuery = searchParams.get("query") || "";
 
-  const [stores] = useState(dummyStores);
+  const [stores, setStores] = useState([]);
   const [filteredStores, setFilteredStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState(initialQuery);
   const [activeFilters, setActiveFilters] = useState({
@@ -21,7 +21,8 @@ const AllStoresPage = () => {
     reviewStars: null,
     sortOption: "none",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const storeCategories = [
     "Beauty",
@@ -32,9 +33,35 @@ const AllStoresPage = () => {
     "Organic",
   ];
 
+  // Fetch stores from API on component mount
   useEffect(() => {
-    applyFiltersAndSearch(initialQuery, activeFilters);
+    fetchStores();
+  }, []);
+
+  // Apply filters when stores data or initial query changes
+  useEffect(() => {
+    if (stores.length > 0) {
+      applyFiltersAndSearch(initialQuery, activeFilters);
+    }
   }, [initialQuery, stores]);
+
+  const fetchStores = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await getAllStores();
+      setStores(data);
+    } catch (err) {
+      console.error("Error fetching stores:", err);
+      setError("Failed to load stores. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRetry = () => {
+    fetchStores();
+  };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -47,7 +74,6 @@ const AllStoresPage = () => {
   };
 
   const applyFiltersAndSearch = (search = "", filters = {}) => {
-    setIsLoading(true);
     const { category, reviewStars, sortOption } = filters;
 
     let result = [...stores];
@@ -98,10 +124,7 @@ const AllStoresPage = () => {
         break;
     }
 
-    setTimeout(() => {
-      setFilteredStores(result);
-      setIsLoading(false);
-    }, 300);
+    setFilteredStores(result);
   };
 
   const handleClearSearch = () => {
@@ -149,13 +172,28 @@ const AllStoresPage = () => {
             )}
           </div>
 
-          {isLoading ? (
+          {error ? (
+            <div className="error-message">
+              <h3>Error Loading Stores</h3>
+              <p>{error}</p>
+              <button onClick={handleRetry} className="retry-btn">
+                Try Again
+              </button>
+            </div>
+          ) : isLoading ? (
             <div className="loading-spinner">
               <div className="spinner"></div>
               <p>Loading stores...</p>
             </div>
           ) : filteredStores.length > 0 ? (
-            <StoreGrid title={""} header={""} className={"all-store-page"} />
+            <StoreGrid
+              stores={filteredStores}
+              title=""
+              header=""
+              className="all-store-page"
+              isLoading={false}
+              error={null}
+            />
           ) : (
             <div className="no-results">
               <h3>No stores found</h3>

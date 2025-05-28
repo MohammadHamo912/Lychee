@@ -61,14 +61,3 @@ export const deleteUser = async (userId) => {
     throw error;
   }
 };
-
-// Set user active status
-export const setUserActiveStatus = async (userId, isActive) => {
-  try {
-    const response = await axios.put(`${API_URL}/${userId}/active/${isActive}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error setting active status for user ${userId}:`, error);
-    throw error;
-  }
-};

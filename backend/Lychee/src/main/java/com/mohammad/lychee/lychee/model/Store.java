@@ -11,11 +11,12 @@ public class Store {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
+    private String logo_url;
 
     public Store() {}
 
     public Store(int storeId, int shopOwnerId, int addressId, String name, String description,
-                 LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+                 LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,String logo_url) {
         this.storeId = storeId;
         this.shopOwnerId = shopOwnerId;
         this.addressId = addressId;
@@ -24,6 +25,7 @@ public class Store {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
+        this.logo_url = logo_url;
     }
 
     // Getters and setters 👇
@@ -91,4 +93,12 @@ public class Store {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+    public String getLogo_url() {
+        return logo_url;
+    }
+
+    public void setLogo_url(String logo_url) {
+        this.logo_url = logo_url;
+    }
+
 }

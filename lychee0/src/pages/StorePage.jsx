@@ -29,8 +29,7 @@ const StorePage = () => {
   // Get storeId from URL params
   //const { storeId } = useParams();
   // For testing/development without router
-  const storeId = 1;
-
+  const { storeId } = useParams(); // Uncommented and used
   const [store, setStore] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);

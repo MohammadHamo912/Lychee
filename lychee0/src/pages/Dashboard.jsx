@@ -14,7 +14,7 @@ import AdminOverview from "../components/AdminOverview";
 import "../PagesCss/Dashboard.css";
 
 // customer , admin, storeOwner
-const Dashboard = ({ userRole = "admin" }) => {
+const Dashboard = ({ userRole = "customer" }) => {
   const [activeTab, setActiveTab] = useState("default");
 
   const getTabsByRole = () => {
@@ -30,7 +30,7 @@ const Dashboard = ({ userRole = "admin" }) => {
           {
             key: "shops",
             title: "🛍️ Store Management",
-            content: <ShopApproval />,
+            content: <ShopApproval />, // this is the store management
           },
           {
             key: "orders",
