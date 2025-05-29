@@ -1,0 +1,99 @@
+.admin-overview-container {
+    padding: 30px;
+    background: #FFF5E1;
+    color: #8B3C5D;
+}
+
+.admin-overview-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.summary-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: #fff;
+    border: 2px solid #D9B6A3;
+    padding: 20px 30px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.card span {
+    display: block;
+    margin-top: 8px;
+    font-size: 1.4rem;
+    color: #B76E79;
+    font-weight: bold;
+}
+
+.charts-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.chart-box {
+    background: #fff;
+    border: 2px solid #D9B6A3;
+    border-radius: 12px;
+    padding: 20px;
+    flex: 1 1 400px;
+    max-width: 600px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.chart-box h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #8B3C5D;
+}
+
+.activity-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}
+
+.activity-box {
+    background: #fff;
+    border: 2px solid #D9B6A3;
+    border-radius: 12px;
+    padding: 20px;
+    flex: 1 1 300px;
+    max-width: 400px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.activity-box h4 {
+    margin-bottom: 12px;
+    color: #8B3C5D;
+}
+
+.activity-box ul {
+    list-style: none;
+    padding: 0;
+    color: #4a2c2c;
+}
+
+.activity-box li {
+    padding: 6px 0;
+    border-bottom: 1px solid #f1d9c3;
+}
+
+.activity-box li:last-child {
+    border-bottom: none;
+}

@@ -1,0 +1,115 @@
+/* ProductListingPage.css */
+
+/* Scoped styles for ProductListingPage component */
+.plp-container * {
+  box-sizing: border-box;
+}
+
+.plp-container {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main Content Layout */
+.plp-content-wrapper {
+  display: flex;
+  flex: 1;
+}
+
+/* Sidebar Styles */
+.plp-sidebar {
+  background-color: #f0f2f5;
+  padding: 20px;
+  border-right: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.plp-sidebar h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.plp-filter-section {
+  margin-bottom: 24px;
+}
+
+.plp-filter-section h3 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+/* Main Content Area */
+.plp-main-content {
+  flex-grow: 1;
+  padding: 30px;
+}
+
+.plp-main-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #2c3e50;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .plp-content-wrapper {
+    flex-direction: column;
+  }
+
+  .plp-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .plp-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+/* Filter Component Styles */
+.plp-filter-item {
+  margin-bottom: 12px;
+}
+
+.plp-filter-select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.plp-price-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plp-price-input {
+  flex: 1;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.plp-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}

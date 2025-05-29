@@ -1,0 +1,46 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    /* important: prevents stretching */
+}
+
+.dashboard-sidebar {
+    width: 250px;
+    background-color: #fff5e1;
+    border-right: 1px solid #d9b6a3;
+    position: sticky;
+    top: 25%;
+    /* ✅ makes it stick to top when scrolling */
+    height: 50vh;
+    /* ✅ full viewport height */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* center tabs horizontally */
+}
+
+#sidebar-title {
+    margin-top: 20%;
+    text-align: center;
+}
+
+.sidebar-tab {
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar-tab.active {
+    background-color: #ffe5e8;
+    font-weight: bold;
+}
+
+.dashboard-content {
+    flex: 1;
+    padding-left: 50px;
+    margin-top: -50px;
+}

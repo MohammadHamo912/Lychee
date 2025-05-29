@@ -1,0 +1,42 @@
+/* ProductDetailsPage.css */
+.product-details-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content-product-detials-page {
+  flex: 1;
+  padding: 20px;
+}
+
+.not-found {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.not-found h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.not-found p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.back-to-shop {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #ff6b6b;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.back-to-shop:hover {
+  background: #e55a5a;
+}

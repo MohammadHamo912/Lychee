@@ -1,0 +1,120 @@
+.combined-filter-sidebar {
+  background-color: white;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 200px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #670010;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 1rem;
+  height: fit-content;
+}
+
+.combined-filter-sidebar h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #670010;
+  font-weight: 600;
+}
+
+.filter-section {
+  margin-bottom: 1.2rem;
+}
+
+.filter-section label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+input[type="number"],
+select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d9b6a3;
+  border-radius: 10px;
+  background: white;
+  color: #670010;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-label,
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+
+.checkbox-label input,
+.radio-label input {
+  accent-color: #b76e79;
+}
+
+.filter-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+}
+
+.apply-button,
+.reset-button {
+  width: 200px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.apply-button {
+  background-color: #670010;
+  color: #fff;
+}
+
+.apply-button:hover {
+  background-color: #b76e79;
+  transform: translateY(-1px);
+}
+
+.reset-button {
+  background-color: #ffc5c5;
+  color: #670010;
+}
+
+.reset-button:hover {
+  background-color: #f8b3b3;
+  transform: translateY(-1px);
+}
+
+#price {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  width: 200px;
+  height: 30px;
+}
+
+#sortBy {
+  width: 200px;
+}
+
+@media (max-width: 600px) {
+  .combined-filter-sidebar {
+    max-width: 100%;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .apply-button,
+  .reset-button,
+  #price,
+  #sortBy {
+    width: 100%;
+  }
+}

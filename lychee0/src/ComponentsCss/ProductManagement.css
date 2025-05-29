@@ -1,0 +1,328 @@
+/* === Container & Title === */
+.pm-container {
+    padding: 40px 20px;
+    background-color: #FFF5E1;
+    min-height: 100vh;
+    color: #670010;
+    box-sizing: border-box;
+}
+
+.pm-container h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+/* === Form Section === */
+.pm-form-card {
+    background: #fff;
+    border: 2px solid #D9B6A3;
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.pm-form-card h3 {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #670010;
+    margin-bottom: 20px;
+}
+
+.pm-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pm-form-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.pm-form-group input {
+    flex: 1;
+}
+
+/* Input / Select / Textarea Styling */
+.pm-form input,
+.pm-form select,
+.pm-form textarea {
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #D9B6A3;
+    background-color: #FFF5E1;
+    color: #670010;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pm-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Feature & Shade Lists */
+.pm-list-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pm-inline-add {
+    display: flex;
+    gap: 10px;
+}
+
+.pm-inline-add input {
+    flex: 1;
+}
+
+.pm-inline-add button {
+    background-color: #670010;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.pm-inline-add button:hover {
+    background-color: #B76E79;
+}
+
+.pm-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.pm-pill {
+    background-color: #FFE3E3;
+    color: #670010;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pm-pill span {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Inline Upload + Buttons */
+.pm-inline-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.pm-image-upload {
+    background: #670010;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-block;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+}
+
+.pm-image-upload:hover {
+    background: #B76E79;
+}
+
+.pm-image-upload input {
+    display: none;
+}
+
+.pm-image-preview {
+    max-height: 100px;
+    border-radius: 8px;
+    margin-left: 12px;
+    object-fit: contain;
+}
+
+.pm-button-group {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.pm-button-group button {
+    padding: 10px 16px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease;
+}
+
+.pm-button-group button[type="submit"],
+.pm-button-group button:not(.pm-cancel-btn) {
+    background-color: #670010;
+    color: #FFF5E1;
+}
+
+.pm-button-group button:hover {
+    background-color: #B76E79;
+}
+
+.pm-cancel-btn {
+    background: transparent;
+    color: #8B3C5D;
+    border: 1.5px solid #8B3C5D;
+}
+
+.pm-cancel-btn:hover {
+    background: #FFE3E3;
+}
+
+/* === Product Layout === */
+.pm-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* Filters Panel */
+.pm-sidebar {
+    flex: 0 0 250px;
+    background: #FFF5E1;
+    padding: 20px;
+}
+
+/* Product Grid */
+.pm-grid {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: flex-start;
+}
+
+.pm-empty {
+    text-align: center;
+    color: #8B3C5D;
+    font-size: 1.1rem;
+    margin-top: 30px;
+}
+
+/* Product Card */
+.pm-card {
+    width: 300px;
+    background-color: #fff;
+    border: 2px solid #D9B6A3;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pm-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.pm-card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.pm-card-body {
+    padding: 16px;
+    flex-grow: 1;
+}
+
+.pm-card-body h4 {
+    font-size: 1.2rem;
+    color: #8B3C5D;
+    margin-bottom: 8px;
+}
+
+.pm-cat {
+    font-size: 0.95rem;
+    color: #A97E7E;
+}
+
+.pm-price {
+    font-weight: bold;
+    color: #B76E79;
+    margin-bottom: 6px;
+}
+
+.pm-old-price {
+    margin-left: 6px;
+    font-size: 0.9rem;
+    text-decoration: line-through;
+    color: #b76e79;
+}
+
+/* Card Actions */
+.pm-card-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid #D9B6A3;
+    background-color: #FFF5E1;
+}
+
+.pm-card-actions button {
+    padding: 8px 14px;
+    border-radius: 6px;
+    background-color: #670010;
+    color: #FFF5E1;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.pm-card-actions button:hover {
+    background-color: #B76E79;
+}
+
+/* === Responsive === */
+@media (max-width: 900px) {
+    .pm-layout {
+        flex-direction: column;
+    }
+
+    .pm-sidebar {
+        width: 100%;
+    }
+
+    .pm-grid {
+        justify-content: center;
+    }
+
+    .pm-inline-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pm-button-group {
+        flex-direction: column;
+        justify-content: stretch;
+    }
+
+    .pm-button-group button {
+        width: 100%;
+    }
+}

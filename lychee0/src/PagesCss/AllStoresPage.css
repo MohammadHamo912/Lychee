@@ -1,0 +1,230 @@
+.stores-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+/* Hero section with search */
+.stores-hero {
+  background-color: #670010;
+  padding: 60px 24px 60px;
+  text-align: center;
+  color: #fff5e1;
+  margin-top: -10px;
+  /* To account for fixed navbar */
+}
+
+.stores-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stores-hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.stores-hero p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.search-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Main content area with sidebar and grid */
+.stores-content {
+  display: flex;
+  max-width: 1200px;
+  margin: 40px;
+  padding: 0 24px;
+  gap: 40px;
+  flex: 1;
+}
+
+.stores-sidebar {
+  flex: 0 0 280px;
+}
+
+.stores-sidebar h2 {
+  color: #670010;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.stores-main {
+  flex: auto;
+}
+
+/* Results header with store count and search info */
+.stores-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.stores-results-header h2 {
+  color: #670010;
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.search-results-info {
+  display: flex;
+  align-items: center;
+  color: #670010;
+  font-size: 1rem;
+}
+
+.search-results-info span {
+  font-weight: bold;
+  margin: 0 8px;
+}
+
+.search-results-info button {
+  background: none;
+  border: none;
+  color: #8b3c5d;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 10px;
+  font-size: 0.9rem;
+}
+
+.search-results-info button:hover {
+  color: #b76e79;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+  color: #670010;
+}
+
+.spinner {
+  border: 4px solid rgba(183, 110, 121, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #670010;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner p {
+  font-size: 1.1rem;
+}
+
+.search-container {
+  background-color: #670010;
+}
+
+/* No results state */
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #fff5e1;
+  border-radius: 12px;
+  color: #670010;
+}
+
+.no-results h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.no-results p {
+  color: #8b3c5d;
+  margin-bottom: 20px;
+}
+
+.reset-search-btn {
+  background-color: #670010;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.reset-search-btn:hover {
+  background-color: #b76e79;
+  transform: translateY(-2px);
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .stores-content {
+    flex-direction: column;
+  }
+
+  .stores-sidebar {
+    flex: 0 0 auto;
+    margin-bottom: 30px;
+  }
+
+  .stores-hero h1 {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .stores-hero {
+    padding: 60px 20px 40px;
+  }
+
+  .stores-hero h1 {
+    font-size: 2rem;
+  }
+
+  .stores-hero p {
+    font-size: 1.1rem;
+  }
+
+  .stores-results-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stores-content {
+    margin: 30px auto;
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stores-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .search-results-info {
+    flex-wrap: wrap;
+  }
+}

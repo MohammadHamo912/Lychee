@@ -1,0 +1,297 @@
+/* === Main Dashboard Container === */
+.dashboard-container {
+  padding: 40px 20px;
+  background: #fff5e1;
+  min-height: 100vh;
+  box-sizing: border-box;
+  color: #670010;
+  display: flex;
+  flex-direction: column;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* === Page Layout Grid === */
+.dashboard-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* === Overview Cards === */
+.overview-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.overview-card {
+  background: #fff;
+  border: 2px solid #d9b6a3;
+  border-radius: 16px;
+  padding: 30px 40px;
+  text-align: center;
+  flex: 1 1 250px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.overview-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  color: #670010;
+}
+
+.overview-card p {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #b76e79;
+}
+
+/* === Profile Editing Section === */
+.profile-section {
+  background: #fff;
+  border: 2px solid #d9b6a3;
+  border-radius: 16px;
+  padding: 30px 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  width: 500px;
+  margin: 0 auto;
+}
+
+.profile-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #670010;
+  text-align: center;
+}
+
+/* === Profile Form Styling === */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.profile-form label {
+  font-weight: 600;
+  color: #670010;
+  font-size: 1rem;
+}
+
+.profile-form input,
+.profile-form textarea {
+  padding: 10px 14px;
+  border: 1px solid #d9b6a3;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fff5e1;
+  color: #4a2c2c;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profile-form input:focus,
+.profile-form textarea:focus {
+  border-color: #b76e79;
+  box-shadow: 0 0 5px rgba(183, 110, 121, 0.3);
+  outline: none;
+}
+
+.profile-form button {
+  padding: 10px 16px;
+  background-color: #670010;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  align-self: flex-end;
+  margin-top: 10px;
+}
+
+.profile-form button:hover {
+  background-color: #732c4a;
+  transform: translateY(-2px);
+}
+
+.save-success-message {
+  color: #3cb371;
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-top: 8px;
+  text-align: right;
+}
+
+/* === Product Section === */
+.details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.dashboard-container .section {
+  background: #fff;
+  border: 2px solid #d9b6a3;
+  border-radius: 16px;
+  padding: 30px 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-container .section h2 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #670010;
+}
+
+/* === Item List Styling === */
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #d9b6a3;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 8px;
+}
+
+.item-list li:hover {
+  background: rgba(183, 110, 121, 0.08);
+}
+
+.item-list li:last-child {
+  border-bottom: none;
+}
+
+.product-name {
+  font-weight: bold;
+  color: #670010;
+}
+
+.product-price {
+  color: #b76e79;
+  font-weight: 500;
+}
+
+.product-stock {
+  color: #670010;
+  font-style: italic;
+}
+
+.low-stock {
+  color: red;
+  font-weight: bold;
+}
+
+.sales-chart-container {
+  background: #fff;
+  border: 2px solid #d9b6a3;
+  border-radius: 16px;
+  padding: 30px 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.sales-chart-container h2 {
+  color: #670010;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* === Sales Chart Section === */
+.sales-chart-container {
+  background: #fff;
+  border: 2px solid #d9b6a3;
+  /* Warm Taupe */
+  border-radius: 16px;
+  padding: 30px 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+}
+
+.sales-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sales-chart-container h2 {
+  color: #670010;
+  /* Deep Berry */
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.timeframe-select {
+  padding: 8px 12px;
+  border: 1px solid #d9b6a3;
+  border-radius: 6px;
+  background-color: #fff5e1;
+  /* Creamy White */
+  color: #670010;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+#saveButton{
+  width: 100%;
+}
+
+.timeframe-select:focus {
+  border-color: #670010;
+  /* Rose Gold */
+  outline: none;
+  box-shadow: 0 0 4px rgba(183, 110, 121, 0.3);
+}
+
+/* === Responsive Layout === */
+@media (max-width: 768px) {
+  .overview-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .details-section {
+    flex-direction: column;
+  }
+
+  .profile-section,
+  .section {
+    padding: 20px;
+  }
+
+  .profile-form button {
+    align-self: center;
+    width: 100%;
+  }
+
+  .sales-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .timeframe-select {
+    width: 100%;
+  }
+}

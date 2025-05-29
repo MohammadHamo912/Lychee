@@ -1,0 +1,148 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+.hero-container {
+  background-image: linear-gradient(rgba(255, 245, 225, 0.5),
+      /* Reduced opacity for a softer effect */
+      rgba(255, 245, 225, 0.7)
+      /* Increased opacity for balance */
+    ),
+    url("./../images/heroSectionBackground.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 20px 0;
+  text-align: center;
+  min-width: 100vw;
+  margin-left: -30px;
+  /* Negate the parent padding */ 
+  padding-bottom: 250px;
+  height: 70vh;
+  margin-top: -10px;
+}
+
+.hero-title {
+  color: #670010;
+  /* Deep Berry color from your palette */
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.hero-description {
+  color: #555;
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 40px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.hero-button-primary {
+  background-color: #670010;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+
+  font-weight: bold;
+  border: 2px solid #670010;
+
+  transition: background-color 0.3s;
+}
+
+.hero-button-primary:hover {
+  background-color: #b76e79;
+  /* Rose Gold from your palette */
+}
+
+.hero-button-secondary {
+  background-color: transparent;
+  color: #670010;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  border: 2px solid #670010;
+  transition: background-color 0.3s;
+}
+
+.hero-button-secondary:hover {
+  background-color: rgba(183, 110, 121, 0.1);
+  color: #b76e79;
+  border-color: #b76e79;
+}
+
+.promo-banner {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.promo-content h3 {
+  color: #8b3c5d;
+  margin-bottom: 10px;
+}
+
+.promo-content p {
+  color: #555;
+  margin: 0;
+}
+
+.promo-button {
+  background-color: #b76e79;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.promo-button:hover {
+  background-color: #8b3c5d;
+}
+
+.hero-section-search-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 70px;
+  /* Space between buttons and search bar */
+  width: 100%;
+  max-width: 600px;
+  /* Adjust based on your design preference */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .promo-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .promo-content {
+    margin-bottom: 15px;
+  }
+}

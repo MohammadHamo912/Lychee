@@ -1,0 +1,129 @@
+.reusable-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInUp 0.5s ease;
+  max-width: 100%;
+  width: 100%;
+  /* Let the grid define sizing */
+  height: fit-content;
+  /* Optional: makes cards consistently tall */
+}
+
+
+.reusable-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.reusable-card-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.reusable-card:hover .reusable-card-image {
+  transform: scale(1.05);
+}
+
+.reusable-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.card-rating {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  font-size: 1rem;
+  color: #d1d1d1;
+}
+
+.card-rating .star.filled {
+  color: #f5b301;
+}
+
+.reusable-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #670010;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reusable-card-subtitle {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reusable-card-description {
+  font-size: 0.95rem;
+  color: #8b3c5d;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.reusable-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  gap: 10px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .reusable-card-image {
+    height: 160px;
+  }
+
+  .reusable-card-title {
+    font-size: 1.1rem;
+  }
+
+  .reusable-card-description {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reusable-card-footer {
+    flex-direction: column;
+  }
+
+  .reusable-card-body {
+    padding: 12px;
+  }
+
+  .reusable-card-title {
+    font-size: 1rem;
+  }
+}

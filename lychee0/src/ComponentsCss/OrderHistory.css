@@ -1,0 +1,62 @@
+.orders-history-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #FFF5E1;
+    /* Creamy White */
+    border: 1px solid #D9B6A3;
+    /* Warm Taupe */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.orders-history-container h2 {
+    text-align: center;
+    color: #670010;
+    /* Deep Berry */
+    margin-bottom: 20px;
+}
+
+.orders-history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.orders-history-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 197, 197, 0.2);
+    border-radius: 8px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.order-id {
+    font-weight: bold;
+    color: #670010;
+}
+
+.order-date,
+.order-total {
+    color: #670010;
+    /* Rose Gold */
+    font-weight: bold;
+}
+
+.order-items-list {
+    list-style: none;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.order-item {
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+    color: #670010;
+}

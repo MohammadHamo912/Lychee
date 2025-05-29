@@ -1,0 +1,250 @@
+/* ItemCard.css */
+/* Specific styling for the item theme that extends ReusableCard */
+
+.item-theme {
+  background: #fff5e1;
+}
+
+.item-theme .reusable-card-subtitle {
+  color: #b76e79;
+}
+
+.item-card-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: #670010;
+}
+
+.item-card-button {
+  background: #670010;
+  border: 2px solid #b76e79;
+  border-radius: 50px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.item-card-button:hover {
+  background: #b76e79;
+  transform: scale(1.1);
+  border-color: #670010;
+}
+
+.cart-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Add these styles to your existing ItemCard.css */
+
+/* Subtitle container styling */
+.item-subtitle-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.item-category {
+  font-style: italic;
+}
+
+.item-stock {
+  font-weight: 500;
+  color: #333;
+}
+
+/* Variant information styling */
+.item-card-variant-info {
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.current-variant {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.variant-label {
+  font-weight: 600;
+  color: #495057;
+  min-width: 50px;
+}
+
+.variant-details {
+  display: flex;
+  gap: 8px;
+}
+
+.variant-size,
+.variant-color {
+  padding: 2px 6px;
+  background-color: #e9ecef;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.variant-size {
+  color: #0056b3;
+}
+
+.variant-color {
+  color: #6f42c1;
+}
+
+.available-variants {
+  border-top: 1px solid #dee2e6;
+  padding-top: 6px;
+}
+
+.variants-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.75rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.variants-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.variant-tag {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border: 1px solid #dee2e6;
+}
+
+.variant-tag.available {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.variant-tag.unavailable {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+  text-decoration: line-through;
+}
+
+.more-variants {
+  font-size: 0.7rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Out of stock styling */
+.item-theme.out-of-stock {
+  opacity: 0.7;
+}
+
+.item-theme.out-of-stock .reusable-card-image {
+  filter: grayscale(50%);
+}
+
+.out-of-stock-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #dc3545;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+}
+
+/* Price container improvements */
+.item-card-price-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.item-card-original-price {
+  text-decoration: line-through;
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+.item-card-price {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #28a745;
+}
+
+.item-card-price.discounted {
+  color: #dc3545;
+}
+
+.item-card-discount {
+  background-color: #dc3545;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Button styling */
+.item-card-button {
+  background-color: #007bff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.item-card-button:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.item-card-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.cart-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+@media (max-width: 480px) {
+  .item-card-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cart-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
