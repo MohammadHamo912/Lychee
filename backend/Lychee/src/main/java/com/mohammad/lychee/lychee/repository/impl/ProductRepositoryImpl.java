@@ -1,4 +1,5 @@
 package com.mohammad.lychee.lychee.repository.impl;
+
 import com.mohammad.lychee.lychee.model.Product;
 import com.mohammad.lychee.lychee.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,15 +35,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         product.setBarcode(rs.getString("barcode"));
         product.setName(rs.getString("name"));
         product.setDescription(rs.getString("description"));
-        product.setCreatedAt(rs.getTimestamp("created_at") != null ?
-                rs.getTimestamp("created_at").toLocalDateTime() : null);
-        product.setUpdatedAt(rs.getTimestamp("updated_at") != null ?
-                rs.getTimestamp("updated_at").toLocalDateTime() : null);
-        product.setDeletedAt(rs.getTimestamp("deleted_at") != null ?
-                rs.getTimestamp("deleted_at").toLocalDateTime() : null);
-        product.setLogo_url(rs.getString("logo_url") != null ?
-                rs.getString("logo_url") : null );
-
+        product.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+        product.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+        product.setDeletedAt(rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null);
+        product.setLogo_url(rs.getString("logo_url"));
         return product;
     };
 
@@ -63,9 +60,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findByName(String name){
+    public Optional<Product> findByName(String name) {
         try {
-            String sql = "SELECT * FROM Product WHERE Product_Name = ? AND deleted_at IS NULL";
+            String sql = "SELECT * FROM Product WHERE name = ? AND deleted_at IS NULL";
             Product product = jdbcTemplate.queryForObject(sql, productRowMapper, name);
             return Optional.ofNullable(product);
         } catch (EmptyResultDataAccessException e) {
@@ -93,37 +90,45 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product save(Product product) {
-        if (product.getProductId() == 0) {
-            return insert(product);
-        } else {
-            return update(product);
-        }
+    public List<Product> findAllById(Iterable<Integer> ids) {
+        if (!ids.iterator().hasNext()) return new ArrayList<>();
+        String placeholders = String.join(",", idsToPlaceholders(ids));
+        String sql = "SELECT * FROM Product WHERE Product_ID IN (" + placeholders + ") AND deleted_at IS NULL";
+        return jdbcTemplate.query(sql, productRowMapper, idsToParams(ids));
     }
 
+    private List<String> idsToPlaceholders(Iterable<Integer> ids) {
+        List<String> placeholders = new ArrayList<>();
+        for (Integer id : ids) {
+            placeholders.add("?");
+        }
+        return placeholders;
+    }
+
+    private Object[] idsToParams(Iterable<Integer> ids) {
+        List<Object> params = new ArrayList<>();
+        for (Integer id : ids) {
+            params.add(id);
+        }
+        return params.toArray();
+    }
+
+    @Override
+    public Product save(Product product) {
+        return product.getProductId() == 0 ? insert(product) : update(product);
+    }
 
     private Product insert(Product product) {
-        String sql = "INSERT INTO Product (barcode, name, description) VALUES (?, ?, ?)";
-
+        String sql = "INSERT INTO Product (barcode, name, description, logo_url, created_at) VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-            if (product.getBarcode() != null) {
-                ps.setString(1, product.getBarcode());
-            } else {
-                ps.setNull(1, java.sql.Types.VARCHAR);
-            }
-
+            ps.setString(1, product.getBarcode());
             ps.setString(2, product.getName());
-
-            if (product.getDescription() != null) {
-                ps.setString(3, product.getDescription());
-            } else {
-                ps.setNull(3, java.sql.Types.VARCHAR);
-            }
-
+            ps.setString(3, product.getDescription());
+            ps.setString(4, product.getLogo_url());
+            ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
             return ps;
         }, keyHolder);
 
@@ -132,18 +137,14 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     private Product update(Product product) {
-        String sql = "UPDATE Product SET barcode = ?, name = ?, description = ?, ,logo_url = ?, "
-                +"updated_at = ? WHERE Product_ID = ?";
-
+        String sql = "UPDATE Product SET barcode = ?, name = ?, description = ?, logo_url = ?, updated_at = ? WHERE Product_ID = ?";
         jdbcTemplate.update(sql,
                 product.getBarcode(),
                 product.getName(),
                 product.getDescription(),
                 product.getLogo_url(),
-
                 Timestamp.valueOf(LocalDateTime.now()),
                 product.getProductId());
-
         return findById(product.getProductId()).orElse(product);
     }
 
@@ -157,5 +158,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void softDelete(Integer id) {
         String sql = "UPDATE Product SET deleted_at = ? WHERE Product_ID = ?";
         jdbcTemplate.update(sql, Timestamp.valueOf(LocalDateTime.now()), id);
+    }
+
+    @Override
+    public boolean existsById(Integer id) {
+        String sql = "SELECT COUNT(*) FROM Product WHERE Product_ID = ? AND deleted_at IS NULL";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
     }
 }

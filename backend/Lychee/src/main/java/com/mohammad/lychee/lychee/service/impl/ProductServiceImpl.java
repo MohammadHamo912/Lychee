@@ -40,6 +40,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Optional<Product> searchProductsByName(String name) {
+        return productRepository.findByName(name);
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(Integer categoryId) {
+        return productRepository.findByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Product> getProductsByIds(List<Integer> ids) {
+        return productRepository.findAllById(ids);
+    }
+
+    @Override
     @Transactional
     public Product createProduct(Product product) {
         return productRepository.save(product);
@@ -48,28 +63,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product updateProduct(Product product) {
-        Optional<Product> existingProduct = productRepository.findById(product.getProductId());
-        if (existingProduct.isEmpty()) {
-            throw new IllegalArgumentException("Product with ID " + product.getProductId() + " does not exist");
+        if (!productRepository.existsById(product.getProductId())) {
+            throw new IllegalArgumentException("Product with ID " + product.getProductId() + " does not exist.");
         }
-
-        productRepository.save(product);
-        return product;
+        return productRepository.save(product);
     }
 
     @Override
     @Transactional
     public void softDeleteProduct(Integer productId) {
         productRepository.softDelete(productId);
-    }
-
-    @Override
-    public Optional<Product> searchProductsByName(String name) {
-        return productRepository.findByName(name);
-    }
-
-    @Override
-    public List<Product> getProductsByCategory(Integer categoryId) {
-        return productRepository.findByCategoryId(categoryId);
     }
 }

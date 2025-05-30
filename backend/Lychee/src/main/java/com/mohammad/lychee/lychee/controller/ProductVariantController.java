@@ -3,17 +3,21 @@ package com.mohammad.lychee.lychee.controller;
 import com.mohammad.lychee.lychee.model.ProductVariant;
 import com.mohammad.lychee.lychee.service.ProductVariantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productvariants")
 public class ProductVariantController {
 
+    private final ProductVariantService productVariantService;
+
     @Autowired
-    private ProductVariantService productVariantService;
+    public ProductVariantController(ProductVariantService productVariantService) {
+        this.productVariantService = productVariantService;
+    }
 
     @GetMapping
     public List<ProductVariant> getAllProductVariants() {
@@ -21,13 +25,20 @@ public class ProductVariantController {
     }
 
     @GetMapping("/{id}")
-    public Optional<ProductVariant> getProductVariantById(@PathVariable Integer id) {
-        return productVariantService.getProductVariantById(id);
+    public ResponseEntity<ProductVariant> getProductVariantById(@PathVariable Integer id) {
+        return productVariantService.getProductVariantById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/product/{productId}")
     public List<ProductVariant> getProductVariantsByProductId(@PathVariable Integer productId) {
         return productVariantService.getProductVariantsByProductId(productId);
+    }
+
+    @GetMapping("/type/{variantType}")
+    public List<ProductVariant> getProductVariantsByType(@PathVariable String variantType) {
+        return productVariantService.getProductVariantsByType(variantType);
     }
 
     @GetMapping("/size/{size}")
@@ -41,17 +52,22 @@ public class ProductVariantController {
     }
 
     @PostMapping
-    public ProductVariant createProductVariant(@RequestBody ProductVariant productVariant) {
-        return productVariantService.createProductVariant(productVariant);
+    public ResponseEntity<ProductVariant> createProductVariant(@RequestBody ProductVariant productVariant) {
+        ProductVariant created = productVariantService.createProductVariant(productVariant);
+        return ResponseEntity.ok(created);
     }
 
-    @PutMapping
-    public ProductVariant updateProductVariant(@RequestBody ProductVariant productVariant) {
-        return productVariantService.updateProductVariant(productVariant);
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductVariant> updateProductVariant(@PathVariable Integer id,
+                                                               @RequestBody ProductVariant productVariant) {
+        productVariant.setProductVariantId(id); // ✅ Corrected method call
+        ProductVariant updated = productVariantService.updateProductVariant(productVariant);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public void softDeleteProductVariant(@PathVariable Integer id) {
+    public ResponseEntity<Void> softDeleteProductVariant(@PathVariable Integer id) {
         productVariantService.softDeleteProductVariant(id);
+        return ResponseEntity.noContent().build();
     }
 }

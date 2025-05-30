@@ -7,16 +7,15 @@ public class Product {
     private String barcode;
     private String name;
     private String description;
+    private String logo_url;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    private String logo_url;
-
     public Product() {}
 
     public Product(int productId, String barcode, String name, String description,
-                   LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,String logo_url) {
+                   LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, String logo_url) {
         this.productId = productId;
         this.barcode = barcode;
         this.name = name;
@@ -26,8 +25,6 @@ public class Product {
         this.deletedAt = deletedAt;
         this.logo_url = logo_url;
     }
-
-    // Getters and setters
 
     public int getProductId() {
         return productId;
@@ -61,6 +58,14 @@ public class Product {
         this.description = description;
     }
 
+    public String getLogo_url() {
+        return logo_url;
+    }
+
+    public void setLogo_url(String logo_url) {
+        this.logo_url = logo_url;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -84,12 +89,4 @@ public class Product {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
-    public String getLogo_url() {
-        return logo_url;
-    }
-
-    public void setLogo_url(String logo_url) {
-        this.logo_url = logo_url;
-    }
-
 }

@@ -12,4 +12,6 @@ public interface OrderRepository {
     void update(Order order);
     void softDelete(Integer orderId);
     List<Order> findByStatus(String status);
+    Optional<Double> getTotalSpendingByUserId(Integer userId);
+    List<Order> searchOrders(String role, String query, String status, String startDate, String endDate);
 }

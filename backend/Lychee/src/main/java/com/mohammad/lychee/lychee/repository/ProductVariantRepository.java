@@ -13,4 +13,6 @@ public interface ProductVariantRepository {
     ProductVariant save(ProductVariant productVariant);
     void delete(Integer id);
     void softDelete(Integer id);
+    List<ProductVariant> findByVariantType(String variantType);
+    boolean existsById(Integer id);
 }

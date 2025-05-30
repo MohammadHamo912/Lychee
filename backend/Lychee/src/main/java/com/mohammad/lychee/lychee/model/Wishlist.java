@@ -15,29 +15,12 @@ public class Wishlist {
         this.addedAt = addedAt;
     }
 
-    // Getters and setters 👇
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
 
-    public int getUserId() {
-        return userId;
-    }
+    public int getProductVariantId() { return productVariantId; }
+    public void setProductVariantId(int productVariantId) { this.productVariantId = productVariantId; }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getProductVariantId() {
-        return productVariantId;
-    }
-
-    public void setProductVariantId(int productVariantId) {
-        this.productVariantId = productVariantId;
-    }
-
-    public LocalDateTime getAddedAt() {
-        return addedAt;
-    }
-
-    public void setAddedAt(LocalDateTime addedAt) {
-        this.addedAt = addedAt;
-    }
+    public LocalDateTime getAddedAt() { return addedAt; }
+    public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
 }

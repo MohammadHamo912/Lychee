@@ -13,4 +13,5 @@ public interface ProductService {
     void softDeleteProduct(Integer productId);
     Optional<Product> searchProductsByName(String name);
     List<Product> getProductsByCategory(Integer categoryId);
+    List<Product> getProductsByIds(List<Integer> ids);
 }

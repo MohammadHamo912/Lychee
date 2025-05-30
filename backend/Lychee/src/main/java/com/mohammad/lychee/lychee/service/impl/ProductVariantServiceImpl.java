@@ -12,9 +12,8 @@ import java.util.Optional;
 
 @Service
 public class ProductVariantServiceImpl implements ProductVariantService {
-
-    private final ProductVariantRepository productVariantRepository;
-
+    @Autowired
+    private ProductVariantRepository productVariantRepository;
     @Autowired
     public ProductVariantServiceImpl(ProductVariantRepository productVariantRepository) {
         this.productVariantRepository = productVariantRepository;
@@ -65,5 +64,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Transactional
     public void softDeleteProductVariant(Integer productVariantId) {
         productVariantRepository.softDelete(productVariantId);
+    }
+
+    @Override
+    public List<ProductVariant> getProductVariantsByType(String variantType) {
+        return productVariantRepository.findByVariantType(variantType);
     }
 }

@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -131,4 +132,63 @@ public class OrderRepositoryImpl implements OrderRepository {
         String sql = "SELECT * FROM `Order` WHERE status = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderRowMapper, status);
     }
+    @Override
+    public Optional<Double> getTotalSpendingByUserId(Integer userId) {
+        String sql = "SELECT COALESCE(SUM(total_price), 0.0) FROM `Order` WHERE user_ID = ? AND deleted_at IS NULL";
+        try {
+            Double total = jdbcTemplate.queryForObject(sql, Double.class, userId);
+            return Optional.of(total);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.of(0.0); // Fallback if query fails
+        }
+    }
+    @Override
+    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT o.*, u.full_name AS customerName, s.store_name AS storeName " +
+                        "FROM `Order` o " +
+                        "JOIN `User` u ON o.user_id = u.user_id " +
+                        "JOIN `Store` s ON o.store_id = s.store_id " +
+                        "WHERE o.deleted_at IS NULL "
+        );
+
+        // Parameters
+        List<Object> params = new ArrayList<>();
+
+        if (status != null && !status.isEmpty()) {
+            sql.append("AND o.status = ? ");
+            params.add(status);
+        }
+
+        if (query != null && !query.isEmpty()) {
+            query = "%" + query.toLowerCase() + "%";
+            if ("admin".equals(role)) {
+                sql.append("AND (LOWER(u.full_name) LIKE ? OR LOWER(s.store_name) LIKE ?) ");
+                params.add(query);
+                params.add(query);
+            } else if ("storeowner".equals(role)) {
+                sql.append("AND LOWER(u.full_name) LIKE ? ");
+                params.add(query);
+            } else if ("customer".equals(role)) {
+                sql.append("AND LOWER(s.store_name) LIKE ? ");
+                params.add(query);
+            }
+        }
+
+        if (startDate != null && !startDate.isEmpty()) {
+            sql.append("AND DATE(o.created_at) >= ? ");
+            params.add(startDate);
+        }
+
+        if (endDate != null && !endDate.isEmpty()) {
+            sql.append("AND DATE(o.created_at) <= ? ");
+            params.add(endDate);
+        }
+
+        sql.append("ORDER BY o.created_at DESC");
+
+        return jdbcTemplate.query(sql.toString(), orderRowMapper, params.toArray());
+    }
+
 }

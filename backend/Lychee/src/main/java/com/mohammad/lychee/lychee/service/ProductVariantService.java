@@ -13,4 +13,5 @@ public interface ProductVariantService {
     ProductVariant createProductVariant(ProductVariant productVariant);
     ProductVariant updateProductVariant(ProductVariant productVariant);
     void softDeleteProductVariant(Integer productVariantId);
+    List<ProductVariant> getProductVariantsByType(String variantType);
 }

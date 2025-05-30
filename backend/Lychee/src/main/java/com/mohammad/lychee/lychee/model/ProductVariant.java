@@ -3,43 +3,41 @@ package com.mohammad.lychee.lychee.model;
 import java.time.LocalDateTime;
 
 public class ProductVariant {
-    private int productVariantId;
-    private int productId;
+    private Integer productVariantId;
+    private Integer productId;
+    private String variantType;
     private String size;
     private String color;
+    private Integer quantity;
+    private Double price;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
     public ProductVariant() {}
 
-    public ProductVariant(int productVariantId, int productId, String size, String color,
-                          LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.productVariantId = productVariantId;
-        this.productId = productId;
-        this.size = size;
-        this.color = color;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
-    }
-
-    // Getters and setters
-
-    public int getProductVariantId() {
+    public Integer getProductVariantId() {
         return productVariantId;
     }
 
-    public void setProductVariantId(int productVariantId) {
+    public void setProductVariantId(Integer productVariantId) {
         this.productVariantId = productVariantId;
     }
 
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public String getVariantType() {
+        return variantType;
+    }
+
+    public void setVariantType(String variantType) {
+        this.variantType = variantType;
     }
 
     public String getSize() {
@@ -56,6 +54,22 @@ public class ProductVariant {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public LocalDateTime getCreatedAt() {

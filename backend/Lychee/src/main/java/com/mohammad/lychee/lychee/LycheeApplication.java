@@ -8,7 +8,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class LycheeApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(LycheeApplication.class, args);
     }
 
