@@ -40,8 +40,6 @@
   height: 22px;
 }
 
-<<<<<<< HEAD
-=======
 /* Add these styles to your existing ItemCard.css */
 
 /* Subtitle container styling */
@@ -239,7 +237,6 @@
   filter: brightness(0) invert(1);
 }
 
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 @media (max-width: 480px) {
   .item-card-button {
     width: 40px;

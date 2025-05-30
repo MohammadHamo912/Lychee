@@ -1,86 +1,255 @@
-import { useState, useEffect } from "react";
-import NavBar from "./../components/NavBar.jsx";
-import Sidebar from "./../components/Sidebar";
-import ProductGrid from "./../components/ProductGrid";
-import Footer from "./../components/Footer";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import NavBar from "../components/NavBar";
+import SearchBar from "../components/SearchBar";
+import ProductFiltersPanel from "../components/ProductFiltersPanel";
+import Footer from "../components/Footer";
+import ProductGrid from "../components/ProductGrid";
+import { getAllProducts } from "../api/products";
 import "../PagesCss/ProductListingPage.css";
-import { getAllProducts } from "../api/products"; // Adjust path if needed
 
 const ProductListingPage = () => {
-  const [allProducts, setAllProducts] = useState([]);
+  const [searchParams] = useSearchParams();
+  const initialQuery = searchParams.get("query") || "";
+
   const [products, setProducts] = useState([]);
-  const [filters, setFilters] = useState({
-    category: "all",
-    priceRange: [0, 1000],
-    inStock: false,
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(initialQuery);
+  const [activeFilters, setActiveFilters] = useState({
+    brand: "All",
+    category: "All",
+    features: "All",
+    sortOption: "none",
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch data from API on component mount
+  const productBrands = [
+    "Fenty Beauty",
+    "Rare Beauty",
+    "Glossier",
+    "The Ordinary",
+    "Cetaphil",
+    "Neutrogena",
+    "L'Oréal",
+    "Maybelline",
+  ];
+
+  const productCategories = [
+    "Foundation",
+    "Lipstick",
+    "Mascara",
+    "Skincare",
+    "Cleanser",
+    "Moisturizer",
+    "Serum",
+    "Sunscreen",
+  ];
+
+  const productFeatures = [
+    "Vegan",
+    "Cruelty-Free",
+    "Organic",
+    "Paraben-Free",
+    "Fragrance-Free",
+    "Hypoallergenic",
+    "Waterproof",
+    "Long-Lasting",
+  ];
+
+  // Fetch products from API on component mount
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAllProducts();
-
-      // Ensure compatibility with your filter logic
-      const formattedData = data.map((product) => ({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        category: product.category?.name || "unknown", // depends on backend shape
-        image: product.imageUrl || "", // fallback if image is optional
-        inStock: product.quantity > 0, // assuming quantity determines stock
-      }));
-
-      setAllProducts(formattedData);
-      setProducts(formattedData);
-    };
-
-    fetchData();
+    fetchProducts();
   }, []);
 
-  const handleFilterChange = (newFilters) => {
-    const updatedFilters = { ...filters, ...newFilters };
-    setFilters(updatedFilters);
+  // Apply filters when products data or initial query changes
+  useEffect(() => {
+    if (products.length > 0) {
+      applyFiltersAndSearch(initialQuery, activeFilters);
+    }
+  }, [initialQuery, products]);
 
-    const filtered = allProducts.filter((product) => {
-      if (
-        updatedFilters.category !== "all" &&
-        product.category !== updatedFilters.category
-      ) {
-        return false;
-      }
+  const fetchProducts = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await getAllProducts();
+      setProducts(data);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setError("Failed to load products. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      if (
-        product.price < updatedFilters.priceRange[0] ||
-        product.price > updatedFilters.priceRange[1]
-      ) {
-        return false;
-      }
+  const handleRetry = () => {
+    fetchProducts();
+  };
 
-      if (updatedFilters.inStock && !product.inStock) {
-        return false;
-      }
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    applyFiltersAndSearch(term, activeFilters);
+  };
 
-      return true;
-    });
+  const handleApplyFilters = (filters) => {
+    setActiveFilters(filters);
+    applyFiltersAndSearch(searchTerm, filters);
+  };
 
-    setProducts(filtered);
+  const applyFiltersAndSearch = (search = "", filters = {}) => {
+    const { brand, category, features, sortOption } = filters;
+
+    let result = [...products];
+
+    // Brand filtering
+    if (brand && brand !== "All") {
+      result = result.filter(
+        (product) => product.brand?.toLowerCase() === brand.toLowerCase()
+      );
+    }
+
+    // Category filtering
+    if (category && category !== "All") {
+      result = result.filter(
+        (product) => product.category?.toLowerCase() === category.toLowerCase()
+      );
+    }
+
+    // Features filtering
+    if (features && features !== "All") {
+      result = result.filter((product) =>
+        product.features?.some(
+          (feature) => feature.toLowerCase() === features.toLowerCase()
+        )
+      );
+    }
+
+    // Search filtering
+    if (search.trim()) {
+      const lowerSearch = search.toLowerCase();
+      result = result.filter(
+        (product) =>
+          product.name?.toLowerCase().includes(lowerSearch) ||
+          product.description?.toLowerCase().includes(lowerSearch) ||
+          product.brand?.toLowerCase().includes(lowerSearch) ||
+          product.category?.toLowerCase().includes(lowerSearch) ||
+          product.features?.some((feature) =>
+            feature.toLowerCase().includes(lowerSearch)
+          )
+      );
+    }
+
+    // Sorting
+    switch (sortOption) {
+      case "nameAZ":
+        result.sort((a, b) =>
+          a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
+        );
+        break;
+      case "nameZA":
+        result.sort((a, b) =>
+          b.name?.toLowerCase().localeCompare(a.name?.toLowerCase())
+        );
+        break;
+      case "priceLowHigh":
+        result.sort((a, b) => (a.price || 0) - (b.price || 0));
+        break;
+      case "priceHighLow":
+        result.sort((a, b) => (b.price || 0) - (a.price || 0));
+        break;
+      case "mostReviewed":
+        result.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+        break;
+      case "leastReviewed":
+        result.sort((a, b) => (a.reviewCount || 0) - (b.reviewCount || 0));
+        break;
+      default:
+        break;
+    }
+
+    setFilteredProducts(result);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    applyFiltersAndSearch("", activeFilters);
   };
 
   return (
-    <div className="plp-container">
+    <div className="products-page">
       <NavBar />
 
-      <div className="plp-content-wrapper">
-        <aside className="plp-sidebar">
-          <Sidebar filters={filters} onFilterChange={handleFilterChange} />
-        </aside>
-
-        <main className="plp-main-content">
-          <h1>All Products</h1>
-          <div className="plp-products-grid">
-            <ProductGrid products={products} />
+      <div className="products-hero">
+        <div className="products-hero-content">
+          <h1>Discover Beauty Products</h1>
+          <p>
+            Find your perfect beauty products from top brands and discover new
+            favorites
+          </p>
+          <div className="search-container">
+            <SearchBar searchType="products" onSearch={handleSearch} />
           </div>
-        </main>
+        </div>
+      </div>
+
+      <div className="products-content">
+        <div className="products-sidebar">
+          <h2>Filter Products</h2>
+          <ProductFiltersPanel
+            onApplyFilters={handleApplyFilters}
+            brands={productBrands}
+            categories={productCategories}
+            features={productFeatures}
+          />
+        </div>
+
+        <div className="products-main">
+          <div className="products-results-header">
+            <h2>
+              All Products{" "}
+              {filteredProducts.length > 0 && `(${filteredProducts.length})`}
+            </h2>
+            {searchTerm && (
+              <div className="search-results-info">
+                Showing results for: <span>"{searchTerm}"</span>
+                <button onClick={handleClearSearch}>Clear Search</button>
+              </div>
+            )}
+          </div>
+
+          {error ? (
+            <div className="error-message">
+              <h3>Error Loading Products</h3>
+              <p>{error}</p>
+              <button onClick={handleRetry} className="retry-btn">
+                Try Again
+              </button>
+            </div>
+          ) : isLoading ? (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Loading products...</p>
+            </div>
+          ) : filteredProducts.length > 0 ? (
+            <ProductGrid
+              products={filteredProducts}
+              title=""
+              header=""
+              className="all-products-page"
+              isLoading={false}
+              error={null}
+            />
+          ) : (
+            <div className="no-results">
+              <h3>No products found</h3>
+              <p>Try adjusting your filters or search term</p>
+              <button onClick={handleClearSearch} className="reset-search-btn">
+                Reset Search
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <Footer />

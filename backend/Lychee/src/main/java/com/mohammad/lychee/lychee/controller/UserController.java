@@ -1,6 +1,7 @@
 package com.mohammad.lychee.lychee.controller;
 
 import com.mohammad.lychee.lychee.model.User;
+import com.mohammad.lychee.lychee.repository.OrderRepository;
 import com.mohammad.lychee.lychee.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -13,14 +14,22 @@ import java.util.*;
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final OrderRepository orderRepository;
 
+    @Autowired
+    public UserController(UserService userService, OrderRepository orderRepository) {
+        this.userService = userService;
+        this.orderRepository = orderRepository;
+    }
+
+    // Get all users
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
+    // Get user by ID
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
         return userService.getUserById(userId)
@@ -28,6 +37,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Sign up
     @PostMapping("/signup")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
@@ -41,6 +51,7 @@ public class UserController {
         }
     }
 
+    // Login
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
@@ -55,11 +66,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Optional<User> user = userService.getUserByEmail(email);
-        return user.map(ResponseEntity::ok)
+        return userService.getUserByEmail(email)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
+    // Update user
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestBody User user) {
         try {
@@ -73,6 +85,7 @@ public class UserController {
         }
     }
 
+    // Soft delete user
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> softDeleteUser(@PathVariable Integer userId) {
         try {
@@ -82,4 +95,12 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Get total spending
+    @GetMapping("/{userId}/total-spending")
+    public ResponseEntity<Double> getTotalSpending(@PathVariable Integer userId) {
+        Optional<Double> total = orderRepository.getTotalSpendingByUserId(userId);
+        return ResponseEntity.ok(total.orElse(0.0));
+    }
+
 }

@@ -1,40 +1,31 @@
-<<<<<<< HEAD
-=======
-.env
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
-HELP.md
+# Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-STS,
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-IntelliJ IDEA,
-.idea
-*.iws
+# IDEs
+.idea/
 *.iml
 *.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+.sts4-cache
 
-<<<<<<< HEAD
-=======
-
-NetBeans,
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
+
+# Build
 build/
 !/src/main//build/
 !/src/test//build/
 
-VS Code,
-.vscode/
+# Environment
+.env

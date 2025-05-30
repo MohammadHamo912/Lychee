@@ -22,50 +22,45 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     }
 
     private final RowMapper<Wishlist> rowMapper = (rs, rowNum) -> {
-        Wishlist wi = new Wishlist();
-        wi.setUserId(rs.getInt("User_ID"));
-        wi.setProductVariantId(rs.getInt("Product_Variant_ID"));
-        return wi;
+        Wishlist wishlist = new Wishlist();
+        wishlist.setUserId(rs.getInt("User_ID"));
+        wishlist.setProductVariantId(rs.getInt("Product_Variant_ID"));
+        return wishlist;
     };
 
     @Override
     public List<Wishlist> findAll() {
-        String sql = "SELECT * FROM Wishlist_Table";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query("SELECT * FROM Wishlist_Table", rowMapper);
     }
 
     @Override
     public List<Wishlist> findByUserId(Integer userId) {
-        String sql = "SELECT * FROM Wishlist_Table WHERE User_ID = ?";
-        return jdbcTemplate.query(sql, rowMapper, userId);
+        return jdbcTemplate.query("SELECT * FROM Wishlist_Table WHERE User_ID = ?", rowMapper, userId);
     }
 
     @Override
     public void addWishlistItem(Integer userId, Integer productVariantId) {
-        String sql = "INSERT INTO Wishlist_Table (User_ID, Product_Variant_ID) VALUES (?, ?)";
-        jdbcTemplate.update(sql, userId, productVariantId);
+        jdbcTemplate.update("INSERT INTO Wishlist_Table (User_ID, Product_Variant_ID) VALUES (?, ?)", userId, productVariantId);
     }
 
     @Override
     public void removeWishlistItem(Integer userId, Integer productVariantId) {
-        String sql = "DELETE FROM Wishlist_Table WHERE User_ID = ? AND Product_Variant_ID = ?";
-        jdbcTemplate.update(sql, userId, productVariantId);
+        jdbcTemplate.update("DELETE FROM Wishlist_Table WHERE User_ID = ? AND Product_Variant_ID = ?", userId, productVariantId);
     }
 
     @Override
     public Optional<Wishlist> findByUserIdAndProductVariantId(Integer userId, Integer productVariantId) {
         try {
-            String sql = "SELECT * FROM Wishlist_Table WHERE User_ID = ? AND Product_Variant_ID = ?";
-            Wishlist item = jdbcTemplate.queryForObject(sql, rowMapper, userId, productVariantId);
-            return Optional.ofNullable(item);
+            Wishlist wishlist = jdbcTemplate.queryForObject("SELECT * FROM Wishlist_Table WHERE User_ID = ? AND Product_Variant_ID = ?",
+                    rowMapper, userId, productVariantId);
+            return Optional.ofNullable(wishlist);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
+
     @Override
     public void deleteAllByUserId(Integer userId) {
-        String sql = "DELETE FROM Wishlist_Table WHERE User_ID = ?";
-        jdbcTemplate.update(sql, userId);
+        jdbcTemplate.update("DELETE FROM Wishlist_Table WHERE User_ID = ?", userId);
     }
-
 }

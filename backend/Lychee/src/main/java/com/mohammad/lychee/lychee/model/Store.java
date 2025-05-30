@@ -28,11 +28,7 @@ public class Store {
         this.logo_url = logo_url;
     }
 
-<<<<<<< HEAD
-    // Getters and setters 👇
-=======
     // Getters and setters
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 
     public int getStoreId() {
         return storeId;

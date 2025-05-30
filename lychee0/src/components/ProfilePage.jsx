@@ -1,23 +1,42 @@
 import React, { useState, useEffect } from "react";
 import "../ComponentsCss/ProfilePage.css";
-import { useUser } from "../context/UserContext";
-import axios from "axios";
+import { getTotalSpendingByUserId, updateUser } from "../api/users";
 
 const ProfilePage = () => {
-  const { user, logout } = useUser();
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem("user");
+    return stored ? JSON.parse(stored) : null;
+  });
+
   const [userData, setUserData] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [totalSpending, setTotalSpending] = useState(null);
 
   useEffect(() => {
-    // Load user data on mount
-    setUserData({
+    if (!user) return;
+
+    const profile = {
       firstName: user?.name?.split(" ")[0] || "",
       lastName: user?.name?.split(" ")[1] || "",
       email: user?.email || "",
       phone: user?.phone || "",
       dob: user?.dob || "",
       password: "",
-    });
+    };
+
+    setUserData(profile);
+
+    const fetchSpending = async () => {
+      try {
+        const total = await getTotalSpendingByUserId(user.userId);
+        setTotalSpending(total);
+      } catch (err) {
+        console.error("Failed to fetch total spending", err);
+        setTotalSpending(0.0);
+      }
+    };
+
+    fetchSpending();
   }, [user]);
 
   const handleChange = (e) => {
@@ -34,14 +53,10 @@ const ProfilePage = () => {
         passwordHash: userData.password || user.passwordHash,
       };
 
-      const res = await axios.put(
-        `http://localhost:8081/api/users/${user.userId}`,
-        updatedUser
-      );
-
+      const res = await updateUser(user.userId, updatedUser);
       alert("Profile updated!");
-      localStorage.setItem("user", JSON.stringify(res.data));
-      window.location.reload(); // or update context if preferred
+      localStorage.setItem("user", JSON.stringify(res));
+      window.location.reload();
     } catch (err) {
       console.error("Update failed", err);
       alert("Failed to update profile.");
@@ -50,20 +65,11 @@ const ProfilePage = () => {
     setEditing(false);
   };
 
-  if (!userData) return <p>Loading...</p>;
-
-  const dummyOrders = [
-    { id: 1, date: "2024-03-01", total: 49.99 },
-    { id: 2, date: "2024-02-15", total: 79.5 },
-    { id: 3, date: "2024-01-20", total: 22.0 },
-  ];
-
-  const totalSpending = dummyOrders.reduce((sum, order) => sum + order.total, 0);
-  const totalPoints = Math.floor(totalSpending);
+  if (!user) return <p>Please log in to view your profile.</p>;
+  if (!userData) return <p>Loading profile...</p>;
 
   return (
     <div className="profile-page-layout">
-      {/* LEFT - Editable Profile Info */}
       <div className="profile-box">
         <h1>My Profile</h1>
 
@@ -137,16 +143,15 @@ const ProfilePage = () => {
         </button>
       </div>
 
-      {/* RIGHT - Spending Summary */}
       <div className="profile-extra-box">
         <div className="spending-box">
           <h2>Total Spending</h2>
-          <p>${totalSpending.toFixed(2)}</p>
+          <p>{totalSpending !== null ? `$${totalSpending.toFixed(2)}` : "Loading..."}</p>
         </div>
 
         <div className="spending-box">
           <h2>Total Points</h2>
-          <p>{totalPoints} pts</p>
+          <p>Coming Soon</p>
         </div>
       </div>
     </div>

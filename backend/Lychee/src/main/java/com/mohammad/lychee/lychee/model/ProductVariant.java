@@ -3,64 +3,35 @@ package com.mohammad.lychee.lychee.model;
 import java.time.LocalDateTime;
 
 public class ProductVariant {
-    private int productVariantId;
-    private int productId;
-<<<<<<< HEAD
+    private Integer productVariantId;
+    private Integer productId;
     private String variantType;
-    private String variantValue;
-=======
     private String size;
     private String color;
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
+    private Integer quantity;
+    private Double price;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
     public ProductVariant() {}
 
-<<<<<<< HEAD
-    public ProductVariant(int productVariantId, int productId, String variantType, String variantValue,
-                          LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.productVariantId = productVariantId;
-        this.productId = productId;
-        this.variantType = variantType;
-        this.variantValue = variantValue;
-=======
-    public ProductVariant(int productVariantId, int productId, String size, String color,
-                          LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.productVariantId = productVariantId;
-        this.productId = productId;
-        this.size = size;
-        this.color = color;
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
-    }
-
-<<<<<<< HEAD
-    // Getters and setters 👇
-=======
-    // Getters and setters
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
-
-    public int getProductVariantId() {
+    public Integer getProductVariantId() {
         return productVariantId;
     }
 
-    public void setProductVariantId(int productVariantId) {
+    public void setProductVariantId(Integer productVariantId) {
         this.productVariantId = productVariantId;
     }
 
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
-<<<<<<< HEAD
     public String getVariantType() {
         return variantType;
     }
@@ -69,13 +40,6 @@ public class ProductVariant {
         this.variantType = variantType;
     }
 
-    public String getVariantValue() {
-        return variantValue;
-    }
-
-    public void setVariantValue(String variantValue) {
-        this.variantValue = variantValue;
-=======
     public String getSize() {
         return size;
     }
@@ -90,7 +54,22 @@ public class ProductVariant {
 
     public void setColor(String color) {
         this.color = color;
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -26,8 +26,6 @@ public class Product {
         this.logo_url = logo_url;
     }
 
-    // Getters and Setters
-
     public int getProductId() {
         return productId;
     }
@@ -60,6 +58,14 @@ public class Product {
         this.description = description;
     }
 
+    public String getLogo_url() {
+        return logo_url;
+    }
+
+    public void setLogo_url(String logo_url) {
+        this.logo_url = logo_url;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -82,13 +88,5 @@ public class Product {
 
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
-    }
-
-    public String getLogo_url() {
-        return logo_url;
-    }
-
-    public void setLogo_url(String logo_url) {
-        this.logo_url = logo_url;
     }
 }
