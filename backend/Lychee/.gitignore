@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+.env
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -19,6 +23,10 @@ target/
 *.iml
 *.ipr
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

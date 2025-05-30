@@ -15,6 +15,10 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
@@ -54,6 +58,10 @@ public class ProductController {
     public void softDeleteProduct(@PathVariable Integer id) {
         productService.softDeleteProduct(id);
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 }
 /*
 

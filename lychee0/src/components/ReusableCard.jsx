@@ -26,6 +26,16 @@ const ReusableCard = ({
           src={image}
           alt={imageAlt || title}
           className="reusable-card-image"
+<<<<<<< HEAD
+=======
+          onError={(e) => {
+            console.error("Image failed to load:", e.target.src);
+            e.target.style.display = "none"; // Hide broken image
+          }}
+          onLoad={() => {
+            console.log("Image loaded successfully:", image);
+          }}
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
         />
       )}
 

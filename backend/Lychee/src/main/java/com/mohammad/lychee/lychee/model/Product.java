@@ -11,10 +11,19 @@ public class Product {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
+<<<<<<< HEAD
     public Product() {}
 
     public Product(int productId, String barcode, String name, String description,
                    LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+=======
+    private String logo_url;
+
+    public Product() {}
+
+    public Product(int productId, String barcode, String name, String description,
+                   LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,String logo_url) {
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
         this.productId = productId;
         this.barcode = barcode;
         this.name = name;
@@ -22,9 +31,16 @@ public class Product {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
+<<<<<<< HEAD
     }
 
     // Getters and setters 👇
+=======
+        this.logo_url = logo_url;
+    }
+
+    // Getters and setters
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 
     public int getProductId() {
         return productId;
@@ -81,4 +97,15 @@ public class Product {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+<<<<<<< HEAD
+=======
+    public String getLogo_url() {
+        return logo_url;
+    }
+
+    public void setLogo_url(String logo_url) {
+        this.logo_url = logo_url;
+    }
+
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 }

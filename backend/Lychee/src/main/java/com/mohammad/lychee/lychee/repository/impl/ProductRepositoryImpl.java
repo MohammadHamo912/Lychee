@@ -39,6 +39,12 @@ public class ProductRepositoryImpl implements ProductRepository {
                 rs.getTimestamp("updated_at").toLocalDateTime() : null);
         product.setDeletedAt(rs.getTimestamp("deleted_at") != null ?
                 rs.getTimestamp("deleted_at").toLocalDateTime() : null);
+<<<<<<< HEAD
+=======
+        product.setLogo_url(rs.getString("logo_url") != null ?
+                rs.getString("logo_url") : null );
+
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
         return product;
     };
 
@@ -129,13 +135,23 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     private Product update(Product product) {
+<<<<<<< HEAD
         String sql = "UPDATE Product SET barcode = ?, name = ?, description = ?, updated_at = ? " +
                 "WHERE Product_ID = ?";
+=======
+        String sql = "UPDATE Product SET barcode = ?, name = ?, description = ?, ,logo_url = ?, "
+                +"updated_at = ? WHERE Product_ID = ?";
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 
         jdbcTemplate.update(sql,
                 product.getBarcode(),
                 product.getName(),
                 product.getDescription(),
+<<<<<<< HEAD
+=======
+                product.getLogo_url(),
+
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
                 Timestamp.valueOf(LocalDateTime.now()),
                 product.getProductId());
 

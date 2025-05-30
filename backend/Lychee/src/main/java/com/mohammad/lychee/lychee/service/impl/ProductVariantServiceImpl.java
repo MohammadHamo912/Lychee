@@ -36,6 +36,19 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
+<<<<<<< HEAD
+=======
+    public List<ProductVariant> getProductVariantsBySize(String size) {
+        return productVariantRepository.findBySize(size);
+    }
+
+    @Override
+    public List<ProductVariant> getProductVariantsByColor(String color) {
+        return productVariantRepository.findByColor(color);
+    }
+
+    @Override
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     @Transactional
     public ProductVariant createProductVariant(ProductVariant productVariant) {
         return productVariantRepository.save(productVariant);
@@ -48,9 +61,13 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         if (existingVariant.isEmpty()) {
             throw new IllegalArgumentException("Product variant with ID " + productVariant.getProductVariantId() + " does not exist");
         }
+<<<<<<< HEAD
 
         productVariantRepository.save(productVariant);
         return productVariant;
+=======
+        return productVariantRepository.save(productVariant);
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     }
 
     @Override
@@ -58,9 +75,12 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     public void softDeleteProductVariant(Integer productVariantId) {
         productVariantRepository.softDelete(productVariantId);
     }
+<<<<<<< HEAD
 
     @Override
     public List<ProductVariant> getProductVariantsByType(String variantType) {
         return productVariantRepository.findByVariantType(variantType);
     }
+=======
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 }

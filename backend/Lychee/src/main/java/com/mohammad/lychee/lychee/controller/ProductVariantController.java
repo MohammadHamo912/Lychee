@@ -30,9 +30,20 @@ public class ProductVariantController {
         return productVariantService.getProductVariantsByProductId(productId);
     }
 
+<<<<<<< HEAD
     @GetMapping("/type/{variantType}")
     public List<ProductVariant> getProductVariantsByType(@PathVariable String variantType) {
         return productVariantService.getProductVariantsByType(variantType);
+=======
+    @GetMapping("/size/{size}")
+    public List<ProductVariant> getProductVariantsBySize(@PathVariable String size) {
+        return productVariantService.getProductVariantsBySize(size);
+    }
+
+    @GetMapping("/color/{color}")
+    public List<ProductVariant> getProductVariantsByColor(@PathVariable String color) {
+        return productVariantService.getProductVariantsByColor(color);
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     }
 
     @PostMapping

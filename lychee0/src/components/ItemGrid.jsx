@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import ReusableGrid from "../components/ReusableGrid";
 import ItemCard from "../components/ItemCard";
+<<<<<<< HEAD
 import { getAllItems } from "../api/items"; // Import the service from your items.js file
+=======
+import { getAllItems } from "../api/items"; // Import the updated service
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 
 const ItemGrid = ({
   limit,
@@ -18,7 +22,11 @@ const ItemGrid = ({
     const fetchItems = async () => {
       try {
         setLoading(true);
+<<<<<<< HEAD
         // Fetch items from API
+=======
+        // Fetch enriched items from API (now includes product data and variants)
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
         let fetchedItems = await getAllItems();
 
         // Apply filters if provided
@@ -47,6 +55,13 @@ const ItemGrid = ({
   const handleAddToCart = (item) => {
     // This will be implemented later with actual cart functionality
     console.log("Add to cart:", item);
+<<<<<<< HEAD
+=======
+    // You can access all the enriched data here:
+    console.log("Product name:", item.name);
+    console.log("Current variant:", item.currentVariant);
+    console.log("Available variants:", item.availableVariants);
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   };
 
   if (loading) {

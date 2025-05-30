@@ -5,26 +5,44 @@ import java.time.LocalDateTime;
 public class ProductVariant {
     private int productVariantId;
     private int productId;
+<<<<<<< HEAD
     private String variantType;
     private String variantValue;
+=======
+    private String size;
+    private String color;
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
     public ProductVariant() {}
 
+<<<<<<< HEAD
     public ProductVariant(int productVariantId, int productId, String variantType, String variantValue,
                           LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
         this.productVariantId = productVariantId;
         this.productId = productId;
         this.variantType = variantType;
         this.variantValue = variantValue;
+=======
+    public ProductVariant(int productVariantId, int productId, String size, String color,
+                          LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        this.productVariantId = productVariantId;
+        this.productId = productId;
+        this.size = size;
+        this.color = color;
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
     }
 
+<<<<<<< HEAD
     // Getters and setters 👇
+=======
+    // Getters and setters
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 
     public int getProductVariantId() {
         return productVariantId;
@@ -42,6 +60,7 @@ public class ProductVariant {
         this.productId = productId;
     }
 
+<<<<<<< HEAD
     public String getVariantType() {
         return variantType;
     }
@@ -56,6 +75,22 @@ public class ProductVariant {
 
     public void setVariantValue(String variantValue) {
         this.variantValue = variantValue;
+=======
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+>>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     }
 
     public LocalDateTime getCreatedAt() {
