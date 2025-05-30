@@ -7,12 +7,6 @@ import "./../ComponentsCss/ProductCard.css"; // For Product-specific styling
 
 const ProductCard = ({ product, onAction }) => {
   const navigate = useNavigate();
-<<<<<<< HEAD
-  const { id, name, imageUrl, description, category } = product;
-
-  const handleCardClick = () => {
-    navigate(`/product/${id}`);
-=======
   const { productId, name, logo_url, description, category } = product;
 
   // Convert Google Drive sharing URL to direct image URL
@@ -32,7 +26,6 @@ const ProductCard = ({ product, onAction }) => {
 
   const handleCardClick = () => {
     navigate(`/product/${productId}`);
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   };
 
   const handleAction = (e) => {
@@ -51,11 +44,7 @@ const ProductCard = ({ product, onAction }) => {
 
   return (
     <ReusableCard
-<<<<<<< HEAD
-      image={imageUrl}
-=======
       image={getDirectImageUrl(logo_url)}
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
       imageAlt={name}
       title={name}
       description={description}
@@ -69,15 +58,6 @@ const ProductCard = ({ product, onAction }) => {
 
 ProductCard.propTypes = {
   product: PropTypes.shape({
-<<<<<<< HEAD
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    title: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    category: PropTypes.string,
-  }).isRequired,
-  onAction: PropTypes.func.isRequired,
-=======
     productId: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
       .isRequired,
     name: PropTypes.string.isRequired,
@@ -86,7 +66,6 @@ ProductCard.propTypes = {
     category: PropTypes.string,
   }).isRequired,
   onAction: PropTypes.func,
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 };
 
 export default ProductCard;

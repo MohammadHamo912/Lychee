@@ -6,50 +6,21 @@ import { getAllProducts } from "./products";
 const API_URL = "http://localhost:8081/api/items";
 let productVariants = [];
 let products = [];
-<<<<<<< HEAD
-=======
 let allItems = []; // Cache for all items
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 
 const loadDependencies = async () => {
   if (productVariants.length === 0) {
     productVariants = await getAllProductVariants();
-<<<<<<< HEAD
-  }
-  if (products.length === 0) {
-    products = await getAllProducts();
-=======
     console.log("Loaded Product Variants:", productVariants);
   }
   if (products.length === 0) {
     products = await getAllProducts();
     console.log("Loaded Products:", products);
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   }
 };
 
 const enrichItemData = async (items) => {
   await loadDependencies();
-<<<<<<< HEAD
-  return items.map((item) => {
-    const variant = productVariants.find((v) => v.id === item.productVariantId);
-    const product = variant
-      ? products.find((p) => p.id === variant.productId)
-      : null;
-
-    return {
-      ...item,
-      name: product?.name || `Product ${item.productVariantId}`,
-      category: product?.category || "Uncategorized",
-      description: product?.description || "No description available",
-      image: variant?.image || "/images/default.jpg",
-      price: parseFloat(item.price),
-      discount: parseFloat(item.discount),
-      stock: item.stockQuantity,
-    };
-  });
-};
-=======
 
   console.log("Raw items data:", items);
 
@@ -143,15 +114,11 @@ const enrichItemData = async (items) => {
   return enrichedItems;
 };
 
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 // Get all items
 export const getAllItems = async () => {
   try {
     const response = await axios.get(API_URL);
-<<<<<<< HEAD
-=======
     allItems = response.data; // Cache all items for variant availability check
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return enrichItemData(response.data);
   } catch (error) {
     console.error("Error fetching items:", error);
@@ -159,24 +126,17 @@ export const getAllItems = async () => {
   }
 };
 
-<<<<<<< HEAD
-=======
 // Rest of your functions remain the same...
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 // Get item by ID
 export const getItemById = async (itemId) => {
   try {
     const response = await axios.get(`${API_URL}/${itemId}`);
-<<<<<<< HEAD
-    return enrichItemData([response.data])[0];
-=======
     // Load all items if not cached for variant availability check
     if (allItems.length === 0) {
       const allItemsResponse = await axios.get(API_URL);
       allItems = allItemsResponse.data;
     }
     return (await enrichItemData([response.data]))[0];
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   } catch (error) {
     console.error(`Error fetching item ${itemId}:`, error);
     throw error;
@@ -187,14 +147,11 @@ export const getItemById = async (itemId) => {
 export const getItemsByStoreId = async (storeId) => {
   try {
     const response = await axios.get(`${API_URL}/store/${storeId}`);
-<<<<<<< HEAD
-=======
     // Load all items for variant availability check
     if (allItems.length === 0) {
       const allItemsResponse = await axios.get(API_URL);
       allItems = allItemsResponse.data;
     }
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return enrichItemData(response.data);
   } catch (error) {
     console.error(
@@ -217,14 +174,11 @@ export const getItemsByStoreId = async (storeId) => {
 export const getItemsByProductVariantId = async (variantId) => {
   try {
     const response = await axios.get(`${API_URL}/variant/${variantId}`);
-<<<<<<< HEAD
-=======
     // Load all items for variant availability check
     if (allItems.length === 0) {
       const allItemsResponse = await axios.get(API_URL);
       allItems = allItemsResponse.data;
     }
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return enrichItemData(response.data);
   } catch (error) {
     console.error(`Error fetching items for variant ${variantId}:`, error);
@@ -238,14 +192,11 @@ export const getItemsByPriceRange = async (minPrice, maxPrice) => {
     const response = await axios.get(`${API_URL}/price-range`, {
       params: { minPrice, maxPrice },
     });
-<<<<<<< HEAD
-=======
     // Load all items for variant availability check
     if (allItems.length === 0) {
       const allItemsResponse = await axios.get(API_URL);
       allItems = allItemsResponse.data;
     }
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return enrichItemData(response.data);
   } catch (error) {
     console.error(`Error fetching items in price range:`, error);
@@ -259,14 +210,11 @@ export const searchItemsByProductName = async (productName) => {
     const response = await axios.get(`${API_URL}/search`, {
       params: { productName },
     });
-<<<<<<< HEAD
-=======
     // Load all items for variant availability check
     if (allItems.length === 0) {
       const allItemsResponse = await axios.get(API_URL);
       allItems = allItemsResponse.data;
     }
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return enrichItemData(response.data);
   } catch (error) {
     console.error(`Error searching items by name ${productName}:`, error);
@@ -274,8 +222,6 @@ export const searchItemsByProductName = async (productName) => {
   }
 };
 
-<<<<<<< HEAD
-=======
 // Get items by category (filter enriched items by product category)
 export const getItemsByCategory = async (category) => {
   try {
@@ -324,18 +270,13 @@ export const getAvailableVariantsForProduct = async (
   }
 };
 
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
 // Create new item
 export const createItem = async (itemData) => {
   try {
     const response = await axios.post(API_URL, itemData);
-<<<<<<< HEAD
-    return enrichItemData([response.data])[0];
-=======
     // Refresh cache
     allItems = [];
     return (await enrichItemData([response.data]))[0];
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   } catch (error) {
     console.error("Error creating item:", error);
     throw error;
@@ -346,13 +287,9 @@ export const createItem = async (itemData) => {
 export const updateItem = async (itemId, itemData) => {
   try {
     const response = await axios.put(`${API_URL}/${itemId}`, itemData);
-<<<<<<< HEAD
-    return enrichItemData([response.data])[0];
-=======
     // Refresh cache
     allItems = [];
     return (await enrichItemData([response.data]))[0];
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   } catch (error) {
     console.error(`Error updating item ${itemId}:`, error);
     throw error;
@@ -365,11 +302,8 @@ export const updateStock = async (itemId, quantity) => {
     await axios.patch(`${API_URL}/${itemId}/stock`, null, {
       params: { quantity },
     });
-<<<<<<< HEAD
-=======
     // Refresh cache
     allItems = [];
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return true;
   } catch (error) {
     console.error(`Error updating stock for item ${itemId}:`, error);
@@ -383,11 +317,8 @@ export const updatePrice = async (itemId, price) => {
     await axios.patch(`${API_URL}/${itemId}/price`, null, {
       params: { price },
     });
-<<<<<<< HEAD
-=======
     // Refresh cache
     allItems = [];
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return true;
   } catch (error) {
     console.error(`Error updating price for item ${itemId}:`, error);
@@ -401,11 +332,8 @@ export const updateDiscount = async (itemId, discount) => {
     await axios.patch(`${API_URL}/${itemId}/discount`, null, {
       params: { discount },
     });
-<<<<<<< HEAD
-=======
     // Refresh cache
     allItems = [];
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return true;
   } catch (error) {
     console.error(`Error updating discount for item ${itemId}:`, error);
@@ -417,19 +345,14 @@ export const updateDiscount = async (itemId, discount) => {
 export const deleteItem = async (itemId) => {
   try {
     await axios.delete(`${API_URL}/${itemId}`);
-<<<<<<< HEAD
-=======
     // Refresh cache
     allItems = [];
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     return true;
   } catch (error) {
     console.error(`Error deleting item ${itemId}:`, error);
     throw error;
   }
 };
-<<<<<<< HEAD
-=======
 
 // Clear cache (useful for testing or manual refresh)
 export const clearCache = () => {
@@ -437,4 +360,3 @@ export const clearCache = () => {
   productVariants = [];
   products = [];
 };
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad

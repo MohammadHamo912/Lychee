@@ -11,23 +11,16 @@ const ItemCard = ({ item, onAddToCart }) => {
   // Use enriched data from the API
   const {
     id,
-<<<<<<< HEAD
-    name,
-=======
     name, // This is now the product name
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     image: imageUrl,
     price,
     description,
     discount,
     category,
     stock,
-<<<<<<< HEAD
-=======
     currentVariant,
     availableVariants,
     barcode,
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   } = item;
 
   // Calculate the final price after discount
@@ -66,8 +59,6 @@ const ItemCard = ({ item, onAddToCart }) => {
     </div>
   );
 
-<<<<<<< HEAD
-=======
   // Create variant information display
   const VariantInfo = currentVariant && (
     <div className="item-card-variant-info">
@@ -116,15 +107,12 @@ const ItemCard = ({ item, onAddToCart }) => {
     </div>
   );
 
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   // Show out of stock indicator
   const stockIndicator =
     stock <= 0 ? (
       <div className="out-of-stock-indicator">Out of Stock</div>
     ) : null;
 
-<<<<<<< HEAD
-=======
   // Create subtitle with category and stock info
   const subtitleContent = (
     <div className="item-subtitle-container">
@@ -133,43 +121,29 @@ const ItemCard = ({ item, onAddToCart }) => {
     </div>
   );
 
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   return (
     <ReusableCard
       image={imageUrl}
       imageAlt={name}
-<<<<<<< HEAD
-      title={name}
-      subtitle={category ? `Category: ${category}` : null}
-=======
       title={name} // Now displays the product name
       subtitle={subtitleContent}
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
       description={description}
       footerLeft={PriceElement}
       footerRight={AddToCartButton}
       onClick={handleCardClick}
       className={`item-theme ${stock <= 0 ? "out-of-stock" : ""}`}
       overlayContent={stockIndicator}
-<<<<<<< HEAD
-    />
-=======
     >
       {/* Add variant information as children */}
       {VariantInfo}
     </ReusableCard>
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   );
 };
 
 ItemCard.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-<<<<<<< HEAD
-    name: PropTypes.string.isRequired,
-=======
     name: PropTypes.string.isRequired, // Product name
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     image: PropTypes.string.isRequired,
     description: PropTypes.string,
     price: PropTypes.number.isRequired,
@@ -177,8 +151,6 @@ ItemCard.propTypes = {
     category: PropTypes.string,
     stock: PropTypes.number,
     storeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-<<<<<<< HEAD
-=======
     currentVariant: PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       size: PropTypes.string,
@@ -193,7 +165,6 @@ ItemCard.propTypes = {
       })
     ),
     barcode: PropTypes.string,
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
   }).isRequired,
   onAddToCart: PropTypes.func.isRequired,
 };

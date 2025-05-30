@@ -60,10 +60,6 @@
             <artifactId>spring-security-crypto</artifactId>
             <version>6.2.3</version>
         </dependency>
-<<<<<<< HEAD
-=======
-
-            <!-- AWS S3 SDK -->
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-s3</artifactId>
@@ -75,7 +71,6 @@
             <artifactId>dotenv-java</artifactId>
             <version>2.2.0</version>
         </dependency>
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
     </dependencies>
 
     <build>

@@ -163,10 +163,6 @@ const HomePage = () => {
         </div>
 
         <div className="trending-products-section section">
-<<<<<<< HEAD
-          <ItemGrid limit={4} header={"Trending Items"} />
-          <ItemGrid limit={4} header={"Top-Selling Items"} />
-=======
           <ItemGrid
             limit={4}
             header={"Trending Items"}
@@ -177,7 +173,6 @@ const HomePage = () => {
             header={"Top-Selling Items"}
             className="top-selling-items-grid"
           />
->>>>>>> d1474035a0413c9afbf4e465f915032571632aad
         </div>
       </main>
       <Footer />
