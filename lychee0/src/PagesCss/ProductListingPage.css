@@ -1,9 +1,5 @@
 /* ProductListingPage.css */
 
-* {
-  box-sizing: border-box; /* Ensure padding and borders are included in element sizes */
-}
-
 .products-page {
   min-height: 100vh;
   display: flex;
@@ -14,10 +10,10 @@
 /* Hero section with search */
 .products-hero {
   background-color: #670010;
-  padding: 60px 24px;
+  padding: 60px 24px 60px;
   text-align: center;
   color: #fff5e1;
-  margin-top: 0; /* Removed negative margin to avoid overlap with navbar */
+  margin-top: -10px; /* Removed negative margin to avoid overlap with navbar */
 }
 
 .products-hero-content {
@@ -48,7 +44,7 @@
 .products-content {
   display: flex;
   max-width: 1200px;
-  margin: 40px auto;
+  margin: 40px;
   padding: 0 24px;
   gap: 32px; /* Reduced gap slightly for better spacing */
   flex: 1;
@@ -56,7 +52,6 @@
 
 .products-sidebar {
   flex: 0 0 280px; /* Fixed width for sidebar */
-  min-width: 280px; /* Prevent sidebar from shrinking */
 }
 
 .products-sidebar h2 {
@@ -67,8 +62,7 @@
 }
 
 .products-main {
-  flex: 1;
-  min-width: 0; /* Prevent flex item from overflowing */
+  flex: auto;
 }
 
 /* Results header with product count and search info */

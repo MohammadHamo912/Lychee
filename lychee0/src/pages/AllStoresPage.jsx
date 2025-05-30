@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SearchBar from "../components/SearchBar";
 import StoreFiltersPanel from "../components/StoreFiltersPanel";
-import StoreCard from "../components/StoreCard";
 import Footer from "../components/Footer";
 import StoreGrid from "../components/StoreGrid";
 import { getAllStores } from "../api/stores";
