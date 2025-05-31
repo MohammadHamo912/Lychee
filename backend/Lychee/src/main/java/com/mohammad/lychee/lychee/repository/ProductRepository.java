@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface ProductRepository {
     List<Product> findAll();
+    List<Product> findByProductIdIn(List<Integer> productIds);
+
     Optional<Product> findById(Integer id);
     Optional<Product> findByName(String name);
     Optional<Product> findByBarcode(String barcode);

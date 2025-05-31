@@ -35,6 +35,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> batchLoadProducts(List<Integer> productIds) {
+        return productRepository.findByProductIdIn(productIds);
+    }
+    @Override
     public Optional<Product> getProductByBarcode(String barcode) {
         return productRepository.findByBarcode(barcode);
     }

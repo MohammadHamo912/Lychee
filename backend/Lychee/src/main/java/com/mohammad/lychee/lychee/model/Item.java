@@ -32,7 +32,7 @@ public class Item {
         this.deletedAt = deletedAt;
     }
 
-    // Getters and setters 👇
+    // Getters and setters
 
     public int getItemId() {
         return itemId;

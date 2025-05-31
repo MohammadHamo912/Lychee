@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
@@ -67,7 +68,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Optional<Item> findByName(String name) {
         try {
-            String sql = "SELECT * FROM Item WHERE Item_Name = ? AND deleted_at IS NULL";
+            String sql = "SELECT * FROM Item WHERE LOWER(name) LIKE LOWER(CONCAT('%', ?, '%')) AND deleted_at IS NULL";
             Item item = jdbcTemplate.queryForObject(sql, itemRowMapper, name);
             return Optional.ofNullable(item);
         } catch (EmptyResultDataAccessException e) {
@@ -89,8 +90,50 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
-        String sql = "SELECT * FROM Item WHERE price BETWEEN ? AND ?";
-        return jdbcTemplate.query(sql, itemRowMapper, minPrice,maxPrice);
+        String sql = "SELECT * FROM Item WHERE price BETWEEN ? AND ? AND deleted_at IS NULL";
+        return jdbcTemplate.query(sql, itemRowMapper, minPrice, maxPrice);
+    }
+
+    @Override
+    public List<Item> findTrendingItems() {
+        String sql = """
+    SELECT i.* FROM Item i 
+    INNER JOIN (
+        SELECT oi.Item_ID, SUM(oi.quantity) as total_sold
+        FROM orderitem oi 
+        INNER JOIN `Order` o ON oi.order_id = o.order_id  
+        WHERE oi.created_at >= DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 45 DAY) 
+        AND oi.deleted_at IS NULL 
+        AND o.deleted_at IS NULL
+        AND o.status IN ('completed', 'processing','shipped','completed')
+        GROUP BY oi.Item_ID 
+        ORDER BY total_sold DESC 
+        LIMIT 5
+    ) trending ON i.Item_ID = trending.Item_ID
+    WHERE i.deleted_at IS NULL
+    ORDER BY trending.total_sold DESC
+    """;
+        return jdbcTemplate.query(sql, itemRowMapper);
+    }
+
+    @Override
+    public List<Item> findByItemIdIn(List<Integer> itemIds) {
+        if (itemIds == null || itemIds.isEmpty()) {
+            return List.of();
+        }
+
+        String inClause = itemIds.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(","));
+
+        String sql = "SELECT * FROM Item WHERE Item_ID IN (" + inClause + ") AND deleted_at IS NULL";
+
+        return jdbcTemplate.query(sql, itemRowMapper, itemIds.toArray());
+    }
+
+    @Override
+    public List<Item> findActiveItems() {
+        return findAll(); // Same as findAll() - returns items where deleted_at IS NULL
     }
 
     @Override
@@ -103,18 +146,16 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item save(Item item) {
-        return update(item);
-/*
-        if (item.getItemId() == null) {
+        if (item.getItemId() == 0) {
             return insert(item);
         } else {
             return update(item);
         }
-  */  }
+    }
 
     private Item insert(Item item) {
-        String sql = "INSERT INTO Item (Store_ID, Product_Variant_ID, price, stockQuantity, rating, discount) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Item (Store_ID, Product_Variant_ID, price, stockQuantity, rating, discount, created_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -124,25 +165,14 @@ public class ItemRepositoryImpl implements ItemRepository {
             ps.setInt(2, item.getProductVariantId());
             ps.setBigDecimal(3, item.getPrice());
             ps.setInt(4, item.getStockQuantity());
-
-            ps.setFloat(5, item.getRating());
-/*
-            if (item.getRating() != null) {
-                ps.setFloat(5, item.getRating());
-            } else {
-                ps.setFloat(5, 0.0f);
-            }
-*/
-            if (item.getDiscount() != null) {
-                ps.setBigDecimal(6, item.getDiscount());
-            } else {
-                ps.setBigDecimal(6, java.math.BigDecimal.ZERO);
-            }
-
+            ps.setFloat(5, item.getRating() != 0.0f ? item.getRating() : 0.0f);
+            ps.setBigDecimal(6, item.getDiscount() != null ? item.getDiscount() : BigDecimal.ZERO);
+            ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
             return ps;
         }, keyHolder);
 
         item.setItemId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        item.setCreatedAt(LocalDateTime.now());
         return item;
     }
 

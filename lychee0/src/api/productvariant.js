@@ -35,19 +35,6 @@ export const getProductVariantsByProductId = async (productId) => {
   }
 };
 
-export const getProductVariantsByType = async (variantType) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/type/${variantType}`);
-    return response.data;
-  } catch (err) {
-    console.error(
-      `Failed to fetch product variants for type ${variantType}:`,
-      err
-    );
-    return [];
-  }
-};
-
 export const createProductVariant = async (productVariant) => {
   try {
     const response = await axios.post(BASE_URL, productVariant);

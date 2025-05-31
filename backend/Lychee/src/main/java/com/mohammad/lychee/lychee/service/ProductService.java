@@ -7,6 +7,7 @@ import java.util.Optional;
 public interface ProductService {
     List<Product> getAllProducts();
     Optional<Product> getProductById(Integer productId);
+
     Optional<Product> getProductByBarcode(String barcode);
     Product createProduct(Product product);
     Product updateProduct(Product product);
@@ -14,4 +15,6 @@ public interface ProductService {
     Optional<Product> searchProductsByName(String name);
     List<Product> getProductsByCategory(Integer categoryId);
     List<Product> getProductsByIds(List<Integer> ids);
+    List<Product> batchLoadProducts(List<Integer> productIds);
+
 }

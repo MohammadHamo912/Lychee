@@ -30,16 +30,17 @@ public class ProductVariantController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    @PostMapping("/batch-load")
+    public List<ProductVariant> batchLoadProductVariants(@RequestBody List<Integer> variantIds) {
+        return productVariantService.batchLoadProductVariants(variantIds);
+    }
     @GetMapping("/product/{productId}")
     public List<ProductVariant> getProductVariantsByProductId(@PathVariable Integer productId) {
         return productVariantService.getProductVariantsByProductId(productId);
     }
 
-    @GetMapping("/type/{variantType}")
-    public List<ProductVariant> getProductVariantsByType(@PathVariable String variantType) {
-        return productVariantService.getProductVariantsByType(variantType);
-    }
+
+
 
     @GetMapping("/size/{size}")
     public List<ProductVariant> getProductVariantsBySize(@PathVariable String size) {

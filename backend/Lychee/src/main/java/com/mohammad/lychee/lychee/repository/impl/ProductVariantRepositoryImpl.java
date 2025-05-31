@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductVariantRepositoryImpl implements ProductVariantRepository {
@@ -26,12 +27,11 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
         ProductVariant pv = new ProductVariant();
         pv.setProductVariantId(rs.getInt("Product_Variant_ID"));
         pv.setProductId(rs.getInt("Product_ID"));
-        pv.setVariantType(rs.getString("variant_type"));
-        pv.setSize(rs.getString("size"));
-        pv.setColor(rs.getString("color"));
         pv.setCreatedAt(getLocalDateTime(rs.getTimestamp("created_at")));
         pv.setUpdatedAt(getLocalDateTime(rs.getTimestamp("updated_at")));
         pv.setDeletedAt(getLocalDateTime(rs.getTimestamp("deleted_at")));
+        pv.setSize(rs.getString("size"));
+        pv.setColor(rs.getString("color"));
         return pv;
     };
 
@@ -55,6 +55,22 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
             return Optional.empty();
         }
     }
+    @Override
+    public List<ProductVariant> findByProductVariantIdIn(List<Integer> variantIds) {
+        if (variantIds == null || variantIds.isEmpty()) {
+            return List.of();
+        }
+
+        String inClause = variantIds.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(","));
+
+        String sql = "SELECT * FROM productvariant WHERE Product_Variant_ID IN (" + inClause + ") AND deleted_at IS NULL";
+
+        Object[] params = variantIds.toArray(new Object[0]);
+
+        return jdbcTemplate.query(sql, productVariantRowMapper, params);
+    }
 
     @Override
     public List<ProductVariant> findBySize(String size) {
@@ -74,23 +90,17 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
         return jdbcTemplate.query(sql, productVariantRowMapper, productId);
     }
 
-    @Override
-    public List<ProductVariant> findByVariantType(String variantType) {
-        String sql = "SELECT * FROM productvariant WHERE variant_type = ? AND deleted_at IS NULL";
-        return jdbcTemplate.query(sql, productVariantRowMapper, variantType);
-    }
 
     @Override
     public ProductVariant save(ProductVariant pv) {
         if (pv.getProductVariantId() == null || pv.getProductVariantId() == 0) {
             // Insert
-            String sql = "INSERT INTO productvariant (Product_ID, variant_type, size, color, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())";
+            String sql = "INSERT INTO productvariant (Product_ID, size, color, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())";
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, pv.getProductId());
-                ps.setString(2, pv.getVariantType());
-                ps.setString(3, pv.getSize());
-                ps.setString(4, pv.getColor());
+                ps.setString(2, pv.getSize());
+                ps.setString(3, pv.getColor());
                 return ps;
             });
 
@@ -98,10 +108,9 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
             pv.setProductVariantId(id);
         } else {
             // Update
-            String sql = "UPDATE productvariant SET Product_ID = ?, variant_type = ?, size = ?, color = ?, updated_at = NOW() WHERE Product_Variant_ID = ? AND deleted_at IS NULL";
+            String sql = "UPDATE productvariant SET Product_ID = ?,size = ?, color = ?, updated_at = NOW() WHERE Product_Variant_ID = ? AND deleted_at IS NULL";
             jdbcTemplate.update(sql,
                     pv.getProductId(),
-                    pv.getVariantType(),
                     pv.getSize(),
                     pv.getColor(),
                     pv.getProductVariantId());

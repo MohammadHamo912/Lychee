@@ -55,14 +55,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        String sql = "SELECT * FROM User WHERE deleted_at IS NULL";
+        String sql = "SELECT * FROM `User` WHERE deleted_at IS NULL";
         return jdbcTemplate.query(sql, userRowMapper);
     }
 
     @Override
     public Optional<User> findById(Integer id) {
         try {
-            String sql = "SELECT * FROM User WHERE User_ID = ? AND deleted_at IS NULL";
+            String sql = "SELECT * FROM `User` WHERE User_ID = ? AND deleted_at IS NULL";
             User user = jdbcTemplate.queryForObject(sql, userRowMapper, id);
             return Optional.ofNullable(user);
         } catch (EmptyResultDataAccessException e) {
@@ -73,7 +73,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findByEmail(String email) {
         try {
-            String sql = "SELECT * FROM User WHERE email = ? AND deleted_at IS NULL";
+            String sql = "SELECT * FROM `User` WHERE email = ? AND deleted_at IS NULL";
             User user = jdbcTemplate.queryForObject(sql, userRowMapper, email);
             return Optional.ofNullable(user);
         } catch (EmptyResultDataAccessException e) {
@@ -91,7 +91,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private User insert(User user) {
-        String sql = "INSERT INTO User (role, name, email, password_hash, phone) " +
+        String sql = "INSERT INTO `User` (role, name, email, password_hash, phone) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -112,7 +112,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private User update(User user) {
-        String sql = "UPDATE User SET role = ?, name = ?, email = ?, password_hash = ?, " +
+        String sql = "UPDATE `User` SET role = ?, name = ?, email = ?, password_hash = ?, " +
                 "phone = ?, updated_at = ? WHERE User_ID = ?";
 
         jdbcTemplate.update(sql,
@@ -129,19 +129,19 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM User WHERE User_ID = ?";
+        String sql = "DELETE FROM `User` WHERE User_ID = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public void softDelete(Integer id) {
-        String sql = "UPDATE User SET deleted_at = ? WHERE User_ID = ?";
+        String sql = "UPDATE `User` SET deleted_at = ? WHERE User_ID = ?";
         jdbcTemplate.update(sql, Timestamp.valueOf(LocalDateTime.now()), id);
     }
 
     @Override
     public List<User> findByRole(String role) {
-        String sql = "SELECT * FROM User WHERE role = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM `User` WHERE role = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, userRowMapper, role);
     }
 }

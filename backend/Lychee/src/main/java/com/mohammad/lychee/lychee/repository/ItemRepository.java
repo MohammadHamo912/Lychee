@@ -10,10 +10,12 @@ public interface ItemRepository {
     List<Item> findAll();
     Optional<Item> findById(Integer id);
     Optional<Item> findByName(String name);
-
     List<Item> findByStoreId(Integer storeId);
     List<Item> findByProductVariantId(Integer productVariantId);
-    List<Item> findByPriceBetween(BigDecimal minPrice,BigDecimal maxPrice);
+    List<Item> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
+    List<Item> findTrendingItems();
+    List<Item> findByItemIdIn(List<Integer> itemIds);
+    List<Item> findActiveItems();
     Item save(Item item);
     void delete(Integer id);
     void softDelete(Integer id);

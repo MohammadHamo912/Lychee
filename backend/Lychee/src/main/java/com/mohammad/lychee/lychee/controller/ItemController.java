@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/items")
-@CrossOrigin(origins = "http://localhost:3000") // Enable CORS for your React app
+@CrossOrigin(origins = "http://localhost:3000")
 public class ItemController {
 
     @Autowired
@@ -24,21 +24,32 @@ public class ItemController {
         return itemService.getAllItems();
     }
 
-    @GetMapping("/{itemId}")
+
+
+    @GetMapping("/{itemId:[0-9]+}")
     public ResponseEntity<Item> getItemById(@PathVariable Integer itemId) {
         Optional<Item> item = itemService.getItemById(itemId);
         return item.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/store/{storeId}")
+    @GetMapping("/store/{storeId:[0-9]+}")
     public List<Item> getItemsByStoreId(@PathVariable Integer storeId) {
         return itemService.getItemsByStoreId(storeId);
     }
 
-    @GetMapping("/variant/{productVariantId}")
+    @GetMapping("/variant/{productVariantId:[0-9]+}")
     public List<Item> getItemsByProductVariantId(@PathVariable Integer productVariantId) {
         return itemService.getItemsByProductVariantId(productVariantId);
+    }
+    @GetMapping("/trending")
+    public List<Item> getTrendingItems() {
+        return itemService.getTrendingItems();
+    }
+
+    @PostMapping("/by-ids")
+    public List<Item> getItemsByIds(@RequestBody List<Integer> itemIds) {
+        return itemService.getItemsByIds(itemIds);
     }
 
     @GetMapping("/price-range")
@@ -65,10 +76,9 @@ public class ItemController {
         }
     }
 
-    @PutMapping("/{itemId}")
+    @PutMapping("/{itemId:[0-9]+}")
     public ResponseEntity<Item> updateItem(@PathVariable Integer itemId, @RequestBody Item item) {
         try {
-            // Make sure the path ID matches the item ID
             item.setItemId(itemId);
             Item updatedItem = itemService.updateItem(item);
             return ResponseEntity.ok(updatedItem);
@@ -79,7 +89,7 @@ public class ItemController {
         }
     }
 
-    @PatchMapping("/{itemId}/stock")
+    @PatchMapping("/{itemId:[0-9]+}/stock")
     public ResponseEntity<Void> updateStock(
             @PathVariable Integer itemId,
             @RequestParam Integer quantity) {
@@ -93,7 +103,7 @@ public class ItemController {
         }
     }
 
-    @PatchMapping("/{itemId}/price")
+    @PatchMapping("/{itemId:[0-9]+}/price")
     public ResponseEntity<Void> updatePrice(
             @PathVariable Integer itemId,
             @RequestParam BigDecimal price) {
@@ -107,7 +117,7 @@ public class ItemController {
         }
     }
 
-    @PatchMapping("/{itemId}/discount")
+    @PatchMapping("/{itemId:[0-9]+}/discount")
     public ResponseEntity<Void> updateDiscount(
             @PathVariable Integer itemId,
             @RequestParam BigDecimal discount) {
@@ -121,7 +131,7 @@ public class ItemController {
         }
     }
 
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/{itemId:[0-9]+}")
     public ResponseEntity<Void> softDeleteItem(@PathVariable Integer itemId) {
         try {
             itemService.softDeleteItem(itemId);

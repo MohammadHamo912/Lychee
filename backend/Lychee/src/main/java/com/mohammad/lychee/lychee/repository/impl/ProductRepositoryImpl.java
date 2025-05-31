@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.stream.Collectors;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -57,6 +58,21 @@ public class ProductRepositoryImpl implements ProductRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Product> findByProductIdIn(List<Integer> productIds) {
+        if (productIds == null || productIds.isEmpty()) {
+            return List.of();
+        }
+
+        String inClause = productIds.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(","));
+
+        String sql = "SELECT * FROM Product WHERE Product_ID IN (" + inClause + ") AND deleted_at IS NULL";
+
+        return jdbcTemplate.query(sql, productRowMapper, productIds.toArray());
     }
 
     @Override

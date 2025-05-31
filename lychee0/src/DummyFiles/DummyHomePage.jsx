@@ -163,15 +163,11 @@ const HomePage = () => {
         </div>
 
         <div className="trending-products-section section">
-          <ItemGrid
-            limit={4}
-            header={"Trending Items"}
-            className="trending-items-grid"
-          />
+          <ItemGrid limit={4} header={"Trending Items"} className="trendings" />
           <ItemGrid
             limit={4}
             header={"Top-Selling Items"}
-            className="top-selling-items-grid"
+            className="trending"
           />
         </div>
       </main>

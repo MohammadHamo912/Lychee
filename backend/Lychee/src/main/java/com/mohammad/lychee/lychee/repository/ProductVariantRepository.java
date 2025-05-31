@@ -7,12 +7,14 @@ import java.util.Optional;
 public interface ProductVariantRepository {
     List<ProductVariant> findAll();
     Optional<ProductVariant> findById(Integer id);
+    List<ProductVariant> findByProductVariantIdIn(List<Integer> variantIds);
+
     List<ProductVariant> findBySize(String size);
     List<ProductVariant> findByColor(String color);
     List<ProductVariant> findByProductId(Integer productId);
     ProductVariant save(ProductVariant productVariant);
     void delete(Integer id);
     void softDelete(Integer id);
-    List<ProductVariant> findByVariantType(String variantType);
+
     boolean existsById(Integer id);
 }

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 public class ProductVariant {
     private Integer productVariantId;
     private Integer productId;
-    private String variantType;
     private String size;
     private String color;
     private Integer quantity;
@@ -32,13 +31,6 @@ public class ProductVariant {
         this.productId = productId;
     }
 
-    public String getVariantType() {
-        return variantType;
-    }
-
-    public void setVariantType(String variantType) {
-        this.variantType = variantType;
-    }
 
     public String getSize() {
         return size;

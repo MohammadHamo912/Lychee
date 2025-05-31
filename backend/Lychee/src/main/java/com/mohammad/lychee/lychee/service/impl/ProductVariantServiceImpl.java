@@ -28,7 +28,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     public Optional<ProductVariant> getProductVariantById(Integer productVariantId) {
         return productVariantRepository.findById(productVariantId);
     }
-
+    @Override
+    public List<ProductVariant> batchLoadProductVariants(List<Integer> variantIds) {
+        return productVariantRepository.findByProductVariantIdIn(variantIds);
+    }
     @Override
     public List<ProductVariant> getProductVariantsByProductId(Integer productId) {
         return productVariantRepository.findByProductId(productId);
@@ -66,8 +69,4 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         productVariantRepository.softDelete(productVariantId);
     }
 
-    @Override
-    public List<ProductVariant> getProductVariantsByType(String variantType) {
-        return productVariantRepository.findByVariantType(variantType);
-    }
-}
+   }

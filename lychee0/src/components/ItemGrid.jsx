@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReusableGrid from "../components/ReusableGrid";
 import ItemCard from "../components/ItemCard";
-import { getAllItems } from "../api/items"; // Import the updated service
+import { getAllItems, getTrendingItems } from "../api/items"; // Import the updated service
 
 const ItemGrid = ({
   limit,
@@ -18,9 +18,15 @@ const ItemGrid = ({
     const fetchItems = async () => {
       try {
         setLoading(true);
-        // Fetch enriched items from API (now includes product data and variants)
-        let fetchedItems = await getAllItems();
 
+        let fetchedItems;
+
+        // Fetch enriched items from API (now includes product data and variants)
+        if (className === "trending") {
+          fetchedItems = await getTrendingItems();
+        } else {
+          fetchedItems = await getAllItems();
+        }
         // Apply filters if provided
         if (storeId) {
           fetchedItems = fetchedItems.filter((item) => item.storeId == storeId);

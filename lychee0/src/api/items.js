@@ -1,51 +1,129 @@
 import axios from "axios";
 
-import { getAllProductVariants } from "./productvariant";
-import { getAllProducts } from "./products";
-
 const API_URL = "http://localhost:8081/api/items";
-let productVariants = [];
-let products = [];
+const PRODUCTS_API_URL = "http://localhost:8081/api/products";
+const VARIANTS_API_URL = "http://localhost:8081/api/productvariants";
+
 let allItems = []; // Cache for all items
 
-const loadDependencies = async () => {
-  if (productVariants.length === 0) {
-    productVariants = await getAllProductVariants();
-    console.log("Loaded Product Variants:", productVariants);
-  }
-  if (products.length === 0) {
-    products = await getAllProducts();
-    console.log("Loaded Products:", products);
+// Optimized function to get products by IDs using batch endpoint
+const getProductsByIds = async (productIds) => {
+  if (!productIds || productIds.length === 0) return [];
+
+  try {
+    const uniqueIds = [...new Set(productIds)]; // Remove duplicates
+    const response = await axios.post(`${PRODUCTS_API_URL}/batch`, uniqueIds);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products by IDs:", error);
+    return [];
   }
 };
 
+// Optimized function to get product variants by IDs using batch endpoint
+const getProductVariantsByIds = async (variantIds) => {
+  if (!variantIds || variantIds.length === 0) return [];
+
+  try {
+    const uniqueIds = [...new Set(variantIds)]; // Remove duplicates
+    console.log("testing unique ids", uniqueIds);
+    const response = await axios.post(
+      `${VARIANTS_API_URL}/batch-load`,
+      uniqueIds
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching product variants by IDs:", error);
+    return [];
+  }
+};
+
+// Function to get all product variants for a specific product (for available variants)
+const getProductVariantsByProductId = async (productId) => {
+  try {
+    const response = await axios.get(
+      `${VARIANTS_API_URL}/product/${productId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching variants for product ${productId}:`, error);
+    return [];
+  }
+};
+
+// Helper function to ensure allItems cache is loaded
+const ensureAllItemsLoaded = async () => {
+  if (allItems.length === 0) {
+    try {
+      const response = await axios.get(API_URL);
+      allItems = response.data;
+      console.log("Loaded all items cache:", allItems.length, "items");
+    } catch (error) {
+      console.error("Error loading all items cache:", error);
+      allItems = [];
+    }
+  }
+};
+
+// Optimized enrichItemData that loads only needed data
 const enrichItemData = async (items) => {
-  await loadDependencies();
+  if (!items || items.length === 0) return [];
 
   console.log("Raw items data:", items);
 
-  // Create lookup maps for better performance - using correct field names
+  // Ensure allItems cache is loaded for variant availability checks
+  await ensureAllItemsLoaded();
+
+  // Extract unique variant IDs from items
+  const variantIds = [
+    ...new Set(items.map((item) => item.productVariantId).filter(Boolean)),
+  ];
+
+  // Load only needed variants
+  const productVariants = await getProductVariantsByIds(variantIds);
+  console.log("Loaded Product Variants:", productVariants);
+
+  // Extract unique product IDs from variants
+  const productIds = [
+    ...new Set(
+      productVariants.map((variant) => variant.productId).filter(Boolean)
+    ),
+  ];
+
+  // Load only needed products
+  const products = await getProductsByIds(productIds);
+  console.log("Loaded Products:", products);
+
+  // For available variants, we need to get ALL variants for each product
+  // Get unique product IDs and fetch all their variants
+  const allVariantsForProducts = [];
+  for (const productId of productIds) {
+    const variants = await getProductVariantsByProductId(productId);
+    allVariantsForProducts.push(...variants);
+  }
+
+  // Create lookup maps for better performance
   const variantsMap = productVariants.reduce((map, variant) => {
-    map[variant.productVariantId] = variant; // Use productVariantId, not id
+    map[variant.productVariantId] = variant;
     return map;
   }, {});
 
   const productsMap = products.reduce((map, product) => {
-    map[product.productId] = product; // Use productId, not id
+    map[product.productId] = product;
     return map;
   }, {});
 
-  console.log("Variants Map:", variantsMap);
-  console.log("Products Map:", productsMap);
-
-  // Group variants by productId for available variants lookup
-  const variantsByProduct = productVariants.reduce((map, variant) => {
+  // Group ALL variants by productId for available variants lookup
+  const variantsByProduct = allVariantsForProducts.reduce((map, variant) => {
     if (!map[variant.productId]) {
       map[variant.productId] = [];
     }
     map[variant.productId].push(variant);
     return map;
   }, {});
+
+  console.log("Variants Map:", variantsMap);
+  console.log("Products Map:", productsMap);
 
   const enrichedItems = items.map((item) => {
     console.log(
@@ -68,7 +146,7 @@ const enrichItemData = async (items) => {
       name: product?.name || `Product ${item.productVariantId}`,
       category: product?.category || "Uncategorized",
       description: product?.description || "No description available",
-      image: product?.logo_url || variant?.image || "/images/default.jpg", // Use product logo_url first
+      image: product?.logo_url || variant?.image || "/images/default.jpg",
       price: parseFloat(item.price),
       discount: parseFloat(item.discount),
       stock: item.stockQuantity,
@@ -76,7 +154,7 @@ const enrichItemData = async (items) => {
       // Current variant information
       currentVariant: variant
         ? {
-            id: variant.productVariantId, // Use productVariantId
+            id: variant.productVariantId,
             size: variant.size,
             color: variant.color,
             productId: variant.productId,
@@ -84,21 +162,21 @@ const enrichItemData = async (items) => {
         : null,
       // All available variants for this product
       availableVariants: availableVariants.map((v) => ({
-        id: v.productVariantId, // Use productVariantId
+        id: v.productVariantId,
         size: v.size,
         color: v.color,
         productId: v.productId,
         // Check if this variant is available as an item in any store
         available: allItems.some(
           (i) =>
-            i.productVariantId === v.productVariantId && // Use productVariantId
+            i.productVariantId === v.productVariantId &&
             i.stockQuantity > 0 &&
             !i.deletedAt
         ),
         // Check if available in the same store as current item
         availableInSameStore: allItems.some(
           (i) =>
-            i.productVariantId === v.productVariantId && // Use productVariantId
+            i.productVariantId === v.productVariantId &&
             i.storeId === item.storeId &&
             i.stockQuantity > 0 &&
             !i.deletedAt
@@ -114,6 +192,17 @@ const enrichItemData = async (items) => {
   return enrichedItems;
 };
 
+// NEW FUNCTION: Get trending items (top 5 most sold in last month)
+export const getTrendingItems = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/trending`);
+    return enrichItemData(response.data);
+  } catch (error) {
+    console.error("Error fetching trending items:", error);
+    throw error;
+  }
+};
+
 // Get all items
 export const getAllItems = async () => {
   try {
@@ -126,16 +215,10 @@ export const getAllItems = async () => {
   }
 };
 
-// Rest of your functions remain the same...
 // Get item by ID
 export const getItemById = async (itemId) => {
   try {
     const response = await axios.get(`${API_URL}/${itemId}`);
-    // Load all items if not cached for variant availability check
-    if (allItems.length === 0) {
-      const allItemsResponse = await axios.get(API_URL);
-      allItems = allItemsResponse.data;
-    }
     return (await enrichItemData([response.data]))[0];
   } catch (error) {
     console.error(`Error fetching item ${itemId}:`, error);
@@ -147,11 +230,6 @@ export const getItemById = async (itemId) => {
 export const getItemsByStoreId = async (storeId) => {
   try {
     const response = await axios.get(`${API_URL}/store/${storeId}`);
-    // Load all items for variant availability check
-    if (allItems.length === 0) {
-      const allItemsResponse = await axios.get(API_URL);
-      allItems = allItemsResponse.data;
-    }
     return enrichItemData(response.data);
   } catch (error) {
     console.error(
@@ -174,11 +252,6 @@ export const getItemsByStoreId = async (storeId) => {
 export const getItemsByProductVariantId = async (variantId) => {
   try {
     const response = await axios.get(`${API_URL}/variant/${variantId}`);
-    // Load all items for variant availability check
-    if (allItems.length === 0) {
-      const allItemsResponse = await axios.get(API_URL);
-      allItems = allItemsResponse.data;
-    }
     return enrichItemData(response.data);
   } catch (error) {
     console.error(`Error fetching items for variant ${variantId}:`, error);
@@ -192,11 +265,6 @@ export const getItemsByPriceRange = async (minPrice, maxPrice) => {
     const response = await axios.get(`${API_URL}/price-range`, {
       params: { minPrice, maxPrice },
     });
-    // Load all items for variant availability check
-    if (allItems.length === 0) {
-      const allItemsResponse = await axios.get(API_URL);
-      allItems = allItemsResponse.data;
-    }
     return enrichItemData(response.data);
   } catch (error) {
     console.error(`Error fetching items in price range:`, error);
@@ -210,11 +278,6 @@ export const searchItemsByProductName = async (productName) => {
     const response = await axios.get(`${API_URL}/search`, {
       params: { productName },
     });
-    // Load all items for variant availability check
-    if (allItems.length === 0) {
-      const allItemsResponse = await axios.get(API_URL);
-      allItems = allItemsResponse.data;
-    }
     return enrichItemData(response.data);
   } catch (error) {
     console.error(`Error searching items by name ${productName}:`, error);
@@ -239,15 +302,16 @@ export const getAvailableVariantsForProduct = async (
   storeId = null
 ) => {
   try {
-    await loadDependencies();
-    const allItems = await getAllItems();
+    await ensureAllItemsLoaded();
+    const allItemsData = await getAllItems();
 
-    const productVariantsForProduct = productVariants.filter(
-      (v) => v.productId === productId
+    // Get all variants for this specific product
+    const productVariantsForProduct = await getProductVariantsByProductId(
+      productId
     );
 
     return productVariantsForProduct.map((variant) => {
-      const itemsForVariant = allItems.filter(
+      const itemsForVariant = allItemsData.filter(
         (item) =>
           item.currentVariant?.id === variant.productVariantId &&
           (storeId ? item.storeId === storeId : true) &&
@@ -357,6 +421,4 @@ export const deleteItem = async (itemId) => {
 // Clear cache (useful for testing or manual refresh)
 export const clearCache = () => {
   allItems = [];
-  productVariants = [];
-  products = [];
 };

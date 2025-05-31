@@ -41,6 +41,18 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findByProductVariantId(productVariantId);
     }
 
+    // NEW METHOD: Get top 5 trending items based on sales in last 30 days
+    @Override
+    public List<Item> getTrendingItems() {
+        return itemRepository.findTrendingItems();
+    }
+
+    // NEW METHOD: Get multiple items by their IDs (for optimized loading)
+    @Override
+    public List<Item> getItemsByIds(List<Integer> itemIds) {
+        return itemRepository.findByItemIdIn(itemIds);
+    }
+
     @Override
     @Transactional
     public Item createItem(Item item) {
@@ -113,6 +125,4 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getItemsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
         return itemRepository.findByPriceBetween(minPrice, maxPrice);
     }
-
-
 }
