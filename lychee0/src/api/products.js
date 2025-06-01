@@ -38,6 +38,16 @@ export const getProductByBarcode = async (barcode) => {
   }
 };
 
+export const getProductByBrand = async (brand) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/brand/${brand}`);
+    return response.data;
+  } catch (err) {
+    console.error(`Failed to fetch product by brand ${brand}:`, err);
+    return null;
+  }
+};
+
 // Search products by name
 export const searchProductByName = async (name) => {
   try {

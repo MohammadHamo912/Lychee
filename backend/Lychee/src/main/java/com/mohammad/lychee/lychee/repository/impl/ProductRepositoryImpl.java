@@ -40,6 +40,8 @@ public class ProductRepositoryImpl implements ProductRepository {
         product.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
         product.setDeletedAt(rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null);
         product.setLogo_url(rs.getString("logo_url"));
+        product.setBrand(rs.getString("brand"));
+
         return product;
     };
 
@@ -95,6 +97,14 @@ public class ProductRepositoryImpl implements ProductRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Product> findByBrand(String brand) {
+
+            String sql = "SELECT * FROM Product WHERE brand = ? AND deleted_at IS NULL";
+            return jdbcTemplate.query(sql, productRowMapper, brand);
+
     }
 
     @Override

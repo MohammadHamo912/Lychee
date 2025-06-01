@@ -12,6 +12,8 @@ public interface ProductRepository {
     Optional<Product> findById(Integer id);
     Optional<Product> findByName(String name);
     Optional<Product> findByBarcode(String barcode);
+
+    List<Product> findByBrand(String brand);
     List<Product> findByCategoryId(Integer categoryId);
     List<Product> findAllById(Iterable<Integer> ids);
     Product save(Product product);

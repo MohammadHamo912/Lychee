@@ -83,6 +83,7 @@
   color: #670010;
   text-decoration: none;
   font-size: 1.2rem;
+  font-weight: bold;
   transition: all 0.3s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -91,6 +92,26 @@
   background-color: #b76e79;
   color: #fff5e1;
   transform: scale(1.1);
+}
+
+/* Specific styles for different social platforms */
+.social-link.facebook {
+  font-family: Georgia, serif;
+  font-style: italic;
+}
+
+.social-link.instagram {
+  font-size: 0.8rem;
+  letter-spacing: -1px;
+}
+
+.social-link.twitter {
+  font-weight: 900;
+}
+
+.social-link.pinterest {
+  font-weight: 900;
+  font-size: 1.4rem;
 }
 
 .footer-bottom {

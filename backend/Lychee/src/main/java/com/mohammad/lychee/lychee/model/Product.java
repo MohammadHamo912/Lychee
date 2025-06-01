@@ -12,10 +12,11 @@ public class Product {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
+    private String brand;
     public Product() {}
 
     public Product(int productId, String barcode, String name, String description,
-                   LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, String logo_url) {
+                   LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, String logo_url,String brand) {
         this.productId = productId;
         this.barcode = barcode;
         this.name = name;
@@ -24,6 +25,7 @@ public class Product {
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
         this.logo_url = logo_url;
+        this.brand = brand;
     }
 
     public int getProductId() {
@@ -88,5 +90,13 @@ public class Product {
 
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

@@ -9,10 +9,13 @@ public interface ProductService {
     Optional<Product> getProductById(Integer productId);
 
     Optional<Product> getProductByBarcode(String barcode);
+    List<Product> getProductByBrand(String brand);
+
     Product createProduct(Product product);
     Product updateProduct(Product product);
     void softDeleteProduct(Integer productId);
     Optional<Product> searchProductsByName(String name);
+
     List<Product> getProductsByCategory(Integer categoryId);
     List<Product> getProductsByIds(List<Integer> ids);
     List<Product> batchLoadProducts(List<Integer> productIds);

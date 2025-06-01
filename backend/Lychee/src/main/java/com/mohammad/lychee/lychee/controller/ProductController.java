@@ -30,6 +30,12 @@ public class ProductController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/brand/{brand}")
+    public List<Product> getProductByBrand(@PathVariable String brand) {
+        return productService.getProductByBrand(brand);
+
+    }
     @PostMapping("/batch-load")
     public List<Product> batchLoadProducts(@RequestBody List<Integer> productIds) {
         return productService.batchLoadProducts(productIds);
