@@ -47,7 +47,7 @@ const Dashboard = () => {
             content: <DiscountManagement />,
           },
         ];
-      case "shopowner":
+      case "storeowner":
         return [
           { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
           {
@@ -100,7 +100,7 @@ const Dashboard = () => {
           <h2 className="sidebar-title">
             {userRole === "admin"
               ? "Admin Panel"
-              : userRole === "shopowner"
+              : userRole === "storeowner"
               ? "Store Panel"
               : "My Account"}
           </h2>

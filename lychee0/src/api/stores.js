@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8081/api/stores";
 
-// ✅ Get all stores
+// Get all stores
 export const getAllStores = async () => {
   try {
     const response = await axios.get(API_URL);
@@ -13,7 +13,7 @@ export const getAllStores = async () => {
   }
 };
 
-// ✅ Get store by store ID
+// Get store by ID
 export const getStoreById = async (storeId) => {
   try {
     const response = await axios.get(`${API_URL}/${storeId}`);
@@ -24,10 +24,10 @@ export const getStoreById = async (storeId) => {
   }
 };
 
-// ✅ Get store by shop owner ID
+// Get store by owner ID
 export const getStoreByOwnerId = async (ownerId) => {
   try {
-    const response = await axios.get(`${API_URL}/shopowner/${ownerId}`);
+    const response = await axios.get(`${API_URL}/owner/${ownerId}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching store for owner ${ownerId}:`, error);
@@ -35,7 +35,7 @@ export const getStoreByOwnerId = async (ownerId) => {
   }
 };
 
-// ✅ Create a new store
+// Create new store
 export const createStore = async (storeData) => {
   try {
     const response = await axios.post(API_URL, storeData);
@@ -46,7 +46,7 @@ export const createStore = async (storeData) => {
   }
 };
 
-// ✅ Update an existing store
+// Update store
 export const updateStore = async (storeId, storeData) => {
   try {
     const response = await axios.put(`${API_URL}/${storeId}`, storeData);
@@ -57,7 +57,7 @@ export const updateStore = async (storeId, storeData) => {
   }
 };
 
-// ✅ Soft delete store
+// Delete store (soft delete)
 export const deleteStore = async (storeId) => {
   try {
     await axios.delete(`${API_URL}/${storeId}`);
@@ -67,8 +67,7 @@ export const deleteStore = async (storeId) => {
     throw error;
   }
 };
-
-// ✅ Get store products (optional, only if supported)
+// Get store products
 export const getStoreProducts = async (storeId) => {
   try {
     const response = await axios.get(`${API_URL}/${storeId}/products`);
@@ -79,34 +78,12 @@ export const getStoreProducts = async (storeId) => {
   }
 };
 
-// ✅ Get store metrics (totalSales, totalOrders, totalProducts)
-export const getStoreMetrics = async (storeId) => {
+// Get store sales data
+export const getStoreSalesData = async (storeId, period) => {
   try {
-    const response = await axios.get(`${API_URL}/${storeId}/metrics`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching metrics for store ${storeId}:`, error);
-    throw error;
-  }
-};
-
-// ✅ Get store reviews
-export const getStoreReviews = async (storeId) => {
-  try {
-    const response = await axios.get(`${API_URL}/${storeId}/reviews`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching reviews for store ${storeId}:`, error);
-    throw error;
-  }
-};
-
-// ✅ Get store sales data (based on timeframe: '7days', '6months', '2023', '2024')
-export const getStoreSalesData = async (storeId, timeframe) => {
-  try {
-    const response = await axios.get(`${API_URL}/${storeId}/sales`, {
-      params: { timeframe },
-    });
+    const response = await axios.get(
+      `${API_URL}/${storeId}/sales?period=${period}`
+    );
     return response.data;
   } catch (error) {
     console.error(`Error fetching sales data for store ${storeId}:`, error);
@@ -114,7 +91,7 @@ export const getStoreSalesData = async (storeId, timeframe) => {
   }
 };
 
-// ✅ Upload store logo (image file)
+// Upload store logo
 export const uploadStoreLogo = async (storeId, file) => {
   try {
     const formData = new FormData();
@@ -125,7 +102,6 @@ export const uploadStoreLogo = async (storeId, file) => {
         "Content-Type": "multipart/form-data",
       },
     });
-
     return response.data;
   } catch (error) {
     console.error(`Error uploading logo for store ${storeId}:`, error);
