@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./NavBar";
+import {
+  getAllDiscounts,
+  createDiscount,
+  toggleDiscount,
+  deleteDiscount,
+} from "../api/discounts";
 import "../ComponentsCss/DiscountManagement.css";
 
 const DiscountManagement = () => {
@@ -14,61 +20,66 @@ const DiscountManagement = () => {
     endDate: "",
   });
 
-  const [discounts, setDiscounts] = useState([
-    {
-      id: 1,
-      code: "SPRING20",
-      type: "percentage",
-      value: 20,
-      startDate: "2025-03-01",
-      endDate: "2025-04-01",
-      active: true,
-    },
-    {
-      id: 2,
-      code: "FLAT10",
-      type: "fixed",
-      value: 10,
-      startDate: "2025-03-15",
-      endDate: "2025-03-31",
-      active: false,
-    },
-  ]);
+  const [discounts, setDiscounts] = useState([]);
+
+  const fetchDiscounts = async () => {
+    try {
+      const data = await getAllDiscounts();
+      setDiscounts(data);
+    } catch (error) {
+      console.error("Failed to fetch discounts:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchDiscounts();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newDiscount = {
-      id: discounts.length + 1,
-      code: formData.code,
-      type: formData.discountType,
-      value: parseFloat(formData.value),
-      startDate: formData.startDate,
-      endDate: formData.endDate,
-      active: true,
-    };
-    setDiscounts((prev) => [...prev, newDiscount]);
-    setFormData({
-      code: "",
-      discountType: "percentage",
-      value: "",
-      startDate: "",
-      endDate: "",
-    });
+    try {
+      const newDiscount = {
+        code: formData.code,
+        type: formData.discountType,
+        value: parseFloat(formData.value),
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+      };
+      await createDiscount(newDiscount);
+      fetchDiscounts();
+      setFormData({
+        code: "",
+        discountType: "percentage",
+        value: "",
+        startDate: "",
+        endDate: "",
+      });
+    } catch (error) {
+      console.error("Failed to create discount:", error.message);
+    }
   };
 
-  const toggleActive = (id) => {
-    setDiscounts((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, active: !d.active } : d))
-    );
+  const handleToggle = async (id) => {
+    try {
+      await toggleDiscount(id);
+      fetchDiscounts();
+    } catch (error) {
+      console.error("Failed to toggle discount:", error.message);
+    }
   };
 
-  const deleteDiscount = (id) => {
-    setDiscounts((prev) => prev.filter((d) => d.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await deleteDiscount(id);
+      fetchDiscounts();
+    } catch (error) {
+      console.error("Failed to delete discount:", error.message);
+    }
   };
 
   return (
@@ -80,7 +91,6 @@ const DiscountManagement = () => {
       <section className="discount-form-section">
         <h2 className="section-heading">Create New Discount</h2>
         <form onSubmit={handleSubmit} className="discount-form">
-          {/* First row */}
           <div className="form-row">
             <div className="form-field">
               <label htmlFor="code">Discount Code</label>
@@ -123,7 +133,6 @@ const DiscountManagement = () => {
             </div>
           </div>
 
-          {/* Second row */}
           <div className="form-row">
             <div className="form-field">
               <label htmlFor="startDate">Start Date</label>
@@ -190,8 +199,7 @@ const DiscountManagement = () => {
                   <td>{discount.endDate}</td>
                   <td>
                     <span
-                      className={`status-badge ${discount.active ? "active" : "inactive"
-                        }`}
+                      className={`status-badge ${discount.active ? "active" : "inactive"}`}
                     >
                       {discount.active ? "Active" : "Inactive"}
                     </span>
@@ -199,14 +207,14 @@ const DiscountManagement = () => {
                   <td>
                     <div className="action-buttons">
                       <button
-                        className="action-button activate-btn" id="active"
-                        onClick={() => toggleActive(discount.id)}
+                        className="action-button activate-btn"
+                        onClick={() => handleToggle(discount.id)}
                       >
                         {discount.active ? "Deactivate" : "Activate"}
                       </button>
                       <button
                         className="action-button delete-btn"
-                        onClick={() => deleteDiscount(discount.id)}
+                        onClick={() => handleDelete(discount.id)}
                       >
                         Delete
                       </button>
