@@ -1,95 +1,257 @@
 import React, { useState } from "react";
-import "../ComponentsCss/FiltersPanel.css";
 
 const FiltersPanel = ({
-    onApplyFilters,
-    categories = ["Skincare", "Makeup", "Hair Care", "Fragrance"],
+  onApplyFilters,
+  categories = ["Skincare", "Makeup", "Hair Care", "Fragrance"],
 }) => {
-    const [category, setCategory] = useState("All");
-    const [reviewStars, setReviewStars] = useState(null);
-    const [sortOption, setSortOption] = useState("none");
+  const [category, setCategory] = useState("All");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [sortOption, setSortOption] = useState("none");
+  const [selectedRating, setSelectedRating] = useState(0);
 
-    const handleStarClick = (stars) => {
-        setReviewStars((prev) => (prev === stars ? null : stars));
-    };
+  const handleApply = () => {
+    onApplyFilters({
+      category,
+      minPrice: minPrice ? parseFloat(minPrice) : null,
+      maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+      sortOption,
+      rating: selectedRating,
+    });
+  };
 
-    const handleApply = () => {
-        onApplyFilters({
-            category,
-            reviewStars,
-            sortOption,
-        });
-    };
+  const handleReset = () => {
+    setCategory("All");
+    setMinPrice("");
+    setMaxPrice("");
+    setSortOption("none");
+    setSelectedRating(0);
+    onApplyFilters({
+      category: "All",
+      minPrice: null,
+      maxPrice: null,
+      sortOption: "none",
+      rating: 0,
+    });
+  };
 
-    const handleReset = () => {
-        setCategory("All");
-        setReviewStars(null);
-        setSortOption("none");
-        onApplyFilters({
-            category: "All",
-            reviewStars: null,
-            sortOption: "none",
-        });
-    };
+  const handleStarClick = (rating) => {
+    setSelectedRating(selectedRating === rating ? 0 : rating);
+  };
 
-    return (
-        <div className="filters-panel">
-            <div className="filter-group">
-                <label htmlFor="category">Category</label>
-                <select
-                    id="category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                >
-                    <option value="All">All</option>
-                    {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                            {cat}
-                        </option>
-                    ))}
-                </select>
-            </div>
+  return (
+    <div style={styles.filtersPanel}>
+      <h2 style={styles.title}>Filter Stores</h2>
 
-            <div className="filter-group" id="stars">
-                <label>Reviews</label>
-                <div className="star-filter">
-                    {[5, 4, 3, 2, 1].map((star) => (
-                        <span
-                            key={star}
-                            className={`star ${reviewStars === star ? "selected" : ""}`}
-                            onClick={() => handleStarClick(star)}
-                            title={`${star} star${star > 1 ? "s" : ""} & up`}
-                        >
-                            {"★".repeat(star)}
-                        </span>
-                    ))}
-                </div>
-            </div>
+      {/* Category Filter */}
+      <div style={styles.filterGroup}>
+        <label style={styles.label}>Category</label>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          style={styles.select}
+        >
+          <option value="All">All</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            <div className="filter-group">
-                <label htmlFor="sortOption">Sort By</label>
-                <select
-                    id="sortOption"
-                    value={sortOption}
-                    onChange={(e) => setSortOption(e.target.value)}
-                >
-                    <option value="none">None</option>
-                    <option value="mostReviewed">Most Reviewed</option>
-                    <option value="leastReviewed">Least Reviewed</option>
-                    <option value="nameAZ">Name: A-Z</option>
-                </select>
-            </div>
-
-            <div className="filter-actions">
-                <button className="apply-button" onClick={handleApply}>
-                    Apply Filters
-                </button>
-                <button className="reset-button" onClick={handleReset}>
-                    Clear Filters
-                </button>
-            </div>
+      {/* Reviews Filter */}
+      <div style={styles.filterGroup}>
+        <label style={styles.label}>Reviews</label>
+        <div style={styles.starContainer}>
+          <div style={styles.starRow}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                style={{
+                  ...styles.star,
+                  color: star <= selectedRating ? "#f5b301" : "#ccc",
+                }}
+                onClick={() => handleStarClick(star)}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+          <div style={styles.starRow}>
+            {[1, 2, 3].map((star) => (
+              <span
+                key={`second-${star}`}
+                style={{
+                  ...styles.star,
+                  color:
+                    star <= Math.max(0, selectedRating - 5)
+                      ? "#f5b301"
+                      : "#ccc",
+                }}
+                onClick={() => handleStarClick(star + 5)}
+              >
+                ★
+              </span>
+            ))}
+            <span style={styles.star}>★</span>
+            <span style={styles.star}>★</span>
+          </div>
         </div>
-    );
+      </div>
+
+      {/* Price Range Filter */}
+      <div style={styles.filterGroup}>
+        <label style={styles.label}>Price Range</label>
+        <div style={styles.priceInputs}>
+          <input
+            type="number"
+            placeholder="Min"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            style={styles.priceInput}
+          />
+          <input
+            type="number"
+            placeholder="Max"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            style={styles.priceInput}
+          />
+        </div>
+      </div>
+
+      {/* Sort By Filter */}
+      <div style={styles.filterGroup}>
+        <label style={styles.label}>Sort By</label>
+        <select
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+          style={styles.select}
+        >
+          <option value="none">None</option>
+          <option value="priceLowToHigh">Price: Low to High</option>
+          <option value="priceHighToLow">Price: High to Low</option>
+          <option value="nameAZ">Name: A-Z</option>
+        </select>
+      </div>
+
+      {/* Action Buttons */}
+      <div style={styles.buttonContainer}>
+        <button style={styles.applyButton} onClick={handleApply}>
+          Apply Filters
+        </button>
+        <button style={styles.clearButton} onClick={handleReset}>
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const styles = {
+  filtersPanel: {
+    backgroundColor: "#fff5e1",
+    border: "1px solid #d9b6a3",
+    borderRadius: "12px",
+    padding: "24px",
+    boxShadow: "0 2px 10px rgba(139, 60, 93, 0.1)",
+    maxWidth: "320px",
+    width: "100%",
+    fontFamily: "Arial, sans-serif",
+  },
+  title: {
+    color: "#670010",
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    marginBottom: "24px",
+    marginTop: "0",
+    textAlign: "center",
+  },
+  filterGroup: {
+    marginBottom: "20px",
+  },
+  label: {
+    display: "block",
+    fontWeight: "bold",
+    color: "#670010",
+    marginBottom: "8px",
+    fontSize: "1rem",
+  },
+  select: {
+    width: "100%",
+    padding: "10px 12px",
+    borderRadius: "6px",
+    border: "1px solid #d9b6a3",
+    backgroundColor: "white",
+    color: "#4a2c2c",
+    fontSize: "1rem",
+    cursor: "pointer",
+    outline: "none",
+    transition: "border-color 0.3s ease",
+  },
+  starContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+  },
+  starRow: {
+    display: "flex",
+    gap: "4px",
+  },
+  star: {
+    fontSize: "1.2rem",
+    cursor: "pointer",
+    transition: "color 0.3s ease",
+    userSelect: "none",
+  },
+  priceInputs: {
+    display: "flex",
+    gap: "10px",
+  },
+  priceInput: {
+    flex: 1,
+    padding: "10px 12px",
+    borderRadius: "6px",
+    border: "1px solid #d9b6a3",
+    backgroundColor: "white",
+    color: "#4a2c2c",
+    fontSize: "1rem",
+    outline: "none",
+    transition: "border-color 0.3s ease",
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+    marginTop: "28px",
+  },
+  applyButton: {
+    width: "100%",
+    padding: "12px 16px",
+    fontSize: "1rem",
+    fontWeight: "bold",
+    borderRadius: "8px",
+    border: "none",
+    backgroundColor: "#670010",
+    color: "white",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
+    outline: "none",
+  },
+  clearButton: {
+    width: "100%",
+    padding: "12px 16px",
+    fontSize: "1rem",
+    fontWeight: "bold",
+    borderRadius: "8px",
+    border: "2px solid #670010",
+    backgroundColor: "white",
+    color: "#670010",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    outline: "none",
+  },
 };
 
 export default FiltersPanel;

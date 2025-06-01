@@ -44,7 +44,7 @@ function App() {
         <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
         <Route path="/category/:category" element={<ShopByCategory />} />
         <Route path="/item/:item" element={<ItemPage />} />
-        <Route path="/storepage" element={<StorePage />} />
+        <Route path="/storepage/:storeId" element={<StorePage />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/contact" element={<ContactAndSupport />} />
         <Route path="/faq" element={<FAQ />} />

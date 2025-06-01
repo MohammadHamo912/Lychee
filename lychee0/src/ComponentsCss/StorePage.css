@@ -28,7 +28,7 @@
 }
 /* Store Page Layout */
 .store-page {
-  background-color: #670010; /* Cream background */
+  background-color: #fff; /* Cream background */
   padding-top: 40px;
   animation: fadeIn 0.8s ease-in-out;
 }
