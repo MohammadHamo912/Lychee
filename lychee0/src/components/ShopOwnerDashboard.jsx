@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     LineChart,
     Line,
@@ -9,105 +9,101 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 import '../ComponentsCss/ShopOwnerDashboard.css';
+import {
+    getStoreByOwnerId,
+    getStoreMetrics,
+    getStoreReviews,
+    getStoreSalesData,
+    updateStore,
+    uploadStoreLogo,
+} from '../api/stores';
+import { useUser } from '../context/UserContext';
 
 const ShopOwnerDashboard = () => {
-    const [storeInfo, setStoreInfo] = useState({
-        storeName: 'Awesome Store',
-        email: 'owner@example.com',
-        description: 'We sell the best beauty products.',
-        address: {
-            city: 'Beauty City',
-            street: '123 Main St',
-            building: 'Block A',
-        },
-        categories: 'Makeup, Skincare',
-        password: 'secret123',
-        totalSales: 12345.67,
-        totalOrders: 150,
-        totalProducts: 50,
-        logoUrl: '', // 🆕 Store logo
-    });
-
-    const [profileForm, setProfileForm] = useState({ ...storeInfo });
+    const { user } = useUser();
+    const [storeId, setStoreId] = useState(null);
+    const [storeInfo, setStoreInfo] = useState(null);
+    const [profileForm, setProfileForm] = useState(null);
     const [saveMessage, setSaveMessage] = useState('');
+    const [reviews, setReviews] = useState([]);
+    const [salesDataSets, setSalesDataSets] = useState({});
+    const [timeframe, setTimeframe] = useState('7days');
 
-    const [products] = useState([
-        { id: 1, name: 'Lip Gloss', price: 9.99, stock: 20 },
-        { id: 2, name: 'Mascara', price: 19.99, stock: 4 },
-        { id: 3, name: 'Foundation', price: 29.99, stock: 2 },
-    ]);
+    console.log("📦 ShopOwnerDashboard loaded, user:", user);
 
-    const [reviews] = useState([
-        {
-            id: 1,
-            productName: 'Shimmering Rose Lip Gloss',
-            rating: 4,
-            comment: 'Really smooth and glossy. Love the Rose tint!',
-            customer: 'Sarah Connor',
-            date: '2024-03-01',
-        },
-        {
-            id: 2,
-            productName: 'Mascara Max Volume',
-            rating: 5,
-            comment: 'Amazing volume and lasts all day!',
-            customer: 'John Doe',
-            date: '2024-02-28',
-        },
-    ]);
+    useEffect(() => {
+        if (!user?.userId) {
+            console.log("⛔ user.userId is not defined yet.", user);
+            return;
+        }
+
+        const loadDashboard = async () => {
+            try {
+                const store = await getStoreByOwnerId(user.userId);
+                console.log("✅ Store response:", store);
+
+                if (!store) {
+                    setSaveMessage("No store found for this user.");
+                    return;
+                }
+
+                setStoreId(store.storeId);
+                setStoreInfo(store);
+                setProfileForm({
+                    name: store.name || '',
+                    description: store.description || '',
+                    logoUrl: store.logoUrl || '',
+                    address: store.address || { city: '', street: '', building: '' },
+                });
+
+                const metricsPromise = getStoreMetrics(store.storeId).catch(err => {
+                    console.error("❌ getStoreMetrics failed:", err);
+                    return {};
+                });
+                const reviewsPromise = getStoreReviews(store.storeId).catch(err => {
+                    console.error("❌ getStoreReviews failed:", err);
+                    return [];
+                });
+                const salesPromise = getStoreSalesData(store.storeId, timeframe).catch(err => {
+                    console.error("❌ getStoreSalesData failed:", err);
+                    return [];
+                });
+
+                const [metrics, fetchedReviews, sales] = await Promise.all([
+                    metricsPromise, reviewsPromise, salesPromise,
+                ]);
+
+                console.log("ℹ️ Metrics:", metrics);
+                console.log("ℹ️ Reviews:", fetchedReviews);
+                console.log("ℹ️ Sales:", sales);
+
+                setStoreInfo((prev) => ({
+                    ...prev,
+                    totalSales: metrics.totalSales || 0,
+                    totalOrders: metrics.totalOrders || 0,
+                    totalProducts: metrics.totalProducts || 0,
+                }));
+                setProfileForm((prev) => ({ ...prev, ...metrics }));
+                setReviews(fetchedReviews);
+                setSalesDataSets((prev) => ({ ...prev, [timeframe]: sales }));
+            } catch (err) {
+                console.error('Error loading dashboard:', err);
+            }
+        };
+
+        loadDashboard();
+    }, [user?.userId, timeframe]);
+
+    const currentSalesData = salesDataSets[timeframe] || [];
 
     const averageRating = reviews.length
         ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
         : 0;
     const roundedRating = Math.round(averageRating);
 
-    const [timeframe, setTimeframe] = useState('7days');
-    const salesDataSets = {
-        '7days': [
-            { date: 'Apr 1', total: 120 },
-            { date: 'Apr 2', total: 220 },
-            { date: 'Apr 3', total: 180 },
-            { date: 'Apr 4', total: 300 },
-            { date: 'Apr 5', total: 250 },
-            { date: 'Apr 6', total: 310 },
-            { date: 'Apr 7', total: 400 },
-        ],
-        '6months': [
-            { date: 'Nov', total: 3200 },
-            { date: 'Dec', total: 4100 },
-            { date: 'Jan', total: 3800 },
-            { date: 'Feb', total: 3600 },
-            { date: 'Mar', total: 4800 },
-            { date: 'Apr', total: 5200 },
-        ],
-        '2023': [
-            { date: 'Jan', total: 3100 },
-            { date: 'Feb', total: 2900 },
-            { date: 'Mar', total: 3500 },
-            { date: 'Apr', total: 3000 },
-            { date: 'May', total: 4200 },
-            { date: 'Jun', total: 4600 },
-            { date: 'Jul', total: 3900 },
-            { date: 'Aug', total: 4300 },
-            { date: 'Sep', total: 4100 },
-            { date: 'Oct', total: 4700 },
-            { date: 'Nov', total: 4900 },
-            { date: 'Dec', total: 5000 },
-        ],
-        '2024': [
-            { date: 'Jan', total: 3900 },
-            { date: 'Feb', total: 3700 },
-            { date: 'Mar', total: 4200 },
-            { date: 'Apr', total: 4400 },
-        ],
-    };
-
-    const currentSalesData = salesDataSets[timeframe] || [];
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-
-        if (['city', 'street', 'building'].includes(name)) {
+        if (["city", "street", "building"].includes(name)) {
             setProfileForm((prev) => ({
                 ...prev,
                 address: {
@@ -120,36 +116,46 @@ const ShopOwnerDashboard = () => {
         }
     };
 
-    const handleLogoChange = (e) => {
+    const handleLogoChange = async (e) => {
         const file = e.target.files[0];
-        if (file) {
-            const logoPreviewUrl = URL.createObjectURL(file);
-            setProfileForm((prev) => ({
-                ...prev,
-                logoUrl: logoPreviewUrl,
-            }));
+        if (!file?.type.startsWith("image/")) {
+            alert("Please upload a valid image file.");
+            return;
+        }
+        if (file && storeId) {
+            try {
+                const uploadedUrl = await uploadStoreLogo(storeId, file);
+                setProfileForm((prev) => ({ ...prev, logoUrl: uploadedUrl }));
+                setStoreInfo((prev) => ({ ...prev, logoUrl: uploadedUrl }));
+            } catch (err) {
+                console.error("Error uploading logo:", err);
+            }
         }
     };
 
-    const handleSaveProfile = () => {
-        setStoreInfo((prev) => ({
-            ...prev,
-            ...profileForm,
-            address: { ...profileForm.address },
-            logoUrl: profileForm.logoUrl,
-        }));
-        setSaveMessage('Profile information updated successfully!');
-        setTimeout(() => setSaveMessage(''), 3000);
+    const handleSaveProfile = async () => {
+        if (!storeId) return alert("Store ID is missing.");
+
+        try {
+            const updated = await updateStore(storeId, profileForm);
+            setStoreInfo(updated);
+            setSaveMessage('Profile updated successfully!');
+            setTimeout(() => setSaveMessage(''), 3000);
+        } catch (err) {
+            console.error("Error updating profile:", err);
+            alert("Failed to save profile.");
+        }
     };
+
+    if (!storeInfo || !profileForm) return <div style={{ padding: "2rem" }}>Loading...</div>;
 
     return (
         <div className="dashboard-container">
             <div className="dashboard-grid">
-                {/* Overview Cards */}
                 <div className="overview-cards">
                     <div className="overview-card">
                         <h2>Total Sales</h2>
-                        <p>${storeInfo.totalSales.toFixed(2)}</p>
+                        <p>${storeInfo.totalSales?.toFixed(2)}</p>
                     </div>
                     <div className="overview-card">
                         <h2>Total Orders</h2>
@@ -163,15 +169,13 @@ const ShopOwnerDashboard = () => {
                         <h2>Store Rating</h2>
                         <div className="store-rating">
                             <div className="stars">
-                                {'★'.repeat(roundedRating)}
-                                {'☆'.repeat(5 - roundedRating)}
+                                {'★'.repeat(roundedRating)}{'☆'.repeat(5 - roundedRating)}
                             </div>
                             <p>{averageRating.toFixed(1)} / 5</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Sales Chart */}
                 <div className="sales-chart-container">
                     <div className="sales-chart-header">
                         <h2>Sales Overview</h2>
@@ -204,7 +208,6 @@ const ShopOwnerDashboard = () => {
                     </ResponsiveContainer>
                 </div>
 
-                {/* Profile Edit */}
                 <div className="profile-section">
                     <h2>Edit Store Profile</h2>
                     <form className="profile-form" onSubmit={(e) => e.preventDefault()}>
@@ -212,8 +215,8 @@ const ShopOwnerDashboard = () => {
                             Store Name:
                             <input
                                 type="text"
-                                name="storeName"
-                                value={profileForm.storeName}
+                                name="name"
+                                value={profileForm.name || ''}
                                 onChange={handleInputChange}
                             />
                         </label>
@@ -222,8 +225,8 @@ const ShopOwnerDashboard = () => {
                             <input
                                 type="email"
                                 name="email"
-                                value={profileForm.email}
-                                onChange={handleInputChange}
+                                value={user.email || ''}
+                                readOnly
                             />
                         </label>
                         <label>
@@ -231,9 +234,8 @@ const ShopOwnerDashboard = () => {
                             <input
                                 type="text"
                                 name="city"
-                                value={profileForm.address.city}
+                                value={profileForm.address?.city || ''}
                                 onChange={handleInputChange}
-                                required
                             />
                         </label>
                         <label>
@@ -241,9 +243,8 @@ const ShopOwnerDashboard = () => {
                             <input
                                 type="text"
                                 name="street"
-                                value={profileForm.address.street || ''}
+                                value={profileForm.address?.street || ''}
                                 onChange={handleInputChange}
-                                placeholder="Optional"
                             />
                         </label>
                         <label>
@@ -251,9 +252,8 @@ const ShopOwnerDashboard = () => {
                             <input
                                 type="text"
                                 name="building"
-                                value={profileForm.address.building || ''}
+                                value={profileForm.address?.building || ''}
                                 onChange={handleInputChange}
-                                placeholder="Optional"
                             />
                         </label>
                         <label>
@@ -261,21 +261,14 @@ const ShopOwnerDashboard = () => {
                             <textarea
                                 name="description"
                                 rows="3"
-                                value={profileForm.description}
+                                value={profileForm.description || ''}
                                 onChange={handleInputChange}
                             ></textarea>
                         </label>
-
-                        {/* Logo Upload */}
                         <label>
                             Store Logo:
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleLogoChange}
-                            />
+                            <input type="file" accept="image/*" onChange={handleLogoChange} />
                         </label>
-
                         {profileForm.logoUrl && (
                             <div className="logo-preview">
                                 <img
@@ -285,13 +278,10 @@ const ShopOwnerDashboard = () => {
                                 />
                             </div>
                         )}
-
-                        <button id="saveButton" type="button" onClick={handleSaveProfile}>
+                        <button type="button" onClick={handleSaveProfile}>
                             Save Changes
                         </button>
-                        {saveMessage && (
-                            <p className="save-success-message">{saveMessage}</p>
-                        )}
+                        {saveMessage && <p className="save-success-message">{saveMessage}</p>}
                     </form>
                 </div>
             </div>

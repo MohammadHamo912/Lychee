@@ -12,26 +12,25 @@ const OrderManagement = ({ role = 'storeowner' }) => {
 
     useEffect(() => {
         const getOrders = async () => {
-            try {
-                const data = await fetchOrders({
-                    role,
-                    status: filterStatus !== 'All' ? filterStatus : '',
-                    query: searchQuery,
-                    startDate,
-                    endDate
-                });
-                setOrders(data || []);
-            } catch (error) {
-                console.error("Error fetching filtered orders:", error);
-            }
+            const data = await fetchOrders({
+                role,
+                status: filterStatus !== 'All' ? filterStatus : '',
+                query: searchQuery,
+                startDate,
+                endDate
+            });
+            setOrders(data || []);
         };
         getOrders();
-    }, [filterStatus, searchQuery, startDate, endDate]);
+    }, [filterStatus, searchQuery, startDate, endDate, role]);
 
     const getSearchPlaceholder = () => {
-        if (role === 'admin') return 'Search by customer or store...';
-        if (role === 'storeowner') return 'Search by customer name...';
-        return 'Search by store name...';
+        switch (role) {
+            case 'admin': return 'Search by customer or store...';
+            case 'storeowner': return 'Search by customer name...';
+            case 'customer': return 'Search by store name...';
+            default: return 'Search...';
+        }
     };
 
     const handleCardClick = (order) => setSelectedOrder(order);
@@ -49,7 +48,9 @@ const OrderManagement = ({ role = 'storeowner' }) => {
                     onChange={(e) => setFilterStatus(e.target.value)}
                 >
                     <option value="All">All</option>
+                    <option value="Pending">Pending</option>
                     <option value="Processing">Processing</option>
+                    <option value="Completed">Completed</option>
                     <option value="Shipped">Shipped</option>
                     <option value="Delivered">Delivered</option>
                     <option value="Cancelled">Cancelled</option>
