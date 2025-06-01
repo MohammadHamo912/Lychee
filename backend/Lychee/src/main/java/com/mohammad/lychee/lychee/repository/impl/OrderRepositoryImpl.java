@@ -13,10 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
@@ -33,12 +30,8 @@ public class OrderRepositoryImpl implements OrderRepository {
         order.setOrderId(rs.getInt("order_id"));
         order.setUserId(rs.getInt("user_ID"));
         order.setShippingAddressId(rs.getInt("shippingAddress_ID"));
-
-        // Handle nullable discount_id
-        if (rs.getObject("Discount_ID") != null) {
-            order.setDiscountId(rs.getInt("Discount_ID"));
-        }
-
+        order.setStoreId(rs.getObject("store_id") != null ? rs.getInt("store_id") : null);
+        order.setDiscountId(rs.getObject("Discount_ID") != null ? rs.getInt("Discount_ID") : null);
         order.setStatus(rs.getString("status"));
         order.setTotalPrice(rs.getBigDecimal("total_price"));
         order.setShippingFee(rs.getBigDecimal("shipping_fee"));
@@ -53,6 +46,15 @@ public class OrderRepositoryImpl implements OrderRepository {
         if (deletedAt != null) {
             order.setDeletedAt(deletedAt.toLocalDateTime());
         }
+
+        // Optional: these are only present in /search with joins
+        try {
+            order.setCustomerName(rs.getString("customerName"));
+        } catch (Exception ignored) {}
+
+        try {
+            order.setStoreName(rs.getString("storeName"));
+        } catch (Exception ignored) {}
 
         return order;
     };
@@ -78,25 +80,18 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Order save(Order order) {
-        String sql = "INSERT INTO `Order` (user_ID, shippingAddress_ID, Discount_ID, status, total_price, shipping_fee) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
-
+        String sql = "INSERT INTO `Order` (user_ID, shippingAddress_ID, Discount_ID, store_id, status, total_price, shipping_fee) VALUES (?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, order.getUserId());
             ps.setInt(2, order.getShippingAddressId());
-
-            if (order.getDiscountId() != null) {
-                ps.setInt(3, order.getDiscountId());
-            } else {
-                ps.setNull(3, java.sql.Types.INTEGER);
-            }
-
-            ps.setString(4, order.getStatus());
-            ps.setBigDecimal(5, order.getTotalPrice());
-            ps.setBigDecimal(6, order.getShippingFee());
+            ps.setObject(3, order.getDiscountId(), java.sql.Types.INTEGER);
+            ps.setObject(4, order.getStoreId(), java.sql.Types.INTEGER);
+            ps.setString(5, order.getStatus());
+            ps.setBigDecimal(6, order.getTotalPrice());
+            ps.setBigDecimal(7, order.getShippingFee());
             return ps;
         }, keyHolder);
 
@@ -106,14 +101,12 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void update(Order order) {
-        String sql = "UPDATE `Order` SET user_ID = ?, shippingAddress_ID = ?, Discount_ID = ?, " +
-                "status = ?, total_price = ?, shipping_fee = ? " +
-                "WHERE order_id = ?";
-
+        String sql = "UPDATE `Order` SET user_ID = ?, shippingAddress_ID = ?, Discount_ID = ?, store_id = ?, status = ?, total_price = ?, shipping_fee = ? WHERE order_id = ?";
         jdbcTemplate.update(sql,
                 order.getUserId(),
                 order.getShippingAddressId(),
                 order.getDiscountId(),
+                order.getStoreId(),
                 order.getStatus(),
                 order.getTotalPrice(),
                 order.getShippingFee(),
@@ -132,17 +125,19 @@ public class OrderRepositoryImpl implements OrderRepository {
         String sql = "SELECT * FROM `Order` WHERE status = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderRowMapper, status);
     }
+
     @Override
     public Optional<Double> getTotalSpendingByUserId(Integer userId) {
         String sql = "SELECT COALESCE(SUM(total_price), 0.0) FROM `Order` WHERE user_ID = ? AND deleted_at IS NULL";
         try {
             Double total = jdbcTemplate.queryForObject(sql, Double.class, userId);
-            return Optional.of(total);
+            return Optional.ofNullable(total);
         } catch (Exception e) {
             e.printStackTrace();
-            return Optional.of(0.0); // Fallback if query fails
+            return Optional.of(0.0);
         }
     }
+
     @Override
     public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate) {
         StringBuilder sql = new StringBuilder(
@@ -153,7 +148,6 @@ public class OrderRepositoryImpl implements OrderRepository {
                         "WHERE o.deleted_at IS NULL "
         );
 
-        // Parameters
         List<Object> params = new ArrayList<>();
 
         if (status != null && !status.isEmpty()) {
@@ -187,8 +181,6 @@ public class OrderRepositoryImpl implements OrderRepository {
         }
 
         sql.append("ORDER BY o.created_at DESC");
-
         return jdbcTemplate.query(sql.toString(), orderRowMapper, params.toArray());
     }
-
 }

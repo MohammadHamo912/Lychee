@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -20,34 +21,32 @@ public class OrderController {
         this.orderRepository = orderRepository;
     }
 
-    // GET /api/orders — fetch all orders
+    // GET all orders
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(orderRepository.findAll());
     }
 
-    // GET /api/orders/{orderId} — fetch one order
+    // GET order by ID
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderById(@PathVariable Integer orderId) {
-        return orderRepository.findById(orderId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Optional<Order> order = orderRepository.findById(orderId);
+        return order.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /api/orders/user/{userId} — get orders by user
+    // GET orders by user ID
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Integer userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(orderRepository.findByUserId(userId));
     }
 
-    // GET /api/orders/status/{status}
+    // GET orders by status
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Order>> getOrdersByStatus(@PathVariable String status) {
-        List<Order> orders = orderRepository.findByStatus(status);
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(orderRepository.findByStatus(status));
     }
+
+    // GET orders with filters: role, query, status, date range
     @GetMapping("/search")
     public ResponseEntity<List<Order>> searchOrders(
             @RequestParam(required = false) String role,
@@ -58,5 +57,30 @@ public class OrderController {
     ) {
         List<Order> results = orderRepository.searchOrders(role, query, status, startDate, endDate);
         return ResponseEntity.ok(results);
+    }
+
+    // POST: Create new order
+    @PostMapping
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        Order saved = orderRepository.save(order);
+        return ResponseEntity.ok(saved);
+    }
+
+    // PUT: Update existing order
+    @PutMapping("/{orderId}")
+    public ResponseEntity<Order> updateOrder(@PathVariable Integer orderId, @RequestBody Order order) {
+        if (!orderRepository.findById(orderId).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        order.setOrderId(orderId);
+        orderRepository.update(order);
+        return ResponseEntity.ok(order);
+    }
+
+    // DELETE (soft): Mark as deleted
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Integer orderId) {
+        orderRepository.softDelete(orderId);
+        return ResponseEntity.noContent().build();
     }
 }
