@@ -23,15 +23,14 @@ export const getOrdersByUserId = async (userId) => {
 };
 
 export const fetchOrders = async ({ role, status, query, startDate, endDate }) => {
-    const params = new URLSearchParams();
-
-    if (role) params.append('role', role);
-    if (status) params.append('status', status);
-    if (query) params.append('query', query);
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
-
     try {
+        const params = new URLSearchParams();
+        params.append('role', role || 'storeowner'); // ✅ enforce fallback if role is missing
+        if (status) params.append('status', status);
+        if (query) params.append('query', query);
+        if (startDate) params.append('startDate', startDate);
+        if (endDate) params.append('endDate', endDate);
+
         const response = await axios.get(`${API_URL}/search?${params.toString()}`);
         return response.data;
     } catch (error) {

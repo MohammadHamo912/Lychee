@@ -4,93 +4,44 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class OrderItem {
+    private int orderItemId;
     private int orderId;
     private int itemId;
-    private String shippingStatus;
+    private int storeId;
     private int quantity;
     private BigDecimal priceAtPurchase;
+    private String shippingStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    public OrderItem() {}
+    public int getOrderItemId() { return orderItemId; }
+    public void setOrderItemId(int orderItemId) { this.orderItemId = orderItemId; }
 
-    public OrderItem(int orderId, int itemId, String shippingStatus, int quantity,
-                     BigDecimal priceAtPurchase, LocalDateTime createdAt,
-                     LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.orderId = orderId;
-        this.itemId = itemId;
-        this.shippingStatus = shippingStatus;
-        this.quantity = quantity;
-        this.priceAtPurchase = priceAtPurchase;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
-    }
+    public int getOrderId() { return orderId; }
+    public void setOrderId(int orderId) { this.orderId = orderId; }
 
-    // Getters and setters 👇
+    public int getItemId() { return itemId; }
+    public void setItemId(int itemId) { this.itemId = itemId; }
 
-    public int getOrderId() {
-        return orderId;
-    }
+    public int getStoreId() { return storeId; }
+    public void setStoreId(int storeId) { this.storeId = storeId; }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public int getItemId() {
-        return itemId;
-    }
+    public BigDecimal getPriceAtPurchase() { return priceAtPurchase; }
+    public void setPriceAtPurchase(BigDecimal priceAtPurchase) { this.priceAtPurchase = priceAtPurchase; }
 
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
-    }
+    public String getShippingStatus() { return shippingStatus; }
+    public void setShippingStatus(String shippingStatus) { this.shippingStatus = shippingStatus; }
 
-    public String getShippingStatus() {
-        return shippingStatus;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setShippingStatus(String shippingStatus) {
-        this.shippingStatus = shippingStatus;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getPriceAtPurchase() {
-        return priceAtPurchase;
-    }
-
-    public void setPriceAtPurchase(BigDecimal priceAtPurchase) {
-        this.priceAtPurchase = priceAtPurchase;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
+    public LocalDateTime getDeletedAt() { return deletedAt; }
+    public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }
 }

@@ -15,102 +15,38 @@ public class Order {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    public Order() {}
+    private String customerName;
 
-    public Order(int orderId, int userId, int shippingAddressId, Integer discountId, String status,
-                 BigDecimal totalPrice, BigDecimal shippingFee, LocalDateTime createdAt,
-                 LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.orderId = orderId;
-        this.userId = userId;
-        this.shippingAddressId = shippingAddressId;
-        this.discountId = discountId;
-        this.status = status;
-        this.totalPrice = totalPrice;
-        this.shippingFee = shippingFee;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
-    }
+    public int getOrderId() { return orderId; }
+    public void setOrderId(int orderId) { this.orderId = orderId; }
 
-    // Getters and setters 👇
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
 
-    public int getOrderId() {
-        return orderId;
-    }
+    public int getShippingAddressId() { return shippingAddressId; }
+    public void setShippingAddressId(int shippingAddressId) { this.shippingAddressId = shippingAddressId; }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
+    public Integer getDiscountId() { return discountId; }
+    public void setDiscountId(Integer discountId) { this.discountId = discountId; }
 
-    public int getUserId() {
-        return userId;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    public BigDecimal getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
 
-    public int getShippingAddressId() {
-        return shippingAddressId;
-    }
+    public BigDecimal getShippingFee() { return shippingFee; }
+    public void setShippingFee(BigDecimal shippingFee) { this.shippingFee = shippingFee; }
 
-    public void setShippingAddressId(int shippingAddressId) {
-        this.shippingAddressId = shippingAddressId;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public Integer getDiscountId() {
-        return discountId;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public void setDiscountId(Integer discountId) {
-        this.discountId = discountId;
-    }
+    public LocalDateTime getDeletedAt() { return deletedAt; }
+    public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public BigDecimal getShippingFee() {
-        return shippingFee;
-    }
-
-    public void setShippingFee(BigDecimal shippingFee) {
-        this.shippingFee = shippingFee;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
 }

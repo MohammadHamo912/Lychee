@@ -1,6 +1,7 @@
 package com.mohammad.lychee.lychee.service.impl;
 
 import com.mohammad.lychee.lychee.model.Order;
+import com.mohammad.lychee.lychee.model.OrderItem;
 import com.mohammad.lychee.lychee.repository.OrderRepository;
 import com.mohammad.lychee.lychee.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Optional<Order> getOrderById(Integer orderId) {
+        return orderRepository.findById(orderId);
+    }
+
+    @Override
     public List<Order> getOrdersByUserId(Integer userId) {
         return orderRepository.findByUserId(userId);
     }
 
     @Override
-    public Optional<Order> getOrderById(Integer orderId) {
-        return orderRepository.findById(orderId);
+    public List<OrderItem> getOrderItemsByOrderId(Integer orderId) {
+        return orderRepository.findItemsByOrderId(orderId);
     }
 
     @Override
@@ -42,18 +48,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
-    public Order updateOrder(Order order) {
-        Optional<Order> existing = orderRepository.findById(order.getOrderId());
-        if (existing.isEmpty()) {
-            throw new IllegalArgumentException("Order with ID " + order.getOrderId() + " not found");
-        }
-        return orderRepository.save(order);
+    public void updateOrder(Order order) {
+        orderRepository.update(order);
     }
 
     @Override
-    @Transactional
     public void deleteOrder(Integer orderId) {
         orderRepository.softDelete(orderId);
+    }
+
+    @Override
+    public List<Order> findByStatus(String status) {
+        return orderRepository.findByStatus(status);
+    }
+
+    @Override
+    public Optional<Double> getTotalSpendingByUserId(Integer userId) {
+        return orderRepository.getTotalSpendingByUserId(userId);
+    }
+
+    @Override
+    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate) {
+        return orderRepository.searchOrders(role, query, status, startDate, endDate);
     }
 }

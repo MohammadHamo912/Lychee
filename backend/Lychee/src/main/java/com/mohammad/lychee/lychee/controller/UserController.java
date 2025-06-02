@@ -23,13 +23,11 @@ public class UserController {
         this.orderRepository = orderRepository;
     }
 
-    // Get all users
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    // Get user by ID
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
         return userService.getUserById(userId)
@@ -37,13 +35,16 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Sign up
     @PostMapping("/signup")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             if (userService.getUserByEmail(user.getEmail()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build(); // Email already exists
             }
+
+            String hashedPassword = userService.encodePassword(user.getPassword());
+            user.setPasswordHash(hashedPassword);
+
             User createdUser = userService.createUser(user);
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -51,7 +52,6 @@ public class UserController {
         }
     }
 
-    // Login
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
@@ -71,11 +71,16 @@ public class UserController {
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
-    // Update user
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestBody User user) {
         try {
             user.setUserId(userId);
+
+            if (user.getPassword() != null && !user.getPassword().isBlank()) {
+                String hashedPassword = userService.encodePassword(user.getPassword());
+                user.setPasswordHash(hashedPassword);
+            }
+
             User updatedUser = userService.updateUser(user);
             return ResponseEntity.ok(updatedUser);
         } catch (IllegalArgumentException e) {
@@ -85,7 +90,6 @@ public class UserController {
         }
     }
 
-    // Soft delete user
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> softDeleteUser(@PathVariable Integer userId) {
         try {
@@ -96,11 +100,9 @@ public class UserController {
         }
     }
 
-    // Get total spending
     @GetMapping("/{userId}/total-spending")
     public ResponseEntity<Double> getTotalSpending(@PathVariable Integer userId) {
         Optional<Double> total = orderRepository.getTotalSpendingByUserId(userId);
         return ResponseEntity.ok(total.orElse(0.0));
     }
-
 }

@@ -1,6 +1,7 @@
 package com.mohammad.lychee.lychee.service;
 
 import com.mohammad.lychee.lychee.model.User;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,4 +14,5 @@ public interface UserService {
     void softDeleteUser(Integer userId);
     boolean verifyPassword(String email, String password);
     void updatePassword(Integer userId, String newPassword);
+    String encodePassword(String rawPassword);
 }

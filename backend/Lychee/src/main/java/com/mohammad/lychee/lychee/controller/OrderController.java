@@ -1,62 +1,70 @@
 package com.mohammad.lychee.lychee.controller;
 
 import com.mohammad.lychee.lychee.model.Order;
-import com.mohammad.lychee.lychee.repository.OrderRepository;
+import com.mohammad.lychee.lychee.model.OrderItem;
+import com.mohammad.lychee.lychee.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "http://localhost:3000")
 public class OrderController {
 
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    // GET /api/orders — fetch all orders
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
-        return ResponseEntity.ok(orders);
+    public List<Order> getAllOrders() {
+        return orderService.getAllOrders();
     }
 
-    // GET /api/orders/{orderId} — fetch one order
-    @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Integer orderId) {
-        return orderRepository.findById(orderId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{id}")
+    public Optional<Order> getOrderById(@PathVariable Integer id) {
+        return orderService.getOrderById(id);
     }
 
-    // GET /api/orders/user/{userId} — get orders by user
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Integer userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
-        return ResponseEntity.ok(orders);
+    public List<Order> getOrdersByUserId(@PathVariable Integer userId) {
+        return orderService.getOrdersByUserId(userId);
     }
 
-    // GET /api/orders/status/{status}
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Order>> getOrdersByStatus(@PathVariable String status) {
-        List<Order> orders = orderRepository.findByStatus(status);
-        return ResponseEntity.ok(orders);
+    @GetMapping("/{orderId}/items")
+    public List<OrderItem> getOrderItems(@PathVariable Integer orderId) {
+        return orderService.getOrderItemsByOrderId(orderId);
     }
+
+    @PostMapping
+    public Order createOrder(@RequestBody Order order) {
+        return orderService.createOrder(order);
+    }
+
+    @PutMapping("/{id}")
+    public void updateOrder(@PathVariable Integer id, @RequestBody Order order) {
+        order.setOrderId(id);
+        orderService.updateOrder(order);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteOrder(@PathVariable Integer id) {
+        orderService.deleteOrder(id);
+    }
+
     @GetMapping("/search")
-    public ResponseEntity<List<Order>> searchOrders(
-            @RequestParam(required = false) String role,
-            @RequestParam(required = false) String query,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate
-    ) {
-        List<Order> results = orderRepository.searchOrders(role, query, status, startDate, endDate);
-        return ResponseEntity.ok(results);
+    public List<Order> searchOrders(@RequestParam String role,
+                                    @RequestParam(required = false) String query,
+                                    @RequestParam(required = false) String status,
+                                    @RequestParam(required = false) String startDate,
+                                    @RequestParam(required = false) String endDate) {
+        System.out.printf("SEARCH: role=%s, query=%s, status=%s, start=%s, end=%s%n",
+                role, query, status, startDate, endDate);
+
+        return orderService.searchOrders(role, query, status, startDate, endDate);
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -42,24 +41,26 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User createUser(User user) {
-        // Hash the password before saving
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        // Password should already be encoded by controller
         return userRepository.save(user);
     }
 
     @Override
     @Transactional
     public User updateUser(User user) {
-        // Check if user exists
-        Optional<User> existingUser = userRepository.findById(user.getUserId());
-        if (existingUser.isEmpty()) {
+        Optional<User> existingUserOpt = userRepository.findById(user.getUserId());
+        if (existingUserOpt.isEmpty()) {
             throw new IllegalArgumentException("User with ID " + user.getUserId() + " does not exist");
         }
 
-        // Don't update password through this method
-        user.setPasswordHash(existingUser.get().getPasswordHash());
-        userRepository.save(user);
-        return user;
+        User existingUser = existingUserOpt.get();
+
+        // If passwordHash is null or blank, preserve the old password
+        if (user.getPasswordHash() == null || user.getPasswordHash().isBlank()) {
+            user.setPasswordHash(existingUser.getPasswordHash());
+        }
+
+        return userRepository.save(user);
     }
 
     @Override
@@ -92,4 +93,8 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public String encodePassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
+    }
 }

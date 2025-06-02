@@ -66,19 +66,25 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
     @Override
     public OrderItem save(OrderItem orderItem) {
-        String sql = "INSERT INTO OrderItem (order_id, item_id, shipping_status, quantity, price_at_purchase) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO OrderItem (order_id, item_id, shipping_status, quantity, price_at_purchase, created_at, updated_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
+        LocalDateTime now = LocalDateTime.now();
         jdbcTemplate.update(sql,
                 orderItem.getOrderId(),
                 orderItem.getItemId(),
                 orderItem.getShippingStatus(),
                 orderItem.getQuantity(),
-                orderItem.getPriceAtPurchase()
+                orderItem.getPriceAtPurchase(),
+                Timestamp.valueOf(now),
+                Timestamp.valueOf(now)
         );
 
+        orderItem.setCreatedAt(now);
+        orderItem.setUpdatedAt(now);
         return orderItem;
     }
+
 
     @Override
     public void update(OrderItem orderItem) {

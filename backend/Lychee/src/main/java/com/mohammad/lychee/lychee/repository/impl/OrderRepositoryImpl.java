@@ -1,6 +1,8 @@
+// --- OrderRepositoryImpl.java (Fully Fixed) ---
 package com.mohammad.lychee.lychee.repository.impl;
 
 import com.mohammad.lychee.lychee.model.Order;
+import com.mohammad.lychee.lychee.model.OrderItem;
 import com.mohammad.lychee.lychee.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,14 +11,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
@@ -34,7 +31,6 @@ public class OrderRepositoryImpl implements OrderRepository {
         order.setUserId(rs.getInt("user_ID"));
         order.setShippingAddressId(rs.getInt("shippingAddress_ID"));
 
-        // Handle nullable discount_id
         if (rs.getObject("Discount_ID") != null) {
             order.setDiscountId(rs.getInt("Discount_ID"));
         }
@@ -54,8 +50,34 @@ public class OrderRepositoryImpl implements OrderRepository {
             order.setDeletedAt(deletedAt.toLocalDateTime());
         }
 
+        if (hasColumn(rs, "customerName")) {
+            order.setCustomerName(rs.getString("customerName"));
+        }
+
         return order;
     };
+
+    private final RowMapper<OrderItem> orderItemRowMapper = (rs, rowNum) -> {
+        OrderItem item = new OrderItem();
+        item.setOrderItemId(rs.getInt("order_item_id"));
+        item.setOrderId(rs.getInt("order_id"));
+        item.setItemId(rs.getInt("item_id"));
+        item.setStoreId(rs.getInt("store_id"));
+        item.setQuantity(rs.getInt("quantity"));
+        item.setPriceAtPurchase(rs.getBigDecimal("price_at_purchase"));
+        item.setShippingStatus(rs.getString("shipping_status"));
+        item.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        return item;
+    };
+
+    private boolean hasColumn(ResultSet rs, String columnName) {
+        try {
+            rs.findColumn(columnName);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 
     @Override
     public List<Order> findAll() {
@@ -65,42 +87,47 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Optional<Order> findById(Integer orderId) {
-        String sql = "SELECT * FROM `Order` WHERE order_id = ? AND deleted_at IS NULL";
+        String sql = "SELECT o.*, u.name AS customerName FROM `Order` o JOIN `User` u ON o.user_ID = u.User_ID WHERE o.order_id = ? AND o.deleted_at IS NULL";
         List<Order> orders = jdbcTemplate.query(sql, orderRowMapper, orderId);
         return orders.isEmpty() ? Optional.empty() : Optional.of(orders.get(0));
     }
 
     @Override
     public List<Order> findByUserId(Integer userId) {
-        String sql = "SELECT * FROM `Order` WHERE user_ID = ? AND deleted_at IS NULL";
+        String sql = "SELECT o.*, u.name AS customerName FROM `Order` o JOIN `User` u ON o.user_ID = u.User_ID WHERE o.user_ID = ? AND o.deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderRowMapper, userId);
     }
 
     @Override
+    public List<OrderItem> findItemsByOrderId(Integer orderId) {
+        String sql = "SELECT * FROM OrderItem WHERE order_id = ?";
+        return jdbcTemplate.query(sql, orderItemRowMapper, orderId);
+    }
+
+    @Override
     public Order save(Order order) {
-        String sql = "INSERT INTO `Order` (user_ID, shippingAddress_ID, Discount_ID, status, total_price, shipping_fee) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `Order` (user_ID, shippingAddress_ID, Discount_ID, status, total_price, shipping_fee, created_at, updated_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
+        LocalDateTime now = LocalDateTime.now();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, order.getUserId());
             ps.setInt(2, order.getShippingAddressId());
-
-            if (order.getDiscountId() != null) {
-                ps.setInt(3, order.getDiscountId());
-            } else {
-                ps.setNull(3, java.sql.Types.INTEGER);
-            }
-
+            ps.setObject(3, order.getDiscountId(), java.sql.Types.INTEGER);
             ps.setString(4, order.getStatus());
             ps.setBigDecimal(5, order.getTotalPrice());
             ps.setBigDecimal(6, order.getShippingFee());
+            ps.setTimestamp(7, Timestamp.valueOf(now));
+            ps.setTimestamp(8, Timestamp.valueOf(now));
             return ps;
         }, keyHolder);
 
         order.setOrderId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        order.setCreatedAt(now);
+        order.setUpdatedAt(now);
         return order;
     }
 
@@ -132,48 +159,48 @@ public class OrderRepositoryImpl implements OrderRepository {
         String sql = "SELECT * FROM `Order` WHERE status = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderRowMapper, status);
     }
+
     @Override
     public Optional<Double> getTotalSpendingByUserId(Integer userId) {
         String sql = "SELECT COALESCE(SUM(total_price), 0.0) FROM `Order` WHERE user_ID = ? AND deleted_at IS NULL";
         try {
             Double total = jdbcTemplate.queryForObject(sql, Double.class, userId);
-            return Optional.of(total);
+            return Optional.ofNullable(total);
         } catch (Exception e) {
             e.printStackTrace();
-            return Optional.of(0.0); // Fallback if query fails
+            return Optional.of(0.0);
         }
     }
+
     @Override
     public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate) {
         StringBuilder sql = new StringBuilder(
-                "SELECT o.*, u.full_name AS customerName, s.store_name AS storeName " +
-                        "FROM `Order` o " +
-                        "JOIN `User` u ON o.user_id = u.user_id " +
-                        "JOIN `Store` s ON o.store_id = s.store_id " +
+                "SELECT o.*, u.name AS customerName FROM `Order` o " +
+                        "JOIN `User` u ON o.user_ID = u.User_ID " +
                         "WHERE o.deleted_at IS NULL "
         );
 
-        // Parameters
         List<Object> params = new ArrayList<>();
+
+        if ("customer".equals(role)) {
+            if (query == null || query.isBlank()) return new ArrayList<>();
+            try {
+                int userId = Integer.parseInt(query.trim());
+                sql.append("AND o.user_ID = ? ");
+                params.add(userId);
+            } catch (NumberFormatException e) {
+                return new ArrayList<>();
+            }
+        } else {
+            if (query != null && !query.isEmpty()) {
+                sql.append("AND LOWER(u.name) LIKE ? ");
+                params.add("%" + query.toLowerCase() + "%");
+            }
+        }
 
         if (status != null && !status.isEmpty()) {
             sql.append("AND o.status = ? ");
             params.add(status);
-        }
-
-        if (query != null && !query.isEmpty()) {
-            query = "%" + query.toLowerCase() + "%";
-            if ("admin".equals(role)) {
-                sql.append("AND (LOWER(u.full_name) LIKE ? OR LOWER(s.store_name) LIKE ?) ");
-                params.add(query);
-                params.add(query);
-            } else if ("storeowner".equals(role)) {
-                sql.append("AND LOWER(u.full_name) LIKE ? ");
-                params.add(query);
-            } else if ("customer".equals(role)) {
-                sql.append("AND LOWER(s.store_name) LIKE ? ");
-                params.add(query);
-            }
         }
 
         if (startDate != null && !startDate.isEmpty()) {
@@ -190,5 +217,4 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         return jdbcTemplate.query(sql.toString(), orderRowMapper, params.toArray());
     }
-
 }
