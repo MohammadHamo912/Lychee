@@ -5,10 +5,9 @@ import com.mohammad.lychee.lychee.repository.OrderItemRepository;
 import com.mohammad.lychee.lychee.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
@@ -21,41 +20,39 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public List<OrderItem> getAllOrderItems() {
-        return orderItemRepository.findAll();
-    }
-
-    @Override
     public List<OrderItem> getOrderItemsByOrderId(Integer orderId) {
         return orderItemRepository.findByOrderId(orderId);
     }
 
     @Override
-    public Optional<OrderItem> getOrderItem(Integer orderId, Integer itemId) {
-        return orderItemRepository.findByOrderIdAndItemId(orderId, itemId);
+    public List<OrderItem> getOrderItemsByStoreId(Integer storeId) {
+        return orderItemRepository.findByStoreId(storeId);
     }
 
     @Override
-    @Transactional
-    public OrderItem createOrderItem(OrderItem orderItem) {
-        return orderItemRepository.save(orderItem);
-    }
-
-    @Override
-    @Transactional
-    public OrderItem updateOrderItem(OrderItem orderItem) {
-        Optional<OrderItem> existing = orderItemRepository.findByOrderIdAndItemId(
-                orderItem.getOrderId(), orderItem.getItemId());
-        if (existing.isEmpty()) {
-            throw new IllegalArgumentException("OrderItem with Order ID " + orderItem.getOrderId() +
-                    " and Item ID " + orderItem.getItemId() + " not found");
+    public void saveOrderItem(OrderItem item) {
+        if (item.getCreatedAt() == null) {
+            item.setCreatedAt(LocalDateTime.now());
         }
-        return orderItemRepository.save(orderItem);
+        if (item.getUpdatedAt() == null) {
+            item.setUpdatedAt(LocalDateTime.now());
+        }
+        orderItemRepository.save(item);
     }
 
     @Override
-    @Transactional
-    public void deleteOrderItem(Integer orderId, Integer itemId) {
-        orderItemRepository.softDelete(orderId, itemId);
+    public void updateOrderItem(OrderItem item) {
+        item.setUpdatedAt(LocalDateTime.now());
+        orderItemRepository.update(item);
+    }
+
+    @Override
+    public void deleteOrderItemById(Integer id) {
+        orderItemRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteOrderItemsByOrderId(Integer orderId) {
+        orderItemRepository.deleteByOrderId(orderId);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @RestController
@@ -102,7 +103,9 @@ public class UserController {
 
     @GetMapping("/{userId}/total-spending")
     public ResponseEntity<Double> getTotalSpending(@PathVariable Integer userId) {
-        Optional<Double> total = orderRepository.getTotalSpendingByUserId(userId);
-        return ResponseEntity.ok(total.orElse(0.0));
+        Optional<BigDecimal> total = orderRepository.getTotalSpendingByUserId(userId);
+        double totalAmount = total.map(BigDecimal::doubleValue).orElse(0.0);
+        return ResponseEntity.ok(totalAmount);
     }
+
 }

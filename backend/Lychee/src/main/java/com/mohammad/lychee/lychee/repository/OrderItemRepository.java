@@ -14,4 +14,10 @@ public interface OrderItemRepository {
     List<OrderItem> findByItemId(Integer itemId);
     List<OrderItem> findByShippingStatus(String shippingStatus);
     Optional<OrderItem> findByOrderIdAndItemId(Integer orderId, Integer itemId);
+
+    List<OrderItem> findByStoreId(Integer storeId);
+
+    void deleteById(Integer id);
+
+    void deleteByOrderId(Integer orderId);
 }

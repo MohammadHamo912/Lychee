@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getOrdersByStoreId(Integer storeId) {
+        return orderRepository.findByStoreId(storeId);
+    }
+
+    @Override
     public List<OrderItem> getOrderItemsByOrderId(Integer orderId) {
         return orderRepository.findItemsByOrderId(orderId);
     }
@@ -63,12 +69,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<Double> getTotalSpendingByUserId(Integer userId) {
+    public Optional<BigDecimal> getTotalSpendingByUserId(Integer userId) {
         return orderRepository.getTotalSpendingByUserId(userId);
     }
 
     @Override
-    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate) {
-        return orderRepository.searchOrders(role, query, status, startDate, endDate);
+    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId) {
+        return orderRepository.searchOrders(role, query, status, startDate, endDate, userId, storeId);
     }
 }
