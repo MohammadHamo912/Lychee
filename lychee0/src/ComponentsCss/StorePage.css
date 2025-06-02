@@ -24,7 +24,10 @@
 }
 
 .search-container {
-  background-color: #670010;
+  background-color: #fff5e1;
+  border-radius: 8px;
+  height: 40px;
+  padding: 5px;
 }
 /* Store Page Layout */
 .store-page {

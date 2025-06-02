@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReusableCard from "../components/ReusableCard";
 import cartIcon from "../images/white-cart-icon.png";
+import { getCategoriesByProductId } from "../api/productcategories";
+import { getCategoryById } from "../api/categories";
 import "../ComponentsCss/ItemCard.css"; // For product-specific styling
 
 const ItemCard = ({ item, onAddToCart }) => {
@@ -16,12 +18,58 @@ const ItemCard = ({ item, onAddToCart }) => {
     price,
     description,
     discount,
-    category,
     stock,
     currentVariant,
     availableVariants,
-    barcode,
+    barcode, // need to match it for the find best price
   } = item;
+
+  // Extract productId from the current variant
+  const productId = currentVariant?.productId;
+
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+
+  // Fetch categories for this item's product
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setCategoriesLoading(true);
+
+        if (productId) {
+          // Get product-category relationships
+          const productCategories = await getCategoriesByProductId(productId);
+
+          if (productCategories && productCategories.length > 0) {
+            // Fetch category details for each relationship
+            const categoryPromises = productCategories.map((pc) =>
+              getCategoryById(pc.categoryId)
+            );
+
+            const categoryDetails = await Promise.all(categoryPromises);
+            // Filter out any null results and set categories
+            setCategories(categoryDetails.filter((cat) => cat !== null));
+          } else {
+            setCategories([]);
+          }
+        }
+      } catch (error) {
+        console.error(
+          `Failed to fetch categories for product ${productId}:`,
+          error
+        );
+        setCategories([]);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    if (productId) {
+      fetchCategories();
+    } else {
+      setCategoriesLoading(false);
+    }
+  }, [productId]);
 
   // Calculate the final price after discount
   const finalPrice = discount ? price - (price * discount) / 100 : price;
@@ -113,10 +161,40 @@ const ItemCard = ({ item, onAddToCart }) => {
       <div className="out-of-stock-indicator">Out of Stock</div>
     ) : null;
 
+  // Create category labels component
+  const CategoryLabels = () => {
+    if (categoriesLoading) {
+      return (
+        <span className="item-category loading">Loading categories...</span>
+      );
+    }
+
+    if (categories.length === 0) {
+      return <span className="item-category no-category">Uncategorized</span>;
+    }
+
+    // Show categories
+    if (categories.length === 1) {
+      return (
+        <span className="item-category">Category: {categories[0].name}</span>
+      );
+    } else {
+      // Show first category + count of others
+      return (
+        <span className="item-category multiple">
+          Categories: {categories[0].name}
+          {categories.length > 1 && (
+            <span className="category-count"> +{categories.length - 1}</span>
+          )}
+        </span>
+      );
+    }
+  };
+
   // Create subtitle with category and stock info
   const subtitleContent = (
     <div className="item-subtitle-container">
-      {category && <span className="item-category">Category: {category}</span>}
+      <CategoryLabels />
       <span className="item-stock">Stock: {stock}</span>
     </div>
   );
@@ -148,17 +226,18 @@ ItemCard.propTypes = {
     description: PropTypes.string,
     price: PropTypes.number.isRequired,
     discount: PropTypes.number,
-    category: PropTypes.string,
     stock: PropTypes.number,
     storeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     currentVariant: PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      productId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Added productId to variant
       size: PropTypes.string,
       color: PropTypes.string,
     }),
     availableVariants: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        productId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Added productId to variant
         size: PropTypes.string,
         color: PropTypes.string,
         available: PropTypes.bool,
