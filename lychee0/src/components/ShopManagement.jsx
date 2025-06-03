@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../ComponentsCss/ShopManagement.css";
 import { getAllStores } from "../api/stores";
 import { getUserById } from "../api/users";
-import { getItemsByStoreId } from "../api/items";
+import { getItemsByStoreId, searchItemsInStore } from "../api/items";
 
 const ShopManagement = () => {
   const [shops, setShops] = useState([]);
@@ -15,7 +15,7 @@ const ShopManagement = () => {
   const [itemsError, setItemsError] = useState(null);
   const [shopOwners, setShopOwners] = useState({});
 
-  // Fetch stores data from API on component mount
+  // Load all shops + owners on mount
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -23,19 +23,13 @@ const ShopManagement = () => {
         const storesData = await getAllStores();
         setShops(storesData);
 
-        // Fetch owner information for each shop
         const ownersData = {};
         for (const shop of storesData) {
           if (shop.shopOwnerId) {
             try {
-              const ownerData = await getUserById(shop.shopOwnerId);
-              ownersData[shop.shopOwnerId] = ownerData;
-            } catch (ownerErr) {
-              console.error(
-                `Error fetching owner for shop ${shop.id}:`,
-                ownerErr
-              );
-              // Set a placeholder for failed owner fetches
+              const owner = await getUserById(shop.shopOwnerId);
+              ownersData[shop.shopOwnerId] = owner;
+            } catch {
               ownersData[shop.shopOwnerId] = {
                 name: "Unknown",
                 email: "Not available",
@@ -46,7 +40,7 @@ const ShopManagement = () => {
         setShopOwners(ownersData);
         setError(null);
       } catch (err) {
-        console.error("Error fetching stores:", err);
+        console.error("Error fetching shops:", err);
         setError("Failed to load shops. Please try again later.");
       } finally {
         setLoading(false);
@@ -56,24 +50,23 @@ const ShopManagement = () => {
     fetchStores();
   }, []);
 
-  // Fetch items when a shop is selected
+  // Fetch items by selected shop or search query
   useEffect(() => {
     const fetchShopItems = async () => {
-      if (!selectedShop) {
-        setShopItems([]);
-        return;
-      }
+      if (!selectedShop) return;
 
       try {
         setLoadingItems(true);
         setItemsError(null);
-        const items = await getItemsByStoreId(selectedShop.store_id);
+
+        const items =
+          search.trim() === ""
+            ? await getItemsByStoreId(selectedShop.storeId)
+            : await searchItemsInStore(selectedShop.storeId, search);
+
         setShopItems(items);
       } catch (err) {
-        console.error(
-          `Error fetching items for shop ${selectedShop.store_id}:`,
-          err
-        );
+        console.error("Error fetching items:", err);
         setItemsError("Failed to load products for this shop.");
         setShopItems([]);
       } finally {
@@ -82,7 +75,7 @@ const ShopManagement = () => {
     };
 
     fetchShopItems();
-  }, [selectedShop]);
+  }, [search, selectedShop]);
 
   const handleShopClick = (shop) => {
     setSelectedShop(shop);
@@ -90,16 +83,11 @@ const ShopManagement = () => {
     setItemsError(null);
   };
 
-  const filteredItems = shopItems.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
-  );
-
+  // UI Loading/Error State
   if (loading) {
     return (
       <div className="shop-management-container">
-        <div className="top-bar">
-          <h2>Shop Management</h2>
-        </div>
+        <div className="top-bar"><h2>Shop Management</h2></div>
         <div className="loading-state">Loading shops...</div>
       </div>
     );
@@ -108,41 +96,34 @@ const ShopManagement = () => {
   if (error) {
     return (
       <div className="shop-management-container">
-        <div className="top-bar">
-          <h2>Shop Management</h2>
-        </div>
+        <div className="top-bar"><h2>Shop Management</h2></div>
         <div className="error-state">{error}</div>
       </div>
     );
   }
 
+  // Main UI
   return (
     <div className="shop-management-container">
-      <div className="top-bar">
-        <h2>Shop Management</h2>
-      </div>
+      <div className="top-bar"><h2>Shop Management</h2></div>
 
       {!selectedShop ? (
         <div className="shop-list">
           {shops.length > 0 ? (
             shops.map((shop) => (
               <div
-                key={shop.store_id}
+                key={shop.storeId}
                 className="shop-card"
                 onClick={() => handleShopClick(shop)}
               >
                 <h3>{shop.name}</h3>
                 <p>
                   <strong>Owner:</strong>{" "}
-                  {shop.shopOwnerId && shopOwners[shop.shopOwnerId]
-                    ? shopOwners[shop.shopOwnerId].name
-                    : "No owner assigned"}
+                  {shopOwners[shop.shopOwnerId]?.name || "No owner assigned"}
                 </p>
                 <p>
                   <strong>Email:</strong>{" "}
-                  {shop.shopOwnerId && shopOwners[shop.shopOwnerId]
-                    ? shopOwners[shop.shopOwnerId].email
-                    : "N/A"}
+                  {shopOwners[shop.shopOwnerId]?.email || "N/A"}
                 </p>
               </div>
             ))
@@ -158,15 +139,11 @@ const ShopManagement = () => {
           <h3>{selectedShop.name}</h3>
           <p>
             <strong>Owner:</strong>{" "}
-            {selectedShop.shopOwnerId && shopOwners[selectedShop.shopOwnerId]
-              ? shopOwners[selectedShop.shopOwnerId].name
-              : "No owner assigned"}
+            {shopOwners[selectedShop.shopOwnerId]?.name || "No owner assigned"}
           </p>
           <p>
             <strong>Email:</strong>{" "}
-            {selectedShop.shopOwnerId && shopOwners[selectedShop.shopOwnerId]
-              ? shopOwners[selectedShop.shopOwnerId].email
-              : "N/A"}
+            {shopOwners[selectedShop.shopOwnerId]?.email || "N/A"}
           </p>
 
           <input
@@ -183,12 +160,10 @@ const ShopManagement = () => {
             <div className="error-state">{itemsError}</div>
           ) : (
             <div className="product-list">
-              {filteredItems.length > 0 ? (
-                filteredItems.map((item) => (
-                  <div key={item.Item_ID} className="product-card">
-                    <p>
-                      <strong>{item.name}</strong>
-                    </p>
+              {shopItems.length > 0 ? (
+                shopItems.map((item) => (
+                  <div key={item.itemId} className="product-card">
+                    <p><strong>{item.name}</strong></p>
                     <p>${item.price.toFixed(2)}</p>
                     {item.discount > 0 && (
                       <p className="discount">Discount: {item.discount}%</p>

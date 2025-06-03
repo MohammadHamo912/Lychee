@@ -154,11 +154,11 @@ const enrichItemData = async (items) => {
       // Current variant information
       currentVariant: variant
         ? {
-            id: variant.productVariantId,
-            size: variant.size,
-            color: variant.color,
-            productId: variant.productId,
-          }
+          id: variant.productVariantId,
+          size: variant.size,
+          color: variant.color,
+          productId: variant.productId,
+        }
         : null,
       // All available variants for this product
       availableVariants: availableVariants.map((v) => ({
@@ -226,18 +226,12 @@ export const getItemById = async (itemId) => {
   }
 };
 
-// Get items by store ID
 export const getItemsByStoreId = async (storeId) => {
   try {
     const response = await axios.get(`${API_URL}/store/${storeId}`);
     return enrichItemData(response.data);
   } catch (error) {
-    console.error(
-      `Error fetching items for store ${storeId}, falling back to filtering all items:`,
-      error
-    );
-
-    // Fallback: Get all items and filter by storeId
+    console.error(`Error fetching items for store ${storeId}:`, error);
     try {
       const allItems = await getAllItems();
       return allItems.filter((item) => item.storeId == storeId);
@@ -247,6 +241,8 @@ export const getItemsByStoreId = async (storeId) => {
     }
   }
 };
+
+
 
 // Get items by product variant ID
 export const getItemsByProductVariantId = async (variantId) => {
@@ -422,3 +418,16 @@ export const deleteItem = async (itemId) => {
 export const clearCache = () => {
   allItems = [];
 };
+export const searchItemsInStore = async (storeId, query) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8081/api/items/store/${storeId}/search`,
+      { params: { query } }
+    );
+    return enrichItemData(response.data);
+  } catch (error) {
+    console.error(`Error searching items in store ${storeId}:`, error);
+    throw error;
+  }
+};
+

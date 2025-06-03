@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.mohammad.lychee.lychee.repository.ItemRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,6 +19,9 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private ItemRepository itemRepository;
+
 
     @GetMapping
     public List<Item> getAllItems() {
@@ -33,10 +37,11 @@ public class ItemController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/store/{storeId:[0-9]+}")
+    @GetMapping("/store/{storeId}")
     public List<Item> getItemsByStoreId(@PathVariable Integer storeId) {
-        return itemService.getItemsByStoreId(storeId);
+        return itemRepository.findItemsByStoreId(storeId);
     }
+
 
     @GetMapping("/variant/{productVariantId:[0-9]+}")
     public List<Item> getItemsByProductVariantId(@PathVariable Integer productVariantId) {
@@ -140,4 +145,12 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/store/{storeId}/search")
+    public List<Item> searchItemsByNameInStore(
+            @PathVariable Integer storeId,
+            @RequestParam String query
+    ) {
+        return itemRepository.searchItemsByStoreIdAndName(storeId, query);
+    }
+
 }

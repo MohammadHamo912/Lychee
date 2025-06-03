@@ -205,4 +205,22 @@ public class ItemRepositoryImpl implements ItemRepository {
         String sql = "UPDATE Item SET deleted_at = ? WHERE Item_ID = ?";
         jdbcTemplate.update(sql, Timestamp.valueOf(LocalDateTime.now()), id);
     }
+    @Override
+    public List<Item> findItemsByStoreId(Integer storeId) {
+        String sql = "SELECT * FROM Item WHERE Store_ID = ? AND deleted_at IS NULL";
+        return jdbcTemplate.query(sql, itemRowMapper, storeId);
+    }
+    @Override
+    public List<Item> searchItemsByStoreIdAndName(Integer storeId, String query) {
+        String sql = """
+        SELECT i.* FROM Item i
+        JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
+        JOIN Product p ON pv.Product_ID = p.Product_ID
+        WHERE i.Store_ID = ?
+        AND LOWER(p.name) LIKE LOWER(CONCAT('%', ?, '%'))
+        AND i.deleted_at IS NULL
+    """;
+
+        return jdbcTemplate.query(sql, itemRowMapper, storeId, query);
+    }
 }
