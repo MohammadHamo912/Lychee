@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,38 +23,61 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     }
 
     private final RowMapper<Wishlist> rowMapper = (rs, rowNum) -> {
-        Wishlist wishlist = new Wishlist();
-        wishlist.setUserId(rs.getInt("User_ID"));
-        wishlist.setProductVariantId(rs.getInt("Product_Variant_ID"));
-        return wishlist;
+        Wishlist w = new Wishlist();
+        w.setUserId(rs.getInt("User_ID"));
+        w.setProductVariantId(rs.getInt("Product_Variant_ID"));
+
+        Timestamp ts = rs.getTimestamp("added_at");
+        if (ts != null) {
+            w.setAddedAt(ts.toLocalDateTime());
+        }
+
+        // Optional columns for UI
+        try {
+            w.setName(rs.getString("name"));
+            w.setImageUrl(rs.getString("imageUrl"));
+        } catch (Exception ignored) {}
+
+        return w;
     };
 
     @Override
     public List<Wishlist> findAll() {
-        return jdbcTemplate.query("SELECT * FROM Wishlist_Table", rowMapper);
+        String sql = "SELECT * FROM Wishlist_Table";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public List<Wishlist> findByUserId(Integer userId) {
-        return jdbcTemplate.query("SELECT * FROM Wishlist_Table WHERE User_ID = ?", rowMapper, userId);
+        String sql = """
+            SELECT w.User_ID, w.Product_Variant_ID, w.added_at,
+                   p.name AS name, p.logo_url AS imageUrl
+            FROM Wishlist_Table w
+            JOIN productvariant pv ON w.Product_Variant_ID = pv.Product_Variant_ID
+            JOIN Product p ON pv.Product_ID = p.Product_ID
+            WHERE w.User_ID = ?
+        """;
+        return jdbcTemplate.query(sql, rowMapper, userId);
     }
 
     @Override
     public void addWishlistItem(Integer userId, Integer productVariantId) {
-        jdbcTemplate.update("INSERT INTO Wishlist_Table (User_ID, Product_Variant_ID) VALUES (?, ?)", userId, productVariantId);
+        String sql = "INSERT INTO Wishlist_Table (User_ID, Product_Variant_ID) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userId, productVariantId);
     }
 
     @Override
     public void removeWishlistItem(Integer userId, Integer productVariantId) {
-        jdbcTemplate.update("DELETE FROM Wishlist_Table WHERE User_ID = ? AND Product_Variant_ID = ?", userId, productVariantId);
+        String sql = "DELETE FROM Wishlist_Table WHERE User_ID = ? AND Product_Variant_ID = ?";
+        jdbcTemplate.update(sql, userId, productVariantId);
     }
 
     @Override
     public Optional<Wishlist> findByUserIdAndProductVariantId(Integer userId, Integer productVariantId) {
         try {
-            Wishlist wishlist = jdbcTemplate.queryForObject("SELECT * FROM Wishlist_Table WHERE User_ID = ? AND Product_Variant_ID = ?",
-                    rowMapper, userId, productVariantId);
-            return Optional.ofNullable(wishlist);
+            String sql = "SELECT * FROM Wishlist_Table WHERE User_ID = ? AND Product_Variant_ID = ?";
+            Wishlist w = jdbcTemplate.queryForObject(sql, rowMapper, userId, productVariantId);
+            return Optional.ofNullable(w);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -61,6 +85,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     @Override
     public void deleteAllByUserId(Integer userId) {
-        jdbcTemplate.update("DELETE FROM Wishlist_Table WHERE User_ID = ?", userId);
+        String sql = "DELETE FROM Wishlist_Table WHERE User_ID = ?";
+        jdbcTemplate.update(sql, userId);
     }
 }

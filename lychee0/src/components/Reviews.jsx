@@ -74,3 +74,4 @@ const Reviews = ({ reviewType }) => {
 };
 
 export default Reviews;
+ 
