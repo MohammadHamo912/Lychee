@@ -9,7 +9,7 @@ import "./../ComponentsCss/ProductCard.css";
 
 const ProductCard = ({ product, onAction }) => {
   const navigate = useNavigate();
-  const { productId, name, logo_url, description } = product;
+  const { productId, name, logo_url, description, brand } = product;
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -107,11 +107,19 @@ const ProductCard = ({ product, onAction }) => {
     }
   };
 
+  // subtitle contains brand
+  const subtitleContent = (
+    <div className="product-subtitle-container">
+      {brand && <span className="product-brand">Brand: {brand}</span>}
+    </div>
+  );
+
   return (
     <ReusableCard
       image={getDirectImageUrl(logo_url)}
       imageAlt={name}
       title={name}
+      subtitle={subtitleContent}
       description={description}
       footerLeft={<CategoryLabels />}
       footerRight={ActionButton}
@@ -128,6 +136,7 @@ ProductCard.propTypes = {
     name: PropTypes.string.isRequired,
     logo_url: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    brand: PropTypes.string,
   }).isRequired,
   onAction: PropTypes.func,
 };

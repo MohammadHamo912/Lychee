@@ -22,6 +22,7 @@ const ItemCard = ({ item, onAddToCart }) => {
     currentVariant,
     availableVariants,
     barcode, // need to match it for the find best price
+    brand,
   } = item;
 
   // Extract productId from the current variant
@@ -191,14 +192,13 @@ const ItemCard = ({ item, onAddToCart }) => {
     }
   };
 
-  // Create subtitle with category and stock info
+  // subtitle contains brand
   const subtitleContent = (
     <div className="item-subtitle-container">
       <CategoryLabels />
-      <span className="item-stock">Stock: {stock}</span>
+      <span className="item-brand">Brand: {brand || "Unknown Brand"}</span>
     </div>
   );
-
   return (
     <ReusableCard
       image={imageUrl}
@@ -224,6 +224,7 @@ ItemCard.propTypes = {
     name: PropTypes.string.isRequired, // Product name
     image: PropTypes.string.isRequired,
     description: PropTypes.string,
+    brand: PropTypes.string,
     price: PropTypes.number.isRequired,
     discount: PropTypes.number,
     stock: PropTypes.number,

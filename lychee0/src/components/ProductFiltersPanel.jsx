@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import "../PagesCss/ProductFiltersPanel.css";
 
-const ProductFiltersPanel = ({
-  onApplyFilters,
-  brands,
-  categories,
-  features,
-}) => {
+const ProductFiltersPanel = ({ onApplyFilters, brands, categories }) => {
   const [filters, setFilters] = useState({
     brand: "All",
     category: "All",
-    features: "All",
+    features: "", // Change to empty string for text input
     sortOption: "none",
   });
 
@@ -27,7 +22,7 @@ const ProductFiltersPanel = ({
     const clearedFilters = {
       brand: "All",
       category: "All",
-      features: "All",
+      features: "",
       sortOption: "none",
     };
     setFilters(clearedFilters);
@@ -35,10 +30,10 @@ const ProductFiltersPanel = ({
   };
 
   return (
-    <div className="product-filters-panel">
+    <div className="filters-panel">
       {/* Brand Filter */}
       <div className="filter-group">
-        <h3>Brand</h3>
+        <label>Brand</label>
         <select
           value={filters.brand}
           onChange={(e) => handleFilterChange("brand", e.target.value)}
@@ -55,7 +50,7 @@ const ProductFiltersPanel = ({
 
       {/* Category Filter */}
       <div className="filter-group">
-        <h3>Category</h3>
+        <label>Category</label>
         <select
           value={filters.category}
           onChange={(e) => handleFilterChange("category", e.target.value)}
@@ -70,26 +65,20 @@ const ProductFiltersPanel = ({
         </select>
       </div>
 
-      {/* Features Filter */}
+      {/* Features Filter (Text Input) */}
       <div className="filter-group">
-        <h3>Features</h3>
-        <select
+        <label>Features</label>
+        <input
+          type="text"
           value={filters.features}
           onChange={(e) => handleFilterChange("features", e.target.value)}
-          className="filter-select"
-        >
-          <option value="All">All Features</option>
-          {features.map((feature) => (
-            <option key={feature} value={feature}>
-              {feature}
-            </option>
-          ))}
-        </select>
+          className="filter-input"
+          placeholder="Enter desired features (e.g., Vegan, Long-Lasting)"
+        />
       </div>
 
-      {/* Sort Options */}
       <div className="filter-group">
-        <h3>Sort By</h3>
+        <label>Sort By</label>
         <select
           value={filters.sortOption}
           onChange={(e) => handleFilterChange("sortOption", e.target.value)}
@@ -106,7 +95,7 @@ const ProductFiltersPanel = ({
       </div>
 
       {/* Clear Filters Button */}
-      <button className="clear-filters-btn" onClick={handleClearFilters}>
+      <button onClick={handleClearFilters} className="clear-filters-btn">
         Clear All Filters
       </button>
     </div>

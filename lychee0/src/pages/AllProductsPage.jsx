@@ -18,46 +18,15 @@ const ProductListingPage = () => {
   const [activeFilters, setActiveFilters] = useState({
     brand: "All",
     category: "All",
-    features: "All",
+    features: "", // Change to empty string for text input
     sortOption: "none",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [productBrands, setProductBrands] = useState([]);
+  const [productCategories, setProductCategories] = useState([]);
 
-  const productBrands = [
-    "Fenty Beauty",
-    "Rare Beauty",
-    "Glossier",
-    "The Ordinary",
-    "Cetaphil",
-    "Neutrogena",
-    "L'Oréal",
-    "Maybelline",
-  ];
-
-  const productCategories = [
-    "Foundation",
-    "Lipstick",
-    "Mascara",
-    "Skincare",
-    "Cleanser",
-    "Moisturizer",
-    "Serum",
-    "Sunscreen",
-  ];
-
-  const productFeatures = [
-    "Vegan",
-    "Cruelty-Free",
-    "Organic",
-    "Paraben-Free",
-    "Fragrance-Free",
-    "Hypoallergenic",
-    "Waterproof",
-    "Long-Lasting",
-  ];
-
-  // Fetch products from API on component mount
+  // Fetch products and extract brands and categories
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -65,6 +34,15 @@ const ProductListingPage = () => {
   // Apply filters when products data or initial query changes
   useEffect(() => {
     if (products.length > 0) {
+      // Extract unique brands and categories
+      const brands = [
+        ...new Set(products.map((p) => p.brand).filter(Boolean)),
+      ].sort();
+      const categories = [
+        ...new Set(products.map((p) => p.category).filter(Boolean)),
+      ].sort();
+      setProductBrands(brands);
+      setProductCategories(categories);
       applyFiltersAndSearch(initialQuery, activeFilters);
     }
   }, [initialQuery, products]);
@@ -116,13 +94,18 @@ const ProductListingPage = () => {
       );
     }
 
-    // Features filtering
-    if (features && features !== "All") {
-      result = result.filter((product) =>
-        product.features?.some(
-          (feature) => feature.toLowerCase() === features.toLowerCase()
-        )
-      );
+    // Features filtering (text-based partial match)
+    if (features && features.trim()) {
+      const lowerFeatures = features.toLowerCase();
+      result = result.filter((product) => {
+        const featuresMatch = product.features?.some((feature) =>
+          feature.toLowerCase().includes(lowerFeatures)
+        );
+        const descriptionMatch = product.description
+          ?.toLowerCase()
+          .includes(lowerFeatures);
+        return featuresMatch || descriptionMatch;
+      });
     }
 
     // Search filtering
@@ -200,7 +183,7 @@ const ProductListingPage = () => {
             onApplyFilters={handleApplyFilters}
             brands={productBrands}
             categories={productCategories}
-            features={productFeatures}
+            // No features prop needed anymore
           />
         </div>
 

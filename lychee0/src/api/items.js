@@ -26,7 +26,6 @@ const getProductVariantsByIds = async (variantIds) => {
 
   try {
     const uniqueIds = [...new Set(variantIds)]; // Remove duplicates
-    console.log("testing unique ids", uniqueIds);
     const response = await axios.post(
       `${VARIANTS_API_URL}/batch-load`,
       uniqueIds
@@ -144,8 +143,8 @@ const enrichItemData = async (items) => {
       ...item,
       id: item.itemId, // Add id field for compatibility
       name: product?.name || `Product ${item.productVariantId}`,
-      category: product?.category || "Uncategorized",
       description: product?.description || "No description available",
+      brand: product?.brand || "Unknown Brand",
       image: product?.logo_url || variant?.image || "/images/default.jpg",
       price: parseFloat(item.price),
       discount: parseFloat(item.discount),
@@ -281,17 +280,6 @@ export const searchItemsByProductName = async (productName) => {
     return enrichItemData(response.data);
   } catch (error) {
     console.error(`Error searching items by name ${productName}:`, error);
-    throw error;
-  }
-};
-
-// Get items by category (filter enriched items by product category)
-export const getItemsByCategory = async (category) => {
-  try {
-    const allItems = await getAllItems();
-    return allItems.filter((item) => item.category === category);
-  } catch (error) {
-    console.error(`Error fetching items by category ${category}:`, error);
     throw error;
   }
 };

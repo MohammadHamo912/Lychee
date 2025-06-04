@@ -5,13 +5,10 @@
   background-color: #fff5e1;
   border: 1px solid #d9b6a3;
   border-radius: 12px;
-
   box-shadow: 0 2px 10px rgba(139, 60, 93, 0.1);
   gap: 20px;
-  height: fit-content;
-  width: 100%;
-  width: fit-content;
-
+  padding: 20px; /* Added padding for better spacing */
+  width: fit-content; /* Adjusted to fit content */
   box-sizing: border-box;
 }
 
@@ -21,18 +18,14 @@
   gap: 5px;
 }
 
-.filter-group h3 {
-  color: #670010;
+.filter-group label {
+  color: #670010; /* Styled labels to match design */
   font-size: 1.1rem;
   font-weight: 600;
-  border-bottom: 1px solid #e8e8e8;
-  padding-left: -10px;
 }
 
 .filter-select {
   max-width: 150px;
-  align-items: flex-end;
-  min-width: 15px;
   border: 2px solid #e8e8e8;
   border-radius: 8px;
   font-size: 1rem;
@@ -46,6 +39,7 @@
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px;
+  padding: 10px 36px 10px 14px; /* Added padding, with extra right padding for arrow */
 }
 
 .filter-select:hover {
@@ -53,6 +47,28 @@
 }
 
 .filter-select:focus {
+  outline: none;
+  border-color: #670010;
+  box-shadow: 0 0 0 3px rgba(103, 0, 16, 0.1);
+}
+
+.filter-input {
+  max-width: 150px; /* Matches filter-select for consistency */
+  border: 2px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  padding: 10px 14px; /* Added padding for better appearance */
+}
+
+.filter-input:hover {
+  border-color: #b76e79;
+}
+
+.filter-input:focus {
   outline: none;
   border-color: #670010;
   box-shadow: 0 0 0 3px rgba(103, 0, 16, 0.1);
@@ -104,6 +120,11 @@
     font-size: 0.95rem;
     background-size: 14px;
     background-position: right 10px center;
+  }
+
+  .filter-input {
+    padding: 10px 14px;
+    font-size: 0.95rem;
   }
 
   .clear-filters-btn {
