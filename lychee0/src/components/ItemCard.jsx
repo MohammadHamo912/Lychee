@@ -5,12 +5,13 @@ import ReusableCard from "../components/ReusableCard";
 import cartIcon from "../images/white-cart-icon.png";
 import { getCategoriesByProductId } from "../api/productcategories";
 import { getCategoryById } from "../api/categories";
+import { getStoreById } from "../api/stores"; // Added import for store API
 import "../ComponentsCss/ItemCard.css"; // For product-specific styling
 
 const ItemCard = ({ item, onAddToCart }) => {
   const navigate = useNavigate();
 
-  // Use enriched data from the API
+  // Use enriched data from the API, added storeId
   const {
     id,
     name, // This is now the product name
@@ -23,6 +24,7 @@ const ItemCard = ({ item, onAddToCart }) => {
     availableVariants,
     barcode, // need to match it for the find best price
     brand,
+    storeId, // Added storeId
   } = item;
 
   // Extract productId from the current variant
@@ -30,6 +32,8 @@ const ItemCard = ({ item, onAddToCart }) => {
 
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [storeName, setStoreName] = useState(""); // Added state for store name
+  const [storeLoading, setStoreLoading] = useState(true); // Added state for store loading
 
   // Fetch categories for this item's product
   useEffect(() => {
@@ -38,17 +42,14 @@ const ItemCard = ({ item, onAddToCart }) => {
         setCategoriesLoading(true);
 
         if (productId) {
-          // Get product-category relationships
           const productCategories = await getCategoriesByProductId(productId);
 
           if (productCategories && productCategories.length > 0) {
-            // Fetch category details for each relationship
             const categoryPromises = productCategories.map((pc) =>
               getCategoryById(pc.categoryId)
             );
 
             const categoryDetails = await Promise.all(categoryPromises);
-            // Filter out any null results and set categories
             setCategories(categoryDetails.filter((cat) => cat !== null));
           } else {
             setCategories([]);
@@ -72,6 +73,37 @@ const ItemCard = ({ item, onAddToCart }) => {
     }
   }, [productId]);
 
+  // Fetch store name based on storeId
+  useEffect(() => {
+    const fetchStore = async () => {
+      try {
+        setStoreLoading(true);
+        if (storeId) {
+          const store = await getStoreById(storeId);
+          if (store) {
+            setStoreName(store.name);
+          } else {
+            setStoreName("Unknown Store");
+          }
+        } else {
+          setStoreName("No Store");
+        }
+      } catch (error) {
+        console.error(`Failed to fetch store for id ${storeId}:`, error);
+        setStoreName("Error Loading Store");
+      } finally {
+        setStoreLoading(false);
+      }
+    };
+
+    if (storeId) {
+      fetchStore();
+    } else {
+      setStoreLoading(false);
+      setStoreName("No Store");
+    }
+  }, [storeId]);
+
   // Calculate the final price after discount
   const finalPrice = discount ? price - (price * discount) / 100 : price;
 
@@ -89,7 +121,7 @@ const ItemCard = ({ item, onAddToCart }) => {
       className="item-card-button"
       onClick={handleAddToCart}
       aria-label="Add to cart"
-      disabled={stock <= 0}
+      disabled={stock <= 0} // Button still uses stock for disabling
     >
       <img src={cartIcon} alt="Cart icon" className="cart-icon" />
     </button>
@@ -156,11 +188,16 @@ const ItemCard = ({ item, onAddToCart }) => {
     </div>
   );
 
-  // Show out of stock indicator
-  const stockIndicator =
-    stock <= 0 ? (
-      <div className="out-of-stock-indicator">Out of Stock</div>
-    ) : null;
+  // Show store information instead of just stock status
+  const storeIndicator = (
+    <div className="store-indicator">
+      {storeLoading
+        ? "Loading store..."
+        : stock <= 0
+        ? `Out of Stock at ${storeName}`
+        : `Available at ${storeName}`}
+    </div>
+  );
 
   // Create category labels component
   const CategoryLabels = () => {
@@ -174,13 +211,11 @@ const ItemCard = ({ item, onAddToCart }) => {
       return <span className="item-category no-category">Uncategorized</span>;
     }
 
-    // Show categories
     if (categories.length === 1) {
       return (
         <span className="item-category">Category: {categories[0].name}</span>
       );
     } else {
-      // Show first category + count of others
       return (
         <span className="item-category multiple">
           Categories: {categories[0].name}
@@ -192,13 +227,15 @@ const ItemCard = ({ item, onAddToCart }) => {
     }
   };
 
-  // subtitle contains brand
+  // Subtitle contains brand
   const subtitleContent = (
     <div className="item-subtitle-container">
       <CategoryLabels />
       <span className="item-brand">Brand: {brand || "Unknown Brand"}</span>
+      <span className="item-store">Store: {storeName || "Unknown Store"}</span>
     </div>
   );
+
   return (
     <ReusableCard
       image={imageUrl}
@@ -209,8 +246,8 @@ const ItemCard = ({ item, onAddToCart }) => {
       footerLeft={PriceElement}
       footerRight={AddToCartButton}
       onClick={handleCardClick}
-      className={`item-theme ${stock <= 0 ? "out-of-stock" : ""}`}
-      overlayContent={stockIndicator}
+      className={`item-theme ${stock <= 0 ? "out-of-stock" : ""}`} // Stock still affects styling
+      overlayContent={storeIndicator} // Updated to show store info
     >
       {/* Add variant information as children */}
       {VariantInfo}

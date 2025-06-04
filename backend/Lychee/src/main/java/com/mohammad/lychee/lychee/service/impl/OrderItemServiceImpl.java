@@ -58,4 +58,9 @@ public class OrderItemServiceImpl implements OrderItemService {
     public void deleteOrderItem(Integer orderId, Integer itemId) {
         orderItemRepository.softDelete(orderId, itemId);
     }
+
+    @Override
+    public List<OrderItem> getOrderItemsByStoreId(Integer storeId) {
+        return orderItemRepository.getOrderItemsByStoreId(storeId);
+    }
 }

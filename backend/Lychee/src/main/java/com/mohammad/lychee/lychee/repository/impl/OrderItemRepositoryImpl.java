@@ -123,4 +123,16 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
         }
     }
 
+    @Override
+    public List<OrderItem> getOrderItemsByStoreId(Integer storeId) {
+        String sql = "SELECT oi.* FROM OrderItem oi " +
+                "JOIN Item i ON oi.item_id = i.Item_ID " +
+                "WHERE i.Store_ID = ? " +
+                "AND oi.deleted_at IS NULL " +
+                "AND i.deleted_at IS NULL";
+
+        return jdbcTemplate.query(sql, orderItemRowMapper, storeId);
+    }
+
+
 }
