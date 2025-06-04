@@ -140,4 +140,12 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/store/{storeId}/search")
+    public List<Item> searchItemsByNameInStore(
+            @PathVariable Integer storeId,
+            @RequestParam String query
+    ) {
+        return itemService.getItemsByStoreIdAndName(storeId,query);
+    }
+
 }

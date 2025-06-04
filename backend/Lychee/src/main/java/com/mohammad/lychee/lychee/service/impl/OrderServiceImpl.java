@@ -56,4 +56,9 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(Integer orderId) {
         orderRepository.softDelete(orderId);
     }
+    @Override
+    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId) {
+        return orderRepository.searchOrders(role, query, status, startDate, endDate); // Adjust based on your actual logic
+    }
+
 }

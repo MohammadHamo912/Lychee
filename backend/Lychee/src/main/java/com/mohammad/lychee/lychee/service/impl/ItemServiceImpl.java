@@ -125,4 +125,9 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getItemsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
         return itemRepository.findByPriceBetween(minPrice, maxPrice);
     }
+
+    @Override
+    public List<Item> getItemsByStoreIdAndName(Integer storeId, String query){
+        return itemRepository.searchItemsByStoreIdAndName(storeId,query);
+    }
 }
