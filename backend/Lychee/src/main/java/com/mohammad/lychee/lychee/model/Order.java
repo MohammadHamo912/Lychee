@@ -2,7 +2,6 @@ package com.mohammad.lychee.lychee.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 public class Order {
     private int orderId;
     private int userId;
