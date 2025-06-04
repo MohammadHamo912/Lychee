@@ -1,4 +1,4 @@
-/* src/PagesCss/ProductDetails.css - Modernized */
+/* src/PagesCss/ProductDetails.css - Modernized 
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
 .product-details-container {
@@ -14,7 +14,7 @@
   position: relative;
 }
 
-/* Image Gallery Section */
+/* Image Gallery Section 
 .product-gallery {
   display: flex;
   flex-direction: column;
@@ -117,7 +117,7 @@
   object-fit: cover;
 }
 
-/* Product Info Section */
+/* Product Info Section 
 .product-info-block {
   display: flex;
   flex-direction: column;
@@ -195,7 +195,7 @@
   color: var(--deep-berry, #670010);
 }
 
-/* Product Variants */
+/* Product Variants 
 .product-variants {
   margin: 15px 0;
 }
@@ -244,7 +244,7 @@
   color: var(--soft-deep-berry, #8b3c5d);
 }
 
-/* Product Actions */
+/* Product Actions 
 .product-actions {
   display: flex;
   flex-direction: column;
@@ -391,7 +391,7 @@
   transform: none;
 }
 
-/* Product Meta */
+/* Product Meta 
 .product-meta {
   display: flex;
   gap: 20px;
@@ -407,7 +407,7 @@
   font-size: 0.85rem;
 }
 
-/* Product Tabs */
+/* Product Tabs 
 .product-tabs {
   margin-top: 20px;
   border-radius: 16px;
@@ -500,7 +500,7 @@
   font-weight: bold;
 }
 
-/* Reviews section */
+/* Reviews section 
 .reviews-summary {
   display: flex;
   justify-content: space-between;
@@ -603,7 +603,7 @@
   transform: translateY(-2px);
 }
 
-/* Notification */
+/* Notification 
 .notification {
   position: fixed;
   top: 110px;
@@ -640,7 +640,7 @@
   }
 }
 
-/* Responsive Design */
+/* Responsive Design 
 @media (max-width: 992px) {
   .product-details-container {
     grid-template-columns: 1fr;
@@ -719,3 +719,4 @@
     font-size: 2.5rem;
   }
 }
+*/

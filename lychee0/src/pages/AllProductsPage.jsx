@@ -14,13 +14,14 @@ const ProductListingPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const initialQuery = searchParams.get("query") || "";
+  const initialCategory = searchParams.get("category") || "All"; // Get category from URL
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState(initialQuery);
   const [activeFilters, setActiveFilters] = useState({
     brand: "All",
-    mainCategory: "All",
+    mainCategory: initialCategory, // Set initial category from URL
     subCategory: "All",
     subSubCategory: "All",
     features: "",
@@ -37,7 +38,7 @@ const ProductListingPage = () => {
     fetchCategories();
   }, []);
 
-  // Apply filters when products data or initial query changes
+  // Apply filters when products data, initial query, or initial category changes
   useEffect(() => {
     if (products.length > 0) {
       // Extract unique brands
@@ -47,7 +48,7 @@ const ProductListingPage = () => {
       setProductBrands(brands);
       applyFiltersAndSearch(initialQuery, activeFilters);
     }
-  }, [initialQuery, products]);
+  }, [initialQuery, initialCategory, products]);
 
   const fetchProducts = async () => {
     setIsLoading(true);
@@ -79,17 +80,23 @@ const ProductListingPage = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    // Update URL parameters
-    if (term) {
-      setSearchParams({ query: term });
-    } else {
-      setSearchParams({});
-    }
+    // Update URL parameters - preserve category if it exists
+    const newParams = {};
+    if (term) newParams.query = term;
+    if (activeFilters.mainCategory !== "All")
+      newParams.category = activeFilters.mainCategory;
+    setSearchParams(newParams);
     applyFiltersAndSearch(term, activeFilters);
   };
 
   const handleApplyFilters = (filters) => {
     setActiveFilters(filters);
+    // Update URL to reflect category changes
+    const newParams = {};
+    if (searchTerm) newParams.query = searchTerm;
+    if (filters.mainCategory !== "All")
+      newParams.category = filters.mainCategory;
+    setSearchParams(newParams);
     applyFiltersAndSearch(searchTerm, filters);
   };
 
@@ -298,13 +305,26 @@ const ProductListingPage = () => {
         <div className="products-main">
           <div className="products-results-header">
             <h2>
-              All Products{" "}
+              {activeFilters.mainCategory !== "All"
+                ? `${activeFilters.mainCategory} Products`
+                : "All Products"}{" "}
               {filteredProducts.length > 0 && `(${filteredProducts.length})`}
             </h2>
-            {searchTerm && (
+            {(searchTerm || activeFilters.mainCategory !== "All") && (
               <div className="search-results-info">
-                Showing results for: <span>"{searchTerm}"</span>
-                <button onClick={handleClearSearch}>Clear Search</button>
+                {searchTerm && (
+                  <>
+                    Showing results for: <span>"{searchTerm}"</span>
+                  </>
+                )}
+                {activeFilters.mainCategory !== "All" && (
+                  <>
+                    {searchTerm && " in "}
+                    {!searchTerm && "Showing: "}
+                    <span>{activeFilters.mainCategory}</span>
+                  </>
+                )}
+                <button onClick={handleClearSearch}>Clear All</button>
               </div>
             )}
           </div>

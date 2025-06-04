@@ -8,7 +8,7 @@ import { getCategoryById } from "../api/categories";
 import { getStoreById } from "../api/stores"; // Added import for store API
 import "../ComponentsCss/ItemCard.css"; // For product-specific styling
 
-const ItemCard = ({ item, onAddToCart }) => {
+const ItemCard = ({ item, onAddToCart, isAddingToCart }) => {
   const navigate = useNavigate();
 
   // Use enriched data from the API, added storeId
@@ -110,22 +110,6 @@ const ItemCard = ({ item, onAddToCart }) => {
   const handleCardClick = () => {
     navigate(`/item/${id}`);
   };
-
-  const handleAddToCart = (e) => {
-    e.stopPropagation(); // Prevent card click when clicking the button
-    onAddToCart(item);
-  };
-
-  const AddToCartButton = (
-    <button
-      className="item-card-button"
-      onClick={handleAddToCart}
-      aria-label="Add to cart"
-      disabled={stock <= 0} // Button still uses stock for disabling
-    >
-      <img src={cartIcon} alt="Cart icon" className="cart-icon" />
-    </button>
-  );
 
   // Create price element with discount display if applicable
   const PriceElement = (
@@ -236,6 +220,30 @@ const ItemCard = ({ item, onAddToCart }) => {
     </div>
   );
 
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Prevent card click when clicking the button
+    if (onAddToCart) {
+      onAddToCart(item);
+    }
+  };
+
+  const AddToCartButton = (
+    <button
+      className={`item-card-button ${isAddingToCart ? "loading" : ""}`}
+      onClick={handleAddToCart}
+      aria-label="Add to cart"
+      disabled={stock <= 0 || isAddingToCart} // Disable when adding to cart
+    >
+      {isAddingToCart ? (
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+        </div>
+      ) : (
+        <img src={cartIcon} alt="Cart icon" className="cart-icon" />
+      )}
+    </button>
+  );
+
   return (
     <ReusableCard
       image={imageUrl}
@@ -284,6 +292,9 @@ ItemCard.propTypes = {
     barcode: PropTypes.string,
   }).isRequired,
   onAddToCart: PropTypes.func.isRequired,
+  isAddingToCart: PropTypes.bool, // Add this prop type
 };
-
+ItemCard.defaultProps = {
+  isAddingToCart: false,
+};
 export default ItemCard;

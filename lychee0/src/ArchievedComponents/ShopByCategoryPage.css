@@ -1,11 +1,11 @@
-/* ShopByCategoryPage.css */
+/* ShopByCategoryPage.css 
 .breadcrumbs {
   display: flex !important;
   justify-content: flex-start !important;
   padding: 1rem 0;
 }
 
-/* Main Content */
+/* Main Content 
 .main-content-shop-by-category-page {
   max-width: 1536px;
   margin: 0 auto;
@@ -52,13 +52,13 @@
   font-size: 1.125rem;
 }
 
-/* Content Wrapper */
+/* Content Wrapper 
 .content-wrapper {
   display: flex;
   gap: 2rem;
 }
 
-/* Products Section */
+/* Products Section 
 .products-section {
   flex: 1;
 }
@@ -108,7 +108,7 @@
   padding: 2rem 0;
 }
 
-/* Product Card Styles (Assuming ProductCard component uses these) */
+/* Product Card Styles (Assuming ProductCard component uses these) 
 .product-card {
   position: relative;
 }
@@ -232,7 +232,7 @@
   color: #e11d48;
 }
 
-/* Responsive Design */
+/* Responsive Design 
 @media (max-width: 768px) {
   .content-wrapper {
     flex-direction: column;
@@ -242,3 +242,4 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
+*/

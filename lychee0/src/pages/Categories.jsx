@@ -10,52 +10,61 @@ import haircareImg from "../images/placeholder-haircare.jpg";
 import fragranceImg from "../images/placeholder-fragrances.jpg";
 
 const categories = [
-    {
-        name: "Skincare",
-        image: skincareImg,
-        path: "/category/skincare",
-        tagline: "Glow up with clean skin",
-    },
-    {
-        name: "MakeUp",
-        image: makeupImg,
-        path: "/category/lipsticks",
-        tagline: "Bold shades for every mood",
-    },
-    {
-        name: "Haircare",
-        image: haircareImg,
-        path: "/category/haircare",
-        tagline: "For silky, strong hair",
-    },
-    {
-        name: "Fragrances",
-        image: fragranceImg,
-        path: "/category/fragrances",
-        tagline: "Scents that define you",
-    },
+  {
+    name: "Skincare",
+    image: skincareImg,
+    // Updated to link to products page with category filter
+    path: "/productlistingpage?category=Skincare",
+    tagline: "Glow up with clean skin",
+  },
+  {
+    name: "MakeUp",
+    image: makeupImg,
+    // Updated to link to products page with category filter
+    path: "/productlistingpage?category=MakeUp",
+    tagline: "Bold shades for every mood",
+  },
+  {
+    name: "Haircare",
+    image: haircareImg,
+    // Updated to link to products page with category filter
+    path: "/productlistingpage?category=Haircare",
+    tagline: "For silky, strong hair",
+  },
+  {
+    name: "Fragrances",
+    image: fragranceImg,
+    // Updated to link to products page with category filter
+    path: "/productlistingpage?category=Fragrances",
+    tagline: "Scents that define you",
+  },
 ];
 
 export default function CategoriesPage() {
-    return (
-        <div className="categories-page">
-            <NavBar />
-            <main className="main-content">
-                <h1 className="page-title">Shop by Category</h1>
-                <p className="page-subtitle">Find your beauty essentials by category</p>
-                <div className="categories-grid">
-                    {categories.map((cat, index) => (
-                        <Link to={cat.path} key={cat.name} className="category-card" style={{ animationDelay: `${index * 0.1}s` }}>
-                            <img src={cat.image} alt={cat.name} className="category-image" />
-                            <div className="category-info">
-                                <h2>{cat.name}</h2>
-                                <p>{cat.tagline}</p>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            </main>
-            <Footer />
+  return (
+    <div className="categories-page">
+      <NavBar />
+      <main className="main-content">
+        <h1 className="page-title">Shop by Category</h1>
+        <p className="page-subtitle">Find your beauty essentials by category</p>
+        <div className="categories-grid">
+          {categories.map((cat, index) => (
+            <Link
+              to={cat.path}
+              key={cat.name}
+              className="category-card"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <img src={cat.image} alt={cat.name} className="category-image" />
+              <div className="category-info">
+                <h2>{cat.name}</h2>
+                <p>{cat.tagline}</p>
+              </div>
+            </Link>
+          ))}
         </div>
-    );
+      </main>
+      <Footer />
+    </div>
+  );
 }

@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import ReusableGrid from "../components/ReusableGrid";
 import ItemCard from "../components/ItemCard";
-import { getAllItems, getTrendingItems } from "../api/items"; // Import the updated service
+import { getAllItems, getTrendingItems } from "../api/items";
+import { useUser } from "../context/UserContext"; // Import the custom hook
 
 const ItemGrid = ({
   limit,
-  header,
+  header = "Explore Items",
   storeId = null,
   category = null,
-  className = "items-grid", // Accept className as prop with default value
+  className = "items-grid",
 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Get the addToCart function from UserContext
+  const { addToCart, isAddingToCart } = useUser();
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -20,14 +24,12 @@ const ItemGrid = ({
         setLoading(true);
 
         let fetchedItems;
-
-        // Fetch enriched items from API (now includes product data and variants)
         if (className === "trending") {
           fetchedItems = await getTrendingItems();
         } else {
           fetchedItems = await getAllItems();
         }
-        // Apply filters if provided
+
         if (storeId) {
           fetchedItems = fetchedItems.filter((item) => item.storeId == storeId);
         }
@@ -50,35 +52,41 @@ const ItemGrid = ({
     fetchItems();
   }, [storeId, category]);
 
-  const handleAddToCart = (item) => {
-    // This will be implemented later with actual cart functionality
-    console.log("Add to cart:", item);
-    // You can access all the enriched data here:
-    console.log("Product name:", item.name);
-    console.log("Current variant:", item.currentVariant);
-    console.log("Available variants:", item.availableVariants);
+  // Handle add to cart function
+  const handleAddToCart = async (item) => {
+    const success = await addToCart(item);
+    if (success) {
+      // Optional: Show success message or update UI
+      console.log(`${item.name} added to cart successfully!`);
+    } else {
+      // Optional: Show error message
+      console.error(`Failed to add ${item.name} to cart`);
+    }
   };
 
   if (loading) {
-    return <div className="loading">Loading items...</div>;
+    return <div>Loading items...</div>;
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div>{error}</div>;
   }
 
   if (items.length === 0) {
-    return <div className="no-items">No items found.</div>;
+    return <div>No items found.</div>;
   }
 
   return (
     <ReusableGrid
-      headerContent={<h2>{header}</h2>}
+      headerContent={header}
       items={limit ? items.slice(0, limit) : items}
       CardComponent={ItemCard}
-      cardProps={{ onAddToCart: handleAddToCart }}
+      cardProps={{
+        onAddToCart: handleAddToCart,
+        isAddingToCart, // Pass loading state to disable buttons during add
+      }}
       itemPropName="item"
-      className={className} // Use the className prop instead of hardcoded value
+      className={className}
       gridStyle={{ gap: "20px" }}
     />
   );

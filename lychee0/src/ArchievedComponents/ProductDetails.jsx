@@ -1,3 +1,4 @@
+/*
 // src/components/ProductDetails.jsx
 import React, { useState } from "react";
 import "./ProductDetails.css";
@@ -110,7 +111,7 @@ const ProductDetails = ({ product = {} }) => {
         </div>
       )}
 
-      {/* Left Side - Image Gallery */}
+      {/* Left Side - Image Gallery }
       <div className="product-gallery">
         <div className="main-image-wrapper">
           <img
@@ -141,7 +142,7 @@ const ProductDetails = ({ product = {} }) => {
         </div>
 
         <div className="image-thumbnails">
-          {/* This would normally map through product images */}
+          {/* This would normally map through product images }
           {[1, 2, 3].map((i) => (
             <div key={i} className="thumbnail-wrapper">
               <img
@@ -154,7 +155,7 @@ const ProductDetails = ({ product = {} }) => {
         </div>
       </div>
 
-      {/* Right Side - Product Details */}
+      {/* Right Side - Product Details }
       <div className="product-info-block">
         <div className="product-header">
           <div className="brand-badge">{finalProduct.brand}</div>
@@ -368,3 +369,4 @@ const getShadeColor = (shadeName) => {
 };
 
 export default ProductDetails;
+*/
