@@ -49,7 +49,7 @@ const NavBar = () => {
           <Link to="/productlistingpage">Products</Link>
           <Link to="/categories">Categories</Link>
           <Link to="/shoppingcartpage" className="cart-link">
-            Cart <span className="cart-badge">{user ? "5" : "0"}</span>
+            Cart <span className="cart-badge">{user ? "2" : "0"}</span>
           </Link>
         </nav>
 

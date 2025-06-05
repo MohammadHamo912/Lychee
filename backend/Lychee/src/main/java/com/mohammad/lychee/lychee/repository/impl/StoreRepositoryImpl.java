@@ -39,14 +39,6 @@ public class StoreRepositoryImpl implements StoreRepository {
         store.setDeletedAt(rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null);
         store.setLogo_url(rs.getString("logo_url"));
 
-        // 👇 Set Address object
-        Address address = new Address();
-        address.setAddressId(rs.getInt("a_id")); // alias to avoid conflict
-        address.setCity(rs.getString("city"));
-        address.setStreet(rs.getString("street"));
-        address.setBuilding(rs.getString("building"));
-
-        store.setAddress(address);
 
         return store;
     };
@@ -81,18 +73,17 @@ public class StoreRepositoryImpl implements StoreRepository {
 
     @Override
     public List<Store> findByNameContaining(String name){
-        String sql = "SELECT * FROM Store WHERE ShopName = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM Store WHERE name = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql,storeRowMapper,name);
     }
     @Override
     public Store save(Store store) {
-        return update(store);
-        /*
-        if (store.getStoreId() == null) {
+
+        if (store.getStoreId() == 0) {
             return insert(store);
         } else {
             return update(store);
-        }*/
+        }
     }
 
     private Store insert(Store store) {
@@ -150,10 +141,10 @@ public class StoreRepositoryImpl implements StoreRepository {
     public Optional<Map<String, Object>> getStoreMetrics(int storeId) {
         String sql = """
         SELECT 
-            (SELECT COUNT(DISTINCT o.Order_ID)
+            (SELECT COUNT(DISTINCT o.order_id)
              FROM OrderItem oi
              JOIN Item i ON oi.item_id = i.Item_ID
-             JOIN `Order` o ON oi.order_id = o.Order_ID
+             JOIN `Order` o ON oi.order_id = o.order_id
              WHERE i.Store_ID = ?) AS totalOrders,
 
             (SELECT COUNT(*) FROM Item i
@@ -183,7 +174,7 @@ public class StoreRepositoryImpl implements StoreRepository {
                SUM(oi.quantity * oi.price_at_purchase) as total
         FROM OrderItem oi
         JOIN Item i ON oi.item_id = i.Item_ID
-        JOIN `Order` o ON o.Order_ID = oi.order_id
+        JOIN `Order` o ON o.order_id = oi.order_id
         WHERE i.Store_ID = ?
         GROUP BY DATE(o.created_at)
         ORDER BY DATE(o.created_at)
@@ -202,7 +193,7 @@ public class StoreRepositoryImpl implements StoreRepository {
         SELECT r.Review_ID AS id, r.Rating, r.Comment, r.Created_At AS date,
                u.name AS customer, s.name AS storeName
         FROM Review r
-        JOIN User u ON r.User_ID = u.User_ID
+        JOIN User u ON r.User_ID = u.User   _ID
         JOIN Store s ON r.Target_ID = s.Store_ID
         WHERE r.Review_Type = 'shop' AND s.Store_ID = ?
         ORDER BY r.Created_At DESC

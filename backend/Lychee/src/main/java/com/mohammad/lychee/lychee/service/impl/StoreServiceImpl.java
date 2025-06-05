@@ -53,11 +53,6 @@ public class StoreServiceImpl implements StoreService {
             throw new IllegalArgumentException("Store with ID " + store.getStoreId() + " does not exist");
         }
 
-        // 🔄 Update address too
-        if (store.getAddress() != null) {
-            addressRepository.update(store.getAddress());
-        }
-
         return storeRepository.save(store); // this triggers the store update
     }
 
