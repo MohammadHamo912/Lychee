@@ -1,40 +1,31 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { processCheckout, validatePayment } from "../api/checkout";
 import "../ComponentsCss/CheckoutForm.css";
 
-const CheckoutForm = ({ onSubmit, cartTotal }) => {
+const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
     firstName: "",
     lastName: "",
-    address: "",
-    apartmentUnit: "",
     city: "",
-    state: "",
-    zipCode: "",
-    country: "United States",
-    sameAsShipping: true,
-    billingFirstName: "",
-    billingLastName: "",
-    billingAddress: "",
-    billingApartmentUnit: "",
-    billingCity: "",
-    billingState: "",
-    billingZipCode: "",
-    billingCountry: "United States",
+    street: "",
+    building: "",
+    orderNotes: "",
     paymentMethod: "creditCard",
     cardName: "",
     cardNumber: "",
     expiryDate: "",
     cvv: "",
-    orderNotes: "",
     agreeToTerms: false,
-    subscribeToNewsletter: false,
   });
 
   const [errors, setErrors] = useState({});
   const [currentStep, setCurrentStep] = useState(1);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -56,26 +47,12 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
         newErrors.email = "Email is invalid";
       if (!formData.firstName) newErrors.firstName = "First name is required";
       if (!formData.lastName) newErrors.lastName = "Last name is required";
-      if (!formData.address) newErrors.address = "Address is required";
       if (!formData.city) newErrors.city = "City is required";
-      if (!formData.state) newErrors.state = "State is required";
-      if (!formData.zipCode) newErrors.zipCode = "ZIP code is required";
+      if (!formData.street) newErrors.street = "Street is required";
+      if (!formData.building) newErrors.building = "Building is required";
     }
 
-    if (step === 2 && !formData.sameAsShipping) {
-      if (!formData.billingFirstName)
-        newErrors.billingFirstName = "First name is required";
-      if (!formData.billingLastName)
-        newErrors.billingLastName = "Last name is required";
-      if (!formData.billingAddress)
-        newErrors.billingAddress = "Address is required";
-      if (!formData.billingCity) newErrors.billingCity = "City is required";
-      if (!formData.billingState) newErrors.billingState = "State is required";
-      if (!formData.billingZipCode)
-        newErrors.billingZipCode = "ZIP code is required";
-    }
-
-    if (step === 3) {
+    if (step === 2) {
       if (formData.paymentMethod === "creditCard") {
         if (!formData.cardName)
           newErrors.cardName = "Cardholder name is required";
@@ -108,13 +85,82 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = validateStep(3);
-    if (Object.keys(errors).length === 0) {
-      onSubmit(formData);
-    } else {
-      setErrors(errors);
+
+    const validationErrors = validateStep(2);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      // Validate payment first
+      if (formData.paymentMethod === "creditCard") {
+        const paymentValidation = await validatePayment(
+          {
+            paymentMethod: formData.paymentMethod,
+            cardNumber: formData.cardNumber.replace(/\s/g, ""),
+            expiryDate: formData.expiryDate,
+            cvv: formData.cvv,
+          },
+          cartTotal
+        );
+
+        if (!paymentValidation.success) {
+          setErrors({ payment: paymentValidation.message });
+          setIsProcessing(false);
+          return;
+        }
+      }
+
+      // Prepare checkout data
+      const checkoutData = {
+        userId: userId,
+        shippingAddress: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          city: formData.city,
+          street: formData.street,
+          building: formData.building,
+        },
+        paymentData: {
+          paymentMethod: formData.paymentMethod,
+          cardName: formData.cardName,
+          cardNumber: formData.cardNumber.replace(/\s/g, ""),
+          expiryDate: formData.expiryDate,
+          cvv: formData.cvv,
+        },
+        orderNotes: formData.orderNotes,
+        contactInfo: {
+          email: formData.email,
+          phone: formData.phone,
+        },
+        cartItems: cartItems,
+      };
+
+      // Process checkout
+      const result = await processCheckout(checkoutData);
+
+      if (result.success) {
+        setOrderSuccess(true);
+        if (onOrderComplete) {
+          onOrderComplete(result.orderId);
+        }
+        // Redirect to success page after a short delay
+        setTimeout(() => {
+          navigate(`/order-success/${result.orderId}`);
+        }, 2000);
+      } else {
+        setErrors({ checkout: result.message });
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      setErrors({ checkout: "Failed to process order. Please try again." });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -129,30 +175,46 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
     return parts.length ? parts.join(" ") : value;
   };
 
+  // Show success message
+  if (orderSuccess) {
+    return (
+      <div className="checkout-form-container">
+        <div className="order-success">
+          <h2>Order Placed Successfully! 🎉</h2>
+          <p>
+            Thank you for your order. You will be redirected to the confirmation
+            page shortly.
+          </p>
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="checkout-form-container">
       <div className="checkout-steps">
         <div
-          className={`step ${currentStep === 1 ? "active" : ""} ${currentStep > 1 ? "completed" : ""
-            }`}
+          className={`step ${currentStep === 1 ? "active" : ""} ${
+            currentStep > 1 ? "completed" : ""
+          }`}
           onClick={() => currentStep > 1 && setCurrentStep(1)}
         >
           <span className="step-number">1</span>
-          <span className="step-title">Shipping</span>
+          <span className="step-title">Information</span>
         </div>
-        <div
-          className={`step ${currentStep === 2 ? "active" : ""} ${currentStep > 2 ? "completed" : ""
-            }`}
-          onClick={() => currentStep > 2 && setCurrentStep(2)}
-        >
+        <div className={`step ${currentStep === 2 ? "active" : ""}`}>
           <span className="step-number">2</span>
-          <span className="step-title">Billing</span>
-        </div>
-        <div className={`step ${currentStep === 3 ? "active" : ""}`}>
-          <span className="step-number">3</span>
           <span className="step-title">Payment</span>
         </div>
       </div>
+
+      {/* Display general errors */}
+      {(errors.checkout || errors.payment) && (
+        <div className="error-banner">{errors.checkout || errors.payment}</div>
+      )}
 
       <form className="checkout-form" onSubmit={handleSubmit}>
         {currentStep === 1 && (
@@ -168,7 +230,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   value={formData.email}
                   onChange={handleChange}
                   className={errors.email ? "error" : ""}
-                  placeholder="you@example.com"
+                  placeholder="Email Address"
                 />
                 {errors.email && (
                   <span className="error-message">{errors.email}</span>
@@ -182,7 +244,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+1 (555) 123-4567"
+                  placeholder="Phone Number"
                 />
               </div>
             </div>
@@ -198,6 +260,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   value={formData.firstName}
                   onChange={handleChange}
                   className={errors.firstName ? "error" : ""}
+                  placeholder="First Name"
                 />
                 {errors.firstName && (
                   <span className="error-message">{errors.firstName}</span>
@@ -212,39 +275,12 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   value={formData.lastName}
                   onChange={handleChange}
                   className={errors.lastName ? "error" : ""}
+                  placeholder="Last Name"
                 />
                 {errors.lastName && (
                   <span className="error-message">{errors.lastName}</span>
                 )}
               </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="address">Address*</label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className={errors.address ? "error" : ""}
-                placeholder="123 Main St"
-              />
-              {errors.address && (
-                <span className="error-message">{errors.address}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="apartmentUnit">Apartment, Suite, etc.</label>
-              <input
-                type="text"
-                id="apartmentUnit"
-                name="apartmentUnit"
-                value={formData.apartmentUnit}
-                onChange={handleChange}
-                placeholder="Apt 4B"
-              />
             </div>
 
             <div className="form-row">
@@ -257,57 +293,54 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                   value={formData.city}
                   onChange={handleChange}
                   className={errors.city ? "error" : ""}
+                  placeholder="City"
                 />
                 {errors.city && (
                   <span className="error-message">{errors.city}</span>
                 )}
               </div>
               <div className="form-group">
-                <label htmlFor="state">State/Province*</label>
+                <label htmlFor="street">Street*</label>
                 <input
                   type="text"
-                  id="state"
-                  name="state"
-                  value={formData.state}
+                  id="street"
+                  name="street"
+                  value={formData.street}
                   onChange={handleChange}
-                  className={errors.state ? "error" : ""}
-                  placeholder="CA"
+                  className={errors.street ? "error" : ""}
+                  placeholder="Street"
                 />
-                {errors.state && (
-                  <span className="error-message">{errors.state}</span>
+                {errors.street && (
+                  <span className="error-message">{errors.street}</span>
                 )}
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="zipCode">ZIP/Postal Code*</label>
-                <input
-                  type="text"
-                  id="zipCode"
-                  name="zipCode"
-                  value={formData.zipCode}
-                  onChange={handleChange}
-                  className={errors.zipCode ? "error" : ""}
-                  placeholder="90210"
-                />
-                {errors.zipCode && (
-                  <span className="error-message">{errors.zipCode}</span>
-                )}
-              </div>
-              <div className="form-group">
-                <label htmlFor="country">Country*</label>
-                <select
-                  id="country"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                >
-                  <option value="United States">United States</option>
-                  <option value="Canada">Canada</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                </select>
-              </div>
+            <div className="form-group">
+              <label htmlFor="building">Building*</label>
+              <input
+                type="text"
+                id="building"
+                name="building"
+                value={formData.building}
+                onChange={handleChange}
+                className={errors.building ? "error" : ""}
+                placeholder="Building"
+              />
+              {errors.building && (
+                <span className="error-message">{errors.building}</span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="orderNotes">Order Notes (Optional)</label>
+              <textarea
+                id="orderNotes"
+                name="orderNotes"
+                value={formData.orderNotes}
+                onChange={handleChange}
+                placeholder="Special instructions for delivery or gift messages"
+              />
             </div>
 
             <div className="form-buttons">
@@ -319,7 +352,7 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                 className="primary-button"
                 onClick={() => handleStepChange(2)}
               >
-                Continue to Billing
+                Continue to Payment
               </button>
             </div>
           </div>
@@ -327,195 +360,12 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
 
         {currentStep === 2 && (
           <div className="checkout-step-content">
-            <div className="form-group checkbox-group">
-              <input
-                type="checkbox"
-                id="sameAsShipping"
-                name="sameAsShipping"
-                checked={formData.sameAsShipping}
-                onChange={handleChange}
-              />
-              <label htmlFor="sameAsShipping">Same as shipping address</label>
-            </div>
-
-            {!formData.sameAsShipping && (
-              <>
-                <h3>Billing Address</h3>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="billingFirstName">First Name*</label>
-                    <input
-                      type="text"
-                      id="billingFirstName"
-                      name="billingFirstName"
-                      value={formData.billingFirstName}
-                      onChange={handleChange}
-                      className={errors.billingFirstName ? "error" : ""}
-                    />
-                    {errors.billingFirstName && (
-                      <span className="error-message">
-                        {errors.billingFirstName}
-                      </span>
-                    )}
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="billingLastName">Last Name*</label>
-                    <input
-                      type="text"
-                      id="billingLastName"
-                      name="billingLastName"
-                      value={formData.billingLastName}
-                      onChange={handleChange}
-                      className={errors.billingLastName ? "error" : ""}
-                    />
-                    {errors.billingLastName && (
-                      <span className="error-message">
-                        {errors.billingLastName}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="billingAddress">Address*</label>
-                  <input
-                    type="text"
-                    id="billingAddress"
-                    name="billingAddress"
-                    value={formData.billingAddress}
-                    onChange={handleChange}
-                    className={errors.billingAddress ? "error" : ""}
-                    placeholder="123 Main St"
-                  />
-                  {errors.billingAddress && (
-                    <span className="error-message">
-                      {errors.billingAddress}
-                    </span>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="billingApartmentUnit">
-                    Apartment, Suite, etc.
-                  </label>
-                  <input
-                    type="text"
-                    id="billingApartmentUnit"
-                    name="billingApartmentUnit"
-                    value={formData.billingApartmentUnit}
-                    onChange={handleChange}
-                    placeholder="Apt 4B"
-                  />
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="billingCity">City*</label>
-                    <input
-                      type="text"
-                      id="billingCity"
-                      name="billingCity"
-                      value={formData.billingCity}
-                      onChange={handleChange}
-                      className={errors.billingCity ? "error" : ""}
-                    />
-                    {errors.billingCity && (
-                      <span className="error-message">
-                        {errors.billingCity}
-                      </span>
-                    )}
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="billingState">State/Province*</label>
-                    <input
-                      type="text"
-                      id="billingState"
-                      name="billingState"
-                      value={formData.billingState}
-                      onChange={handleChange}
-                      className={errors.billingState ? "error" : ""}
-                      placeholder="CA"
-                    />
-                    {errors.billingState && (
-                      <span className="error-message">
-                        {errors.billingState}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="billingZipCode">ZIP/Postal Code*</label>
-                    <input
-                      type="text"
-                      id="billingZipCode"
-                      name="billingZipCode"
-                      value={formData.billingZipCode}
-                      onChange={handleChange}
-                      className={errors.billingZipCode ? "error" : ""}
-                      placeholder="90210"
-                    />
-                    {errors.billingZipCode && (
-                      <span className="error-message">
-                        {errors.billingZipCode}
-                      </span>
-                    )}
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="billingCountry">Country*</label>
-                    <select
-                      id="billingCountry"
-                      name="billingCountry"
-                      value={formData.billingCountry}
-                      onChange={handleChange}
-                    >
-                      <option value="United States">United States</option>
-                      <option value="Canada">Canada</option>
-                      <option value="United Kingdom">United Kingdom</option>
-                    </select>
-                  </div>
-                </div>
-              </>
-            )}
-
-            <div className="form-group">
-              <label htmlFor="orderNotes">Order Notes</label>
-              <textarea
-                id="orderNotes"
-                name="orderNotes"
-                value={formData.orderNotes}
-                onChange={handleChange}
-                placeholder="Special instructions for delivery or gift messages"
-              />
-            </div>
-
-            <div className="form-buttons">
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={() => setCurrentStep(1)}
-              >
-                Back to Shipping
-              </button>
-              <button
-                type="button"
-                className="primary-button"
-                onClick={() => handleStepChange(3)}
-              >
-                Continue to Payment
-              </button>
-            </div>
-          </div>
-        )}
-
-        {currentStep === 3 && (
-          <div className="checkout-step-content">
             <h3>Payment Method</h3>
             <div className="payment-methods">
               <div
-                className={`payment-method ${formData.paymentMethod === "creditCard" ? "selected" : ""
-                  }`}
+                className={`payment-method ${
+                  formData.paymentMethod === "creditCard" ? "selected" : ""
+                }`}
                 onClick={() =>
                   setFormData({ ...formData, paymentMethod: "creditCard" })
                 }
@@ -536,8 +386,9 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
                 </div>
               </div>
               <div
-                className={`payment-method ${formData.paymentMethod === "paypal" ? "selected" : ""
-                  }`}
+                className={`payment-method ${
+                  formData.paymentMethod === "paypal" ? "selected" : ""
+                }`}
                 onClick={() =>
                   setFormData({ ...formData, paymentMethod: "paypal" })
                 }
@@ -634,26 +485,6 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
               </div>
             )}
 
-            <div className="order-summary">
-              <h3>Order Summary</h3>
-              <div className="summary-row">
-                <span>Subtotal</span>
-                <span>${cartTotal.toFixed(2)}</span>
-              </div>
-              <div className="summary-row">
-                <span>Shipping</span>
-                <span>Free</span>
-              </div>
-              <div className="summary-row">
-                <span>Tax (8%)</span>
-                <span>${(cartTotal * 0.08).toFixed(2)}</span>
-              </div>
-              <div className="summary-row total">
-                <span>Total</span>
-                <span>${(cartTotal + cartTotal * 0.08).toFixed(2)}</span>
-              </div>
-            </div>
-
             <div className="form-group checkbox-group">
               <input
                 type="checkbox"
@@ -674,29 +505,20 @@ const CheckoutForm = ({ onSubmit, cartTotal }) => {
               )}
             </div>
 
-            <div className="form-group checkbox-group">
-              <input
-                type="checkbox"
-                id="subscribeToNewsletter"
-                name="subscribeToNewsletter"
-                checked={formData.subscribeToNewsletter}
-                onChange={handleChange}
-              />
-              <label htmlFor="subscribeToNewsletter">
-                Subscribe to our newsletter for exclusive updates
-              </label>
-            </div>
-
             <div className="form-buttons">
               <button
                 type="button"
                 className="secondary-button"
-                onClick={() => setCurrentStep(2)}
+                onClick={() => setCurrentStep(1)}
               >
-                Back to Billing
+                Back to Information
               </button>
-              <button type="submit" className="primary-button">
-                Complete Order
+              <button
+                type="submit"
+                className="primary-button"
+                disabled={isProcessing}
+              >
+                {isProcessing ? "Processing..." : "Complete Order"}
               </button>
             </div>
           </div>

@@ -12,7 +12,9 @@ public class User { //extends BaseEntity
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
-
+    public User() {
+        // Default constructor
+    }
     public User(int userId, String role, String name, String email, String passwordHash,
                 String phone, LocalDateTime createdAt, LocalDateTime updatedAt,
                 LocalDateTime deletedAt) {

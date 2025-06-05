@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReusableGrid from "../components/ReusableGrid";
 import ItemCard from "../components/ItemCard";
 import { getAllItems, getTrendingItems } from "../api/items";
-import { useUser } from "../context/UserContext"; // Import the custom hook
+import { useUser } from "../context/UserContext";
 
 const ItemGrid = ({
   limit,
@@ -12,6 +12,7 @@ const ItemGrid = ({
   className = "items-grid",
 }) => {
   const [items, setItems] = useState([]);
+  const [allItems, setAllItems] = useState([]); // Store all items for cross-referencing
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,24 +24,36 @@ const ItemGrid = ({
       try {
         setLoading(true);
 
+        // Always fetch all items for cross-referencing
+        const allEnrichedItems = await getAllItems();
+        setAllItems(allEnrichedItems);
+
+        // Get the specific items to display
         let fetchedItems;
         if (className === "trending") {
           fetchedItems = await getTrendingItems();
         } else {
-          fetchedItems = await getAllItems();
+          fetchedItems = allEnrichedItems; // Use the already fetched items
         }
 
+        // Apply filters
+        let filteredItems = fetchedItems;
+
         if (storeId) {
-          fetchedItems = fetchedItems.filter((item) => item.storeId == storeId);
+          filteredItems = filteredItems.filter(
+            (item) => item.storeId == storeId
+          );
         }
 
         if (category) {
-          fetchedItems = fetchedItems.filter(
+          // Note: Since categories aren't in enriched data, this filter might not work
+          // You may need to remove this or add category info to your enriched endpoint
+          filteredItems = filteredItems.filter(
             (item) => item.category === category
           );
         }
 
-        setItems(fetchedItems);
+        setItems(filteredItems);
       } catch (err) {
         console.error("Error fetching items:", err);
         setError("Failed to load items. Please try again later.");
@@ -50,7 +63,7 @@ const ItemGrid = ({
     };
 
     fetchItems();
-  }, [storeId, category]);
+  }, [storeId, category, className]);
 
   // Handle add to cart function
   const handleAddToCart = async (item) => {
@@ -65,15 +78,44 @@ const ItemGrid = ({
   };
 
   if (loading) {
-    return <div>Loading items...</div>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+        </div>
+        <p>Loading items...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div className="error-container">
+        <h3>Oops! Something went wrong</h3>
+        <p>{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="retry-button"
+        >
+          Try Again
+        </button>
+      </div>
+    );
   }
 
   if (items.length === 0) {
-    return <div>No items found.</div>;
+    return (
+      <div className="no-items-container">
+        <h3>No items found</h3>
+        <p>
+          {storeId
+            ? "No items available in this store."
+            : category
+            ? `No items found in the "${category}" category.`
+            : "No items available at the moment."}
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -84,6 +126,7 @@ const ItemGrid = ({
       cardProps={{
         onAddToCart: handleAddToCart,
         isAddingToCart, // Pass loading state to disable buttons during add
+        allItems, // Pass all items for cross-referencing in ItemCard
       }}
       itemPropName="item"
       className={className}

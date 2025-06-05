@@ -27,6 +27,7 @@ import FAQ from "./pages/FAQ.jsx";
 import dummyProducts from "./Data/dummyProducts.js";
 import ProductCard from "./components/ProductCard.jsx";
 import PrivateRoute from "./pages/PrivateRoute.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
 
 function App() {
   return (
@@ -47,6 +48,8 @@ function App() {
           <Route path="/storepage/:storeId" element={<StorePage />} />
           <Route path="/passwordreset" element={<PasswordReset />} />
           <Route path="/contact" element={<ContactAndSupport />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+
           <Route path="/faq" element={<FAQ />} />
           <Route
             path="/dashboard"

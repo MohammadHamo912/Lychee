@@ -5,16 +5,12 @@ const FiltersPanel = ({
   categories = ["Skincare", "Makeup", "Hair Care", "Fragrance"],
 }) => {
   const [category, setCategory] = useState("All");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
   const [sortOption, setSortOption] = useState("none");
   const [selectedRating, setSelectedRating] = useState(0);
 
   const handleApply = () => {
     onApplyFilters({
       category,
-      minPrice: minPrice ? parseFloat(minPrice) : null,
-      maxPrice: maxPrice ? parseFloat(maxPrice) : null,
       sortOption,
       rating: selectedRating,
     });
@@ -22,8 +18,6 @@ const FiltersPanel = ({
 
   const handleReset = () => {
     setCategory("All");
-    setMinPrice("");
-    setMaxPrice("");
     setSortOption("none");
     setSelectedRating(0);
     onApplyFilters({
@@ -97,27 +91,6 @@ const FiltersPanel = ({
             <span style={styles.star}>★</span>
             <span style={styles.star}>★</span>
           </div>
-        </div>
-      </div>
-
-      {/* Price Range Filter */}
-      <div style={styles.filterGroup}>
-        <label style={styles.label}>Price Range</label>
-        <div style={styles.priceInputs}>
-          <input
-            type="number"
-            placeholder="Min"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            style={styles.priceInput}
-          />
-          <input
-            type="number"
-            placeholder="Max"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            style={styles.priceInput}
-          />
         </div>
       </div>
 

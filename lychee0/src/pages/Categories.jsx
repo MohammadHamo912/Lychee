@@ -21,7 +21,7 @@ const categories = [
     name: "MakeUp",
     image: makeupImg,
     // Updated to link to products page with category filter
-    path: "/productlistingpage?category=MakeUp",
+    path: "/productlistingpage?category=Makeup",
     tagline: "Bold shades for every mood",
   },
   {

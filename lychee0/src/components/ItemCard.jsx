@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReusableCard from "../components/ReusableCard";
 import cartIcon from "../images/white-cart-icon.png";
-import { getCategoriesByProductId } from "../api/productcategories";
-import { getCategoryById } from "../api/categories";
-import { getStoreById } from "../api/stores"; // Added import for store API
-import "../ComponentsCss/ItemCard.css"; // For product-specific styling
+import "../ComponentsCss/ItemCard.css";
 
-const ItemCard = ({ item, onAddToCart, isAddingToCart }) => {
+const ItemCard = ({ item, onAddToCart, isAddingToCart, allItems = [] }) => {
   const navigate = useNavigate();
 
-  // Use enriched data from the API, added storeId
+  // Use enriched data from the API
   const {
     id,
-    name, // This is now the product name
+    name, // Product name from enriched data
     image: imageUrl,
     price,
     description,
@@ -22,90 +19,27 @@ const ItemCard = ({ item, onAddToCart, isAddingToCart }) => {
     stock,
     currentVariant,
     availableVariants,
-    barcode, // need to match it for the find best price
+    barcode,
     brand,
-    storeId, // Added storeId
+    storeId,
+    storeName, // Store name is already included in enriched data
+    finalPrice, // Final price is already calculated in enriched data
   } = item;
 
   // Extract productId from the current variant
   const productId = currentVariant?.productId;
 
-  const [categories, setCategories] = useState([]);
-  const [categoriesLoading, setCategoriesLoading] = useState(true);
-  const [storeName, setStoreName] = useState(""); // Added state for store name
-  const [storeLoading, setStoreLoading] = useState(true); // Added state for store loading
+  // Get categories from other items with the same productId (if needed for display)
+  const getProductCategories = () => {
+    if (!productId || !allItems.length) return [];
 
-  // Fetch categories for this item's product
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setCategoriesLoading(true);
+    // Find other items with the same productId that might have category info
+    // Since categories aren't in the enriched data, we'll return a placeholder
+    // You can either add categories to your enriched endpoint or remove this feature
+    return [];
+  };
 
-        if (productId) {
-          const productCategories = await getCategoriesByProductId(productId);
-
-          if (productCategories && productCategories.length > 0) {
-            const categoryPromises = productCategories.map((pc) =>
-              getCategoryById(pc.categoryId)
-            );
-
-            const categoryDetails = await Promise.all(categoryPromises);
-            setCategories(categoryDetails.filter((cat) => cat !== null));
-          } else {
-            setCategories([]);
-          }
-        }
-      } catch (error) {
-        console.error(
-          `Failed to fetch categories for product ${productId}:`,
-          error
-        );
-        setCategories([]);
-      } finally {
-        setCategoriesLoading(false);
-      }
-    };
-
-    if (productId) {
-      fetchCategories();
-    } else {
-      setCategoriesLoading(false);
-    }
-  }, [productId]);
-
-  // Fetch store name based on storeId
-  useEffect(() => {
-    const fetchStore = async () => {
-      try {
-        setStoreLoading(true);
-        if (storeId) {
-          const store = await getStoreById(storeId);
-          if (store) {
-            setStoreName(store.name);
-          } else {
-            setStoreName("Unknown Store");
-          }
-        } else {
-          setStoreName("No Store");
-        }
-      } catch (error) {
-        console.error(`Failed to fetch store for id ${storeId}:`, error);
-        setStoreName("Error Loading Store");
-      } finally {
-        setStoreLoading(false);
-      }
-    };
-
-    if (storeId) {
-      fetchStore();
-    } else {
-      setStoreLoading(false);
-      setStoreName("No Store");
-    }
-  }, [storeId]);
-
-  // Calculate the final price after discount
-  const finalPrice = discount ? price - (price * discount) / 100 : price;
+  const categories = getProductCategories();
 
   const handleCardClick = () => {
     navigate(`/item/${id}`);
@@ -118,7 +52,7 @@ const ItemCard = ({ item, onAddToCart, isAddingToCart }) => {
         <span className="item-card-original-price">${price.toFixed(2)}</span>
       )}
       <span className={`item-card-price ${discount > 0 ? "discounted" : ""}`}>
-        ${finalPrice.toFixed(2)}
+        ${(finalPrice || price).toFixed(2)}
       </span>
       {discount > 0 && <span className="item-card-discount">-{discount}%</span>}
     </div>
@@ -172,46 +106,23 @@ const ItemCard = ({ item, onAddToCart, isAddingToCart }) => {
     </div>
   );
 
-  // Show store information instead of just stock status
+  // Store information using pre-fetched storeName
   const storeIndicator = (
     <div className="store-indicator">
-      {storeLoading
-        ? "Loading store..."
-        : stock <= 0
-        ? `Out of Stock at ${storeName}`
-        : `Available at ${storeName}`}
+      {stock <= 0
+        ? `Out of Stock at ${storeName || "Unknown Store"}`
+        : `Available at ${storeName || "Unknown Store"}`}
     </div>
   );
 
-  // Create category labels component
+  // Simplified category labels (since categories aren't in enriched data)
   const CategoryLabels = () => {
-    if (categoriesLoading) {
-      return (
-        <span className="item-category loading">Loading categories...</span>
-      );
-    }
-
-    if (categories.length === 0) {
-      return <span className="item-category no-category">Uncategorized</span>;
-    }
-
-    if (categories.length === 1) {
-      return (
-        <span className="item-category">Category: {categories[0].name}</span>
-      );
-    } else {
-      return (
-        <span className="item-category multiple">
-          Categories: {categories[0].name}
-          {categories.length > 1 && (
-            <span className="category-count"> +{categories.length - 1}</span>
-          )}
-        </span>
-      );
-    }
+    // If you want to show categories, you'll need to add them to your enriched endpoint
+    // For now, we'll show a simple "Product" label or remove this section
+    return null; // Remove category display since it's not in enriched data
   };
 
-  // Subtitle contains brand
+  // Subtitle contains brand and store info
   const subtitleContent = (
     <div className="item-subtitle-container">
       <CategoryLabels />
@@ -232,7 +143,7 @@ const ItemCard = ({ item, onAddToCart, isAddingToCart }) => {
       className={`item-card-button ${isAddingToCart ? "loading" : ""}`}
       onClick={handleAddToCart}
       aria-label="Add to cart"
-      disabled={stock <= 0 || isAddingToCart} // Disable when adding to cart
+      disabled={stock <= 0 || isAddingToCart}
     >
       {isAddingToCart ? (
         <div className="loading-spinner">
@@ -248,14 +159,14 @@ const ItemCard = ({ item, onAddToCart, isAddingToCart }) => {
     <ReusableCard
       image={imageUrl}
       imageAlt={name}
-      title={name} // Now displays the product name
+      title={name} // Product name from enriched data
       subtitle={subtitleContent}
       description={description}
       footerLeft={PriceElement}
       footerRight={AddToCartButton}
       onClick={handleCardClick}
-      className={`item-theme ${stock <= 0 ? "out-of-stock" : ""}`} // Stock still affects styling
-      overlayContent={storeIndicator} // Updated to show store info
+      className={`item-theme ${stock <= 0 ? "out-of-stock" : ""}`}
+      overlayContent={storeIndicator}
     >
       {/* Add variant information as children */}
       {VariantInfo}
@@ -266,35 +177,42 @@ const ItemCard = ({ item, onAddToCart, isAddingToCart }) => {
 ItemCard.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    name: PropTypes.string.isRequired, // Product name
+    name: PropTypes.string.isRequired, // Product name from enriched data
     image: PropTypes.string.isRequired,
     description: PropTypes.string,
     brand: PropTypes.string,
     price: PropTypes.number.isRequired,
     discount: PropTypes.number,
     stock: PropTypes.number,
+    finalPrice: PropTypes.number, // Pre-calculated final price from enriched data
     storeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    storeName: PropTypes.string, // Store name from enriched data
     currentVariant: PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      productId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Added productId to variant
+      productId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       size: PropTypes.string,
       color: PropTypes.string,
     }),
     availableVariants: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        productId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Added productId to variant
+        productId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         size: PropTypes.string,
         color: PropTypes.string,
         available: PropTypes.bool,
+        availableInSameStore: PropTypes.bool,
       })
     ),
     barcode: PropTypes.string,
   }).isRequired,
   onAddToCart: PropTypes.func.isRequired,
-  isAddingToCart: PropTypes.bool, // Add this prop type
+  isAddingToCart: PropTypes.bool,
+  allItems: PropTypes.array, // Optional array of all items for cross-referencing
 };
+
 ItemCard.defaultProps = {
   isAddingToCart: false,
+  allItems: [],
 };
+
 export default ItemCard;

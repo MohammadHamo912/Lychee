@@ -1,19 +1,31 @@
+/* Checkout form css */
+
 .checkout-form-container {
   max-width: 1000px;
-  margin: 80px auto;
-  /* Matches other components */
+  margin: 0 auto;
   padding: 30px;
-  background-color: #fff5e1;
-  /* Cream */
+  background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(103, 0, 16, 0.1);
   animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Step Indicator */
 .checkout-steps {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
   margin-bottom: 50px;
   position: relative;
 }
@@ -22,11 +34,11 @@
   content: "";
   position: absolute;
   top: 20px;
-  left: 15%;
-  width: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
   height: 3px;
   background-color: #b76e79;
-  /* Rose Gold */
   opacity: 0.3;
   z-index: 1;
 }
@@ -48,11 +60,8 @@
   align-items: center;
   justify-content: center;
   background-color: #fff;
-  /* White */
   color: #8b3c5d;
-  /* Softer Deep Berry */
   border: 2px solid #b76e79;
-  /* Rose Gold */
   border-radius: 50%;
   margin-bottom: 10px;
   font-weight: 700;
@@ -63,9 +72,7 @@
 .step.active .step-number,
 .step.completed .step-number {
   background-color: #670010;
-  /* Deep Berry */
   color: #fff5e1;
-  /* Cream */
   border-color: #670010;
 }
 
@@ -78,7 +85,6 @@
 .step-title {
   font-size: 1rem;
   color: #8b3c5d;
-  /* Softer Deep Berry */
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -86,20 +92,17 @@
 
 .step.active .step-title {
   color: #670010;
-  /* Deep Berry */
 }
 
 /* Form Styling */
 .checkout-form h3 {
   color: #670010;
-  /* Deep Berry */
-  margin: 40px 0 20px;
+  margin: 30px 0 20px;
   font-size: 1.5rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   border-bottom: 2px solid #b76e79;
-  /* Rose Gold */
   padding-bottom: 10px;
 }
 
@@ -112,7 +115,6 @@
     opacity: 0;
     transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -128,54 +130,52 @@
 .form-group {
   flex: 1;
   margin-bottom: 20px;
+  position: relative;
+  padding: 40px 20px;
 }
 
-label {
+.form-group label {
   display: block;
-  margin-bottom: 10px;
-  font-size: 1rem;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
   color: #670010;
-  /* Deep Berry */
   font-weight: 600;
+  position: relative;
+  z-index: 1;
 }
 
-input:not([type="checkbox"], [type="radio"]),
-select,
-textarea {
+.form-group input:not([type="checkbox"], [type="radio"]),
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 14px 15px;
   border: 2px solid #b76e79;
-  /* Rose Gold */
   border-radius: 8px;
   font-size: 1rem;
   background-color: #fff;
-  /* White */
   color: #670010;
-  /* Deep Berry */
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
   outline: none;
   border-color: #670010;
-  /* Deep Berry */
   box-shadow: 0 0 5px rgba(103, 0, 16, 0.3);
 }
 
-input::placeholder,
-textarea::placeholder {
+.form-group input::placeholder,
+.form-group textarea::placeholder {
   color: #8b3c5d;
-  /* Softer Deep Berry */
   opacity: 0.7;
 }
 
-input.error,
-select.error,
-textarea.error {
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
   border-color: #e74c3c;
-  /* Red for errors */
 }
 
 .error-message {
@@ -194,27 +194,24 @@ textarea.error {
 
 .checkbox-group input {
   margin-top: 3px;
+  width: auto;
   accent-color: #670010;
-  /* Deep Berry */
 }
 
 .checkbox-group label {
   margin-bottom: 0;
   font-weight: 500;
   color: #8b3c5d;
-  /* Softer Deep Berry */
 }
 
 .checkbox-group a {
   color: #b76e79;
-  /* Rose Gold */
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .checkbox-group a:hover {
   color: #670010;
-  /* Deep Berry */
   text-decoration: underline;
 }
 
@@ -237,24 +234,24 @@ textarea {
   gap: 15px;
   padding: 20px;
   border: 2px solid #b76e79;
-  /* Rose Gold */
   border-radius: 8px;
   cursor: pointer;
   background-color: #fff;
-  /* White */
   transition: all 0.3s ease;
 }
 
 .payment-method:hover {
   border-color: #670010;
-  /* Deep Berry */
   box-shadow: 0 4px 10px rgba(103, 0, 16, 0.1);
 }
 
 .payment-method.selected {
   border-color: #670010;
-  /* Deep Berry */
   background-color: rgba(103, 0, 16, 0.05);
+}
+
+.payment-method input[type="radio"] {
+  width: auto;
 }
 
 .payment-method label {
@@ -263,7 +260,6 @@ textarea {
   cursor: pointer;
   flex-grow: 1;
   color: #670010;
-  /* Deep Berry */
 }
 
 .payment-icons {
@@ -273,10 +269,8 @@ textarea {
 
 .payment-icon {
   color: #8b3c5d;
-  /* Softer Deep Berry */
   font-size: 1rem;
   background-color: #fff5e1;
-  /* Cream */
   padding: 5px 10px;
   border-radius: 5px;
 }
@@ -284,40 +278,10 @@ textarea {
 /* Credit Card Form */
 .credit-card-form {
   border: 2px solid #b76e79;
-  /* Rose Gold */
   border-radius: 8px;
   padding: 25px;
   margin-bottom: 30px;
   background-color: #fff;
-  /* White */
-}
-
-/* Order Summary */
-.order-summary {
-  background-color: #fff;
-  /* White */
-  padding: 25px;
-  border-radius: 12px;
-  margin: 40px 0;
-  box-shadow: 0 4px 10px rgba(103, 0, 16, 0.1);
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-  color: #670010;
-  /* Deep Berry */
-}
-
-.summary-row.total {
-  font-weight: 700;
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 2px solid #b76e79;
-  /* Rose Gold */
-  font-size: 1.2rem;
 }
 
 /* Button Styles */
@@ -332,7 +296,6 @@ textarea {
 .secondary-button {
   padding: 14px 30px;
   border-radius: 25px;
-  /* Matches other components */
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -340,44 +303,99 @@ textarea {
   text-decoration: none;
   text-align: center;
   width: 100%;
+  display: inline-block;
 }
 
 .primary-button {
   background-color: #670010;
-  /* Deep Berry */
   color: #fff5e1;
-  /* Cream */
   border: 2px solid #b76e79;
-  /* Rose Gold */
 }
 
 .primary-button:hover {
   background-color: #b76e79;
-  /* Rose Gold */
   border-color: #670010;
-  /* Deep Berry */
   transform: scale(1.05);
+}
+
+.primary-button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  border-color: #cccccc;
+}
+
+.primary-button:disabled:hover {
+  background-color: #cccccc;
+  transform: none;
 }
 
 .secondary-button {
   background-color: transparent;
   color: #670010;
-  /* Deep Berry */
   border: 2px solid #670010;
-  /* Deep Berry */
 }
 
 .secondary-button:hover {
   background-color: #670010;
-  /* Deep Berry */
   color: #fff5e1;
-  /* Cream */
+}
+
+/* Error banner */
+.error-banner {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.order-success {
+  text-align: center;
+  padding: 60px 30px;
+  color: #670010;
+}
+
+.order-success h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #670010;
+}
+
+.order-success p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  color: #8b3c5d;
+}
+
+.order-success .loading-spinner {
+  margin: 20px auto;
+}
+
+.order-success .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #670010;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
   .checkout-form-container {
-    margin: 60px auto;
     padding: 20px;
   }
 
@@ -387,7 +405,12 @@ textarea {
   }
 
   .checkout-steps {
+    gap: 50px;
     margin-bottom: 30px;
+  }
+
+  .checkout-steps::before {
+    width: 100px;
   }
 
   .step-number {
@@ -403,16 +426,15 @@ textarea {
   .form-buttons {
     flex-direction: column;
   }
-
-  .secondary-button {
-    width: 83%;
-  }
 }
 
 @media (max-width: 480px) {
+  .checkout-steps {
+    gap: 30px;
+  }
+
   .checkout-steps::before {
-    left: 10%;
-    width: 80%;
+    width: 80px;
   }
 
   .step-title {
