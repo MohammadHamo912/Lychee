@@ -42,3 +42,7 @@ export const fetchOrders = async ({ role, status, query, startDate, endDate, use
     }
 };
 
+export const fetchOrderItems = async (orderId) => {
+    const response = await axios.get(`http://localhost:8081/api/orders/${orderId}/items`);
+    return response.data;
+};

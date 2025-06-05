@@ -3,6 +3,7 @@ package com.mohammad.lychee.lychee.repository;
 import com.mohammad.lychee.lychee.model.Order;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 public interface OrderRepository {
     List<Order> findAll();
@@ -14,5 +15,6 @@ public interface OrderRepository {
     List<Order> findByStatus(String status);
     Optional<Double> getTotalSpendingByUserId(Integer userId);
     List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId);
+    List<Map<String, Object>> getOrderItemSummaries(int orderId);
 
 }

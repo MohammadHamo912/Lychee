@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import '../ComponentsCss/OrderManagement.css';
-import { fetchOrders } from '../api/orders';
-import { useUser } from '../context/UserContext'; // Ensure this exists
+import { fetchOrders, fetchOrderItems } from '../api/orders'; // ✅ import this
+import { useUser } from '../context/UserContext';
 
 const OrderManagement = ({ role = 'shopowner' }) => {
-    const { user } = useUser(); // Get current user
+    const { user } = useUser();
     const [orders, setOrders] = useState([]);
+    const [orderItems, setOrderItems] = useState([]); // ✅ move this inside
     const [filterStatus, setFilterStatus] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
     const [startDate, setStartDate] = useState('');
@@ -41,14 +42,27 @@ const OrderManagement = ({ role = 'shopowner' }) => {
         getOrders();
     }, [filterStatus, searchQuery, startDate, endDate, role, user]);
 
+    const handleCardClick = async (order) => {
+        setSelectedOrder(order);
+        try {
+            const items = await fetchOrderItems(order.orderId);
+            setOrderItems(items || []);
+        } catch (err) {
+            console.error("Failed to fetch order items:", err);
+            setOrderItems([]);
+        }
+    };
+
+    const closeModal = () => {
+        setSelectedOrder(null);
+        setOrderItems([]); // optional cleanup
+    };
+
     const getSearchPlaceholder = () => {
         if (role === 'admin') return 'Search by customer or store...';
         if (role === 'customer') return 'Search by customer name...';
         return 'Search by store name...';
     };
-
-    const handleCardClick = (order) => setSelectedOrder(order);
-    const closeModal = () => setSelectedOrder(null);
 
     return (
         <div className="order-management-container">
@@ -108,13 +122,11 @@ const OrderManagement = ({ role = 'shopowner' }) => {
                     >
                         <div className="order-header">
                             <h3>Order #{order.orderId}</h3>
-                            <span className="status-badge">{order.status}</span>
+                            <span className="status-badge">{order.status || 'Unknown'}</span>
                         </div>
                         <div className="order-info">
-                            <p><strong>Customer:</strong> {order.customerName || 'N/A'}</p>
-                            <p><strong>Store:</strong> {order.storeName || 'N/A'}</p>
-                            <p><strong>Date:</strong> {order.createdAt?.split('T')[0]}</p>
-                            <p><strong>Total:</strong> ${order.totalPrice?.toFixed(2)}</p>
+                            <p><strong>Date:</strong> {order.createdAt?.split('T')[0] || 'N/A'}</p>
+                            <p><strong>Total:</strong> ${order.totalPrice?.toFixed(2) || '0.00'}</p>
                         </div>
                     </div>
                 ))}
@@ -125,11 +137,24 @@ const OrderManagement = ({ role = 'shopowner' }) => {
                     <div className="order-popup-content" onClick={(e) => e.stopPropagation()}>
                         <button className="close-button" onClick={closeModal}>×</button>
                         <h3>Order #{selectedOrder.orderId} Details</h3>
-                        <p><strong>Customer:</strong> {selectedOrder.customerName || 'N/A'}</p>
-                        <p><strong>Store:</strong> {selectedOrder.storeName || 'N/A'}</p>
-                        <p><strong>Date:</strong> {selectedOrder.createdAt?.split('T')[0]}</p>
-                        <p><strong>Status:</strong> {selectedOrder.status}</p>
-                        <p><strong>Total:</strong> ${selectedOrder.totalPrice?.toFixed(2)}</p>
+                        <p><strong>Date:</strong> {selectedOrder.createdAt?.split('T')[0] || 'N/A'}</p>
+                        <p><strong>Status:</strong> {selectedOrder.status || 'Unknown'}</p>
+                        <p><strong>Total:</strong> ${selectedOrder.totalPrice?.toFixed(2) || '0.00'}</p>
+
+                        <h4>Items:</h4>
+                        {orderItems.length > 0 ? (
+                            <ul className="order-items-list">
+                                {orderItems.map((item, idx) => (
+                                    <li key={idx} className="order-item">
+                                        <p><strong>Product:</strong> {item.productName}</p>
+                                        <p><strong>Quantity:</strong> {item.quantity}</p>
+                                        <p><strong>Price:</strong> ${item.price?.toFixed(2)}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No items found.</p>
+                        )}
                     </div>
                 </div>
             )}

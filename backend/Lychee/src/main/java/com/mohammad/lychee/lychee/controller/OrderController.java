@@ -1,14 +1,13 @@
 package com.mohammad.lychee.lychee.controller;
-// fix the endpoints for the trending
+
 import com.mohammad.lychee.lychee.model.Order;
-import com.mohammad.lychee.lychee.model.OrderItem;
 import com.mohammad.lychee.lychee.service.OrderService;
-import com.mohammad.lychee.lychee.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -16,14 +15,13 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderItemService orderItemService;
 
     @Autowired
-    public OrderController(OrderService orderService, OrderItemService orderItemService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.orderItemService = orderItemService;
     }
 
+    // Get all orders (basic list)
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders(@RequestParam(required = false) String role,
                                                     @RequestParam(required = false) Integer userId,
@@ -31,6 +29,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
+    // Get order by ID
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Integer id) {
         return orderService.getOrderById(id)
@@ -38,38 +37,42 @@ public class OrderController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Get orders for a specific user
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Integer userId) {
         return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
     }
 
+    // ✅ Get order item summaries (uses Map<String, Object>)
     @GetMapping("/{orderId}/items")
-    public ResponseEntity<List<OrderItem>> getOrderItems(@PathVariable Integer orderId) {
-        return ResponseEntity.ok(orderItemService.getOrderItemsByOrderId(orderId));
+    public ResponseEntity<List<Map<String, Object>>> getOrderItemSummaries(@PathVariable int orderId) {
+        List<Map<String, Object>> items = orderService.getOrderItemSummaries(orderId);
+        return ResponseEntity.ok(items);
     }
 
-
+    // Create a new order
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         Order created = orderService.createOrder(order);
-        return ResponseEntity.ok(created); // Or .created() if you want to return 201
+        return ResponseEntity.ok(created);
     }
 
+    // Update an existing order
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateOrder(@PathVariable Integer id, @RequestBody Order order) {
         order.setOrderId(id);
         orderService.updateOrder(order);
-        return ResponseEntity.noContent().build(); // Returns 204
+        return ResponseEntity.noContent().build();
     }
 
-
+    // Soft delete an order
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Integer id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
 
-
+    // Advanced search with filters
     @GetMapping("/search")
     public ResponseEntity<List<Order>> searchOrders(@RequestParam String role,
                                                     @RequestParam(required = false) String query,
@@ -80,5 +83,4 @@ public class OrderController {
                                                     @RequestParam(required = false) Integer storeId) {
         return ResponseEntity.ok(orderService.searchOrders(role, query, status, startDate, endDate, userId, storeId));
     }
-
 }

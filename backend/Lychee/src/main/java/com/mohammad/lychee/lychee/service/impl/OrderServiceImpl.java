@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -60,4 +61,10 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId) {
         return orderRepository.searchOrders(role, query, status, startDate, endDate, userId, storeId);
     }
+
+    @Override
+    public List<Map<String, Object>> getOrderItemSummaries(int orderId) {
+        return orderRepository.getOrderItemSummaries(orderId);
+    }
+
 }
