@@ -1,16 +1,15 @@
-// --- OrderItemRepositoryImpl.java (fixed with all methods) ---
 package com.mohammad.lychee.lychee.repository.impl;
 
 import com.mohammad.lychee.lychee.model.OrderItem;
 import com.mohammad.lychee.lychee.repository.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,107 +24,115 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
     }
 
     private final RowMapper<OrderItem> orderItemRowMapper = (rs, rowNum) -> {
-        OrderItem item = new OrderItem();
-        item.setOrderItemId(rs.getInt("order_item_id"));
-        item.setOrderId(rs.getInt("order_id"));
-        item.setItemId(rs.getInt("item_id"));
-        item.setStoreId(rs.getInt("store_id"));
-        item.setQuantity(rs.getInt("quantity"));
-        item.setPriceAtPurchase(rs.getBigDecimal("price_at_purchase"));
-        item.setShippingStatus(rs.getString("shipping_status"));
-        Timestamp createdAt = rs.getTimestamp("created_at");
-        if (createdAt != null) {
-            item.setCreatedAt(createdAt.toLocalDateTime());
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrderId(rs.getInt("order_id"));
+        orderItem.setItemId(rs.getInt("item_id"));
+        orderItem.setShippingStatus(rs.getString("shipping_status"));
+        orderItem.setQuantity(rs.getInt("quantity"));
+        orderItem.setPriceAtPurchase(rs.getBigDecimal("price_at_purchase"));
+        orderItem.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+        Timestamp updatedAt = rs.getTimestamp("updated_at");
+        if (updatedAt != null) {
+            orderItem.setUpdatedAt(updatedAt.toLocalDateTime());
         }
-        return item;
+
+        Timestamp deletedAt = rs.getTimestamp("deleted_at");
+        if (deletedAt != null) {
+            orderItem.setDeletedAt(deletedAt.toLocalDateTime());
+        }
+
+        return orderItem;
     };
 
     @Override
     public List<OrderItem> findAll() {
-        String sql = "SELECT * FROM OrderItem";
+        String sql = "SELECT * FROM OrderItem WHERE deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderItemRowMapper);
     }
 
     @Override
     public Optional<OrderItem> findById(Integer orderId, Integer itemId) {
-        String sql = "SELECT * FROM OrderItem WHERE order_id = ? AND item_id = ?";
-        List<OrderItem> items = jdbcTemplate.query(sql, orderItemRowMapper, orderId, itemId);
-        return items.isEmpty() ? Optional.empty() : Optional.of(items.get(0));
+        String sql = "SELECT * FROM OrderItem WHERE order_id = ? AND item_id = ? AND deleted_at IS NULL";
+        List<OrderItem> orderItems = jdbcTemplate.query(sql, orderItemRowMapper, orderId, itemId);
+        return orderItems.isEmpty() ? Optional.empty() : Optional.of(orderItems.get(0));
     }
 
     @Override
     public List<OrderItem> findByOrderId(Integer orderId) {
-        String sql = "SELECT * FROM OrderItem WHERE order_id = ?";
+        String sql = "SELECT * FROM OrderItem WHERE order_id = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderItemRowMapper, orderId);
     }
 
     @Override
-    public List<OrderItem> findByStoreId(Integer storeId) {
-        String sql = "SELECT * FROM OrderItem WHERE store_id = ?";
-        return jdbcTemplate.query(sql, orderItemRowMapper, storeId);
-    }
+    public OrderItem save(OrderItem orderItem) {
+        String sql = "INSERT INTO OrderItem (order_id, item_id, shipping_status, quantity, price_at_purchase) " +
+                "VALUES (?, ?, ?, ?, ?)";
 
-    @Override
-    public OrderItem save(OrderItem item) {
-        String sql = "INSERT INTO OrderItem (order_id, item_id, store_id, quantity, price_at_purchase, shipping_status, created_at, updated_at) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                item.getOrderId(),
-                item.getItemId(),
-                item.getStoreId(),
-                item.getQuantity(),
-                item.getPriceAtPurchase(),
-                item.getShippingStatus(),
-                Timestamp.valueOf(item.getCreatedAt()),
-                Timestamp.valueOf(item.getUpdatedAt() != null ? item.getUpdatedAt() : item.getCreatedAt())
+                orderItem.getOrderId(),
+                orderItem.getItemId(),
+                orderItem.getShippingStatus(),
+                orderItem.getQuantity(),
+                orderItem.getPriceAtPurchase()
         );
-        return item;
+
+        return orderItem;
     }
 
     @Override
-    public void update(OrderItem item) {
-        String sql = "UPDATE OrderItem SET quantity = ?, price_at_purchase = ?, shipping_status = ?, updated_at = NOW() WHERE order_id = ? AND item_id = ?";
+    public void update(OrderItem orderItem) {
+        String sql = "UPDATE OrderItem SET shipping_status = ?, quantity = ?, price_at_purchase = ? " +
+                "WHERE order_id = ? AND item_id = ?";
+
         jdbcTemplate.update(sql,
-                item.getQuantity(),
-                item.getPriceAtPurchase(),
-                item.getShippingStatus(),
-                item.getOrderId(),
-                item.getItemId()
+                orderItem.getShippingStatus(),
+                orderItem.getQuantity(),
+                orderItem.getPriceAtPurchase(),
+                orderItem.getOrderId(),
+                orderItem.getItemId()
         );
     }
 
     @Override
     public void softDelete(Integer orderId, Integer itemId) {
-        String sql = "UPDATE OrderItem SET shipping_status = 'deleted' WHERE order_id = ? AND item_id = ?";
-        jdbcTemplate.update(sql, orderId, itemId);
+        String sql = "UPDATE OrderItem SET deleted_at = ? WHERE order_id = ? AND item_id = ?";
+        jdbcTemplate.update(sql, Timestamp.valueOf(LocalDateTime.now()), orderId, itemId);
     }
 
     @Override
     public List<OrderItem> findByItemId(Integer itemId) {
-        String sql = "SELECT * FROM OrderItem WHERE item_id = ?";
+        String sql = "SELECT * FROM OrderItem WHERE item_id = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderItemRowMapper, itemId);
     }
 
     @Override
     public List<OrderItem> findByShippingStatus(String shippingStatus) {
-        String sql = "SELECT * FROM OrderItem WHERE shipping_status = ?";
+        String sql = "SELECT * FROM OrderItem WHERE shipping_status = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderItemRowMapper, shippingStatus);
     }
 
     @Override
     public Optional<OrderItem> findByOrderIdAndItemId(Integer orderId, Integer itemId) {
-        return findById(orderId, itemId);
+        try {
+            String sql = "SELECT * FROM OrderItem WHERE order_id = ? AND item_id = ?";
+            OrderItem orderItem = jdbcTemplate.queryForObject(sql, orderItemRowMapper, orderId, itemId);
+            return Optional.ofNullable(orderItem);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public void deleteById(Integer orderItemId) {
-        String sql = "DELETE FROM OrderItem WHERE order_item_id = ?";
-        jdbcTemplate.update(sql, orderItemId);
+    public List<OrderItem> getOrderItemsByStoreId(Integer storeId) {
+        String sql = "SELECT oi.* FROM OrderItem oi " +
+                "JOIN Item i ON oi.item_id = i.Item_ID " +
+                "WHERE i.Store_ID = ? " +
+                "AND oi.deleted_at IS NULL " +
+                "AND i.deleted_at IS NULL";
+
+        return jdbcTemplate.query(sql, orderItemRowMapper, storeId);
     }
 
-    @Override
-    public void deleteByOrderId(Integer orderId) {
-        String sql = "DELETE FROM OrderItem WHERE order_id = ?";
-        jdbcTemplate.update(sql, orderId);
-    }
-} // end of OrderItemRepositoryImpl.java
+
+}

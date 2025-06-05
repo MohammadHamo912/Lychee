@@ -1,4 +1,4 @@
-// ✅ NavBar.jsx (dynamic session + logout)
+// ✅ NavBar.jsx (fixed version)
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../ComponentsCss/NavBar.css";
@@ -21,15 +21,27 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.href = "/login";
+  const handleLogout = async () => {
+    try {
+      // Use the logout function from context instead of manual localStorage removal
+      logout();
+      // Redirect to login page
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
+
+  // Debug: Add this to see what's happening (remove in production)
+  console.log("NavBar - User:", user);
+  console.log("NavBar - isLoggedIn:", isLoggedIn);
 
   return (
     <header className="navbar" style={{ opacity }}>
       <div className="navbar-inner">
-        <Link to="/" className="logo">Lychee</Link>
+        <Link to="/" className="logo">
+          Lychee
+        </Link>
 
         <nav className="nav-links">
           <Link to="/">Home</Link>
@@ -37,7 +49,7 @@ const NavBar = () => {
           <Link to="/productlistingpage">Products</Link>
           <Link to="/categories">Categories</Link>
           <Link to="/shoppingcartpage" className="cart-link">
-            Cart <span className="cart-badge">5</span>
+            Cart <span className="cart-badge">{user ? "5" : "0"}</span>
           </Link>
         </nav>
 
@@ -45,10 +57,14 @@ const NavBar = () => {
           {isLoggedIn ? (
             <>
               <Link to="/dashboard" className="profile-link">
-                <span className="profile-badge">{user?.name?.charAt(0).toUpperCase()}</span>
-                {user?.name?.split(" ")[0] ?? "Profile"}
+                <span className="profile-badge">
+                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </span>
+                {user?.name?.split(" ")[0] || user?.username || "Profile"}
               </Link>
-              <button onClick={logout} className="logout-btn">Logout</button>
+              <button onClick={handleLogout} className="logout-btn">
+                Logout
+              </button>
             </>
           ) : (
             <>
@@ -62,7 +78,9 @@ const NavBar = () => {
           className="mobile-toggle"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle mobile menu"
-        >☰</button>
+        >
+          ☰
+        </button>
       </div>
 
       {isMenuOpen && (

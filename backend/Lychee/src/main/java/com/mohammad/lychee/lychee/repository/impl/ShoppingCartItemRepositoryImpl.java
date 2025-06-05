@@ -34,20 +34,20 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
 
     @Override
     public List<ShoppingCartItem> findAll() {
-        String sql = "SELECT * FROM ShoppingCartItem";
+        String sql = "SELECT * FROM ShoppingCartItem WHERE deleted_at IS NULL";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public List<ShoppingCartItem> findByUserId(Integer userId) {
-        String sql = "SELECT * FROM ShoppingCartItem WHERE User_ID = ?";
+        String sql = "SELECT * FROM ShoppingCartItem WHERE User_ID = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, rowMapper, userId);
     }
 
     @Override
     public Optional<ShoppingCartItem> findByUserIdAndItemId(Integer userId, Integer itemId) {
         try {
-            String sql = "SELECT * FROM ShoppingCartItem WHERE User_ID = ? AND Item_ID = ?";
+            String sql = "SELECT * FROM ShoppingCartItem WHERE User_ID = ? AND Item_ID = ? AND deleted_at IS NULL";
             ShoppingCartItem sci = jdbcTemplate.queryForObject(sql, rowMapper, userId, itemId);
             return Optional.ofNullable(sci);
         } catch (EmptyResultDataAccessException e) {
@@ -57,21 +57,53 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
 
     @Override
     public ShoppingCartItem save(ShoppingCartItem sci) {
-        String sql = "INSERT INTO ShoppingCartItem (User_ID, Item_ID, quantity, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
-                sci.getUserId(),
-                sci.getItemId(),
-                sci.getQuantity(),
-                sci.getCreatedAt(),
-                sci.getUpdatedAt()
-        );
-        return sci;
+        try {
+            System.out.println("Repository - Saving cart item: User=" + sci.getUserId() +
+                    ", Item=" + sci.getItemId() +
+                    ", Quantity=" + sci.getQuantity());
+
+            // Insert new item (don't check for existing - service layer handles that)
+            String insertSql = "INSERT INTO ShoppingCartItem (User_ID, Item_ID, quantity, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())";
+            int rowsAffected = jdbcTemplate.update(insertSql,
+                    sci.getUserId(),
+                    sci.getItemId(),
+                    sci.getQuantity()
+            );
+
+            if (rowsAffected > 0) {
+                System.out.println("Repository - Successfully inserted cart item");
+                return sci;
+            } else {
+                throw new RuntimeException("Repository - Failed to insert cart item - no rows affected");
+            }
+        } catch (Exception e) {
+            System.err.println("Repository - Error saving cart item: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
+
     @Override
     public ShoppingCartItem update(ShoppingCartItem item) {
-        String sql = "UPDATE shopping_cart_item SET quantity = ?, updated_at = NOW() WHERE user_id = ? AND product_variant_id = ?";
-        jdbcTemplate.update(sql, item.getQuantity(), item.getUserId(), item.getProductVariantId());
-        return item;
+        try {
+            System.out.println("Repository - Updating cart item: User=" + item.getUserId() +
+                    ", Item=" + item.getItemId() +
+                    ", Quantity=" + item.getQuantity());
+
+            String sql = "UPDATE ShoppingCartItem SET quantity = ?, updated_at = NOW() WHERE User_ID = ? AND Item_ID = ?";
+            int rowsAffected = jdbcTemplate.update(sql, item.getQuantity(), item.getUserId(), item.getItemId());
+
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Repository - Cart item not found for update");
+            }
+
+            System.out.println("Repository - Successfully updated cart item");
+            return item;
+        } catch (Exception e) {
+            System.err.println("Repository - Error updating cart item: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override

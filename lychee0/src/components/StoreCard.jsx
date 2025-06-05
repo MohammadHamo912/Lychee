@@ -1,11 +1,57 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReusableCard from "./ReusableCard";
+import { getAddressById } from "../api/addresses"; // Import your address API
 import "./../ComponentsCss/StoreCard.css";
 
 const StoreCard = ({ store }) => {
+  const [address, setAddress] = useState(null);
+  const [locationLoading, setLocationLoading] = useState(false);
+
   // Get the store ID from any of the possible property names
   const storeId = store.storeId || store.id || store.Store_ID;
+
+  // Get the address ID from any of the possible property names
+  const addressId = store.address_id || store.addressId || store.Address_ID;
+
+  // Fetch address data when component mounts or addressId changes
+  useEffect(() => {
+    const fetchAddress = async () => {
+      if (addressId) {
+        setLocationLoading(true);
+        try {
+          const addressData = await getAddressById(addressId);
+          setAddress(addressData);
+        } catch (error) {
+          console.error(`Failed to fetch address for store ${storeId}:`, error);
+          setAddress(null);
+        } finally {
+          setLocationLoading(false);
+        }
+      }
+    };
+
+    fetchAddress();
+  }, [addressId, storeId]);
+
+  // Format address for display
+  const formatAddress = (addressData) => {
+    if (!addressData) return "Unknown location";
+
+    const parts = [];
+    if (addressData.building) parts.push(addressData.building);
+    if (addressData.street) parts.push(addressData.street);
+    if (addressData.city) parts.push(addressData.city);
+
+    return parts.length > 0 ? parts.join(", ") : "Unknown location";
+  };
+
+  // Get location display - prioritize fetched address, fallback to store.location
+  const getLocationDisplay = () => {
+    if (locationLoading) return "Loading location...";
+    if (address) return formatAddress(address);
+    return store.location || "Unknown location";
+  };
 
   // Create store rating display with stars
   const ratingDisplay = (
@@ -47,10 +93,12 @@ const StoreCard = ({ store }) => {
 
   // Create footer content
   const footerLeft = (
-    <span className="store-location">
-      {store.location || "Unknown location"}
+    <span className={`store-location ${locationLoading ? "loading" : ""}`}>
+      <i className="location-icon">📍</i>
+      {getLocationDisplay()}
     </span>
   );
+
   const footerRight = (
     <Link
       to={`/StorePage/${storeId}`}

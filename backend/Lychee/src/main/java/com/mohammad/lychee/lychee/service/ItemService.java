@@ -36,4 +36,7 @@ public interface ItemService {
     Optional<Item> searchItemsByProductName(String productName);
 
     List<Item> getItemsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice);
+
+
+    List<Item> getItemsByStoreIdAndName(Integer storeId, String query);
 }

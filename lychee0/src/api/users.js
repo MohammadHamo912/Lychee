@@ -30,7 +30,7 @@ export const createUser = async (userData) => {
     if (!userData.passwordHash) {
       userData.passwordHash = userData.password || "tempPassword123";
     }
-    const response = await axios.post(`${API_URL}/signup`, userData);
+    const response = await axios.post(API_URL, userData);
     return response.data;
   } catch (error) {
     console.error("Error creating user:", error);

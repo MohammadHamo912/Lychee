@@ -1,11 +1,11 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { UserProvider } from "./context/UserContext";
 
 // Pages
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import HomePage from "./DummyFiles/DummyHomePage";
-import ShopByCategory from "./pages/ShopByCategoryPage.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import AdminDashboard from "./components/AdminDashboard.jsx";
 import CheckOut from "./components/CheckoutForm.jsx";
@@ -30,46 +30,47 @@ import PrivateRoute from "./pages/PrivateRoute.jsx";
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/Lychee" element={<HomePage />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/product/:id" element={<ProductPage />} />
-        <Route path="/productlistingpage" element={<ProductListingPage />} />
-        <Route path="/categories" element={<CategoriesPage />} />
-        <Route path="/allstorespage" element={<AllStoresPage />} />
-        <Route path="/shoppingcartpage" element={<ShoppingCartPage />} />
-        <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
-        <Route path="/category/:category" element={<ShopByCategory />} />
-        <Route path="/item/:item" element={<ItemPage />} />
-        <Route path="/storepage/:storeId" element={<StorePage />} />
-        <Route path="/passwordreset" element={<PasswordReset />} />
-        <Route path="/contact" element={<ContactAndSupport />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute roles={["admin", "shopowner", "customer"]}>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route path="/checkout" element={<CheckOut />} />
-        <Route path="*" element={<NotFoundPage />} />
-        <Route
-          path="/search-products"
-          element={
-            <SearchPage
-              searchType="products"
-              data={dummyProducts}
-              renderCard={(product) => <ProductCard product={product} />}
-            />
-          }
-        />
-      </Routes>
-    </div>
+    <UserProvider>
+      <div>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/Lychee" element={<HomePage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="/productlistingpage" element={<ProductListingPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/allstorespage" element={<AllStoresPage />} />
+          <Route path="/shoppingcartpage" element={<ShoppingCartPage />} />
+          <Route path="/blogandbeauty" element={<BlogAndBeauty />} />
+          <Route path="/item/:item" element={<ItemPage />} />
+          <Route path="/storepage/:storeId" element={<StorePage />} />
+          <Route path="/passwordreset" element={<PasswordReset />} />
+          <Route path="/contact" element={<ContactAndSupport />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute roles={["admin", "storeowner", "customer"]}>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="*" element={<NotFoundPage />} />
+          <Route
+            path="/search-products"
+            element={
+              <SearchPage
+                searchType="products"
+                data={dummyProducts}
+                renderCard={(product) => <ProductCard product={product} />}
+              />
+            }
+          />
+        </Routes>
+      </div>
+    </UserProvider>
   );
 }
 

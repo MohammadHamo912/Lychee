@@ -1,73 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SearchBar from "../components/SearchBar";
 import ProductFiltersPanel from "../components/ProductFiltersPanel";
 import Footer from "../components/Footer";
 import ProductGrid from "../components/ProductGrid";
 import { getAllProducts } from "../api/products";
+import { getAllCategories } from "../api/categories";
+import { getProductsByCategoryId } from "../api/productcategories";
 import "../PagesCss/ProductListingPage.css";
 
 const ProductListingPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const initialQuery = searchParams.get("query") || "";
+  const initialCategory = searchParams.get("category") || "All"; // Get category from URL
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState(initialQuery);
   const [activeFilters, setActiveFilters] = useState({
     brand: "All",
-    category: "All",
-    features: "All",
+    mainCategory: initialCategory, // Set initial category from URL
+    subCategory: "All",
+    subSubCategory: "All",
+    features: "",
     sortOption: "none",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [productBrands, setProductBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  const productBrands = [
-    "Fenty Beauty",
-    "Rare Beauty",
-    "Glossier",
-    "The Ordinary",
-    "Cetaphil",
-    "Neutrogena",
-    "L'Oréal",
-    "Maybelline",
-  ];
-
-  const productCategories = [
-    "Foundation",
-    "Lipstick",
-    "Mascara",
-    "Skincare",
-    "Cleanser",
-    "Moisturizer",
-    "Serum",
-    "Sunscreen",
-  ];
-
-  const productFeatures = [
-    "Vegan",
-    "Cruelty-Free",
-    "Organic",
-    "Paraben-Free",
-    "Fragrance-Free",
-    "Hypoallergenic",
-    "Waterproof",
-    "Long-Lasting",
-  ];
-
-  // Fetch products from API on component mount
+  // Fetch products and categories
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
-  // Apply filters when products data or initial query changes
+  // Apply filters when products data, initial query, or initial category changes
   useEffect(() => {
     if (products.length > 0) {
+      // Extract unique brands
+      const brands = [
+        ...new Set(products.map((p) => p.brand).filter(Boolean)),
+      ].sort();
+      setProductBrands(brands);
       applyFiltersAndSearch(initialQuery, activeFilters);
     }
-  }, [initialQuery, products]);
+  }, [initialQuery, initialCategory, products]);
 
   const fetchProducts = async () => {
     setIsLoading(true);
@@ -83,24 +64,127 @@ const ProductListingPage = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const categoriesData = await getAllCategories();
+      setCategories(categoriesData);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    }
+  };
+
   const handleRetry = () => {
     fetchProducts();
+    fetchCategories();
   };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+    // Update URL parameters - preserve category if it exists
+    const newParams = {};
+    if (term) newParams.query = term;
+    if (activeFilters.mainCategory !== "All")
+      newParams.category = activeFilters.mainCategory;
+    setSearchParams(newParams);
     applyFiltersAndSearch(term, activeFilters);
   };
 
   const handleApplyFilters = (filters) => {
     setActiveFilters(filters);
+    // Update URL to reflect category changes
+    const newParams = {};
+    if (searchTerm) newParams.query = searchTerm;
+    if (filters.mainCategory !== "All")
+      newParams.category = filters.mainCategory;
+    setSearchParams(newParams);
     applyFiltersAndSearch(searchTerm, filters);
   };
 
-  const applyFiltersAndSearch = (search = "", filters = {}) => {
-    const { brand, category, features, sortOption } = filters;
+  // Helper function to find category by name
+  const findCategoryByName = (categoryName, level = null) => {
+    return categories.find(
+      (cat) =>
+        cat.name === categoryName && (level === null || cat.level === level)
+    );
+  };
+
+  // Get products that belong to a specific category (including all subcategory products)
+  const getProductsForCategoryTree = async (categoryName, level) => {
+    try {
+      const category = findCategoryByName(categoryName, level);
+      if (!category) return [];
+
+      // Get direct products for this category
+      const directProducts = await getProductsByCategoryId(category.categoryId);
+      let allProductIds = new Set(directProducts.map((pc) => pc.productId));
+
+      // If this is not a leaf category, also get products from all subcategories
+      const subcategories = categories.filter(
+        (cat) => cat.parentId === category.categoryId
+      );
+
+      for (const subcat of subcategories) {
+        const subcatProducts = await getProductsForCategoryTree(
+          subcat.name,
+          subcat.level
+        );
+        subcatProducts.forEach((productId) => allProductIds.add(productId));
+      }
+
+      return Array.from(allProductIds);
+    } catch (error) {
+      console.error(
+        `Error getting products for category ${categoryName}:`,
+        error
+      );
+      return [];
+    }
+  };
+
+  const applyFiltersAndSearch = async (search = "", filters = {}) => {
+    const {
+      brand,
+      mainCategory,
+      subCategory,
+      subSubCategory,
+      features,
+      sortOption,
+    } = filters;
 
     let result = [...products];
+    let categoryFilteredProductIds = null;
+
+    // Category filtering - find the most specific category selected
+    try {
+      if (subSubCategory && subSubCategory !== "All") {
+        // Most specific - filter by sub-sub category (level 2)
+        categoryFilteredProductIds = await getProductsForCategoryTree(
+          subSubCategory,
+          2
+        );
+      } else if (subCategory && subCategory !== "All") {
+        // Medium specific - filter by sub category (level 1)
+        categoryFilteredProductIds = await getProductsForCategoryTree(
+          subCategory,
+          1
+        );
+      } else if (mainCategory && mainCategory !== "All") {
+        // Least specific - filter by main category (level 0)
+        categoryFilteredProductIds = await getProductsForCategoryTree(
+          mainCategory,
+          0
+        );
+      }
+
+      // Apply category filter if any category was selected
+      if (categoryFilteredProductIds !== null) {
+        result = result.filter((product) =>
+          categoryFilteredProductIds.includes(product.productId)
+        );
+      }
+    } catch (error) {
+      console.error("Error applying category filters:", error);
+    }
 
     // Brand filtering
     if (brand && brand !== "All") {
@@ -109,20 +193,18 @@ const ProductListingPage = () => {
       );
     }
 
-    // Category filtering
-    if (category && category !== "All") {
-      result = result.filter(
-        (product) => product.category?.toLowerCase() === category.toLowerCase()
-      );
-    }
-
-    // Features filtering
-    if (features && features !== "All") {
-      result = result.filter((product) =>
-        product.features?.some(
-          (feature) => feature.toLowerCase() === features.toLowerCase()
-        )
-      );
+    // Features filtering (text-based partial match)
+    if (features && features.trim()) {
+      const lowerFeatures = features.toLowerCase();
+      result = result.filter((product) => {
+        const featuresMatch = product.features?.some((feature) =>
+          feature.toLowerCase().includes(lowerFeatures)
+        );
+        const descriptionMatch = product.description
+          ?.toLowerCase()
+          .includes(lowerFeatures);
+        return featuresMatch || descriptionMatch;
+      });
     }
 
     // Search filtering
@@ -133,7 +215,6 @@ const ProductListingPage = () => {
           product.name?.toLowerCase().includes(lowerSearch) ||
           product.description?.toLowerCase().includes(lowerSearch) ||
           product.brand?.toLowerCase().includes(lowerSearch) ||
-          product.category?.toLowerCase().includes(lowerSearch) ||
           product.features?.some((feature) =>
             feature.toLowerCase().includes(lowerSearch)
           )
@@ -173,7 +254,21 @@ const ProductListingPage = () => {
 
   const handleClearSearch = () => {
     setSearchTerm("");
-    applyFiltersAndSearch("", activeFilters);
+    setSearchParams({}); // Clear URL parameters
+
+    // Reset all filters to default
+    const resetFilters = {
+      brand: "All",
+      mainCategory: "All",
+      subCategory: "All",
+      subSubCategory: "All",
+      features: "",
+      sortOption: "none",
+    };
+    setActiveFilters(resetFilters);
+
+    // Apply filters with empty search
+    applyFiltersAndSearch("", resetFilters);
   };
 
   return (
@@ -188,7 +283,11 @@ const ProductListingPage = () => {
             favorites
           </p>
           <div className="search-container">
-            <SearchBar searchType="products" onSearch={handleSearch} />
+            <SearchBar
+              searchType="products"
+              onSearch={handleSearch}
+              initialValue={searchTerm}
+            />
           </div>
         </div>
       </div>
@@ -199,21 +298,33 @@ const ProductListingPage = () => {
           <ProductFiltersPanel
             onApplyFilters={handleApplyFilters}
             brands={productBrands}
-            categories={productCategories}
-            features={productFeatures}
+            activeFilters={activeFilters}
           />
         </div>
 
         <div className="products-main">
           <div className="products-results-header">
             <h2>
-              All Products{" "}
+              {activeFilters.mainCategory !== "All"
+                ? `${activeFilters.mainCategory} Products`
+                : "All Products"}{" "}
               {filteredProducts.length > 0 && `(${filteredProducts.length})`}
             </h2>
-            {searchTerm && (
+            {(searchTerm || activeFilters.mainCategory !== "All") && (
               <div className="search-results-info">
-                Showing results for: <span>"{searchTerm}"</span>
-                <button onClick={handleClearSearch}>Clear Search</button>
+                {searchTerm && (
+                  <>
+                    Showing results for: <span>"{searchTerm}"</span>
+                  </>
+                )}
+                {activeFilters.mainCategory !== "All" && (
+                  <>
+                    {searchTerm && " in "}
+                    {!searchTerm && "Showing: "}
+                    <span>{activeFilters.mainCategory}</span>
+                  </>
+                )}
+                <button onClick={handleClearSearch}>Clear All</button>
               </div>
             )}
           </div>

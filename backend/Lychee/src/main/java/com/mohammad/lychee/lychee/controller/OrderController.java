@@ -1,6 +1,5 @@
-// --- OrderController.java (fixed) ---
 package com.mohammad.lychee.lychee.controller;
-
+// fix the endpoints for the trending
 import com.mohammad.lychee.lychee.model.Order;
 import com.mohammad.lychee.lychee.model.OrderItem;
 import com.mohammad.lychee.lychee.service.OrderService;
@@ -10,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
+@CrossOrigin(origins = "http://localhost:3000")
 public class OrderController {
 
     private final OrderService orderService;
@@ -26,16 +25,10 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> getAllOrders(@RequestParam(required = false) String role,
-                                    @RequestParam(required = false) Integer userId,
-                                    @RequestParam(required = false) Integer storeId) {
-        if ("customer".equalsIgnoreCase(role) && userId != null) {
-            return orderService.getOrdersByUserId(userId);
-        } else if ("storeowner".equalsIgnoreCase(role) && storeId != null) {
-            return orderService.getOrdersByStoreId(storeId);
-        } else {
-            return orderService.getAllOrders();
-        }
+    public ResponseEntity<List<Order>> getAllOrders(@RequestParam(required = false) String role,
+                                                    @RequestParam(required = false) Integer userId,
+                                                    @RequestParam(required = false) Integer storeId) {
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @GetMapping("/{id}")
@@ -46,39 +39,46 @@ public class OrderController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUserId(@PathVariable Integer userId) {
-        return orderService.getOrdersByUserId(userId);
+    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Integer userId) {
+        return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
     }
 
     @GetMapping("/{orderId}/items")
-    public List<OrderItem> getOrderItems(@PathVariable Integer orderId) {
-        return orderItemService.getOrderItemsByOrderId(orderId);
+    public ResponseEntity<List<OrderItem>> getOrderItems(@PathVariable Integer orderId) {
+        return ResponseEntity.ok(orderItemService.getOrderItemsByOrderId(orderId));
     }
 
+
     @PostMapping
-    public Order createOrder(@RequestBody Order order) {
-        return orderService.createOrder(order);
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        Order created = orderService.createOrder(order);
+        return ResponseEntity.ok(created); // Or .created() if you want to return 201
     }
 
     @PutMapping("/{id}")
-    public void updateOrder(@PathVariable Integer id, @RequestBody Order order) {
+    public ResponseEntity<Void> updateOrder(@PathVariable Integer id, @RequestBody Order order) {
         order.setOrderId(id);
         orderService.updateOrder(order);
+        return ResponseEntity.noContent().build(); // Returns 204
     }
+
 
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteOrder(@PathVariable Integer id) {
         orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
     }
 
+
     @GetMapping("/search")
-    public List<Order> searchOrders(@RequestParam String role,
-                                    @RequestParam(required = false) String query,
-                                    @RequestParam(required = false) String status,
-                                    @RequestParam(required = false) String startDate,
-                                    @RequestParam(required = false) String endDate,
-                                    @RequestParam(required = false) Integer userId,
-                                    @RequestParam(required = false) Integer storeId) {
-        return orderService.searchOrders(role, query, status, startDate, endDate, userId, storeId);
+    public ResponseEntity<List<Order>> searchOrders(@RequestParam String role,
+                                                    @RequestParam(required = false) String query,
+                                                    @RequestParam(required = false) String status,
+                                                    @RequestParam(required = false) String startDate,
+                                                    @RequestParam(required = false) String endDate,
+                                                    @RequestParam(required = false) Integer userId,
+                                                    @RequestParam(required = false) Integer storeId) {
+        return ResponseEntity.ok(orderService.searchOrders(role, query, status, startDate, endDate, userId, storeId));
     }
-} // end of OrderController.java
+
+}

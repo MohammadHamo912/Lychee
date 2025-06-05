@@ -20,7 +20,6 @@ public class WishlistController {
         this.wishlistService = wishlistService;
     }
 
-    // ✅ Get all wishlist items for a specific user
     @GetMapping("/{userId}")
     public ResponseEntity<List<Wishlist>> getWishlist(@PathVariable Integer userId) {
         List<Wishlist> items = wishlistService.getWishlistItemsByUserId(userId);
@@ -38,7 +37,6 @@ public class WishlistController {
         return ResponseEntity.ok().build();
     }
 
-    // ✅ Remove one item from wishlist
     @DeleteMapping("/remove")
     public ResponseEntity<Void> removeWishlistItem(@RequestParam Integer userId,
                                                    @RequestParam Integer productVariantId) {
@@ -46,14 +44,12 @@ public class WishlistController {
         return ResponseEntity.ok().build();
     }
 
-    // ✅ Clear entire wishlist
     @DeleteMapping("/clear/{userId}")
     public ResponseEntity<Void> clearWishlist(@PathVariable Integer userId) {
         wishlistService.clearWishlist(userId);
         return ResponseEntity.ok().build();
     }
 
-    // ✅ Optional test endpoint
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Wishlist API is working.");

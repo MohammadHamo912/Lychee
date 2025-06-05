@@ -1,66 +1,63 @@
-import React, { useEffect, useState } from "react";
-import { useUser } from "../context/UserContext";
-import { deleteReview, getUserReviews } from '../api/reviews';
+import React, { useState } from "react";
 import "../ComponentsCss/ShowMyReviews.css";
 
-const ShowMyReviews = () => {
-    const { user } = useUser();
-    const [reviews, setReviews] = useState([]);
-    const [loading, setLoading] = useState(true);
+const initialReviews = [
+    {
+        id: 1,
+        product: "Lychee Lip Tint",
+        rating: 4,
+        review: "Loved the texture and color! Long-lasting too.",
+        date: "2025-03-21",
+    },
+    {
+        id: 2,
+        product: "HydraGlow Serum",
+        rating: 5,
+        review: "This made my skin feel amazing! Highly recommended.",
+        date: "2025-02-14",
+    },
+    {
+        id: 3,
+        product: "Rose Petal Face Mist",
+        rating: 3,
+        review: "Smells good but didn’t last very long.",
+        date: "2025-01-10",
+    },
+];
 
-    useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                const data = await getUserReviews(user.userId);
-                setReviews(data);
-            } catch (err) {
-                console.error("Error loading user reviews:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
+const Reviews = () => {
+    const [reviews, setReviews] = useState(initialReviews);
 
-        if (user?.userId) fetchReviews();
-    }, [user]);
-
-    const handleDelete = async (id) => {
-        try {
-            await deleteReview(id);
-            const updated = await getUserReviews(user.userId);
-            setReviews(updated);
-        } catch (err) {
-            console.error("Failed to delete review:", err);
-        }
+    const handleDelete = (id) => {
+        const updatedReviews = reviews.filter((review) => review.id !== id);
+        setReviews(updatedReviews);
     };
 
     return (
         <div className="reviews-container">
             <h2>My Reviews</h2>
-            {loading ? (
-                <p>Loading...</p>
-            ) : reviews.length === 0 ? (
-                <p>You haven't posted any reviews yet.</p>
-            ) : (
-                <div className="reviews-list">
-                    {reviews.map((review) => (
-                        <div key={review.reviewId} className="review-card">
-                            <div className="review-header">
-                                <h4>{review.targetName || (review.reviewType === "shop" ? `Shop #${review.targetId}` : `Product #${review.targetId}`)}</h4>
-                                <span className="review-date">{new Date(review.createdAt).toLocaleDateString()}</span>
-                            </div>
-                            <div className="review-rating">
-                                {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
-                            </div>
-                            <p className="review-text">{review.comment}</p>
-                            <button className="delete-btn" onClick={() => handleDelete(review.reviewId)}>
-                                Delete Review
-                            </button>
+            <div className="reviews-list">
+                {reviews.map((review) => (
+                    <div key={review.id} className="review-card">
+                        <div className="review-header">
+                            <h4>{review.product}</h4>
+                            <span className="review-date">{review.date}</span>
                         </div>
-                    ))}
-                </div>
-            )}
+                        <div className="review-rating">
+                            {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+                        </div>
+                        <p className="review-text">{review.review}</p>
+                        <button
+                            className="delete-btn"
+                            onClick={() => handleDelete(review.id)}
+                        >
+                            Delete Review
+                        </button>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
 
-export default ShowMyReviews;
+export default Reviews;

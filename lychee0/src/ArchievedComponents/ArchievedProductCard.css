@@ -1,4 +1,4 @@
-.product-card {
+/*.product-card {
   background: #fff5e1;
   border: none;
   border-radius: 12px;
@@ -108,7 +108,6 @@
   height: 22px;
 }
 
-/* Animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -121,7 +120,6 @@
   }
 }
 
-/* Responsive */
 @media (max-width: 992px) {
   .product-card-image {
     height: 180px;
@@ -174,3 +172,4 @@
     height: 20px;
   }
 }
+*/

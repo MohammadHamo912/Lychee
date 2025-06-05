@@ -100,7 +100,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     SELECT i.* FROM Item i 
     INNER JOIN (
         SELECT oi.Item_ID, SUM(oi.quantity) as total_sold
-        FROM orderitem oi 
+        FROM OrderItem oi 
         INNER JOIN `Order` o ON oi.order_id = o.order_id  
         WHERE oi.created_at >= DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 45 DAY) 
         AND oi.deleted_at IS NULL 

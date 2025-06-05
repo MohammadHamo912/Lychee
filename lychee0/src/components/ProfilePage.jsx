@@ -50,16 +50,13 @@ const ProfilePage = () => {
         name: `${userData.firstName} ${userData.lastName}`,
         email: userData.email,
         phone: userData.phone,
-        password: userData.password,
+        passwordHash: userData.password || user.passwordHash,
       };
-
 
       const res = await updateUser(user.userId, updatedUser);
       alert("Profile updated!");
       localStorage.setItem("user", JSON.stringify(res));
       window.location.reload();
-      setUser(res); // update frontend state
-      setUserData(prev => ({ ...prev, password: "" }));
     } catch (err) {
       console.error("Update failed", err);
       alert("Failed to update profile.");

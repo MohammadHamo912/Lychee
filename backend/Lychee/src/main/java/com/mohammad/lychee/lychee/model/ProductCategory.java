@@ -11,7 +11,7 @@ public class ProductCategory {
         this.categoryId = categoryId;
     }
 
-    // Getters and setters 👇
+    // Getters and setters
 
     public int getProductId() {
         return productId;

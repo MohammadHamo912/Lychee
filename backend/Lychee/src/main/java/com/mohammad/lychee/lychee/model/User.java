@@ -1,35 +1,22 @@
 package com.mohammad.lychee.lychee.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Transient;
-
 import java.time.LocalDateTime;
 
-public class User {
-
+public class User { //extends BaseEntity
     private int userId;
     private String role;
     private String name;
     private String email;
-
-    @JsonIgnore
     private String passwordHash;
-
     private String phone;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    @Transient
-    private String password; // Raw password (transient, not stored in DB)
-
-    public User() {
-        // Default constructor
-    }
-
     public User(int userId, String role, String name, String email, String passwordHash,
                 String phone, LocalDateTime createdAt, LocalDateTime updatedAt,
                 LocalDateTime deletedAt) {
+       // super("User",userId);
         this.userId = userId;
         this.role = role;
         this.name = name;
@@ -41,7 +28,7 @@ public class User {
         this.deletedAt = deletedAt;
     }
 
-    // Getters and Setters
+    // Getters and setters
 
     public int getUserId() {
         return userId;
@@ -115,12 +102,5 @@ public class User {
         this.deletedAt = deletedAt;
     }
 
-    // Transient password field for raw input
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
