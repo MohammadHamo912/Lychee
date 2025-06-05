@@ -62,15 +62,15 @@ public class AddressRepositoryImpl implements AddressRepository {
 
     @Override
     public Address save(Address address) {
-
         return update(address);
         /*
-        if (address.getAddressId()==null) {
+        if (address.getAddressId() == null) {
             return insert(address);
         } else {
             return update(address);
         }
-    */}
+        */
+    }
 
     private Address insert(Address address) {
         String sql = "INSERT INTO Address (city, street, building) VALUES (?, ?, ?)";
@@ -89,16 +89,11 @@ public class AddressRepositoryImpl implements AddressRepository {
         return address;
     }
 
-    private Address update(Address address) {
+    @Override
+    public Address update(Address address) {
         String sql = "UPDATE Address SET city = ?, street = ?, building = ? WHERE Address_ID = ?";
-
-        jdbcTemplate.update(sql,
-                address.getCity(),
-                address.getStreet(),
-                address.getBuilding(),
-                address.getAddressId());
-
-        return findById(address.getAddressId()).orElse(address);
+        jdbcTemplate.update(sql, address.getCity(), address.getStreet(), address.getBuilding(), address.getAddressId());
+        return address;
     }
 
     @Override

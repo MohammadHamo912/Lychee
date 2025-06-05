@@ -10,4 +10,5 @@ public interface AddressRepository {
     List<Address> findByUserId(Integer userId);
     Address save(Address address);
     void delete(Integer id);
+    Address update(Address address);
 }

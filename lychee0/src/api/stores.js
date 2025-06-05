@@ -46,13 +46,13 @@ export const createStore = async (storeData) => {
   }
 };
 
-// Update store
 export const updateStore = async (storeId, storeData) => {
   try {
+    console.log(`📤 Updating store ${storeId} with:`, storeData); // ✅ Debug log
     const response = await axios.put(`${API_URL}/${storeId}`, storeData);
     return response.data;
   } catch (error) {
-    console.error(`Error updating store ${storeId}:`, error);
+    console.error(`❌ Error updating store ${storeId}:`, error.response?.data || error.message);
     throw error;
   }
 };
@@ -78,17 +78,9 @@ export const getStoreProducts = async (storeId) => {
   }
 };
 
-// Get store sales data
 export const getStoreSalesData = async (storeId, period) => {
-  try {
-    const response = await axios.get(
-      `${API_URL}/${storeId}/sales?period=${period}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching sales data for store ${storeId}:`, error);
-    throw error;
-  }
+  const res = await axios.get(`${API_URL}/${storeId}/sales?period=${period}`);
+  return res.data;
 };
 
 // Upload store logo
@@ -107,4 +99,12 @@ export const uploadStoreLogo = async (storeId, file) => {
     console.error(`Error uploading logo for store ${storeId}:`, error);
     throw error;
   }
+};
+export const getStoreMetrics = async (storeId) => {
+  const res = await axios.get(`${API_URL}/${storeId}/metrics`);
+  return res.data;
+};
+export const getStoreReviews = async () => {
+  const response = await axios.get('http://localhost:8081/api/stores/reviews'); // Adjust endpoint if needed
+  return response.data;
 };

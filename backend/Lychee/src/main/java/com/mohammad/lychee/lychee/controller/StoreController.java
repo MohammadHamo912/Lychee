@@ -5,9 +5,11 @@ import com.mohammad.lychee.lychee.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -62,6 +64,25 @@ public class StoreController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<Store> getStoreByOwnerId(@PathVariable Integer ownerId) {
+        List<Store> stores = storeService.getStoresByShopOwnerId(ownerId);
+        if (stores.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(stores.get(0)); // Assuming 1 store per owner
+    }
+    @GetMapping("/{storeId}/metrics")
+    public ResponseEntity<Map<String, Object>> getStoreMetrics(@PathVariable int storeId) {
+        return storeService.getStoreMetrics(storeId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+    @GetMapping("/{storeId}/sales")
+    public ResponseEntity<List<Map<String, Object>>> getSalesChartData(
+            @PathVariable int storeId,
+            @RequestParam(defaultValue = "7days") String period
+    ) {
+        return ResponseEntity.ok(storeService.getSalesChartData(storeId, period));
+    }
 }

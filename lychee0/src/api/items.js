@@ -418,11 +418,12 @@ export const deleteItem = async (itemId) => {
 export const clearCache = () => {
   allItems = [];
 };
+
 export const searchItemsInStore = async (storeId, query) => {
   try {
     const response = await axios.get(
       `http://localhost:8081/api/items/store/${storeId}/search`,
-      { params: { query } }
+      { params: { query: encodeURIComponent(query) } }
     );
     return enrichItemData(response.data);
   } catch (error) {
@@ -430,4 +431,3 @@ export const searchItemsInStore = async (storeId, query) => {
     throw error;
   }
 };
-
