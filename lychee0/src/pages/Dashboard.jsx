@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../PagesCss/Dashboard.css";
 import { useUser } from "../context/UserContext";
+import { getStoreByOwnerId } from "../api/stores";
 
 // Components by role
 import NavBar from "../components/NavBar";
@@ -20,6 +21,23 @@ const Dashboard = () => {
   const { user } = useUser();
   const userRole = user?.role || "customer";
   const [activeTab, setActiveTab] = useState("default");
+
+  const [storeId, setStoreId] = useState(null);
+
+  useEffect(() => {
+    const fetchStore = async () => {
+      if (user?.userId && user?.role === "shopowner") {
+        try {
+          const data = await getStoreByOwnerId(user.userId);
+          setStoreId(data.storeId);
+        } catch (err) {
+          console.error("Failed to fetch store for reviews tab:", err);
+        }
+      }
+    };
+    fetchStore();
+  }, [user]);
+
 
   const getTabsByRole = () => {
     switch (userRole) {
@@ -47,7 +65,7 @@ const Dashboard = () => {
             content: <DiscountManagement />,
           },
         ];
-      case "storeowner":
+      case "shopowner":
         return [
           { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
           {
@@ -63,12 +81,12 @@ const Dashboard = () => {
           {
             key: "orders",
             title: "🧾 Orders",
-            content: <OrderManagement role="storeowner" />,
+            content: <OrderManagement role="shopowner" />,
           },
           {
             key: "reviewsAndSocial",
             title: "🌐 Social",
-            content: <StoreReviewAndSocial />,
+            content: <StoreReviewAndSocial storeId={storeId}/>,
           },
         ];
       default: // customer
@@ -100,9 +118,9 @@ const Dashboard = () => {
           <h2 className="sidebar-title">
             {userRole === "admin"
               ? "Admin Panel"
-              : userRole === "storeowner"
-              ? "Store Panel"
-              : "My Account"}
+              : userRole === "shopowner"
+                ? "Store Panel"
+                : "My Account"}
           </h2>
 
           {tabs.map((tab) => (

@@ -12,7 +12,15 @@ public class Store {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
     private String logo_url;
+    private Address address;
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
     public Store() {}
 
     public Store(int storeId, int shopOwnerId, int addressId, String name, String description,

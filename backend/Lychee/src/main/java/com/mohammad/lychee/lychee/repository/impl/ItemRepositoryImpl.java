@@ -212,15 +212,26 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
     @Override
     public List<Item> searchItemsByStoreIdAndName(Integer storeId, String query) {
-        String sql = """
-        SELECT i.* FROM Item i
-        JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
-        JOIN Product p ON pv.Product_ID = p.Product_ID
-        WHERE i.Store_ID = ?
-        AND LOWER(p.name) LIKE LOWER(CONCAT('%', ?, '%'))
-        AND i.deleted_at IS NULL
-    """;
+        try {
+            if (query == null || query.trim().isEmpty()) {
+                return List.of(); // Return empty if query is blank
+            }
 
-        return jdbcTemplate.query(sql, itemRowMapper, storeId, query);
+            String sql = """
+            SELECT i.* FROM Item i
+            JOIN productvariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
+            JOIN Product p ON pv.Product_ID = p.Product_ID
+            WHERE i.Store_ID = ?
+              AND LOWER(p.name) LIKE ?
+              AND i.deleted_at IS NULL
+        """;
+
+            String safeQuery = "%" + query.toLowerCase().replaceAll("[^a-zA-Z0-9\\s]", "") + "%";
+            return jdbcTemplate.query(sql, itemRowMapper, storeId, safeQuery);
+        } catch (Exception e) {
+            System.err.println("❌ Error in searchItemsByStoreIdAndName:");
+            e.printStackTrace();
+            return List.of(); // fallback
+        }
     }
 }
