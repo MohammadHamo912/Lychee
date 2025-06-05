@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../PagesCss/Dashboard.css";
 import { useUser } from "../context/UserContext";
+import { getStoreByOwnerId } from "../api/stores";
 
 // Components by role
 import NavBar from "../components/NavBar";
@@ -20,6 +21,23 @@ const Dashboard = () => {
   const { user } = useUser();
   const userRole = user?.role || "customer";
   const [activeTab, setActiveTab] = useState("default");
+
+  const [storeId, setStoreId] = useState(null);
+
+  useEffect(() => {
+    const fetchStore = async () => {
+      if (user?.userId && user?.role === "shopowner") {
+        try {
+          const data = await getStoreByOwnerId(user.userId);
+          setStoreId(data.storeId);
+        } catch (err) {
+          console.error("Failed to fetch store for reviews tab:", err);
+        }
+      }
+    };
+    fetchStore();
+  }, [user]);
+
 
   const getTabsByRole = () => {
     switch (userRole) {
@@ -68,7 +86,7 @@ const Dashboard = () => {
           {
             key: "reviewsAndSocial",
             title: "🌐 Social",
-            content: <StoreReviewAndSocial />,
+            content: <StoreReviewAndSocial storeId={storeId}/>,
           },
         ];
       default: // customer
@@ -101,8 +119,8 @@ const Dashboard = () => {
             {userRole === "admin"
               ? "Admin Panel"
               : userRole === "shopowner"
-              ? "Store Panel"
-              : "My Account"}
+                ? "Store Panel"
+                : "My Account"}
           </h2>
 
           {tabs.map((tab) => (

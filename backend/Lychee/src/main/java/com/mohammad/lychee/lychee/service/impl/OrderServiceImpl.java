@@ -58,7 +58,6 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId) {
-        return orderRepository.searchOrders(role, query, status, startDate, endDate); // Adjust based on your actual logic
+        return orderRepository.searchOrders(role, query, status, startDate, endDate, userId, storeId);
     }
-
 }

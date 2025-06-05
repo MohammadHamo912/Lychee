@@ -85,4 +85,15 @@ public class StoreController {
     ) {
         return ResponseEntity.ok(storeService.getSalesChartData(storeId, period));
     }
+    @GetMapping("/{storeId}/reviews")
+    public ResponseEntity<List<Map<String, Object>>> getReviewsByStoreId(@PathVariable int storeId) {
+        try {
+            List<Map<String, Object>> reviews = storeService.getReviewsByStoreId(storeId);
+            return ResponseEntity.ok(reviews);
+        } catch (Exception e) {
+            System.err.println("Failed to fetch store reviews: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

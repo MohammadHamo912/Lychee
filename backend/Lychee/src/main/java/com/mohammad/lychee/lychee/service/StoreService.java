@@ -15,4 +15,5 @@ public interface StoreService {
     List<Store> searchStoresByName(String name);
     Optional<Map<String, Object>> getStoreMetrics(int storeId);
     List<Map<String, Object>> getSalesChartData(int storeId, String period);
+    List<Map<String, Object>> getReviewsByStoreId(int storeId);
 }

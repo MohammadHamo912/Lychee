@@ -16,4 +16,5 @@ public interface StoreRepository {
     void softDelete(Integer id);
     public Optional<Map<String, Object>> getStoreMetrics(int storeId);
     List<Map<String, Object>> getSalesChartData(int storeId, String period);
+    List<Map<String, Object>> getReviewsByStoreId(int storeId);
 }

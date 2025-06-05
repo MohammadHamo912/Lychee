@@ -144,17 +144,39 @@ public class OrderRepositoryImpl implements OrderRepository {
         }
     }
     @Override
-    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate) {
-        StringBuilder sql = new StringBuilder(
-                "SELECT o.*, u.full_name AS customerName, s.store_name AS storeName " +
-                        "FROM `Order` o " +
-                        "JOIN `User` u ON o.user_id = u.user_id " +
-                        "JOIN `Store` s ON o.store_id = s.store_id " +
-                        "WHERE o.deleted_at IS NULL "
-        );
-
-        // Parameters
+    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId) {
+        StringBuilder sql = new StringBuilder();
         List<Object> params = new ArrayList<>();
+
+        if ("admin".equals(role)) {
+            sql.append("SELECT o.* FROM `Order` o WHERE o.deleted_at IS NULL ");
+        } else if ("customer".equals(role)) {
+            sql.append("""
+            SELECT o.* FROM `Order` o
+            JOIN `User` u ON o.user_ID = u.User_ID
+            WHERE o.deleted_at IS NULL AND u.deleted_at IS NULL
+        """);
+            if (userId != null) {
+                sql.append("AND o.user_ID = ? ");
+                params.add(userId);
+            }
+        } else if ("shopowner".equals(role)) {
+            sql.append("""
+            SELECT o.* FROM `Order` o
+            JOIN `User` u ON o.user_ID = u.User_ID
+            LEFT JOIN OrderItem oi ON o.order_id = oi.order_id
+            LEFT JOIN Item i ON oi.item_id = i.Item_ID
+            LEFT JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
+            LEFT JOIN Product p ON pv.Product_ID = p.Product_ID
+            LEFT JOIN Store s ON i.Store_ID = s.Store_ID
+            WHERE o.deleted_at IS NULL
+        """);
+
+            if (storeId != null) {
+                sql.append("AND i.Store_ID = ? ");
+                params.add(storeId);
+            }
+        }
 
         if (status != null && !status.isEmpty()) {
             sql.append("AND o.status = ? ");
@@ -164,14 +186,14 @@ public class OrderRepositoryImpl implements OrderRepository {
         if (query != null && !query.isEmpty()) {
             query = "%" + query.toLowerCase() + "%";
             if ("admin".equals(role)) {
-                sql.append("AND (LOWER(u.full_name) LIKE ? OR LOWER(s.store_name) LIKE ?) ");
+                sql.append("AND (LOWER(o.status) LIKE ? OR LOWER(o.order_id) LIKE ?) ");
                 params.add(query);
                 params.add(query);
-            } else if ("storeowner".equals(role)) {
-                sql.append("AND LOWER(u.full_name) LIKE ? ");
+            } else if ("shopowner".equals(role)) {
+                sql.append("AND LOWER(u.name) LIKE ? ");
                 params.add(query);
             } else if ("customer".equals(role)) {
-                sql.append("AND LOWER(s.store_name) LIKE ? ");
+                sql.append("AND LOWER(s.name) LIKE ? ");
                 params.add(query);
             }
         }
@@ -186,9 +208,15 @@ public class OrderRepositoryImpl implements OrderRepository {
             params.add(endDate);
         }
 
-        sql.append("ORDER BY o.created_at DESC");
+        sql.append("GROUP BY o.order_id ORDER BY o.created_at DESC");
 
-        return jdbcTemplate.query(sql.toString(), orderRowMapper, params.toArray());
+        try {
+            System.out.println("🔍 Final SQL: " + sql);
+            System.out.println("📦 Params: " + params);
+            return jdbcTemplate.query(sql.toString(), orderRowMapper, params.toArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
-
 }

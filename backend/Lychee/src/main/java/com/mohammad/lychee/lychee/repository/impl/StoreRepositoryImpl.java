@@ -150,26 +150,28 @@ public class StoreRepositoryImpl implements StoreRepository {
     public Optional<Map<String, Object>> getStoreMetrics(int storeId) {
         String sql = """
         SELECT 
-            (SELECT COUNT(*) FROM orderitem oi 
-             JOIN Item i ON oi.item_id = i.Item_ID 
+            (SELECT COUNT(DISTINCT o.Order_ID)
+             FROM OrderItem oi
+             JOIN Item i ON oi.item_id = i.Item_ID
+             JOIN `Order` o ON oi.order_id = o.Order_ID
              WHERE i.Store_ID = ?) AS totalOrders,
 
-            (SELECT COUNT(*) FROM Item i 
+            (SELECT COUNT(*) FROM Item i
              WHERE i.Store_ID = ?) AS totalProducts,
 
             (SELECT COALESCE(SUM(oi.quantity * oi.price_at_purchase), 0)
-             FROM orderitem oi 
-             JOIN Item i ON oi.item_id = i.Item_ID 
+             FROM OrderItem oi
+             JOIN Item i ON oi.item_id = i.Item_ID
              WHERE i.Store_ID = ?) AS totalSales
-    """;
+        """;
 
         try {
-            System.out.println("📊 Fetching metrics for store ID: " + storeId);
+            System.out.println("Fetching metrics for store ID: " + storeId);
             Map<String, Object> result = jdbcTemplate.queryForMap(sql, storeId, storeId, storeId);
-            System.out.println("✅ Metrics result: " + result);
+            System.out.println("Metrics result: " + result);
             return Optional.of(result);
         } catch (Exception e) {
-            System.err.println("❌ Error in getStoreMetrics(): " + e.getMessage());
+            System.err.println("Error in getStoreMetrics(): " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -179,7 +181,7 @@ public class StoreRepositoryImpl implements StoreRepository {
         String sql = """
         SELECT DATE(o.created_at) as date,
                SUM(oi.quantity * oi.price_at_purchase) as total
-        FROM orderitem oi
+        FROM OrderItem oi
         JOIN Item i ON oi.item_id = i.Item_ID
         JOIN `Order` o ON o.Order_ID = oi.order_id
         WHERE i.Store_ID = ?
@@ -194,5 +196,27 @@ public class StoreRepositoryImpl implements StoreRepository {
             return row;
         });
     }
+    @Override
+    public List<Map<String, Object>> getReviewsByStoreId(int storeId) {
+        String sql = """
+        SELECT r.Review_ID AS id, r.Rating, r.Comment, r.Created_At AS date,
+               u.name AS customer, s.name AS storeName
+        FROM Review r
+        JOIN User u ON r.User_ID = u.User_ID
+        JOIN Store s ON r.Target_ID = s.Store_ID
+        WHERE r.Review_Type = 'shop' AND s.Store_ID = ?
+        ORDER BY r.Created_At DESC
+    """;
 
+        return jdbcTemplate.query(sql, new Object[]{storeId}, (rs, rowNum) -> {
+            Map<String, Object> row = new HashMap<>();
+            row.put("id", rs.getInt("id"));
+            row.put("rating", rs.getInt("rating"));
+            row.put("comment", rs.getString("comment"));
+            row.put("date", rs.getTimestamp("date").toLocalDateTime().toLocalDate().toString());
+            row.put("customer", rs.getString("customer"));
+            row.put("storeName", rs.getString("storeName"));
+            return row;
+        });
+    }
 }

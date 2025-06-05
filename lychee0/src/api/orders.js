@@ -22,7 +22,7 @@ export const getOrdersByUserId = async (userId) => {
     }
 };
 
-export const fetchOrders = async ({ role, status, query, startDate, endDate }) => {
+export const fetchOrders = async ({ role, status, query, startDate, endDate, userId, storeId }) => {
     const params = new URLSearchParams();
 
     if (role) params.append('role', role);
@@ -30,6 +30,8 @@ export const fetchOrders = async ({ role, status, query, startDate, endDate }) =
     if (query) params.append('query', query);
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
+    if (userId) params.append('userId', userId);
+    if (storeId) params.append('storeId', storeId); // ✅ This was missing
 
     try {
         const response = await axios.get(`${API_URL}/search?${params.toString()}`);
@@ -39,3 +41,4 @@ export const fetchOrders = async ({ role, status, query, startDate, endDate }) =
         return [];
     }
 };
+

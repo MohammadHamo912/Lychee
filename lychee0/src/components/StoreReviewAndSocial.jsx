@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../ComponentsCss/StoreReviewAndSocial.css';
 import { getStoreReviews } from '../api/stores'; // Adjust path based on your file structure
 
-const StoreReviewAndSocial = () => {
+const StoreReviewAndSocial = ({ storeId }) => {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,8 +10,10 @@ const StoreReviewAndSocial = () => {
     // Fetch reviews from backend
     useEffect(() => {
         const fetchReviews = async () => {
+            if (!storeId) return;
+
             try {
-                const data = await getStoreReviews(); // Fetch API
+                const data = await getStoreReviews(storeId);  // ✅ pass storeId
                 setReviews(data);
             } catch (err) {
                 setError('Failed to load reviews.');
@@ -19,16 +21,18 @@ const StoreReviewAndSocial = () => {
                 setLoading(false);
             }
         };
-        fetchReviews();
-    }, []);
 
-    const lastMonth = new Date();
-    lastMonth.setMonth(lastMonth.getMonth() - 1);
+        fetchReviews();
+    }, [storeId]);
+
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
     const recentReviews = reviews.filter((review) => {
         const reviewDate = new Date(review.date);
-        return reviewDate >= lastMonth;
+        return reviewDate >= oneWeekAgo;
     });
+
 
     return (
         <div className="store-panel-container">

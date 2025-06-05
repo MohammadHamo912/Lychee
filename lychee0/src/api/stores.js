@@ -48,11 +48,11 @@ export const createStore = async (storeData) => {
 
 export const updateStore = async (storeId, storeData) => {
   try {
-    console.log(`📤 Updating store ${storeId} with:`, storeData); // ✅ Debug log
+    console.log(`📤 Updating store ${storeId} with:`, storeData); 
     const response = await axios.put(`${API_URL}/${storeId}`, storeData);
     return response.data;
   } catch (error) {
-    console.error(`❌ Error updating store ${storeId}:`, error.response?.data || error.message);
+    console.error(`Error updating store ${storeId}:`, error.response?.data || error.message);
     throw error;
   }
 };
@@ -104,7 +104,7 @@ export const getStoreMetrics = async (storeId) => {
   const res = await axios.get(`${API_URL}/${storeId}/metrics`);
   return res.data;
 };
-export const getStoreReviews = async () => {
-  const response = await axios.get('http://localhost:8081/api/stores/reviews'); // Adjust endpoint if needed
-  return response.data;
+export const getStoreReviews = async (storeId) => {
+    const res = await axios.get(`http://localhost:8081/api/stores/${storeId}/reviews`);
+    return res.data;
 };

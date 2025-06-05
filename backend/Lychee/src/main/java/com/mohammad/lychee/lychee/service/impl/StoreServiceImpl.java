@@ -80,4 +80,8 @@ public class StoreServiceImpl implements StoreService {
     public List<Map<String, Object>> getSalesChartData(int storeId, String period) {
         return storeRepository.getSalesChartData(storeId, period);
     }
+    @Override
+    public List<Map<String, Object>> getReviewsByStoreId(int storeId) {
+        return storeRepository.getReviewsByStoreId(storeId); // Delegate to repository
+    }
 }

@@ -51,7 +51,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <PrivateRoute roles={["admin", "storeowner", "customer"]}>
+              <PrivateRoute roles={["admin", "shopowner", "customer"]}>
                 <Dashboard />
               </PrivateRoute>
             }
