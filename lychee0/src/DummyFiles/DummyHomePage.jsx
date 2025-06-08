@@ -4,7 +4,6 @@ import Footer from "./../components/Footer";
 import Carousel from "./../components/Carousel";
 import ProductGrid from "./../components/ProductGrid";
 import HeroSection from "./../components/HeroSection";
-import CategoryGrid from "./../components/CategoryGrid";
 import StoresGrid from "../components/StoreGrid";
 import ItemGrid from "../components/ItemGrid";
 import { getAllProducts } from "../api/products";
@@ -122,10 +121,6 @@ const HomePage = () => {
       <NavBar />
       <main className="main-content">
         <HeroSection scrollToStoresGrid={scrollToStoresGrid} />
-
-        <div className="category-grid-section section">
-          <CategoryGrid /> {/* delete this section */}
-        </div>
 
         <div className="carousel-section section">
           <Carousel slides={carouselSlides} />{" "}

@@ -37,6 +37,35 @@
 }
 
 /* Ensure all inputs/selects behave responsively */
+.filter-select,
+.filter-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d9b6a3;
+  background: #ffffff;
+  color: #4a2c2c;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+  outline: none;
+  border-color: #670010;
+  box-shadow: 0 0 0 2px rgba(103, 0, 16, 0.1);
+}
+
+/* Price inputs */
+#minPrice,
+#maxPrice {
+  width: 100px;
+  box-sizing: border-box;
+  height: 40px;
+}
+
+/* Ensure all inputs/selects behave responsively */
 .filters-sidebar input,
 .filters-sidebar select {
   width: 100%;
@@ -46,7 +75,6 @@
   background: #fff5e1;
   color: #4a2c2c;
   box-sizing: border-box;
-  /* ✅ important */
   display: block;
 }
 
@@ -60,21 +88,24 @@
 .apply-button,
 .reset-button {
   flex: 1;
-  padding: 10px 16px;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   border: none;
-  margin-top: 30px;
-  margin-left: 12%;
-  width: 75%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.3px;
 }
 
 .apply-button {
-  background-color: #670010;
+  background: linear-gradient(135deg, #670010 0%, #8b3c5d 100%);
   color: white;
+  box-shadow: 0 2px 8px rgba(103, 0, 16, 0.15);
 }
 
 .apply-button:hover {

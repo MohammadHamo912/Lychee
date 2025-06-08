@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SearchBar from "../components/SearchBar";
-import StoreFiltersPanel from "../components/StoreFiltersPanel";
+import StoreFiltersPanel from "../components/StoreFiltersPanel"; // Updated component
 import Footer from "../components/Footer";
 import StoreGrid from "../components/StoreGrid";
 import { getAllStores } from "../api/stores";
@@ -16,21 +16,12 @@ const AllStoresPage = () => {
   const [filteredStores, setFilteredStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState(initialQuery);
   const [activeFilters, setActiveFilters] = useState({
-    category: "All",
-    reviewStars: null,
+    minRating: 0,
+    location: "",
     sortOption: "none",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const storeCategories = [
-    "Beauty",
-    "Skincare",
-    "Makeup",
-    "Luxury",
-    "Korean",
-    "Organic",
-  ];
 
   // Fetch stores from API on component mount
   useEffect(() => {
@@ -73,24 +64,44 @@ const AllStoresPage = () => {
   };
 
   const applyFiltersAndSearch = (search = "", filters = {}) => {
-    const { category, reviewStars, sortOption } = filters;
+    const { minRating, location, sortOption } = filters;
 
     let result = [...stores];
 
-    // Category filtering
-    if (category && category !== "All") {
-      result = result.filter((store) =>
-        store.categories?.some(
-          (cat) => cat.toLowerCase() === category.toLowerCase()
-        )
-      );
+    // Minimum rating filtering
+    if (minRating > 0) {
+      result = result.filter((store) => (store.rating || 0) >= minRating);
     }
 
-    // Review filtering
-    if (reviewStars !== null) {
-      result = result.filter(
-        (store) => Math.floor(store.rating || 0) === reviewStars
-      );
+    // Enhanced location filtering with partial matching
+    if (location && location.trim()) {
+      const lowerLocation = location.toLowerCase();
+      result = result.filter((store) => {
+        // Check if any part of the location input matches any part of store location data
+        const searchTerms = lowerLocation
+          .split(/[,\s-]+/)
+          .filter((term) => term.length > 0);
+
+        const storeLocationText = [
+          store.city || "",
+          store.country || "",
+          store.address || "",
+          `${store.city || ""}, ${store.country || ""}`
+            .replace(", ,", ",")
+            .replace(/^,|,$/, ""),
+        ]
+          .join(" ")
+          .toLowerCase();
+
+        // Check if ANY search term is found in ANY part of the store location
+        return searchTerms.some(
+          (term) =>
+            storeLocationText.includes(term) ||
+            (store.city && store.city.toLowerCase().includes(term)) ||
+            (store.country && store.country.toLowerCase().includes(term)) ||
+            (store.address && store.address.toLowerCase().includes(term))
+        );
+      });
     }
 
     // Search filtering
@@ -113,6 +124,14 @@ const AllStoresPage = () => {
           a.name.toLowerCase().localeCompare(b.name.toLowerCase())
         );
         break;
+      case "nameZA":
+        result.sort((a, b) =>
+          b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+        );
+        break;
+      case "highestRated":
+        result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
       case "mostReviewed":
         result.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
         break;
@@ -120,6 +139,7 @@ const AllStoresPage = () => {
         result.sort((a, b) => (a.reviewCount || 0) - (b.reviewCount || 0));
         break;
       default:
+        // Keep original order or sort by ID/creation date
         break;
     }
 
@@ -128,7 +148,23 @@ const AllStoresPage = () => {
 
   const handleClearSearch = () => {
     setSearchTerm("");
-    applyFiltersAndSearch("", activeFilters);
+    // Reset filters completely
+    const resetFilters = {
+      minRating: 0,
+      location: "",
+      sortOption: "none",
+    };
+    setActiveFilters(resetFilters);
+    applyFiltersAndSearch("", resetFilters);
+  };
+
+  // Count active filters for display
+  const getActiveFilterCount = () => {
+    let count = 0;
+    if (activeFilters.minRating > 0) count++;
+    if (activeFilters.location.trim()) count++;
+    if (activeFilters.sortOption !== "none") count++;
+    return count;
   };
 
   return (
@@ -150,18 +186,23 @@ const AllStoresPage = () => {
 
       <div className="stores-content">
         <div className="stores-sidebar">
-          <h2>Filter Stores</h2>
+          <h2>
+            Filter Stores
+            {getActiveFilterCount() > 0 && (
+              <span className="filter-count">({getActiveFilterCount()})</span>
+            )}
+          </h2>
           <StoreFiltersPanel
             onApplyFilters={handleApplyFilters}
-            categories={storeCategories}
+            stores={stores} // Pass stores for location suggestions
           />
         </div>
 
         <div className="stores-main">
           <div className="stores-results-header">
             <h2>
-              All Stores{" "}
-              {filteredStores.length > 0 && `(${filteredStores.length})`}
+              All Stores
+              {filteredStores.length > 0 && ` (${filteredStores.length})`}
             </h2>
             {searchTerm && (
               <div className="search-results-info">
@@ -196,9 +237,13 @@ const AllStoresPage = () => {
           ) : (
             <div className="no-results">
               <h3>No stores found</h3>
-              <p>Try adjusting your filters or search term</p>
+              <p>
+                {getActiveFilterCount() > 0 || searchTerm
+                  ? "Try adjusting your filters or search term"
+                  : "No stores available at the moment"}
+              </p>
               <button onClick={handleClearSearch} className="reset-search-btn">
-                Reset Search
+                Clear All Filters
               </button>
             </div>
           )}
