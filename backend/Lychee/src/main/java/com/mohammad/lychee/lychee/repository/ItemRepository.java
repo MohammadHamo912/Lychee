@@ -23,4 +23,6 @@ public interface ItemRepository {
     void softDelete(Integer id);
     List<Item> findByProductId(Integer productId);
     List<Item> searchItemsByStoreIdAndName(Integer storeId, String query);
+    boolean updateStock(Integer itemId, Integer quantity);
+
 }

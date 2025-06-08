@@ -22,7 +22,7 @@ public class WarehouseInventory {
         this.shippedAt = shippedAt;
     }
 
-    // Getters and setters 👇
+    // Getters and setters
 
     public int getWarehouseInventoryId() {
         return warehouseInventoryId;

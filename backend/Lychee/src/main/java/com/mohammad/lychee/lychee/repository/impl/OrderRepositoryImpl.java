@@ -104,6 +104,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         return order;
     }
 
+
     @Override
     public void update(Order order) {
         String sql = "UPDATE `Order` SET user_ID = ?, shippingAddress_ID = ?, Discount_ID = ?, " +
@@ -232,4 +233,11 @@ public class OrderRepositoryImpl implements OrderRepository {
             return row;
         }, orderId);
     }
+
+    @Override
+    public void updateOrderStatus(Integer orderId, String status) {
+        String sql = "UPDATE `Order` SET status = ?, updated_at = ? WHERE order_id = ?";
+        jdbcTemplate.update(sql, status, Timestamp.valueOf(LocalDateTime.now()), orderId);
+    }
+
 }

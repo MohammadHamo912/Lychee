@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
-
 // Pages
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
@@ -28,7 +27,7 @@ import dummyProducts from "./Data/dummyProducts.js";
 import ProductCard from "./components/ProductCard.jsx";
 import PrivateRoute from "./pages/PrivateRoute.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
-
+import OrderSuccessPage from "./pages/OrderSuccessPage.jsx";
 function App() {
   return (
     <UserProvider>
@@ -49,6 +48,10 @@ function App() {
           <Route path="/passwordreset" element={<PasswordReset />} />
           <Route path="/contact" element={<ContactAndSupport />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route
+            path="/order-success/:orderId"
+            element={<OrderSuccessPage />}
+          />
 
           <Route path="/faq" element={<FAQ />} />
           <Route

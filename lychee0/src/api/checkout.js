@@ -3,6 +3,19 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:8081/api";
 
+// Get user information from User table
+export const getUserInfo = async (userId) => {
+  try {
+    console.log("API - Getting user info for user:", userId);
+    const response = await axios.get(`${API_BASE_URL}/users/${userId}`);
+    console.log("API - Retrieved user info:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("API - Error fetching user info:", error);
+    throw error;
+  }
+};
+
 // Get user's cart items with product details
 export const getCartItems = async (userId) => {
   try {
@@ -16,7 +29,7 @@ export const getCartItems = async (userId) => {
   }
 };
 
-// Process complete checkout
+// Process complete checkout (updated to handle dummy payment)
 export const processCheckout = async (checkoutData) => {
   try {
     console.log("API - Processing checkout for user:", checkoutData.userId);
@@ -35,7 +48,10 @@ export const processCheckout = async (checkoutData) => {
   }
 };
 
-// Validate payment details
+// Remove the validatePayment function since we're using dummy payment
+// If you need it for future real payment integration, you can keep it commented:
+
+/*
 export const validatePayment = async (paymentData, amount) => {
   try {
     console.log("API - Validating payment for amount:", amount);
@@ -58,3 +74,4 @@ export const validatePayment = async (paymentData, amount) => {
     throw error;
   }
 };
+*/

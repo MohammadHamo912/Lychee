@@ -8,7 +8,6 @@ public interface PaymentTransactionRepository {
     List<PaymentTransaction> findAll();
     Optional<PaymentTransaction> findById(Integer paymentTransactionId);
     List<PaymentTransaction> findByOrderId(Integer orderId);
-    List<PaymentTransaction> findByPaymentMethodId(Integer paymentMethodId);
     List<PaymentTransaction> findByStatus(String status);
     PaymentTransaction save(PaymentTransaction paymentTransaction);
     void update(PaymentTransaction paymentTransaction);

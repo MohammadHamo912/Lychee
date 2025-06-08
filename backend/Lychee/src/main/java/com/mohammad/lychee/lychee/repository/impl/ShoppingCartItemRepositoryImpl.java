@@ -2,6 +2,7 @@ package com.mohammad.lychee.lychee.repository.impl;
 
 import com.mohammad.lychee.lychee.model.ShoppingCartItem;
 import com.mohammad.lychee.lychee.repository.ShoppingCartItemRepository;
+import com.mohammad.lychee.lychee.service.impl.CheckoutServiceImpl.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -116,5 +117,15 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     public void deleteAllByUserId(Integer userId) {
         String sql = "DELETE FROM ShoppingCartItem WHERE User_ID = ?";
         jdbcTemplate.update(sql, userId);
+    }
+
+    // NEW METHOD: Get simple cart items with quantities for checkout
+    @Override
+    public List<CartItem> getCartItemsByUserId(Integer userId) {
+        String sql = "SELECT Item_ID, quantity FROM ShoppingCartItem WHERE User_ID = ? AND deleted_at IS NULL";
+
+        return jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) ->
+                new CartItem(rs.getInt("Item_ID"), rs.getInt("quantity"))
+        );
     }
 }

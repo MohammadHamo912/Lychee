@@ -1,6 +1,6 @@
 // src/context/UserContext.js
-import React, { useState, useContext, createContext } from "react";
-import CartService from "./cartService"; // adjust the path if needed
+import React, { useState, useContext, createContext, useEffect } from "react";
+import ShoppingCartAPI from "../api/shoppingcartitems"; // Update this path
 
 // Create the context
 const UserContext = createContext();
@@ -20,21 +20,63 @@ export const UserProvider = ({ children }) => {
     return stored ? JSON.parse(stored) : null;
   });
 
-  const [cart, setCart] = useState([]); // optional: load initial cart items if needed
-  const [isAddingToCart, setIsAddingToCart] = useState(false); // loading state
+  const [cart, setCart] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isLoadingCart, setIsLoadingCart] = useState(false);
+
+  // Load cart items when component mounts or user changes
+  useEffect(() => {
+    if (user) {
+      loadCartItems();
+    } else {
+      setCart([]);
+      setCartCount(0);
+    }
+  }, [user]);
+
+  // Update cart count whenever cart items change
+  useEffect(() => {
+    const totalCount = cart.reduce(
+      (sum, item) => sum + (item.quantity || 0),
+      0
+    );
+    setCartCount(totalCount);
+  }, [cart]);
+
+  const loadCartItems = async () => {
+    if (!user) return;
+
+    try {
+      setIsLoadingCart(true);
+      const userIdToUse = user.userId || user.id;
+      console.log("UserContext - Loading cart for user:", userIdToUse);
+
+      const cartItems = await ShoppingCartAPI.getCartItems(userIdToUse);
+      setCart(cartItems || []);
+      console.log("UserContext - Loaded cart items:", cartItems);
+    } catch (error) {
+      console.error("UserContext - Error loading cart items:", error);
+      setCart([]);
+    } finally {
+      setIsLoadingCart(false);
+    }
+  };
 
   const login = (userData) => {
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
+    // Cart will be loaded automatically by useEffect
   };
 
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
     setCart([]);
+    setCartCount(0);
   };
 
-  const addToCart = async (item) => {
+  const addToCart = async (item, quantity = 1) => {
     if (!user) {
       console.warn("User must be logged in to add items to cart");
       return false;
@@ -42,52 +84,96 @@ export const UserProvider = ({ children }) => {
 
     try {
       setIsAddingToCart(true);
-      console.log("UserContext - Adding to cart with user:", user);
-      console.log("UserContext - User ID:", user.userId || user.id);
-      console.log("UserContext - Item:", item);
+      console.log("UserContext - Adding to cart:", item, "quantity:", quantity);
 
-      // Use user.userId instead of user.id (based on your user object structure)
       const userIdToUse = user.userId || user.id;
-      await CartService.addToCart(userIdToUse, item.id, 1);
+      await ShoppingCartAPI.addToCart(userIdToUse, item.id, quantity);
 
-      // Update local cart state
-      setCart((prev) => {
-        // Check if item already exists in cart
-        const existingItemIndex = prev.findIndex(
-          (cartItem) => cartItem.id === item.id
-        );
-        if (existingItemIndex >= 0) {
-          // Update quantity if item exists
-          const updatedCart = [...prev];
-          updatedCart[existingItemIndex] = {
-            ...updatedCart[existingItemIndex],
-            quantity: (updatedCart[existingItemIndex].quantity || 1) + 1,
-          };
-          return updatedCart;
-        } else {
-          // Add new item to cart
-          return [...prev, { ...item, quantity: 1 }];
-        }
-      });
+      // Reload cart items to get updated data from server
+      await loadCartItems();
 
       console.log("Item successfully added to cart!");
       return true;
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      console.error("UserContext - Error adding to cart:", error);
       return false;
     } finally {
       setIsAddingToCart(false);
     }
   };
 
+  const removeFromCart = async (itemId) => {
+    if (!user) return false;
+
+    try {
+      const userIdToUse = user.userId || user.id;
+      await ShoppingCartAPI.removeFromCart(userIdToUse, itemId);
+
+      // Reload cart items to get updated data from server
+      await loadCartItems();
+
+      console.log("Item successfully removed from cart!");
+      return true;
+    } catch (error) {
+      console.error("UserContext - Error removing from cart:", error);
+      return false;
+    }
+  };
+
+  const updateCartItemQuantity = async (itemId, quantity) => {
+    if (!user) return false;
+
+    try {
+      const userIdToUse = user.userId || user.id;
+      await ShoppingCartAPI.updateCartItemQuantity(
+        userIdToUse,
+        itemId,
+        quantity
+      );
+
+      // Reload cart items to get updated data from server
+      await loadCartItems();
+
+      console.log("Cart item quantity updated successfully!");
+      return true;
+    } catch (error) {
+      console.error("UserContext - Error updating cart item quantity:", error);
+      return false;
+    }
+  };
+
+  const clearCart = async () => {
+    if (!user) return false;
+
+    try {
+      const userIdToUse = user.userId || user.id;
+      await ShoppingCartAPI.clearCart(userIdToUse);
+
+      setCart([]);
+      setCartCount(0);
+
+      console.log("Cart cleared successfully!");
+      return true;
+    } catch (error) {
+      console.error("UserContext - Error clearing cart:", error);
+      return false;
+    }
+  };
+
   const value = {
     user,
     cart,
+    cartCount,
     isAddingToCart,
-    isLoggedIn: !!user, // Add isLoggedIn property
+    isLoadingCart,
+    isLoggedIn: !!user,
     login,
     logout,
     addToCart,
+    removeFromCart,
+    updateCartItemQuantity,
+    clearCart,
+    loadCartItems, // Expose this in case you need to refresh cart manually
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

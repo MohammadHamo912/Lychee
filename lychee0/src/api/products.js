@@ -2,7 +2,7 @@ import axios from "axios";
 
 // BASE URLs for different entities
 const BASE_URL = "http://localhost:8081/api/products";
-const VARIANT_URL = "http://localhost:8081/api/product-variants";
+const VARIANT_URL = "http://localhost:8081/api/productvariants";
 const ITEM_URL = "http://localhost:8081/api/items";
 
 // Fetch all products

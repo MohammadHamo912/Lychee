@@ -1,7 +1,7 @@
 package com.mohammad.lychee.lychee.controller;
 
 import com.mohammad.lychee.lychee.dto.CheckoutDTO;
-import com.mohammad.lychee.lychee.dto.EnrichedItem;
+import com.mohammad.lychee.lychee.dto.CartEnrichedItem;
 import com.mohammad.lychee.lychee.service.CheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +21,11 @@ public class CheckoutController {
 
     // GET /api/checkout/cart/{userId} - Get user's cart items with full details
     @GetMapping("/cart/{userId}")
-    public ResponseEntity<List<EnrichedItem>> getCartItems(@PathVariable Integer userId) {
+    public ResponseEntity<List<CartEnrichedItem>> getCartItems(@PathVariable Integer userId) {
         try {
             System.out.println("CheckoutController - Getting cart items for user: " + userId);
 
-            List<EnrichedItem> cartItems = checkoutService.getCartItems(userId);
+            List<CartEnrichedItem> cartItems = checkoutService.getCartItems(userId);
 
             System.out.println("CheckoutController - Retrieved " + cartItems.size() + " cart items");
             return ResponseEntity.ok(cartItems);
@@ -37,7 +37,7 @@ public class CheckoutController {
         }
     }
 
-    // POST /api/checkout/process - Process complete checkout
+    // POST /api/checkout/process - Process complete checkout with dummy payment
     @PostMapping("/process")
     public ResponseEntity<CheckoutDTO.CheckoutResponseDTO> processCheckout(@RequestBody CheckoutDTO checkoutData) {
         try {
@@ -62,6 +62,8 @@ public class CheckoutController {
                 );
             }
 
+
+
             CheckoutDTO.CheckoutResponseDTO response = checkoutService.processCheckout(checkoutData);
 
             if (response.isSuccess()) {
@@ -83,35 +85,6 @@ public class CheckoutController {
         }
     }
 
-    // POST /api/checkout/validate-payment - Validate payment details
-    @PostMapping("/validate-payment")
-    public ResponseEntity<CheckoutDTO.CheckoutResponseDTO> validatePayment(@RequestBody PaymentValidationRequest request) {
-        try {
-            System.out.println("CheckoutController - Validating payment for amount: " + request.getAmount());
-
-            CheckoutDTO.CheckoutResponseDTO response = checkoutService.validatePayment(
-                    request.getPaymentData(),
-                    request.getAmount()
-            );
-
-            if (response.isSuccess()) {
-                System.out.println("CheckoutController - Payment validation successful");
-                return ResponseEntity.ok(response);
-            } else {
-                System.out.println("CheckoutController - Payment validation failed: " + response.getMessage());
-                return ResponseEntity.badRequest().body(response);
-            }
-
-        } catch (Exception e) {
-            System.err.println("CheckoutController - Error validating payment: " + e.getMessage());
-            e.printStackTrace();
-
-            CheckoutDTO.CheckoutResponseDTO errorResponse = new CheckoutDTO.CheckoutResponseDTO(
-                    false, null, "Payment validation failed: " + e.getMessage()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-    }
 
     // Inner class for payment validation request
     public static class PaymentValidationRequest {

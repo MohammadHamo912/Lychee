@@ -33,7 +33,7 @@ public class ItemController {
 
     }
 
-    @GetMapping("/enriched/{itemId:[0-9]+}")
+    @GetMapping("/enriched/{itemId}")
     public ResponseEntity<EnrichedItem> getEnrichedItemById(@PathVariable Integer itemId) {
         try {
             Optional<EnrichedItem> enrichedItem = enrichedItemService.getEnrichedItemById(itemId);
@@ -46,7 +46,7 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/enriched/store/{storeId:[0-9]+}")
+    @GetMapping("/enriched/store/{storeId}")
     public ResponseEntity<List<EnrichedItem>> getEnrichedItemsByStoreId(@PathVariable Integer storeId) {
         try {
             List<EnrichedItem> enrichedItems = enrichedItemService.getEnrichedItemsByStoreId(storeId);
@@ -122,12 +122,12 @@ public class ItemController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/store/{storeId:[0-9]+}")
+    @GetMapping("/store/{storeId}")
     public List<Item> getItemsByStoreId(@PathVariable Integer storeId) {
         return itemService.getItemsByStoreId(storeId);
     }
 
-    @GetMapping("/variant/{productVariantId:[0-9]+}")
+    @GetMapping("/variant/{productVariantId}")
     public List<Item> getItemsByProductVariantId(@PathVariable Integer productVariantId) {
         return itemService.getItemsByProductVariantId(productVariantId);
     }

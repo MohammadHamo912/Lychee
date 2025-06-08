@@ -2,6 +2,7 @@ package com.mohammad.lychee.lychee.service.impl;
 
 import com.mohammad.lychee.lychee.dto.CheckoutDTO;
 import com.mohammad.lychee.lychee.dto.EnrichedItem;
+import com.mohammad.lychee.lychee.dto.CartEnrichedItem;
 import com.mohammad.lychee.lychee.model.*;
 import com.mohammad.lychee.lychee.repository.*;
 import com.mohammad.lychee.lychee.service.CheckoutService;
@@ -12,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class CheckoutServiceImpl implements CheckoutService {
 
     @Autowired
@@ -24,291 +27,278 @@ public class CheckoutServiceImpl implements CheckoutService {
     private EnrichedItemRepository enrichedItemRepository;
 
     @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
     private OrderRepository orderRepository;
 
     @Autowired
     private OrderItemRepository orderItemRepository;
 
     @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private PaymentMethodRepository paymentMethodRepository;
-
-    @Autowired
     private PaymentTransactionRepository paymentTransactionRepository;
-
-    @Autowired
-    private ItemRepository itemRepository;
 
     @Autowired
     private WarehouseInventoryRepository warehouseInventoryRepository;
 
     @Override
-    public List<EnrichedItem> getCartItems(Integer userId) {
-        try {
-            System.out.println("CheckoutService - Getting cart items for user: " + userId);
+    public List<CartEnrichedItem> getCartItems(Integer userId) {
+        System.out.println("CheckoutService - Getting cart items for user: " + userId);
 
-            // Get cart items from shopping cart
-            List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserId(userId);
+        // Get cart items with quantities from shopping cart
+        List<CartItem> cartItems = shoppingCartItemRepository.getCartItemsByUserId(userId);
+        List<CartEnrichedItem> enrichedCartItems = new ArrayList<>();
 
-            if (cartItems.isEmpty()) {
-                System.out.println("CheckoutService - No cart items found for user: " + userId);
-                return List.of();
+        for (CartItem cartItem : cartItems) {
+            // Get enriched item details
+            Optional<EnrichedItem> enrichedItemOpt = enrichedItemRepository.findEnrichedById(cartItem.getItemId());
+
+            if (enrichedItemOpt.isPresent()) {
+                // Create cart-specific enriched item
+                CartEnrichedItem cartEnrichedItem = new CartEnrichedItem(enrichedItemOpt.get(), cartItem.getQuantity());
+                enrichedCartItems.add(cartEnrichedItem);
             }
-
-            // Extract item IDs
-            List<Integer> itemIds = cartItems.stream()
-                    .map(ShoppingCartItem::getItemId)
-                    .toList();
-
-            // Get enriched items
-            List<EnrichedItem> enrichedItems = enrichedItemRepository.findEnrichedByIds(itemIds);
-
-            // Add quantity from cart to enriched items
-            for (EnrichedItem enrichedItem : enrichedItems) {
-                cartItems.stream()
-                        .filter(cartItem -> cartItem.getItemId().equals(enrichedItem.getItemId()))
-                        .findFirst()
-                        .ifPresent(cartItem -> {
-                            // Note: You might want to add a cartQuantity field to EnrichedItem
-                            // For now, we'll use a different approach in the frontend
-                            System.out.println("CheckoutService - Item " + enrichedItem.getItemId() +
-                                    " has quantity: " + cartItem.getQuantity());
-                        });
-            }
-
-            System.out.println("CheckoutService - Retrieved " + enrichedItems.size() + " enriched cart items");
-            return enrichedItems;
-
-        } catch (Exception e) {
-            System.err.println("CheckoutService - Error getting cart items: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Failed to retrieve cart items", e);
         }
+
+        System.out.println("CheckoutService - Retrieved " + enrichedCartItems.size() + " cart items");
+        return enrichedCartItems;
     }
 
     @Override
     @Transactional
     public CheckoutDTO.CheckoutResponseDTO processCheckout(CheckoutDTO checkoutData) {
         try {
-            System.out.println("CheckoutService - Processing checkout for user: " + checkoutData.getUserId());
+            System.out.println("CheckoutService - Starting checkout process for user: " + checkoutData.getUserId());
 
-            // 1. Validate user and cart items
-            List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserId(checkoutData.getUserId());
+            // 1. Get and validate cart items
+            List<CartEnrichedItem> cartItems = getCartItems(checkoutData.getUserId());
             if (cartItems.isEmpty()) {
-                throw new RuntimeException("Cart is empty");
+                return new CheckoutDTO.CheckoutResponseDTO(false, null, "Cart is empty");
             }
 
-            // 2. Calculate totals
-            BigDecimal subtotal = calculateSubtotal(cartItems);
-            BigDecimal tax = BigDecimal.ZERO; // Fixed value as requested
-            BigDecimal shippingFee = BigDecimal.ZERO; // Free shipping
-            BigDecimal totalPrice = subtotal.add(tax).add(shippingFee);
-
-            System.out.println("CheckoutService - Order totals - Subtotal: " + subtotal +
-                    ", Tax: " + tax + ", Total: " + totalPrice);
+            // 2. Validate stock availability
+            for (CartEnrichedItem item : cartItems) {
+                if (item.getStockQuantity() < item.getCartQuantity()) {
+                    return new CheckoutDTO.CheckoutResponseDTO(false, null,
+                            "Insufficient stock for item: " + item.getName());
+                }
+            }
 
             // 3. Create shipping address
-            Address shippingAddress = createAddressFromShippingDTO(checkoutData.getShippingAddress());
-            shippingAddress = addressRepository.save(shippingAddress);
-            System.out.println("CheckoutService - Created shipping address with ID: " + shippingAddress.getAddressId());
-
-            // 4. Create billing address (if different)
-            Integer billingAddressId = shippingAddress.getAddressId();
-            if (checkoutData.getBillingAddress() != null &&
-                    !Boolean.TRUE.equals(checkoutData.getBillingAddress().getSameAsShipping())) {
-                Address billingAddress = createAddressFromBillingDTO(checkoutData.getBillingAddress());
-                billingAddress = addressRepository.save(billingAddress);
-                billingAddressId = billingAddress.getAddressId();
-                System.out.println("CheckoutService - Created separate billing address with ID: " + billingAddressId);
+            Integer addressId = createShippingAddress(checkoutData.getShippingAddress());
+            if (addressId == null) {
+                return new CheckoutDTO.CheckoutResponseDTO(false, null, "Failed to create shipping address");
             }
+
+            // 4. Calculate order total
+            BigDecimal totalPrice = calculateOrderTotal(cartItems);
 
             // 5. Create order
-            Order order = new Order();
-            order.setUserId(checkoutData.getUserId());
-            order.setShippingAddressId(shippingAddress.getAddressId());
-            order.setStatus("pending");
-            order.setTotalPrice(totalPrice);
-            order.setShippingFee(shippingFee);
-
-            order = orderRepository.save(order);
-            System.out.println("CheckoutService - Created order with ID: " + order.getOrderId());
-
-            // 6. Create order items and update inventory
-            for (ShoppingCartItem cartItem : cartItems) {
-                // Get item details
-                Item item = itemRepository.findById(cartItem.getItemId())
-                        .orElseThrow(() -> new RuntimeException("Item not found: " + cartItem.getItemId()));
-
-                // Check stock availability
-                if (item.getStockQuantity() < cartItem.getQuantity()) {
-                    throw new RuntimeException("Insufficient stock for item: " + cartItem.getItemId());
-                }
-
-                // Calculate item total price
-                BigDecimal itemPrice = item.getPrice();
-                if (item.getDiscount() != null && item.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
-                    BigDecimal discountAmount = itemPrice.multiply(item.getDiscount()).divide(BigDecimal.valueOf(100));
-                    itemPrice = itemPrice.subtract(discountAmount);
-                }
-
-                // Create order item
-                OrderItem orderItem = new OrderItem();
-                orderItem.setOrderId(order.getOrderId());
-                orderItem.setItemId(cartItem.getItemId());
-                orderItem.setQuantity(cartItem.getQuantity());
-                orderItem.setPriceAtPurchase(itemPrice);
-                orderItem.setShippingStatus("processing");
-
-                orderItemRepository.save(orderItem);
-
-                // Update item stock
-                item.setStockQuantity(item.getStockQuantity() - cartItem.getQuantity());
-                itemRepository.save(item);
-
-                // Create warehouse inventory entry
-                WarehouseInventory warehouseEntry = new WarehouseInventory();
-                warehouseEntry.setOrderItemId(order.getOrderId()); // Using orderId as orderItemId for now
-                warehouseEntry.setItemId(cartItem.getItemId());
-                warehouseEntry.setStatus("pending");
-                warehouseInventoryRepository.save(warehouseEntry);
-
-                System.out.println("CheckoutService - Created order item for item: " + cartItem.getItemId() +
-                        ", quantity: " + cartItem.getQuantity());
+            Integer orderId = createOrder(checkoutData.getUserId(), addressId, totalPrice, checkoutData.getOrderNotes());
+            if (orderId == null) {
+                return new CheckoutDTO.CheckoutResponseDTO(false, null, "Failed to create order");
             }
 
-            // 7. Process payment
-            PaymentMethod paymentMethod = null;
-            if ("creditCard".equals(checkoutData.getPaymentData().getPaymentMethod())) {
-                // For now, create a temporary payment method (don't store sensitive data)
-                paymentMethod = new PaymentMethod();
-                paymentMethod.setUserId(checkoutData.getUserId());
-                paymentMethod.setType("creditCard");
-                paymentMethod.setDetails("****" + checkoutData.getPaymentData().getCardNumber().substring(
-                        Math.max(0, checkoutData.getPaymentData().getCardNumber().length() - 4)));
-                paymentMethod.setDefault(false);
-                paymentMethod = paymentMethodRepository.save(paymentMethod);
+            // 6. Reserve inventory and create order items
+            boolean inventoryReserved = reserveInventoryAndCreateOrderItems(orderId, cartItems);
+            if (!inventoryReserved) {
+                throw new RuntimeException("Failed to reserve inventory");
             }
 
-            // Create payment transaction
-            PaymentTransaction transaction = new PaymentTransaction();
-            transaction.setOrderId(order.getOrderId());
-            transaction.setPaymentMethodId(paymentMethod != null ? paymentMethod.getPaymentMethodId() : 1);
-            transaction.setAmount(totalPrice);
-            transaction.setStatus("completed");
-            transaction.setTransactionReference("TXN_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
 
-            transaction = paymentTransactionRepository.save(transaction);
-            System.out.println("CheckoutService - Created payment transaction: " + transaction.getTransactionReference());
+            // 7. SKIP PAYMENT PROCESSING FOR NOW - just log it
+            System.out.println("CheckoutService - Skipping payment processing for order: " + orderId);
+            System.out.println("CheckoutService - Amount: " + totalPrice);
 
-            // 8. Clear shopping cart - THIS IS THE IMPORTANT PART FOR YOUR REQUIREMENT
-            shoppingCartItemRepository.deleteAllByUserId(checkoutData.getUserId());
-            System.out.println("CheckoutService - Cleared shopping cart from database for user: " + checkoutData.getUserId());
+            // 8. Clear shopping cart
 
-            // 9. Update order status to confirmed
-            order.setStatus("confirmed");
-            orderRepository.update(order);
+            clearShoppingCart(checkoutData.getUserId(), cartItems);
 
-            // Return success response
-            CheckoutDTO.CheckoutResponseDTO response = new CheckoutDTO.CheckoutResponseDTO();
-            response.setSuccess(true);
-            response.setOrderId(order.getOrderId());
-            response.setMessage("Order placed successfully");
-            response.setTransactionReference(transaction.getTransactionReference());
+            // 9. SKIP WAREHOUSE INVENTORY FOR NOW
 
-            System.out.println("CheckoutService - Successfully processed checkout. Order ID: " + order.getOrderId());
-            return response;
+            System.out.println("CheckoutService - Skipping warehouse inventory creation");
+
+            // 10. Update order status
+            updateOrderStatus(orderId, "confirmed");
+
+            System.out.println("CheckoutService - Checkout completed successfully. Order ID: " + orderId);
+            return new CheckoutDTO.CheckoutResponseDTO(true, orderId, "Order processed successfully (payment skipped for testing)");
 
         } catch (Exception e) {
-            System.err.println("CheckoutService - Error processing checkout: " + e.getMessage());
+            System.err.println("CheckoutService - Checkout failed: " + e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException("Failed to process checkout: " + e.getMessage(), e);
+            return new CheckoutDTO.CheckoutResponseDTO(false, null, "Checkout failed: " + e.getMessage());
+        }
+    }
+
+
+
+    @Override
+    public boolean validateCartItems(Integer userId, List<CheckoutDTO.CartItemDTO> cartItems) {
+        // Implementation for cart validation
+        try {
+            for (CheckoutDTO.CartItemDTO cartItem : cartItems) {
+                Optional<Item> itemOpt = itemRepository.findById(cartItem.getItemId());
+                if (itemOpt.isEmpty() || itemOpt.get().getStockQuantity() < cartItem.getQuantity()) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            System.err.println("CheckoutService - Cart validation error: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public CheckoutDTO.CheckoutResponseDTO validatePayment(CheckoutDTO.PaymentDataDTO paymentData, BigDecimal amount) {
+    public BigDecimal calculateOrderTotal(List<CartEnrichedItem> items) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (CartEnrichedItem item : items) {
+            total = total.add(item.getCartItemTotal());
+        }
+
+        return total;
+    }
+
+    // Private helper methods using repository pattern
+    private Integer createShippingAddress(CheckoutDTO.ShippingAddressDTO addressData) {
         try {
-            System.out.println("CheckoutService - Validating payment for amount: " + amount);
+            System.out.println("CheckoutService - Creating address: " +
+                    addressData.getCity() + ", " + addressData.getStreet() + ", " + addressData.getBuilding());
 
-            if ("creditCard".equals(paymentData.getPaymentMethod())) {
-                // Basic validation
-                if (paymentData.getCardNumber() == null || paymentData.getCardNumber().length() < 15) {
-                    throw new RuntimeException("Invalid card number");
-                }
-                if (paymentData.getExpiryDate() == null || !paymentData.getExpiryDate().matches("\\d{2}/\\d{2}")) {
-                    throw new RuntimeException("Invalid expiry date");
-                }
-                if (paymentData.getCvv() == null || paymentData.getCvv().length() < 3) {
-                    throw new RuntimeException("Invalid CVV");
-                }
+            Address address = new Address();
+            address.setCity(addressData.getCity() != null ? addressData.getCity() : "Default City");
+            address.setStreet(addressData.getStreet() != null ? addressData.getStreet() : "Default Street");
+            address.setBuilding(addressData.getBuilding() != null ? addressData.getBuilding() : "Default Building");
+
+            Address savedAddress = addressRepository.save(address);
+
+            System.out.println("CheckoutService - Address created with ID: " + savedAddress.getAddressId());
+
+            if (savedAddress.getAddressId() == 0) {
+                throw new RuntimeException("Address ID was not generated properly");
             }
 
-            // Simulate successful payment validation
-            CheckoutDTO.CheckoutResponseDTO response = new CheckoutDTO.CheckoutResponseDTO();
-            response.setSuccess(true);
-            response.setMessage("Payment validated successfully");
-            response.setTransactionReference("VAL_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-
-            return response;
-
+            return savedAddress.getAddressId();
         } catch (Exception e) {
-            System.err.println("CheckoutService - Payment validation failed: " + e.getMessage());
-            CheckoutDTO.CheckoutResponseDTO response = new CheckoutDTO.CheckoutResponseDTO();
-            response.setSuccess(false);
-            response.setMessage(e.getMessage());
-            return response;
+            System.err.println("CheckoutService - Error creating address: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
-    private BigDecimal calculateSubtotal(List<ShoppingCartItem> cartItems) {
-        BigDecimal subtotal = BigDecimal.ZERO;
+    private Integer createOrder(Integer userId, Integer addressId, BigDecimal totalPrice, String orderNotes) {
+        try {
+            Order order = new Order();
+            order.setUserId(userId);
+            order.setShippingAddressId(addressId);
+            order.setStatus("pending");
+            order.setTotalPrice(totalPrice);
+            order.setShippingFee(BigDecimal.ZERO); // Free shipping
+            order.setCreatedAt(LocalDateTime.now());
+            order.setUpdatedAt(LocalDateTime.now());
 
-        for (ShoppingCartItem cartItem : cartItems) {
-            Item item = itemRepository.findById(cartItem.getItemId())
-                    .orElseThrow(() -> new RuntimeException("Item not found: " + cartItem.getItemId()));
+            Order savedOrder = orderRepository.save(order);
+            return savedOrder.getOrderId();
+        } catch (Exception e) {
+            System.err.println("CheckoutService - Error creating order: " + e.getMessage());
+            return null;
+        }
+    }
 
-            BigDecimal itemPrice = item.getPrice();
+    private boolean reserveInventoryAndCreateOrderItems(Integer orderId, List<CartEnrichedItem> items) {
+        try {
+            for (CartEnrichedItem item : items) {
+                // Reserve inventory
+                boolean stockUpdated = itemRepository.updateStock(item.getItemId(), item.getCartQuantity());
+                if (!stockUpdated) {
+                    throw new RuntimeException("Failed to reserve stock for item: " + item.getItemId());
+                }
 
-            // Apply discount if exists
-            if (item.getDiscount() != null && item.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
-                BigDecimal discountAmount = itemPrice.multiply(item.getDiscount()).divide(BigDecimal.valueOf(100));
-                itemPrice = itemPrice.subtract(discountAmount);
+                // Create order item
+                OrderItem orderItem = new OrderItem();
+                orderItem.setOrderId(orderId);
+                orderItem.setItemId(item.getItemId());
+                orderItem.setQuantity(item.getCartQuantity());
+                orderItem.setPriceAtPurchase(item.getPrice());
+                orderItem.setShippingStatus("processing");
+                orderItem.setCreatedAt(LocalDateTime.now());
+                orderItem.setUpdatedAt(LocalDateTime.now());
+
+                orderItemRepository.save(orderItem);
             }
-
-            BigDecimal itemTotal = itemPrice.multiply(BigDecimal.valueOf(cartItem.getQuantity()));
-            subtotal = subtotal.add(itemTotal);
+            return true;
+        } catch (Exception e) {
+            System.err.println("CheckoutService - Error reserving inventory: " + e.getMessage());
+            throw new RuntimeException("Inventory reservation failed", e);
         }
-
-        return subtotal;
     }
 
-    private Address createAddressFromShippingDTO(CheckoutDTO.ShippingAddressDTO addressDTO) {
-        Address address = new Address();
-        address.setCity(addressDTO.getCity());
-        // Combine address fields into street
-        String street = addressDTO.getAddress();
-        if (addressDTO.getApartmentUnit() != null && !addressDTO.getApartmentUnit().trim().isEmpty()) {
-            street += ", " + addressDTO.getApartmentUnit();
+    private boolean processDummyPayment(Integer orderId, CheckoutDTO.PaymentDataDTO paymentData, BigDecimal amount) {
+        try {
+            // Get or create dummy payment method
+
+            // Create payment transaction
+            PaymentTransaction transaction = new PaymentTransaction();
+            transaction.setOrderId(orderId);
+            transaction.setAmount(amount);
+            transaction.setStatus("completed"); // Dummy payment always succeeds
+            transaction.setTransactionReference(
+                    paymentData.getTransactionId() != null ?
+                            paymentData.getTransactionId() :
+                            "DUMMY_" + System.currentTimeMillis()
+            );
+            transaction.setCreatedAt(LocalDateTime.now());
+
+            paymentTransactionRepository.save(transaction);
+            return true;
+        } catch (Exception e) {
+            System.err.println("CheckoutService - Error processing payment: " + e.getMessage());
+            return false;
         }
-        address.setStreet(street);
-        // Use firstName + lastName as building for now
-        address.setBuilding(addressDTO.getFirstName() + " " + addressDTO.getLastName());
-        return address;
     }
 
-    private Address createAddressFromBillingDTO(CheckoutDTO.BillingAddressDTO addressDTO) {
-        Address address = new Address();
-        address.setCity(addressDTO.getCity());
-        // Combine address fields into street
-        String street = addressDTO.getAddress();
-        if (addressDTO.getApartmentUnit() != null && !addressDTO.getApartmentUnit().trim().isEmpty()) {
-            street += ", " + addressDTO.getApartmentUnit();
+    private void clearShoppingCart(Integer userId, List<CartEnrichedItem> items) {
+        for (CartEnrichedItem item : items) {
+            shoppingCartItemRepository.deleteByUserIdAndItemId(userId, item.getItemId());
         }
-        address.setStreet(street);
-        // Use firstName + lastName as building for now
-        address.setBuilding(addressDTO.getFirstName() + " " + addressDTO.getLastName());
-        return address;
+    }
+
+    private void createWarehouseInventory(Integer orderId, List<CartEnrichedItem> items) {
+        for (CartEnrichedItem item : items) {
+            WarehouseInventory inventory = new WarehouseInventory();
+            inventory.setOrderItemId(orderId);
+            inventory.setItemId(item.getItemId());
+            inventory.setStatus("pending");
+            inventory.setReceivedAt(LocalDateTime.now());
+
+            warehouseInventoryRepository.save(inventory);
+        }
+    }
+
+    private void updateOrderStatus(Integer orderId, String status) {
+        orderRepository.updateOrderStatus(orderId, status);
+    }
+
+    // Inner class for cart items
+    public static class CartItem {
+        private Integer itemId;
+        private Integer quantity;
+
+        public CartItem(Integer itemId, Integer quantity) {
+            this.itemId = itemId;
+            this.quantity = quantity;
+        }
+
+        // Getters and setters
+        public Integer getItemId() { return itemId; }
+        public void setItemId(Integer itemId) { this.itemId = itemId; }
+
+        public Integer getQuantity() { return quantity; }
+        public void setQuantity(Integer quantity) { this.quantity = quantity; }
     }
 }

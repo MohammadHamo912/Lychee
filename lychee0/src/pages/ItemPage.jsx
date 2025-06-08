@@ -22,19 +22,33 @@ const ItemPage = () => {
     shop_name: "Lychee Official Store",
     price: 19.99,
     salePrice: 16.99,
-    description: "A luxurious lip gloss that adds radiant shine and subtle color to your lips.",
+    description:
+      "A luxurious lip gloss that adds radiant shine and subtle color to your lips.",
     features: [
       "Long-lasting up to 8 hours",
       "95% natural ingredients",
       "Botanical oils for hydration",
       "Non-sticky texture",
-      "Cruelty-free & vegan"
+      "Cruelty-free & vegan",
     ],
     howToUse: "Apply to clean, dry lips. For stronger color, apply two coats.",
-    ingredients: "Castor Oil, Octyldodecanol, Silica, Hydrogenated Polyisobutene, Mica, Fragrance, Vitamin E",
+    ingredients:
+      "Castor Oil, Octyldodecanol, Silica, Hydrogenated Polyisobutene, Mica, Fragrance, Vitamin E",
     reviews: [
-      { id: 1, user: "Sophia L.", rating: 5, date: "March 15, 2025", text: "Loved the shine! It’s my daily go-to." },
-      { id: 2, user: "Amelia T.", rating: 4, date: "March 2, 2025", text: "Great color payoff, could last longer." },
+      {
+        id: 1,
+        user: "Sophia L.",
+        rating: 5,
+        date: "March 15, 2025",
+        text: "Loved the shine! It’s my daily go-to.",
+      },
+      {
+        id: 2,
+        user: "Amelia T.",
+        rating: 4,
+        date: "March 2, 2025",
+        text: "Great color payoff, could last longer.",
+      },
     ],
     rating: 4.5,
     shades: ["Rose Petal", "Sunset Glow", "Berry Bliss", "Clear Shine"],
@@ -44,11 +58,13 @@ const ItemPage = () => {
   const finalProduct = product || defaultProduct;
 
   useEffect(() => {
-    document.title = finalProduct.name ? `${finalProduct.name} | Lychee` : "Item Not Found | Lychee";
+    document.title = finalProduct.name
+      ? `${finalProduct.name} | Lychee`
+      : "Item Not Found | Lychee";
   }, [finalProduct.name]);
 
   const handleQuantityChange = (delta) => {
-    setQuantity(prev => Math.max(1, prev + delta));
+    setQuantity((prev) => Math.max(1, prev + delta));
   };
 
   const handleInputQuantity = (e) => {
@@ -64,11 +80,13 @@ const ItemPage = () => {
 
   const handleAddToCart = () => {
     console.log("Added to cart:", { ...finalProduct, quantity });
-    showTemporaryNotification(`${quantity} x ${finalProduct.name} added to your cart`);
+    showTemporaryNotification(
+      `${quantity} x ${finalProduct.name} added to your cart`
+    );
   };
 
   const toggleWishlist = () => {
-    setIsWishlisted(prev => !prev);
+    setIsWishlisted((prev) => !prev);
     showTemporaryNotification(
       !isWishlisted
         ? `${finalProduct.name} added to wishlist`
@@ -92,9 +110,17 @@ const ItemPage = () => {
     const empty = 5 - full - (half ? 1 : 0);
     return (
       <div className="stars-container">
-        {[...Array(full)].map((_, i) => <span key={`full-${i}`} className="star">★</span>)}
+        {[...Array(full)].map((_, i) => (
+          <span key={`full-${i}`} className="star">
+            ★
+          </span>
+        ))}
         {half && <span className="star half-star">★</span>}
-        {[...Array(empty)].map((_, i) => <span key={`empty-${i}`} className="star empty-star">☆</span>)}
+        {[...Array(empty)].map((_, i) => (
+          <span key={`empty-${i}`} className="star empty-star">
+            ☆
+          </span>
+        ))}
       </div>
     );
   };
@@ -107,7 +133,9 @@ const ItemPage = () => {
           <div className="not-found">
             <h2>Item Not Found</h2>
             <p>Item ID {id} does not exist or has been removed.</p>
-            <Link to="/shop" className="back-to-shop">Back to Shop</Link>
+            <Link to="/shop" className="back-to-shop">
+              Back to Shop
+            </Link>
           </div>
         </main>
         <Footer />
@@ -120,19 +148,23 @@ const ItemPage = () => {
       <NavBar />
       <main className="main-content">
         <div className="product-details-container">
-
           {showNotification && (
-            <div className="notification">
-              {notificationMessage}
-            </div>
+            <div className="notification">{notificationMessage}</div>
           )}
 
           {/* Image Gallery */}
           <div className="product-gallery">
             <div className="main-image-wrapper">
-              <img src={productImg} alt={finalProduct.name} className="product-image" />
+              <img
+                src={productImg}
+                alt={finalProduct.name}
+                className="product-image"
+              />
               {finalProduct.salePrice && <div className="sale-badge">SALE</div>}
-              <button className={`wishlist-btn ${isWishlisted ? "wishlisted" : ""}`} onClick={toggleWishlist}>
+              <button
+                className={`wishlist-btn ${isWishlisted ? "wishlisted" : ""}`}
+                onClick={toggleWishlist}
+              >
                 ❤️
               </button>
             </div>
@@ -140,7 +172,11 @@ const ItemPage = () => {
             <div className="image-thumbnails">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="thumbnail-wrapper">
-                  <img src={productImg} alt={`${finalProduct.name} view ${i}`} className="thumbnail-image" />
+                  <img
+                    src={productImg}
+                    alt={`${finalProduct.name} view ${i}`}
+                    className="thumbnail-image"
+                  />
                 </div>
               ))}
             </div>
@@ -154,28 +190,32 @@ const ItemPage = () => {
 
               {/* STORE NAME */}
               {finalProduct.shop_name && (
-                <Link
-                  to={`/store/${id}`}
-                  className="shop-name-link"
-                >
+                <Link to={`/store/${id}`} className="shop-name-link">
                   Sold by: <span>{finalProduct.shop_name}</span>
                 </Link>
               )}
 
-
               <div className="product-rating">
                 {renderRatingStars(finalProduct.rating)}
-                <span className="rating-count">({finalProduct.reviews.length} reviews)</span>
+                <span className="rating-count">
+                  ({finalProduct.reviews.length} reviews)
+                </span>
               </div>
 
               <div className="product-price-container">
                 {finalProduct.salePrice ? (
                   <>
-                    <span className="original-price">${finalProduct.price.toFixed(2)}</span>
-                    <span className="sale-price">${finalProduct.salePrice.toFixed(2)}</span>
+                    <span className="original-price">
+                      ${finalProduct.price.toFixed(2)}
+                    </span>
+                    <span className="sale-price">
+                      ${finalProduct.salePrice.toFixed(2)}
+                    </span>
                   </>
                 ) : (
-                  <span className="product-price">${finalProduct.price.toFixed(2)}</span>
+                  <span className="product-price">
+                    ${finalProduct.price.toFixed(2)}
+                  </span>
                 )}
               </div>
             </div>
@@ -187,7 +227,10 @@ const ItemPage = () => {
                 <div className="shade-options">
                   {finalProduct.shades.map((shade, idx) => (
                     <button key={idx} className="shade-option" title={shade}>
-                      <span className="shade-circle" style={{ backgroundColor: getShadeColor(shade) }}></span>
+                      <span
+                        className="shade-circle"
+                        style={{ backgroundColor: getShadeColor(shade) }}
+                      ></span>
                       <span className="shade-name">{shade}</span>
                     </button>
                   ))}
@@ -198,12 +241,22 @@ const ItemPage = () => {
             {/* Actions */}
             <div className="product-actions">
               <div className="stock-status">
-                <span className={`status-indicator ${finalProduct.inStock ? "in-stock" : "out-of-stock"}`}></span>
+                <span
+                  className={`status-indicator ${
+                    finalProduct.inStock ? "in-stock" : "out-of-stock"
+                  }`}
+                ></span>
                 {finalProduct.inStock ? "In Stock" : "Out of Stock"}
               </div>
 
               <div className="quantity-control">
-                <button className="quantity-btn" onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1}>−</button>
+                <button
+                  className="quantity-btn"
+                  onClick={() => handleQuantityChange(-1)}
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
                 <input
                   type="number"
                   value={quantity}
@@ -211,11 +264,19 @@ const ItemPage = () => {
                   onChange={handleInputQuantity}
                   className="quantity-input"
                 />
-                <button className="quantity-btn" onClick={() => handleQuantityChange(1)}>+</button>
+                <button
+                  className="quantity-btn"
+                  onClick={() => handleQuantityChange(1)}
+                >
+                  +
+                </button>
               </div>
 
-
-              <button className="add-to-cart-btn" onClick={handleAddToCart} disabled={!finalProduct.inStock}>
+              <button
+                className="add-to-cart-btn"
+                onClick={handleAddToCart}
+                disabled={!finalProduct.inStock}
+              >
                 Add to Cart
               </button>
             </div>
@@ -223,25 +284,45 @@ const ItemPage = () => {
             {/* Tabs */}
             <div className="product-tabs">
               <div className="tabs-header">
-                {["description", "howToUse", "ingredients", "reviews"].map((tab) => (
-                  <button key={tab} className={`tab-button ${activeTab === tab ? "active" : ""}`} onClick={() => setActiveTab(tab)}>
-                    {tab === "description" && "Description"}
-                    {tab === "howToUse" && "How to Use"}
-                    {tab === "ingredients" && "Ingredients"}
-                    {tab === "reviews" && `Reviews (${finalProduct.reviews.length})`}
-                  </button>
-                ))}
+                {["description", "howToUse", "ingredients", "reviews"].map(
+                  (tab) => (
+                    <button
+                      key={tab}
+                      className={`tab-button ${
+                        activeTab === tab ? "active" : ""
+                      }`}
+                      onClick={() => setActiveTab(tab)}
+                    >
+                      {tab === "description" && "Description"}
+                      {tab === "howToUse" && "How to Use"}
+                      {tab === "ingredients" && "Ingredients"}
+                      {tab === "reviews" &&
+                        `Reviews (${finalProduct.reviews.length})`}
+                    </button>
+                  )
+                )}
               </div>
 
               <div className="tab-content">
                 {activeTab === "description" && (
-                  <div><p>{finalProduct.description}</p><ul>{finalProduct.features.map((f, idx) => <li key={idx}>{f}</li>)}</ul></div>
+                  <div>
+                    <p>{finalProduct.description}</p>
+                    <ul>
+                      {finalProduct.features.map((f, idx) => (
+                        <li key={idx}>{f}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
                 {activeTab === "howToUse" && (
-                  <div><p>{finalProduct.howToUse}</p></div>
+                  <div>
+                    <p>{finalProduct.howToUse}</p>
+                  </div>
                 )}
                 {activeTab === "ingredients" && (
-                  <div><p>{finalProduct.ingredients}</p></div>
+                  <div>
+                    <p>{finalProduct.ingredients}</p>
+                  </div>
                 )}
                 {activeTab === "reviews" && (
                   <div>
@@ -256,7 +337,6 @@ const ItemPage = () => {
                 )}
               </div>
             </div>
-
           </div>
         </div>
       </main>

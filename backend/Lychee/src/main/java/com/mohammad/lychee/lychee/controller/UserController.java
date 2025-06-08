@@ -29,12 +29,26 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // Get user by ID
+    // Get user by ID - Updated for checkout functionality
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
-        return userService.getUserById(userId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> getUserById(@PathVariable Integer userId) {
+        Optional<User> userOptional = userService.getUserById(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            // Create a safe response without password hash
+            UserInfoResponse userInfo = new UserInfoResponse();
+            userInfo.setUserId(user.getUserId());
+            userInfo.setName(user.getName());
+            userInfo.setEmail(user.getEmail());
+            userInfo.setPhone(user.getPhone());
+            userInfo.setRole(user.getRole());
+
+            return ResponseEntity.ok(userInfo);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Sign up
@@ -103,4 +117,39 @@ public class UserController {
         return ResponseEntity.ok(total.orElse(0.0));
     }
 
+    // Inner class for safe user information response
+    public static class UserInfoResponse {
+        private Integer userId;
+        private String name;
+        private String email;
+        private String phone;
+        private String role;
+
+        // Constructors
+        public UserInfoResponse() {}
+
+        public UserInfoResponse(Integer userId, String name, String email, String phone, String role) {
+            this.userId = userId;
+            this.name = name;
+            this.email = email;
+            this.phone = phone;
+            this.role = role;
+        }
+
+        // Getters and Setters
+        public Integer getUserId() { return userId; }
+        public void setUserId(Integer userId) { this.userId = userId; }
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+
+        public String getPhone() { return phone; }
+        public void setPhone(String phone) { this.phone = phone; }
+
+        public String getRole() { return role; }
+        public void setRole(String role) { this.role = role; }
+    }
 }
