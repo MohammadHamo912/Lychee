@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -235,6 +236,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    @Transactional
     public void updateOrderStatus(Integer orderId, String status) {
         String sql = "UPDATE `Order` SET status = ?, updated_at = ? WHERE order_id = ?";
         jdbcTemplate.update(sql, status, Timestamp.valueOf(LocalDateTime.now()), orderId);

@@ -50,16 +50,16 @@
 export const dummyOrderData = [
   {
     id: 101,
-    date: '2024-03-01',
+    date: "2024-03-01",
     total: 49.99,
     items: [
       {
-        productName: 'Lip Gloss',
+        productName: "Lip Gloss",
         quantity: 2,
         price: 9.99,
       },
       {
-        productName: 'Mascara',
+        productName: "Mascara",
         quantity: 1,
         price: 29.99,
       },
@@ -67,30 +67,30 @@ export const dummyOrderData = [
   },
   {
     id: 102,
-    date: '2024-02-15',
-    total: 79.50,
+    date: "2024-02-15",
+    total: 79.5,
     items: [
       {
-        productName: 'Foundation',
+        productName: "Foundation",
         quantity: 1,
-        price: 39.50,
+        price: 39.5,
       },
       {
-        productName: 'Blush',
+        productName: "Blush",
         quantity: 1,
-        price: 40.00,
+        price: 40.0,
       },
     ],
   },
   {
     id: 103,
-    date: '2024-01-20',
-    total: 22.00,
+    date: "2024-01-20",
+    total: 22.0,
     items: [
       {
-        productName: 'Eyeliner',
+        productName: "Eyeliner",
         quantity: 1,
-        price: 22.00,
+        price: 22.0,
       },
     ],
   },

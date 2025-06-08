@@ -69,10 +69,8 @@ const ItemGrid = ({
   const handleAddToCart = async (item) => {
     const success = await addToCart(item);
     if (success) {
-      // Optional: Show success message or update UI
       console.log(`${item.name} added to cart successfully!`);
     } else {
-      // Optional: Show error message
       console.error(`Failed to add ${item.name} to cart`);
     }
   };

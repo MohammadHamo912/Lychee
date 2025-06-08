@@ -56,13 +56,6 @@ public class CheckoutController {
                 );
             }
 
-            if (checkoutData.getPaymentData() == null) {
-                return ResponseEntity.badRequest().body(
-                        new CheckoutDTO.CheckoutResponseDTO(false, null, "Payment data is required")
-                );
-            }
-
-
 
             CheckoutDTO.CheckoutResponseDTO response = checkoutService.processCheckout(checkoutData);
 
@@ -86,29 +79,5 @@ public class CheckoutController {
     }
 
 
-    // Inner class for payment validation request
-    public static class PaymentValidationRequest {
-        private CheckoutDTO.PaymentDataDTO paymentData;
-        private BigDecimal amount;
 
-        // Constructors
-        public PaymentValidationRequest() {}
-
-        // Getters and Setters
-        public CheckoutDTO.PaymentDataDTO getPaymentData() {
-            return paymentData;
-        }
-
-        public void setPaymentData(CheckoutDTO.PaymentDataDTO paymentData) {
-            this.paymentData = paymentData;
-        }
-
-        public BigDecimal getAmount() {
-            return amount;
-        }
-
-        public void setAmount(BigDecimal amount) {
-            this.amount = amount;
-        }
-    }
 }

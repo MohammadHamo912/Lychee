@@ -152,13 +152,6 @@ class ShoppingCartAPI {
     }
   }
 
-  /**
-   * Update the quantity of an item in the cart
-   * @param {number} userId - The user ID
-   * @param {number} itemId - The item ID
-   * @param {number} quantity - The new quantity
-   * @returns {Promise<Object>} Updated cart item
-   */
   static async updateCartItemQuantity(userId, itemId, quantity) {
     try {
       const requestData = { quantity: quantity };

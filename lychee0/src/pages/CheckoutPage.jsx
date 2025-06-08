@@ -47,36 +47,14 @@ const CheckoutPage = () => {
         return;
       }
 
-      // Get cart quantities from localStorage (if you store them there)
-      // Or make another API call to get cart with quantities
-      const cartWithQuantities = items.map((item) => {
-        // For now, assume quantity is 1 - you might need to adjust this
-        // based on how you store cart quantities
-        const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-        const cartItem = savedCart.find((c) => c.itemId === item.itemId);
+      setCartItems(items);
 
-        return {
-          ...item,
-          cartQuantity: cartItem ? cartItem.quantity : 1,
-        };
-      });
-
-      setCartItems(cartWithQuantities);
-
-      // Calculate total
-      const total = cartWithQuantities.reduce((sum, item) => {
-        const price = item.finalPrice || item.price || 0;
-        const quantity = item.cartQuantity || 1;
-        return sum + price * quantity;
+      // Calculate total by summing cartItemTotal for each item
+      const total = items.reduce((sum, item) => {
+        return sum + (item.cartItemTotal || 0);
       }, 0);
 
       setCartTotal(total);
-      console.log(
-        "CheckoutPage - Cart loaded. Items:",
-        cartWithQuantities.length,
-        "Total:",
-        total
-      );
     } catch (err) {
       console.error("CheckoutPage - Error fetching cart items:", err);
       setError("Failed to load cart items. Please try again.");
@@ -87,9 +65,6 @@ const CheckoutPage = () => {
 
   const handleOrderComplete = (orderId) => {
     console.log("CheckoutPage - Order completed:", orderId);
-    // Clear cart from localStorage
-    localStorage.removeItem("cart");
-    // Navigate to success page
     navigate(`/order-success/${orderId}`);
   };
 
@@ -152,34 +127,41 @@ const CheckoutPage = () => {
           <div className="order-summary-card">
             <h3>Order Summary</h3>
             <div className="summary-items">
-              {cartItems.map((item) => (
-                <div key={item.itemId} className="summary-item">
-                  <div className="item-details">
-                    <img
-                      src={item.image || "/default-product.jpg"}
-                      alt={item.name}
-                      className="item-image"
-                    />
-                    <div className="item-info">
-                      <h4>{item.name}</h4>
-                      <p className="item-brand">{item.brand}</p>
-                      <p className="item-variant">
-                        {item.currentVariant?.size &&
-                          `Size: ${item.currentVariant.size}`}
-                        {item.currentVariant?.color &&
-                          ` | Color: ${item.currentVariant.color}`}
-                      </p>
-                      <p className="item-quantity">Qty: {item.cartQuantity}</p>
+              {cartItems.map(
+                (item) => (
+                  console.log("CheckoutPage - Rendering item:", item),
+                  (
+                    <div key={item.itemId} className="summary-item">
+                      <div className="item-details">
+                        <img
+                          src={item.image || "/default-product.jpg"}
+                          alt={item.name}
+                          className="item-image"
+                        />
+                        <div className="item-info">
+                          <h4>{item.name}</h4>
+                          <p className="item-brand">{item.brand}</p>
+                          <p className="item-variant">
+                            {item.currentVariant?.size &&
+                              `Size: ${item.currentVariant.size}`}
+                            {item.currentVariant?.color &&
+                              ` | Color: ${item.currentVariant.color}`}
+                          </p>
+                          <p className="item-quantity">
+                            Quantity: {item.cartQuantity}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="item-price">
+                        $
+                        {(
+                          (item.finalPrice || item.price) * item.cartQuantity
+                        ).toFixed(2)}
+                      </div>
                     </div>
-                  </div>
-                  <div className="item-price">
-                    $
-                    {(
-                      (item.finalPrice || item.price) * item.cartQuantity
-                    ).toFixed(2)}
-                  </div>
-                </div>
-              ))}
+                  )
+                )
+              )}
             </div>
 
             <div className="summary-totals">
@@ -191,10 +173,7 @@ const CheckoutPage = () => {
                 <span>Shipping</span>
                 <span>Free</span>
               </div>
-              <div className="summary-row">
-                <span>Tax</span>
-                <span>$0.00</span>
-              </div>
+
               <div className="summary-row total">
                 <span>Total</span>
                 <span>${cartTotal.toFixed(2)}</span>

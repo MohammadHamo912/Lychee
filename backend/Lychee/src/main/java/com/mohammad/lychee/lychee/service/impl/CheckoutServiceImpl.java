@@ -41,9 +41,6 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Autowired
     private PaymentTransactionRepository paymentTransactionRepository;
 
-    @Autowired
-    private WarehouseInventoryRepository warehouseInventoryRepository;
-
     @Override
     public List<CartEnrichedItem> getCartItems(Integer userId) {
         System.out.println("CheckoutService - Getting cart items for user: " + userId);
@@ -69,7 +66,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     @Override
     @Transactional
-    public CheckoutDTO.CheckoutResponseDTO processCheckout(CheckoutDTO checkoutData) {
+    public CheckoutDTO.CheckoutResponseDTO processCheckout(CheckoutDTO checkoutData){
         try {
             System.out.println("CheckoutService - Starting checkout process for user: " + checkoutData.getUserId());
 
@@ -109,20 +106,18 @@ public class CheckoutServiceImpl implements CheckoutService {
             }
 
 
-            // 7. SKIP PAYMENT PROCESSING FOR NOW - just log it
-            System.out.println("CheckoutService - Skipping payment processing for order: " + orderId);
-            System.out.println("CheckoutService - Amount: " + totalPrice);
+            boolean paymentTransaction = processDummyPayment(checkoutData.getUserId(), totalPrice,checkoutData.getPaymentMethod());
+            if(!paymentTransaction){
+                throw new RuntimeException("Failed to save the paymentTransaction");
+            }
+
 
             // 8. Clear shopping cart
-
             clearShoppingCart(checkoutData.getUserId(), cartItems);
-
-            // 9. SKIP WAREHOUSE INVENTORY FOR NOW
-
-            System.out.println("CheckoutService - Skipping warehouse inventory creation");
 
             // 10. Update order status
             updateOrderStatus(orderId, "confirmed");
+
 
             System.out.println("CheckoutService - Checkout completed successfully. Order ID: " + orderId);
             return new CheckoutDTO.CheckoutResponseDTO(true, orderId, "Order processed successfully (payment skipped for testing)");
@@ -134,23 +129,23 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
-
-
-    @Override
-    public boolean validateCartItems(Integer userId, List<CheckoutDTO.CartItemDTO> cartItems) {
-        // Implementation for cart validation
+    private boolean processDummyPayment(Integer orderId, BigDecimal amount,String paymentMethod) {
         try {
-            for (CheckoutDTO.CartItemDTO cartItem : cartItems) {
-                Optional<Item> itemOpt = itemRepository.findById(cartItem.getItemId());
-                if (itemOpt.isEmpty() || itemOpt.get().getStockQuantity() < cartItem.getQuantity()) {
-                    return false;
-                }
-            }
+            // Create payment transaction
+            PaymentTransaction transaction = new PaymentTransaction();
+            transaction.setOrderId(orderId);
+            transaction.setAmount(amount);
+            transaction.setStatus(paymentMethod.equals("creditCard") ? "completed": "pending");
+            transaction.setCreatedAt(LocalDateTime.now());
+            transaction.setTransactionReference(paymentMethod.equals("creditCard") ? "creditCard" : "cashOnDelivery");
+
+            paymentTransactionRepository.save(transaction);
             return true;
         } catch (Exception e) {
-            System.err.println("CheckoutService - Cart validation error: " + e.getMessage());
+            System.err.println("CheckoutService - Error processing payment: " + e.getMessage());
             return false;
         }
+
     }
 
     @Override
@@ -238,45 +233,10 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
-    private boolean processDummyPayment(Integer orderId, CheckoutDTO.PaymentDataDTO paymentData, BigDecimal amount) {
-        try {
-            // Get or create dummy payment method
-
-            // Create payment transaction
-            PaymentTransaction transaction = new PaymentTransaction();
-            transaction.setOrderId(orderId);
-            transaction.setAmount(amount);
-            transaction.setStatus("completed"); // Dummy payment always succeeds
-            transaction.setTransactionReference(
-                    paymentData.getTransactionId() != null ?
-                            paymentData.getTransactionId() :
-                            "DUMMY_" + System.currentTimeMillis()
-            );
-            transaction.setCreatedAt(LocalDateTime.now());
-
-            paymentTransactionRepository.save(transaction);
-            return true;
-        } catch (Exception e) {
-            System.err.println("CheckoutService - Error processing payment: " + e.getMessage());
-            return false;
-        }
-    }
 
     private void clearShoppingCart(Integer userId, List<CartEnrichedItem> items) {
         for (CartEnrichedItem item : items) {
             shoppingCartItemRepository.deleteByUserIdAndItemId(userId, item.getItemId());
-        }
-    }
-
-    private void createWarehouseInventory(Integer orderId, List<CartEnrichedItem> items) {
-        for (CartEnrichedItem item : items) {
-            WarehouseInventory inventory = new WarehouseInventory();
-            inventory.setOrderItemId(orderId);
-            inventory.setItemId(item.getItemId());
-            inventory.setStatus("pending");
-            inventory.setReceivedAt(LocalDateTime.now());
-
-            warehouseInventoryRepository.save(inventory);
         }
     }
 

@@ -160,8 +160,7 @@ const ShoppingCartPage = () => {
   const calculateTotal = () => {
     const subtotal = calculateSubtotal();
     const shipping = subtotal > 100 ? 0 : 7.99;
-    const tax = subtotal * 0.08; // 8% tax rate
-    return subtotal + shipping + tax - discount;
+    return subtotal + shipping + -discount;
   };
 
   // Update quantity
@@ -607,11 +606,6 @@ const ShoppingCartPage = () => {
                         `$7.99`
                       )}
                     </span>
-                  </div>
-
-                  <div className="summary-row">
-                    <span>Tax (8%)</span>
-                    <span>${(calculateSubtotal() * 0.08).toFixed(2)}</span>
                   </div>
 
                   {discount > 0 && (

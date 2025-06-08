@@ -124,11 +124,13 @@ const HomePage = () => {
         <HeroSection scrollToStoresGrid={scrollToStoresGrid} />
 
         <div className="category-grid-section section">
-          <CategoryGrid />
+          <CategoryGrid /> {/* delete this section */}
         </div>
 
         <div className="carousel-section section">
-          <Carousel slides={carouselSlides} />
+          <Carousel slides={carouselSlides} />{" "}
+          {/* replace with real data
+          discounts */}
         </div>
 
         <div className="product-grid-section section">

@@ -7,23 +7,12 @@ import java.math.BigDecimal;
 import java.util.List;
 public interface CheckoutService {
 
-    /**
-     * Get user's cart items with full product details and cart quantities
-     */
+    //Get user's cart items with full product details and cart quantities
     List<CartEnrichedItem> getCartItems(Integer userId);
 
-    /**
-     * Process complete checkout with dummy payment
-     */
+    //Process complete checkout with dummy payment
     CheckoutDTO.CheckoutResponseDTO processCheckout(CheckoutDTO checkoutData);
 
-    /**
-     * Validate cart items and check stock availability
-     */
-    boolean validateCartItems(Integer userId, List<CheckoutDTO.CartItemDTO> cartItems);
-
-    /**
-     * Calculate order total with discounts
-     */
+    //Calculate order total with discounts
     BigDecimal calculateOrderTotal(List<CartEnrichedItem> items);
 }

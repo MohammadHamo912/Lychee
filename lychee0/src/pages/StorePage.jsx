@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 // Import API functions
 import { getStoreById } from "../api/stores.js";
 import { getItemsByStoreId } from "../api/items.js";
+import { useUser } from "../context/UserContext";
 
 // Mock data imports for fallback/development
 import shop1SampleImage from "../images/shop1SampleImage.png";
@@ -39,6 +40,8 @@ const StorePage = () => {
   const [search, setSearch] = useState("");
   // For product detail modal
   const [viewingItem, setViewingItem] = useState(null);
+
+  const { addToCart, isAddingToCart } = useUser();
 
   // Mock categories for filtering - replace with dynamic categories from products
   const categories = ["Skincare", "Makeup", "Accessories", "Fragrances"];
@@ -92,9 +95,13 @@ const StorePage = () => {
   });
 
   // Handle add to cart function
-  const handleAddToCart = (item) => {
-    console.log(`Added ${item.name} to cart`);
-    // In a real app, you would dispatch this to your cart state or context
+  const handleAddToCart = async (item) => {
+    const success = await addToCart(item);
+    if (success) {
+      console.log(`${item.name} added to cart successfully!`);
+    } else {
+      console.error(`Failed to add ${item.name} to cart`);
+    }
   };
 
   return (

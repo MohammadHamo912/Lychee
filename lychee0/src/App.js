@@ -28,6 +28,7 @@ import ProductCard from "./components/ProductCard.jsx";
 import PrivateRoute from "./pages/PrivateRoute.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import OrderSuccessPage from "./pages/OrderSuccessPage.jsx";
+
 function App() {
   return (
     <UserProvider>

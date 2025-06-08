@@ -67,7 +67,7 @@ public class PaymentTransactionRepositoryImpl implements PaymentTransactionRepos
     @Override
     public PaymentTransaction save(PaymentTransaction paymentTransaction) {
         String sql = "INSERT INTO PaymentTransaction (order_id, amount, status, transaction_reference) " +
-                "VALUES (?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -76,12 +76,7 @@ public class PaymentTransactionRepositoryImpl implements PaymentTransactionRepos
             ps.setInt(1, paymentTransaction.getOrderId());
             ps.setBigDecimal(2, paymentTransaction.getAmount());
             ps.setString(3, paymentTransaction.getStatus());
-
-            if (paymentTransaction.getTransactionReference() != null) {
-                ps.setString(4, paymentTransaction.getTransactionReference());
-            } else {
-                ps.setNull(4, java.sql.Types.VARCHAR);
-            }
+            ps.setString(4, paymentTransaction.getTransactionReference());
 
             return ps;
         }, keyHolder);

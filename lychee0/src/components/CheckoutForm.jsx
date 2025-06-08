@@ -81,19 +81,10 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
 
   const simulatePaymentProcessing = () => {
     return new Promise((resolve) => {
-      // Simulate payment processing delay
       setTimeout(() => {
-        // For demo purposes, always succeed
-        // You could add logic here to randomly fail sometimes for testing
-        const success = Math.random() > 0.1; // 90% success rate
         resolve({
-          success: success,
-          transactionId: success
-            ? `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-            : null,
-          message: success
-            ? "Payment processed successfully"
-            : "Payment failed. Please try again.",
+          success: true,
+          message: "Payment processed successfully",
         });
       }, 2000); // 2 second delay to simulate processing
     });
@@ -124,23 +115,12 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
       const checkoutData = {
         userId: userId,
         shippingAddress: {
-          firstName: userInfo.name.split(" ")[0] || userInfo.name,
-          lastName: userInfo.name.split(" ").slice(1).join(" ") || "",
           city: formData.city,
           street: formData.street,
           building: formData.building,
         },
-        paymentData: {
-          paymentMethod: formData.paymentMethod,
-          transactionId: paymentResult.transactionId,
-          // For dummy payment, we just send the method and transaction ID
-        },
         orderNotes: formData.orderNotes,
-        contactInfo: {
-          email: userInfo.email,
-          phone: userInfo.phone,
-        },
-        cartItems: cartItems,
+        paymentMethod: formData.paymentMethod,
       };
 
       // Process checkout
