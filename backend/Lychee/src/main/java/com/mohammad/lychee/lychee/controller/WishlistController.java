@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishlist")
-@CrossOrigin(origins = "http://localhost:3000") // adjust as needed for prod
+@CrossOrigin(origins = "http://localhost:3000")
 public class WishlistController {
 
     private final WishlistService wishlistService;
@@ -26,21 +26,20 @@ public class WishlistController {
         return ResponseEntity.ok(items);
     }
 
-    // ✅ Add an item to wishlist if not already present
     @PostMapping("/add")
     public ResponseEntity<Void> addWishlistItem(@RequestParam Integer userId,
-                                                @RequestParam Integer productVariantId) {
+                                                @RequestParam Integer itemId) {
         Wishlist item = new Wishlist();
         item.setUserId(userId);
-        item.setProductVariantId(productVariantId);
+        item.setItemId(itemId);
         wishlistService.addItemToWishlist(item);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/remove")
     public ResponseEntity<Void> removeWishlistItem(@RequestParam Integer userId,
-                                                   @RequestParam Integer productVariantId) {
-        wishlistService.removeItemFromWishlist(userId, productVariantId);
+                                                   @RequestParam Integer itemId) {
+        wishlistService.removeItemFromWishlist(userId, itemId);
         return ResponseEntity.ok().build();
     }
 
@@ -48,10 +47,5 @@ public class WishlistController {
     public ResponseEntity<Void> clearWishlist(@PathVariable Integer userId) {
         wishlistService.clearWishlist(userId);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Wishlist API is working.");
     }
 }

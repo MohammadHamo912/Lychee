@@ -27,7 +27,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public boolean isItemInWishlist(Integer userId, Integer productVariantId) {
-        Optional<Wishlist> wishlistItem = wishlistRepository.findByUserIdAndProductVariantId(userId, productVariantId);
+        Optional<Wishlist> wishlistItem = wishlistRepository.findByUserIdAndItemId(userId, productVariantId);
         return wishlistItem.isPresent();
     }
 
@@ -35,8 +35,8 @@ public class WishlistServiceImpl implements WishlistService {
     @Transactional
     public void addItemToWishlist(Wishlist wishlistItem) {
         // Check if item already in wishlist
-        if (!isItemInWishlist(wishlistItem.getUserId(), wishlistItem.getProductVariantId())) {
-            wishlistRepository.addWishlistItem(wishlistItem.getUserId(), wishlistItem.getProductVariantId());
+        if (!isItemInWishlist(wishlistItem.getUserId(), wishlistItem.getItemId())) {
+            wishlistRepository.addWishlistItem(wishlistItem.getUserId(), wishlistItem.getItemId());
         }
         // If already in wishlist, do nothing (idempotent operation)
     }
