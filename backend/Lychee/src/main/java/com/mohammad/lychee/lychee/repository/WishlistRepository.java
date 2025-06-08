@@ -9,6 +9,6 @@ public interface WishlistRepository {
     List<Wishlist> findByUserId(Integer userId);
     void addWishlistItem(Integer userId, Integer productVariantId);
     void removeWishlistItem(Integer userId, Integer productVariantId);
-    Optional<Wishlist> findByUserIdAndProductVariantId(Integer userId, Integer productVariantId);
+    Optional<Wishlist> findByUserIdAndItemId(Integer userId, Integer itemId);
     void deleteAllByUserId(Integer userId);
 }
