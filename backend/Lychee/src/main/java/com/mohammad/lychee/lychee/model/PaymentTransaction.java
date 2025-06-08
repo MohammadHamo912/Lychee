@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 public class PaymentTransaction {
     private int paymentTransactionId;
     private int orderId;
-    private int paymentMethodId;
     private BigDecimal amount;
     private String status;
     private String transactionReference;
@@ -14,19 +13,18 @@ public class PaymentTransaction {
 
     public PaymentTransaction() {}
 
-    public PaymentTransaction(int paymentTransactionId, int orderId, int paymentMethodId,
+    public PaymentTransaction(int paymentTransactionId, int orderId,
                               BigDecimal amount, String status, String transactionReference,
                               LocalDateTime createdAt) {
         this.paymentTransactionId = paymentTransactionId;
         this.orderId = orderId;
-        this.paymentMethodId = paymentMethodId;
         this.amount = amount;
         this.status = status;
         this.transactionReference = transactionReference;
         this.createdAt = createdAt;
     }
 
-    // Getters and setters 👇
+    // Getters and setters
 
     public int getPaymentTransactionId() {
         return paymentTransactionId;
@@ -42,14 +40,6 @@ public class PaymentTransaction {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
-    }
-
-    public int getPaymentMethodId() {
-        return paymentMethodId;
-    }
-
-    public void setPaymentMethodId(int paymentMethodId) {
-        this.paymentMethodId = paymentMethodId;
     }
 
     public BigDecimal getAmount() {

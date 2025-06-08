@@ -61,10 +61,15 @@ const ShopManagement = () => {
       try {
         setLoadingItems(true);
         setItemsError(null);
+        console.log(`Fetching items for shop ${selectedShop.storeId}...`);
+
         const items = await getItemsByStoreId(selectedShop.storeId);
         setShopItems(items);
       } catch (err) {
-        console.error(`Error fetching items for shop ${selectedShop.storeId}:`, err);
+        console.error(
+          `Error fetching items for shop ${selectedShop.storeId}:`,
+          err
+        );
         setItemsError("Failed to load products for this shop.");
         setShopItems([]);
       } finally {

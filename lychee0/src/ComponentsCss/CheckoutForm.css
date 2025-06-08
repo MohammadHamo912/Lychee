@@ -441,3 +441,190 @@ textarea {
     font-size: 0.8rem;
   }
 }
+
+/* Additional CSS for updated checkout form - add this to your existing CheckoutForm.css */
+
+/* User info display */
+.user-info-display {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-item label {
+  font-weight: 600;
+  min-width: 80px;
+  margin-right: 15px;
+  color: #495057;
+}
+
+.info-value {
+  color: #212529;
+  font-weight: 500;
+}
+
+/* Loading user info */
+.loading-user-info {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-user-info .loading-spinner {
+  margin-bottom: 15px;
+}
+
+/* Payment notice */
+.payment-notice {
+  background: #e7f3ff;
+  border: 1px solid #b8daff;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 25px;
+}
+
+.demo-notice {
+  margin: 0;
+  color: #004085;
+  font-size: 14px;
+}
+
+/* Updated payment methods */
+.payment-method {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.payment-method:hover {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.payment-method.selected {
+  border-color: #007bff;
+  background-color: #e7f3ff;
+}
+
+.payment-method input[type="radio"] {
+  margin-right: 12px;
+}
+
+.payment-method label {
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0;
+  display: block;
+}
+
+.payment-description {
+  margin-top: 8px;
+  margin-left: 28px;
+}
+
+.payment-description small {
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Order summary preview */
+.order-summary-preview {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 25px 0;
+}
+
+.order-summary-preview h4 {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 18px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.summary-line:last-child {
+  margin-bottom: 0;
+}
+
+.summary-line.total {
+  border-top: 1px solid #dee2e6;
+  padding-top: 12px;
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #212529;
+}
+
+/* Processing spinner for button */
+.processing-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Update step titles */
+.step-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .user-info-display {
+    padding: 15px;
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info-item label {
+    margin-bottom: 5px;
+    margin-right: 0;
+    min-width: auto;
+  }
+
+  .payment-method {
+    padding: 15px;
+  }
+
+  .order-summary-preview {
+    padding: 15px;
+  }
+}

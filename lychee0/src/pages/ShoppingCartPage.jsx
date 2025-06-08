@@ -378,7 +378,7 @@ const ShoppingCartPage = () => {
               </div>
               <h2>Your cart is empty</h2>
               <p>Looks like you haven't added any items to your cart yet.</p>
-              <Link to="/shops" className="continue-shopping-btn">
+              <Link to="/" className="continue-shopping-btn">
                 Discover Amazing Products
               </Link>
             </motion.div>
@@ -627,26 +627,12 @@ const ShoppingCartPage = () => {
                   </div>
                 </div>
 
-                <div className="estimated-delivery">
-                  <svg viewBox="0 0 24 24" width="18" height="18">
-                    <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
-                  </svg>
-                  <span>Estimated delivery: {estimatedDelivery}</span>
-                </div>
-
                 <Link to="/checkout" className="checkout-btn">
                   <span>Proceed to Checkout</span>
                   <svg viewBox="0 0 24 24" width="18" height="18">
                     <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
                   </svg>
                 </Link>
-
-                <div className="secure-checkout">
-                  <svg viewBox="0 0 24 24" width="16" height="16">
-                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
-                  </svg>
-                  <span>Secure Checkout</span>
-                </div>
               </div>
 
               <div className="need-help">

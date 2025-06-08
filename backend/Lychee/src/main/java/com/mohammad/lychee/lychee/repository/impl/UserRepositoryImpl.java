@@ -62,6 +62,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findById(Integer id) {
         try {
+            // Fixed: Added backticks for consistency
             String sql = "SELECT * FROM `User` WHERE User_ID = ? AND deleted_at IS NULL";
             User user = jdbcTemplate.queryForObject(sql, userRowMapper, id);
             return Optional.ofNullable(user);
@@ -81,6 +82,11 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    @Override
+    public List<User> findByRole(String role) {
+        String sql = "SELECT * FROM `User` WHERE role = ? AND deleted_at IS NULL";
+        return jdbcTemplate.query(sql, userRowMapper, role);
+    }
     @Override
     public User save(User user) {
         if (user.getUserId() == 0) {
@@ -139,9 +145,5 @@ public class UserRepositoryImpl implements UserRepository {
         jdbcTemplate.update(sql, Timestamp.valueOf(LocalDateTime.now()), id);
     }
 
-    @Override
-    public List<User> findByRole(String role) {
-        String sql = "SELECT * FROM `User` WHERE role = ? AND deleted_at IS NULL";
-        return jdbcTemplate.query(sql, userRowMapper, role);
-    }
+
 }

@@ -112,7 +112,7 @@ public class AdminOverviewController {
         String sql = """
             SELECT o.order_id AS id, u.name AS customer, o.total_price AS total
             FROM `Order` o
-            JOIN `User` u ON o.user_ID = u.id
+            JOIN `User` u ON o.user_ID = u.User_ID
             ORDER BY o.created_at DESC
             LIMIT 5
         """;

@@ -1,24 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { processCheckout, validatePayment } from "../api/checkout";
+import { processCheckout, getUserInfo } from "../api/checkout";
 import "../ComponentsCss/CheckoutForm.css";
 
 const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState(null);
   const [formData, setFormData] = useState({
-    email: "",
-    phone: "",
-    firstName: "",
-    lastName: "",
     city: "",
     street: "",
     building: "",
     orderNotes: "",
     paymentMethod: "creditCard",
-    cardName: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
     agreeToTerms: false,
   });
 
@@ -26,6 +19,27 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [loadingUserInfo, setLoadingUserInfo] = useState(true);
+
+  // Fetch user information on component mount
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        setLoadingUserInfo(true);
+        const userData = await getUserInfo(userId);
+        setUserInfo(userData);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+        setErrors({ general: "Failed to load user information" });
+      } finally {
+        setLoadingUserInfo(false);
+      }
+    };
+
+    if (userId) {
+      fetchUserInfo();
+    }
+  }, [userId]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -42,34 +56,14 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
     const newErrors = {};
 
     if (step === 1) {
-      if (!formData.email) newErrors.email = "Email is required";
-      else if (!/\S+@\S+\.\S+/.test(formData.email))
-        newErrors.email = "Email is invalid";
-      if (!formData.firstName) newErrors.firstName = "First name is required";
-      if (!formData.lastName) newErrors.lastName = "Last name is required";
       if (!formData.city) newErrors.city = "City is required";
       if (!formData.street) newErrors.street = "Street is required";
       if (!formData.building) newErrors.building = "Building is required";
     }
 
     if (step === 2) {
-      if (formData.paymentMethod === "creditCard") {
-        if (!formData.cardName)
-          newErrors.cardName = "Cardholder name is required";
-        if (!formData.cardNumber)
-          newErrors.cardNumber = "Card number is required";
-        else if (!/^\d{15,16}$/.test(formData.cardNumber.replace(/\s/g, "")))
-          newErrors.cardNumber = "Card number must be 15-16 digits";
-        if (!formData.expiryDate)
-          newErrors.expiryDate = "Expiry date is required";
-        else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate))
-          newErrors.expiryDate = "Use MM/YY format";
-        if (!formData.cvv) newErrors.cvv = "CVV is required";
-        else if (!/^\d{3,4}$/.test(formData.cvv))
-          newErrors.cvv = "CVV must be 3-4 digits";
-      }
-      if (!formData.agreeToTerms)
-        newErrors.agreeToTerms = "You must agree to the terms";
+      if (!formData.paymentMethod)
+        newErrors.paymentMethod = "Please select a payment method";
     }
 
     return newErrors;
@@ -85,6 +79,26 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
     }
   };
 
+  const simulatePaymentProcessing = () => {
+    return new Promise((resolve) => {
+      // Simulate payment processing delay
+      setTimeout(() => {
+        // For demo purposes, always succeed
+        // You could add logic here to randomly fail sometimes for testing
+        const success = Math.random() > 0.1; // 90% success rate
+        resolve({
+          success: success,
+          transactionId: success
+            ? `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+            : null,
+          message: success
+            ? "Payment processed successfully"
+            : "Payment failed. Please try again.",
+        });
+      }, 2000); // 2 second delay to simulate processing
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -97,46 +111,34 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
     setIsProcessing(true);
 
     try {
-      // Validate payment first
-      if (formData.paymentMethod === "creditCard") {
-        const paymentValidation = await validatePayment(
-          {
-            paymentMethod: formData.paymentMethod,
-            cardNumber: formData.cardNumber.replace(/\s/g, ""),
-            expiryDate: formData.expiryDate,
-            cvv: formData.cvv,
-          },
-          cartTotal
-        );
+      // Simulate payment processing
+      const paymentResult = await simulatePaymentProcessing();
 
-        if (!paymentValidation.success) {
-          setErrors({ payment: paymentValidation.message });
-          setIsProcessing(false);
-          return;
-        }
+      if (!paymentResult.success) {
+        setErrors({ payment: paymentResult.message });
+        setIsProcessing(false);
+        return;
       }
 
       // Prepare checkout data
       const checkoutData = {
         userId: userId,
         shippingAddress: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
+          firstName: userInfo.name.split(" ")[0] || userInfo.name,
+          lastName: userInfo.name.split(" ").slice(1).join(" ") || "",
           city: formData.city,
           street: formData.street,
           building: formData.building,
         },
         paymentData: {
           paymentMethod: formData.paymentMethod,
-          cardName: formData.cardName,
-          cardNumber: formData.cardNumber.replace(/\s/g, ""),
-          expiryDate: formData.expiryDate,
-          cvv: formData.cvv,
+          transactionId: paymentResult.transactionId,
+          // For dummy payment, we just send the method and transaction ID
         },
         orderNotes: formData.orderNotes,
         contactInfo: {
-          email: formData.email,
-          phone: formData.phone,
+          email: userInfo.email,
+          phone: userInfo.phone,
         },
         cartItems: cartItems,
       };
@@ -164,16 +166,31 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
     }
   };
 
-  const formatCardNumber = (value) => {
-    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-    const matches = v.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || "";
-    const parts = [];
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    return parts.length ? parts.join(" ") : value;
-  };
+  // Show loading while fetching user info
+  if (loadingUserInfo) {
+    return (
+      <div className="checkout-form-container">
+        <div className="loading-user-info">
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+          </div>
+          <p>Loading your information...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if user info couldn't be loaded
+  if (!userInfo) {
+    return (
+      <div className="checkout-form-container">
+        <div className="error-banner">
+          {errors.general ||
+            "Failed to load user information. Please refresh the page."}
+        </div>
+      </div>
+    );
+  }
 
   // Show success message
   if (orderSuccess) {
@@ -203,7 +220,7 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
           onClick={() => currentStep > 1 && setCurrentStep(1)}
         >
           <span className="step-number">1</span>
-          <span className="step-title">Information</span>
+          <span className="step-title">Address</span>
         </div>
         <div className={`step ${currentStep === 2 ? "active" : ""}`}>
           <span className="step-number">2</span>
@@ -212,77 +229,34 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
       </div>
 
       {/* Display general errors */}
-      {(errors.checkout || errors.payment) && (
-        <div className="error-banner">{errors.checkout || errors.payment}</div>
+      {(errors.checkout || errors.payment || errors.general) && (
+        <div className="error-banner">
+          {errors.checkout || errors.payment || errors.general}
+        </div>
       )}
 
       <form className="checkout-form" onSubmit={handleSubmit}>
         {currentStep === 1 && (
           <div className="checkout-step-content">
-            <h3>Contact Information</h3>
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="email">Email Address*</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={errors.email ? "error" : ""}
-                  placeholder="Email Address"
-                />
-                {errors.email && (
-                  <span className="error-message">{errors.email}</span>
-                )}
+            <h3>Your Information</h3>
+            <div className="user-info-display">
+              <div className="info-item">
+                <label>Name:</label>
+                <span className="info-value">{userInfo.name}</span>
               </div>
-              <div className="form-group">
-                <label htmlFor="phone">Phone Number (Optional)</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Phone Number"
-                />
+              <div className="info-item">
+                <label>Email:</label>
+                <span className="info-value">{userInfo.email}</span>
               </div>
+              {userInfo.phone && (
+                <div className="info-item">
+                  <label>Phone:</label>
+                  <span className="info-value">{userInfo.phone}</span>
+                </div>
+              )}
             </div>
 
             <h3>Shipping Address</h3>
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="firstName">First Name*</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className={errors.firstName ? "error" : ""}
-                  placeholder="First Name"
-                />
-                {errors.firstName && (
-                  <span className="error-message">{errors.firstName}</span>
-                )}
-              </div>
-              <div className="form-group">
-                <label htmlFor="lastName">Last Name*</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className={errors.lastName ? "error" : ""}
-                  placeholder="Last Name"
-                />
-                {errors.lastName && (
-                  <span className="error-message">{errors.lastName}</span>
-                )}
-              </div>
-            </div>
-
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="city">City*</label>
@@ -293,7 +267,7 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
                   value={formData.city}
                   onChange={handleChange}
                   className={errors.city ? "error" : ""}
-                  placeholder="City"
+                  placeholder="Enter your city"
                 />
                 {errors.city && (
                   <span className="error-message">{errors.city}</span>
@@ -308,7 +282,7 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
                   value={formData.street}
                   onChange={handleChange}
                   className={errors.street ? "error" : ""}
-                  placeholder="Street"
+                  placeholder="Enter street name"
                 />
                 {errors.street && (
                   <span className="error-message">{errors.street}</span>
@@ -325,7 +299,7 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
                 value={formData.building}
                 onChange={handleChange}
                 className={errors.building ? "error" : ""}
-                placeholder="Building"
+                placeholder="Building number or name"
               />
               {errors.building && (
                 <span className="error-message">{errors.building}</span>
@@ -361,6 +335,13 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
         {currentStep === 2 && (
           <div className="checkout-step-content">
             <h3>Payment Method</h3>
+            <div className="payment-notice">
+              <p className="demo-notice">
+                🎭 <strong>Demo Mode:</strong> This is a simulated payment
+                system. No real charges will be made.
+              </p>
+            </div>
+
             <div className="payment-methods">
               <div
                 className={`payment-method ${
@@ -378,131 +359,49 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
                   checked={formData.paymentMethod === "creditCard"}
                   onChange={handleChange}
                 />
-                <label htmlFor="creditCard">Credit Card</label>
-                <div className="payment-icons">
-                  <span className="payment-icon">Visa</span>
-                  <span className="payment-icon">MasterCard</span>
-                  <span className="payment-icon">Amex</span>
+                <label htmlFor="creditCard"> Credit Card (Demo)</label>
+                <div className="payment-description">
+                  <small>Simulated credit card payment</small>
                 </div>
               </div>
+
               <div
                 className={`payment-method ${
-                  formData.paymentMethod === "paypal" ? "selected" : ""
+                  formData.paymentMethod === "cashOnDelivery" ? "selected" : ""
                 }`}
                 onClick={() =>
-                  setFormData({ ...formData, paymentMethod: "paypal" })
+                  setFormData({ ...formData, paymentMethod: "cashOnDelivery" })
                 }
               >
                 <input
                   type="radio"
-                  id="paypal"
+                  id="cashOnDelivery"
                   name="paymentMethod"
-                  value="paypal"
-                  checked={formData.paymentMethod === "paypal"}
+                  value="cashOnDelivery"
+                  checked={formData.paymentMethod === "cashOnDelivery"}
                   onChange={handleChange}
                 />
-                <label htmlFor="paypal">PayPal</label>
-                <div className="payment-icons">
-                  <span className="payment-icon">PayPal</span>
+                <label htmlFor="cashOnDelivery"> Cash on Delivery</label>
+                <div className="payment-description">
+                  <small>Pay when your order is delivered</small>
                 </div>
               </div>
             </div>
 
-            {formData.paymentMethod === "creditCard" && (
-              <div className="credit-card-form">
-                <div className="form-group">
-                  <label htmlFor="cardName">Cardholder Name*</label>
-                  <input
-                    type="text"
-                    id="cardName"
-                    name="cardName"
-                    value={formData.cardName}
-                    onChange={handleChange}
-                    className={errors.cardName ? "error" : ""}
-                    placeholder="John Doe"
-                  />
-                  {errors.cardName && (
-                    <span className="error-message">{errors.cardName}</span>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="cardNumber">Card Number*</label>
-                  <input
-                    type="text"
-                    id="cardNumber"
-                    name="cardNumber"
-                    value={formData.cardNumber}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        cardNumber: formatCardNumber(e.target.value),
-                      })
-                    }
-                    className={errors.cardNumber ? "error" : ""}
-                    placeholder="1234 5678 9012 3456"
-                    maxLength="19"
-                  />
-                  {errors.cardNumber && (
-                    <span className="error-message">{errors.cardNumber}</span>
-                  )}
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="expiryDate">Expiry Date*</label>
-                    <input
-                      type="text"
-                      id="expiryDate"
-                      name="expiryDate"
-                      value={formData.expiryDate}
-                      onChange={handleChange}
-                      className={errors.expiryDate ? "error" : ""}
-                      placeholder="MM/YY"
-                      maxLength="5"
-                    />
-                    {errors.expiryDate && (
-                      <span className="error-message">{errors.expiryDate}</span>
-                    )}
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="cvv">CVV*</label>
-                    <input
-                      type="text"
-                      id="cvv"
-                      name="cvv"
-                      value={formData.cvv}
-                      onChange={handleChange}
-                      className={errors.cvv ? "error" : ""}
-                      placeholder="123"
-                      maxLength="4"
-                    />
-                    {errors.cvv && (
-                      <span className="error-message">{errors.cvv}</span>
-                    )}
-                  </div>
-                </div>
+            <div className="order-summary-preview">
+              <h4>Order Summary</h4>
+              <div className="summary-line">
+                <span>Subtotal:</span>
+                <span>${cartTotal.toFixed(2)}</span>
               </div>
-            )}
-
-            <div className="form-group checkbox-group">
-              <input
-                type="checkbox"
-                id="agreeToTerms"
-                name="agreeToTerms"
-                checked={formData.agreeToTerms}
-                onChange={handleChange}
-                className={errors.agreeToTerms ? "error" : ""}
-              />
-              <label htmlFor="agreeToTerms">
-                I agree to the{" "}
-                <Link to="/terms" target="_blank" rel="noopener noreferrer">
-                  Terms & Conditions
-                </Link>
-              </label>
-              {errors.agreeToTerms && (
-                <span className="error-message">{errors.agreeToTerms}</span>
-              )}
+              <div className="summary-line">
+                <span>Shipping:</span>
+                <span>Free</span>
+              </div>
+              <div className="summary-line total">
+                <span>Total:</span>
+                <span>${cartTotal.toFixed(2)}</span>
+              </div>
             </div>
 
             <div className="form-buttons">
@@ -511,14 +410,21 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
                 className="secondary-button"
                 onClick={() => setCurrentStep(1)}
               >
-                Back to Information
+                Back to Address
               </button>
               <button
                 type="submit"
                 className="primary-button"
                 disabled={isProcessing}
               >
-                {isProcessing ? "Processing..." : "Complete Order"}
+                {isProcessing ? (
+                  <>
+                    <span className="processing-spinner"></span>
+                    Processing Payment...
+                  </>
+                ) : (
+                  `Complete Order - $${cartTotal.toFixed(2)}`
+                )}
               </button>
             </div>
           </div>

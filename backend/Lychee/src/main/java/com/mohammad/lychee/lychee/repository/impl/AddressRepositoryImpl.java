@@ -52,24 +52,14 @@ public class AddressRepositoryImpl implements AddressRepository {
         }
     }
 
-    @Override
-    public List<Address> findByUserId(Integer userId) {
-        String sql = "SELECT a.* FROM Address a " +
-                "JOIN User u ON u.default_address_id = a.Address_ID " +
-                "WHERE u.User_ID = ?";
-        return jdbcTemplate.query(sql, addressRowMapper, userId);
-    }
 
     @Override
     public Address save(Address address) {
-        return update(address);
-        /*
-        if (address.getAddressId() == null) {
+        if (address.getAddressId() == 0) {
             return insert(address);
         } else {
             return update(address);
         }
-        */
     }
 
     private Address insert(Address address) {

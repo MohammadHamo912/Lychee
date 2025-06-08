@@ -4,12 +4,12 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import CheckoutForm from "../components/CheckoutForm";
 import { getCartItems } from "../api/checkout";
-import { useUser } from "../context/UserContext"; // Import your UserContext
+import { useUser } from "../context/UserContext";
 import "../PagesCss/CheckoutPage.css";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
-  const { user } = useUser(); // Get user from context
+  const { user } = useUser();
   const [cartItems, setCartItems] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);

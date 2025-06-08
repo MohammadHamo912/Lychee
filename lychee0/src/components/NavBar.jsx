@@ -1,4 +1,3 @@
-// ✅ NavBar.jsx (fixed version)
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../ComponentsCss/NavBar.css";
@@ -7,7 +6,7 @@ import { useUser } from "../context/UserContext";
 const NavBar = () => {
   const [opacity, setOpacity] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, isLoggedIn, logout } = useUser();
+  const { user, isLoggedIn, logout, cartCount, isLoadingCart } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,18 +22,17 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     try {
-      // Use the logout function from context instead of manual localStorage removal
       logout();
-      // Redirect to login page
       window.location.href = "/login";
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
 
-  // Debug: Add this to see what's happening (remove in production)
+  // Debug logs
   console.log("NavBar - User:", user);
   console.log("NavBar - isLoggedIn:", isLoggedIn);
+  console.log("NavBar - cartCount:", cartCount);
 
   return (
     <header className="navbar" style={{ opacity }}>
@@ -49,7 +47,10 @@ const NavBar = () => {
           <Link to="/productlistingpage">Products</Link>
           <Link to="/categories">Categories</Link>
           <Link to="/shoppingcartpage" className="cart-link">
-            Cart <span className="cart-badge">{user ? "2" : "0"}</span>
+            Cart
+            <span className="cart-badge">
+              {isLoadingCart ? "..." : cartCount}
+            </span>
           </Link>
         </nav>
 
@@ -89,7 +90,9 @@ const NavBar = () => {
           <Link to="/allstorespage">Shops</Link>
           <Link to="/productlistingpage">Products</Link>
           <Link to="/categories">Categories</Link>
-          <Link to="/shoppingcartpage">Cart</Link>
+          <Link to="/shoppingcartpage">
+            Cart {cartCount > 0 && `(${cartCount})`}
+          </Link>
           {isLoggedIn ? (
             <>
               <Link to="/dashboard">Profile</Link>

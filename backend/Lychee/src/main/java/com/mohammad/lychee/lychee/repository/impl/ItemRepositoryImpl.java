@@ -234,4 +234,17 @@ public class ItemRepositoryImpl implements ItemRepository {
             return List.of(); // fallback
         }
     }
+    @Override
+    public boolean updateStock(Integer itemId, Integer quantity) {
+        String sql = "UPDATE Item SET stockQuantity = stockQuantity - ? WHERE Item_ID = ? AND stockQuantity >= ?";
+
+        try {
+            int rowsAffected = jdbcTemplate.update(sql, quantity, itemId, quantity);
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            System.err.println("Error updating stock: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

@@ -92,18 +92,14 @@ public class CheckoutDTO {
     }
 
     public static class PaymentDataDTO {
-        private String paymentMethod;
         private String cardName;
         private String cardNumber;
         private String expiryDate;
         private String cvv;
+        private String transactionId; // Added for dummy payment system
 
         // Constructors
         public PaymentDataDTO() {}
-
-        // Getters and Setters
-        public String getPaymentMethod() { return paymentMethod; }
-        public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 
         public String getCardName() { return cardName; }
         public void setCardName(String cardName) { this.cardName = cardName; }
@@ -116,6 +112,10 @@ public class CheckoutDTO {
 
         public String getCvv() { return cvv; }
         public void setCvv(String cvv) { this.cvv = cvv; }
+
+        // Added for dummy payment system
+        public String getTransactionId() { return transactionId; }
+        public void setTransactionId(String transactionId) { this.transactionId = transactionId; }
     }
 
     public static class ContactInfoDTO {
