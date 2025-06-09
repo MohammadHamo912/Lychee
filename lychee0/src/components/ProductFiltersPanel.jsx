@@ -243,7 +243,7 @@ const ProductFiltersPanel = ({ onApplyFilters, brands, activeFilters }) => {
         />
       </div>
 
-      {/* Sort By Filter */}
+      {/* Sort By Filter - Updated options */}
       <div className="filter-group">
         <label>Sort By</label>
         <select
@@ -254,10 +254,8 @@ const ProductFiltersPanel = ({ onApplyFilters, brands, activeFilters }) => {
           <option value="none">Default</option>
           <option value="nameAZ">Name (A-Z)</option>
           <option value="nameZA">Name (Z-A)</option>
-          <option value="priceLowHigh">Price (Low to High)</option>
-          <option value="priceHighLow">Price (High to Low)</option>
-          <option value="mostReviewed">Most Reviewed</option>
-          <option value="leastReviewed">Least Reviewed</option>
+          <option value="highestRated">Highest Rated</option>
+          <option value="lowestRated">Lowest Rated</option>
         </select>
       </div>
 

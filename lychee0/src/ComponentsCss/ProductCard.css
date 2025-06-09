@@ -44,3 +44,69 @@
     font-size: 0.8rem;
   }
 }
+
+.product-subtitle-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.product-brand {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #8b3c5d;
+}
+
+.product-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.product-rating.loading {
+  font-size: 0.8rem;
+  color: #999;
+  font-style: italic;
+}
+
+.rating-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #f5b301;
+}
+
+.review-count {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.no-rating {
+  color: #999;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.star {
+  font-size: 1rem;
+  color: #d1d1d1;
+  transition: color 0.2s ease;
+}
+
+.star.filled {
+  color: #f5b301;
+}
+
+.star.half-filled {
+  background: linear-gradient(90deg, #f5b301 50%, #d1d1d1 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

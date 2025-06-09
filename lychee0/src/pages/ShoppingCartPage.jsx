@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import ShoppingCartAPI from "../api/shoppingcartitems";
 import { getEnrichedItemsByIds } from "../api/items"; // Import the new enriched API
 import { useUser } from "../context/UserContext";
+import { validateDiscountCode } from "../api/discounts";
 
 const ShoppingCartPage = () => {
   const { user, isLoggedIn } = useUser();
@@ -156,11 +157,21 @@ const ShoppingCartPage = () => {
     }, 0);
   };
 
-  // Calculate total
+  // Calculate total - FIXED with better error handling
   const calculateTotal = () => {
     const subtotal = calculateSubtotal();
     const shipping = subtotal > 100 ? 0 : 7.99;
-    return subtotal + shipping + -discount;
+    const discountAmount = isNaN(discount) ? 0 : discount;
+
+    const total = subtotal + shipping - discountAmount;
+    console.log("Total calculation:", {
+      subtotal,
+      shipping,
+      discountAmount,
+      total,
+    }); // Debug log
+
+    return isNaN(total) ? 0 : total;
   };
 
   // Update quantity
@@ -238,27 +249,81 @@ const ShoppingCartPage = () => {
     }
   };
 
-  // Apply promo code
-  const applyPromo = (e) => {
+  // Apply promo code - FIXED with single use validation
+  const applyPromo = async (e) => {
     e.preventDefault();
 
-    if (promoCode.toLowerCase() === "welcome20") {
-      const subtotal = calculateSubtotal();
-      setDiscount(subtotal * 0.2); // 20% off
-      setPromoApplied({ code: promoCode, message: "20% discount applied!" });
-    } else if (promoCode.toLowerCase() === "free5") {
-      setDiscount(5);
-      setPromoApplied({ code: promoCode, message: "$5 discount applied!" });
-    } else {
+    // Check if a promo is already applied
+    if (promoApplied && !promoApplied.error) {
       setPromoApplied({
         code: promoCode,
-        message: "Invalid promo code",
+        message: "A discount is already applied. Please remove it first.",
+        error: true,
+      });
+      setTimeout(() => setPromoApplied(null), 3000);
+      setPromoCode("");
+      return;
+    }
+
+    try {
+      // Validate the promo code using the API
+      const response = await validateDiscountCode(promoCode);
+      console.log("Promo validation response:", response); // Debug log
+
+      if (response.valid && response.discount) {
+        const subtotal = calculateSubtotal();
+        const discountData = response.discount;
+
+        console.log("Subtotal:", subtotal); // Debug log
+        console.log("Discount data:", discountData); // Debug log
+
+        // Use discountPercentage instead of value (based on your API response)
+        const discountValue = parseFloat(discountData.discountPercentage);
+        if (isNaN(discountValue) || discountValue <= 0) {
+          throw new Error("Invalid discount value");
+        }
+
+        // Apply percentage discount
+        const discountAmount = subtotal * (discountValue / 100);
+        console.log("Calculated discount amount:", discountAmount); // Debug log
+
+        // Ensure discount amount is valid
+        if (isNaN(discountAmount) || discountAmount < 0) {
+          throw new Error("Invalid discount calculation");
+        }
+
+        setDiscount(discountAmount);
+        setPromoApplied({
+          code: promoCode,
+          message:
+            response.message ||
+            `${discountData.code} applied successfully! ${discountValue}% off`,
+        });
+      } else {
+        setPromoApplied({
+          code: promoCode,
+          message: response.message || "Invalid promo code",
+          error: true,
+        });
+        setTimeout(() => setPromoApplied(null), 3000);
+      }
+    } catch (error) {
+      console.error("Error validating promo code:", error);
+      setPromoApplied({
+        code: promoCode,
+        message: "Error validating promo code. Please try again.",
         error: true,
       });
       setTimeout(() => setPromoApplied(null), 3000);
     }
 
     setPromoCode("");
+  };
+
+  // Function to remove applied promo code
+  const removePromo = () => {
+    setDiscount(0);
+    setPromoApplied(null);
   };
 
   // Error display component
@@ -559,28 +624,51 @@ const ShoppingCartPage = () => {
               </div>
 
               <div className="promo-section">
-                <form onSubmit={applyPromo}>
-                  <input
-                    type="text"
-                    placeholder="Enter promo code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    className="promo-input"
-                  />
-                  <button
-                    type="submit"
-                    className="promo-btn"
-                    disabled={!promoCode.trim()}
-                  >
-                    Apply
-                  </button>
-                </form>
-                {promoApplied && (
-                  <div
-                    className={`promo-message ${
-                      promoApplied.error ? "error" : "success"
-                    }`}
-                  >
+                {/* Show promo input only if no promo is applied */}
+                {!promoApplied || promoApplied.error ? (
+                  <form onSubmit={applyPromo}>
+                    <input
+                      type="text"
+                      placeholder="Enter promo code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="promo-input"
+                    />
+                    <button
+                      type="submit"
+                      className="promo-btn"
+                      disabled={!promoCode.trim()}
+                    >
+                      Apply
+                    </button>
+                  </form>
+                ) : (
+                  /* Show applied promo with remove option */
+                  <div className="applied-promo">
+                    <span className="promo-success">
+                      ✓ {promoApplied.message}
+                    </span>
+                    <button
+                      onClick={removePromo}
+                      className="remove-promo-btn"
+                      style={{
+                        background: "transparent",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        padding: "4px 8px",
+                        fontSize: "12px",
+                        cursor: "pointer",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+
+                {/* Show error messages */}
+                {promoApplied && promoApplied.error && (
+                  <div className="promo-message error">
                     {promoApplied.message}
                   </div>
                 )}
@@ -620,8 +708,16 @@ const ShoppingCartPage = () => {
                     <span>${calculateTotal().toFixed(2)}</span>
                   </div>
                 </div>
-
-                <Link to="/checkout" className="checkout-btn">
+                <Link
+                  to="/checkout"
+                  state={{
+                    discount: discount,
+                    promoApplied: promoApplied,
+                    subtotal: calculateSubtotal(),
+                    shipping: calculateSubtotal() > 100 ? 0 : 7.99,
+                  }}
+                  className="checkout-btn"
+                >
                   <span>Proceed to Checkout</span>
                   <svg viewBox="0 0 24 24" width="18" height="18">
                     <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReusableCard from "./ReusableCard";
-import { getAddressById } from "../api/addresses"; // Import your address API
+import { getAddressById } from "../api/addresses";
+import { getReviews } from "../api/reviews";
 import "./../ComponentsCss/StoreCard.css";
 
 const StoreCard = ({ store }) => {
   const [address, setAddress] = useState(null);
   const [locationLoading, setLocationLoading] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
 
   // Get the store ID from any of the possible property names
   const storeId = store.storeId || store.id || store.Store_ID;
@@ -34,6 +37,64 @@ const StoreCard = ({ store }) => {
     fetchAddress();
   }, [addressId, storeId]);
 
+  // Fetch reviews for this store
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setReviewsLoading(true);
+        // Using 'shop' as the review type since stores are reviewed as shops
+        const storeReviews = await getReviews("shop", storeId);
+        setReviews(storeReviews || []);
+      } catch (error) {
+        console.error(`Failed to fetch reviews for store ${storeId}:`, error);
+        setReviews([]);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+
+    if (storeId) {
+      fetchReviews();
+    }
+  }, [storeId]);
+
+  // Calculate average rating from reviews
+  const calculateAverageRating = () => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1);
+  };
+
+  // Render star rating
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        stars.push(
+          <span key={i} className="star filled">
+            ★
+          </span>
+        );
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        stars.push(
+          <span key={i} className="star half-filled">
+            ★
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star">
+            ☆
+          </span>
+        );
+      }
+    }
+    return stars;
+  };
+
   // Format address for display
   const formatAddress = (addressData) => {
     if (!addressData) return "Unknown location";
@@ -53,16 +114,37 @@ const StoreCard = ({ store }) => {
     return store.location || "Unknown location";
   };
 
-  // Create store rating display with stars
-  const ratingDisplay = (
-    <div>
-      <span className="stars">
-        {"★".repeat(Math.floor(store.rating || 0))}
-        {(store.rating || 0) % 1 > 0 ? "☆" : ""}
-      </span>
-      <span>({store.reviewCount || 0} reviews)</span>
-    </div>
-  );
+  // Create store rating display with dynamic stars from reviews
+  const getRatingDisplay = () => {
+    if (reviewsLoading) {
+      return (
+        <div className="store-rating loading">
+          <span className="rating-loading">Loading rating...</span>
+        </div>
+      );
+    }
+
+    const avgRating = calculateAverageRating();
+    const reviewCount = reviews.length;
+
+    return (
+      <div className="store-rating">
+        <div className="stars-container">
+          <span className="stars">{renderStars(parseFloat(avgRating))}</span>
+          <span className="rating-text">
+            {avgRating > 0 ? (
+              <>
+                <span className="rating-value">{avgRating}</span>
+                <span className="review-count">({reviewCount} reviews)</span>
+              </>
+            ) : (
+              <span className="no-rating">No reviews yet</span>
+            )}
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   // Truncate description if too long
   const truncatedDescription =
@@ -71,7 +153,7 @@ const StoreCard = ({ store }) => {
       : store.description || "No description available";
 
   // Create category tags
-  const categories = Array.isArray(store.categories) ? store.categories : []; // Default to empty array
+  const categories = Array.isArray(store.categories) ? store.categories : [];
   const categoriesDisplay = (
     <div className="store-categories">
       {categories.slice(0, 3).map((category, index) => (
@@ -114,7 +196,7 @@ const StoreCard = ({ store }) => {
       image={store.logo_url}
       imageAlt={`${store.name || "Store"} logo`}
       title={<>{store.name || "Unnamed Store"}</>}
-      subtitle={ratingDisplay}
+      subtitle={getRatingDisplay()}
       description={descriptionWithCategories}
       footerLeft={footerLeft}
       footerRight={footerRight}

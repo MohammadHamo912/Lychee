@@ -156,4 +156,18 @@ public class DiscountRepositoryImpl implements DiscountRepository {
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, code);
         return count != null && count > 0;
     }
+
+    @Override
+    public List<Discount> findTop3ByOrderByDiscountPercentageDesc() {
+        String sql = """
+            SELECT Discount_ID, discountPercentage, code, start_date, end_date, active 
+            FROM discount 
+            WHERE active = true 
+            AND (start_date IS NULL OR start_date <= CURDATE())
+            AND (end_date IS NULL OR end_date >= CURDATE())
+            ORDER BY discountPercentage DESC 
+            LIMIT 3
+        """;
+        return jdbcTemplate.query(sql, discountRowMapper);
+    }
 }

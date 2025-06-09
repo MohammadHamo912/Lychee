@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import ReusableCard from "./../components/ReusableCard";
 import { getCategoriesByProductId } from "../api/productcategories";
 import { getCategoryById } from "../api/categories";
+import { getReviews } from "../api/reviews";
 import "./../ComponentsCss/ProductCard.css";
 
 const ProductCard = ({ product, onAction }) => {
@@ -12,24 +13,23 @@ const ProductCard = ({ product, onAction }) => {
   const { productId, name, logo_url, description, brand } = product;
 
   const [categories, setCategories] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
 
   // Fetch categories for this product
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        // Get product-category relationships
         const productCategories = await getCategoriesByProductId(productId);
 
         if (productCategories && productCategories.length > 0) {
-          // Fetch category details for each relationship
           const categoryPromises = productCategories.map((pc) =>
             getCategoryById(pc.categoryId)
           );
 
           const categoryDetails = await Promise.all(categoryPromises);
-          // Filter out any null results and set categories
           setCategories(categoryDetails.filter((cat) => cat !== null));
         }
       } catch (error) {
@@ -48,18 +48,68 @@ const ProductCard = ({ product, onAction }) => {
     }
   }, [productId]);
 
-  // Convert Google Drive sharing URL to direct image URL
-  const getDirectImageUrl = (driveUrl) => {
-    console.log("Original URL:", driveUrl); // Debug log
-    if (driveUrl && driveUrl.includes("drive.google.com")) {
-      const fileIdMatch = driveUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
-      if (fileIdMatch) {
-        const directUrl = `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
-        console.log("Converted URL:", directUrl); // Debug log
-        return directUrl;
+  // Fetch reviews for this product
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setReviewsLoading(true);
+        const productReviews = await getReviews("product", productId);
+        setReviews(productReviews || []);
+      } catch (error) {
+        console.error(
+          `Failed to fetch reviews for product ${productId}:`,
+          error
+        );
+        setReviews([]);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+
+    if (productId) {
+      fetchReviews();
+    }
+  }, [productId]);
+
+  // Calculate average rating
+  const calculateAverageRating = () => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1);
+  };
+
+  // Render star rating
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        stars.push(
+          <span key={i} className="star filled">
+            ★
+          </span>
+        );
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        stars.push(
+          <span key={i} className="star half-filled">
+            ★
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star">
+            ☆
+          </span>
+        );
       }
     }
-    console.log("Using original URL:", driveUrl); // Debug log
+    return stars;
+  };
+
+  const getDirectImageUrl = (driveUrl) => {
+    console.log("Original URL:", driveUrl);
     return driveUrl;
   };
 
@@ -85,13 +135,11 @@ const ProductCard = ({ product, onAction }) => {
       );
     }
 
-    // Show first category, or multiple categories
     if (categories.length === 1) {
       return (
         <span className="product-card-category">{categories[0].name}</span>
       );
     } else {
-      // Show first category + count of others
       return (
         <span className="product-card-category multiple">
           {categories[0].name}
@@ -103,10 +151,37 @@ const ProductCard = ({ product, onAction }) => {
     }
   };
 
-  // subtitle contains brand
+  // Create rating component
+  const RatingComponent = () => {
+    if (reviewsLoading) {
+      return <div className="product-rating loading">Loading rating...</div>;
+    }
+
+    const avgRating = calculateAverageRating();
+    const reviewCount = reviews.length;
+
+    return (
+      <div className="product-rating">
+        <div className="card-rating">{renderStars(parseFloat(avgRating))}</div>
+        <div className="rating-text">
+          {avgRating > 0 ? (
+            <>
+              <span className="rating-value">{avgRating}</span>
+              <span className="review-count">({reviewCount} reviews)</span>
+            </>
+          ) : (
+            <span className="no-rating">No reviews yet</span>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // subtitle contains brand and rating
   const subtitleContent = (
     <div className="product-subtitle-container">
       {brand && <span className="product-brand">Brand: {brand}</span>}
+      <RatingComponent />
     </div>
   );
 

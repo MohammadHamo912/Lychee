@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import CheckoutForm from "../components/CheckoutForm";
@@ -9,14 +9,25 @@ import "../PagesCss/CheckoutPage.css";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useUser();
   const [cartItems, setCartItems] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Get discount data from navigation state
+  const discountData = location.state || {};
+  const {
+    discount = 0,
+    promoApplied = null,
+    subtotal = 0,
+    shipping = 0,
+  } = discountData;
+
   useEffect(() => {
     console.log("CheckoutPage - Current user from context:", user);
+    console.log("CheckoutPage - Discount data from navigation:", discountData);
 
     // Check if user is logged in and get the correct user ID field
     const userId = user?.userId || user?.User_ID;
@@ -49,10 +60,21 @@ const CheckoutPage = () => {
 
       setCartItems(items);
 
-      // Calculate total by summing cartItemTotal for each item
-      const total = items.reduce((sum, item) => {
-        return sum + (item.cartItemTotal || 0);
-      }, 0);
+      // Calculate total
+      let calculatedSubtotal;
+      if (subtotal > 0) {
+        // Use subtotal from cart page if available
+        calculatedSubtotal = subtotal;
+      } else {
+        // Fallback: calculate from items
+        calculatedSubtotal = items.reduce((sum, item) => {
+          return sum + (item.cartItemTotal || 0);
+        }, 0);
+      }
+
+      const calculatedShipping =
+        shipping || (calculatedSubtotal > 100 ? 0 : 7.99);
+      const total = calculatedSubtotal + calculatedShipping - discount;
 
       setCartTotal(total);
     } catch (err) {
@@ -67,6 +89,16 @@ const CheckoutPage = () => {
     console.log("CheckoutPage - Order completed:", orderId);
     navigate(`/order-success/${orderId}`);
   };
+
+  // Calculate display values
+  const displaySubtotal =
+    subtotal > 0
+      ? subtotal
+      : cartItems.reduce((sum, item) => {
+          return sum + (item.cartItemTotal || 0);
+        }, 0);
+
+  const displayShipping = shipping || (displaySubtotal > 100 ? 0 : 7.99);
 
   if (isLoading) {
     return (
@@ -120,6 +152,10 @@ const CheckoutPage = () => {
             cartTotal={cartTotal}
             userId={user?.userId || user?.User_ID}
             onOrderComplete={handleOrderComplete}
+            discount={discount}
+            promoApplied={promoApplied}
+            subtotal={subtotal}
+            shipping={shipping}
           />
         </div>
 
@@ -167,12 +203,25 @@ const CheckoutPage = () => {
             <div className="summary-totals">
               <div className="summary-row">
                 <span>Subtotal ({cartItems.length} items)</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>${displaySubtotal.toFixed(2)}</span>
               </div>
+
               <div className="summary-row">
                 <span>Shipping</span>
-                <span>Free</span>
+                <span>
+                  {displayShipping === 0
+                    ? "Free"
+                    : `$${displayShipping.toFixed(2)}`}
+                </span>
               </div>
+
+              {/* Show discount if applied */}
+              {discount > 0 && promoApplied && (
+                <div className="summary-row discount">
+                  <span>Discount ({promoApplied.code})</span>
+                  <span>-${discount.toFixed(2)}</span>
+                </div>
+              )}
 
               <div className="summary-row total">
                 <span>Total</span>

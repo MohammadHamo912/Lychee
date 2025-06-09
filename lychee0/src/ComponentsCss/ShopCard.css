@@ -124,3 +124,83 @@
     height: 140px;
   }
 }
+.shop-rating-section {
+  margin: 10px 0;
+}
+
+.shop-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.shop-rating.loading {
+  font-size: 0.8rem;
+  color: #999;
+  font-style: italic;
+}
+
+.shop-rating .card-rating {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  font-size: 1rem;
+}
+
+.shop-rating .rating-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+}
+
+.shop-rating .rating-value {
+  font-weight: 600;
+  color: #f5b301;
+}
+
+.shop-rating .review-count {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.shop-rating .no-rating {
+  color: #999;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-rating,
+  .shop-rating {
+    gap: 2px;
+  }
+
+  .rating-text {
+    font-size: 0.8rem;
+  }
+
+  .star {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-subtitle-container {
+    gap: 6px;
+  }
+
+  .product-brand {
+    font-size: 0.85rem;
+  }
+
+  .rating-text {
+    font-size: 0.75rem;
+  }
+
+  .star {
+    font-size: 0.85rem;
+  }
+}

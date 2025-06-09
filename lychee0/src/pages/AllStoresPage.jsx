@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SearchBar from "../components/SearchBar";
-import StoreFiltersPanel from "../components/StoreFiltersPanel"; // Updated component
+import StoreFiltersPanel from "../components/StoreFiltersPanel";
 import Footer from "../components/Footer";
 import StoreGrid from "../components/StoreGrid";
 import { getAllStores } from "../api/stores";
+import { getReviews } from "../api/reviews";
 import "../PagesCss/AllStoresPage.css";
 
 const AllStoresPage = () => {
@@ -16,12 +17,14 @@ const AllStoresPage = () => {
   const [filteredStores, setFilteredStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState(initialQuery);
   const [activeFilters, setActiveFilters] = useState({
-    minRating: 0,
     location: "",
+    minRating: 0,
     sortOption: "none",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [storeRatings, setStoreRatings] = useState({}); // Cache for store ratings
+  const [storeReviewCounts, setStoreReviewCounts] = useState({}); // Cache for review counts
 
   // Fetch stores from API on component mount
   useEffect(() => {
@@ -49,6 +52,43 @@ const AllStoresPage = () => {
     }
   };
 
+  // Function to calculate average rating and review count for a store
+  const calculateStoreRatingAndCount = async (storeId) => {
+    try {
+      const reviews = await getReviews("shop", storeId);
+      if (!reviews || reviews.length === 0) {
+        return { rating: 0, reviewCount: 0 };
+      }
+      const totalRating = reviews.reduce(
+        (sum, review) => sum + review.rating,
+        0
+      );
+      const avgRating = totalRating / reviews.length;
+      return { rating: avgRating, reviewCount: reviews.length };
+    } catch (error) {
+      console.error(`Error fetching reviews for store ${storeId}:`, error);
+      return { rating: 0, reviewCount: 0 };
+    }
+  };
+
+  // Function to get or calculate rating and review count for a store (with caching)
+  const getStoreRatingAndCount = async (storeId) => {
+    if (
+      storeRatings[storeId] !== undefined &&
+      storeReviewCounts[storeId] !== undefined
+    ) {
+      return {
+        rating: storeRatings[storeId],
+        reviewCount: storeReviewCounts[storeId],
+      };
+    }
+
+    const { rating, reviewCount } = await calculateStoreRatingAndCount(storeId);
+    setStoreRatings((prev) => ({ ...prev, [storeId]: rating }));
+    setStoreReviewCounts((prev) => ({ ...prev, [storeId]: reviewCount }));
+    return { rating, reviewCount };
+  };
+
   const handleRetry = () => {
     fetchStores();
   };
@@ -63,21 +103,15 @@ const AllStoresPage = () => {
     applyFiltersAndSearch(searchTerm, filters);
   };
 
-  const applyFiltersAndSearch = (search = "", filters = {}) => {
-    const { minRating, location, sortOption } = filters;
+  const applyFiltersAndSearch = async (search = "", filters = {}) => {
+    const { location, minRating, sortOption } = filters;
 
     let result = [...stores];
 
-    // Minimum rating filtering
-    if (minRating > 0) {
-      result = result.filter((store) => (store.rating || 0) >= minRating);
-    }
-
-    // Enhanced location filtering with partial matching
+    // Location filtering with enhanced matching
     if (location && location.trim()) {
       const lowerLocation = location.toLowerCase();
       result = result.filter((store) => {
-        // Check if any part of the location input matches any part of store location data
         const searchTerms = lowerLocation
           .split(/[,\s-]+/)
           .filter((term) => term.length > 0);
@@ -86,6 +120,7 @@ const AllStoresPage = () => {
           store.city || "",
           store.country || "",
           store.address || "",
+          store.location || "",
           `${store.city || ""}, ${store.country || ""}`
             .replace(", ,", ",")
             .replace(/^,|,$/, ""),
@@ -93,15 +128,30 @@ const AllStoresPage = () => {
           .join(" ")
           .toLowerCase();
 
-        // Check if ANY search term is found in ANY part of the store location
         return searchTerms.some(
           (term) =>
             storeLocationText.includes(term) ||
             (store.city && store.city.toLowerCase().includes(term)) ||
             (store.country && store.country.toLowerCase().includes(term)) ||
-            (store.address && store.address.toLowerCase().includes(term))
+            (store.address && store.address.toLowerCase().includes(term)) ||
+            (store.location && store.location.toLowerCase().includes(term))
         );
       });
+    }
+
+    // Minimum rating filtering - need to get actual ratings from reviews
+    if (minRating > 0) {
+      const storesWithRatings = await Promise.all(
+        result.map(async (store) => {
+          const storeId = store.storeId || store.id || store.Store_ID;
+          const { rating } = await getStoreRatingAndCount(storeId);
+          return { store, rating };
+        })
+      );
+
+      result = storesWithRatings
+        .filter(({ rating }) => rating >= minRating)
+        .map(({ store }) => store);
     }
 
     // Search filtering
@@ -109,8 +159,8 @@ const AllStoresPage = () => {
       const lowerSearch = search.toLowerCase();
       result = result.filter(
         (store) =>
-          store.name.toLowerCase().includes(lowerSearch) ||
-          store.description.toLowerCase().includes(lowerSearch) ||
+          store.name?.toLowerCase().includes(lowerSearch) ||
+          store.description?.toLowerCase().includes(lowerSearch) ||
           store.categories?.some((cat) =>
             cat.toLowerCase().includes(lowerSearch)
           )
@@ -121,25 +171,56 @@ const AllStoresPage = () => {
     switch (sortOption) {
       case "nameAZ":
         result.sort((a, b) =>
-          a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+          (a.name || "")
+            .toLowerCase()
+            .localeCompare((b.name || "").toLowerCase())
         );
         break;
       case "nameZA":
         result.sort((a, b) =>
-          b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+          (b.name || "")
+            .toLowerCase()
+            .localeCompare((a.name || "").toLowerCase())
         );
         break;
       case "highestRated":
-        result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        // For rating sorting, we need to fetch ratings and sort accordingly
+        const ratingsForSorting = await Promise.all(
+          result.map(async (store) => {
+            const storeId = store.storeId || store.id || store.Store_ID;
+            const { rating } = await getStoreRatingAndCount(storeId);
+            return { store, rating };
+          })
+        );
+        ratingsForSorting.sort((a, b) => b.rating - a.rating);
+        result = ratingsForSorting.map((item) => item.store);
         break;
       case "mostReviewed":
-        result.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+        const reviewCountsForSortingHigh = await Promise.all(
+          result.map(async (store) => {
+            const storeId = store.storeId || store.id || store.Store_ID;
+            const { reviewCount } = await getStoreRatingAndCount(storeId);
+            return { store, reviewCount };
+          })
+        );
+        reviewCountsForSortingHigh.sort(
+          (a, b) => b.reviewCount - a.reviewCount
+        );
+        result = reviewCountsForSortingHigh.map((item) => item.store);
         break;
       case "leastReviewed":
-        result.sort((a, b) => (a.reviewCount || 0) - (b.reviewCount || 0));
+        const reviewCountsForSortingLow = await Promise.all(
+          result.map(async (store) => {
+            const storeId = store.storeId || store.id || store.Store_ID;
+            const { reviewCount } = await getStoreRatingAndCount(storeId);
+            return { store, reviewCount };
+          })
+        );
+        reviewCountsForSortingLow.sort((a, b) => a.reviewCount - b.reviewCount);
+        result = reviewCountsForSortingLow.map((item) => item.store);
         break;
       default:
-        // Keep original order or sort by ID/creation date
+        // Keep original order
         break;
     }
 
@@ -150,8 +231,8 @@ const AllStoresPage = () => {
     setSearchTerm("");
     // Reset filters completely
     const resetFilters = {
-      minRating: 0,
       location: "",
+      minRating: 0,
       sortOption: "none",
     };
     setActiveFilters(resetFilters);
@@ -194,7 +275,7 @@ const AllStoresPage = () => {
           </h2>
           <StoreFiltersPanel
             onApplyFilters={handleApplyFilters}
-            stores={stores} // Pass stores for location suggestions
+            activeFilters={activeFilters}
           />
         </div>
 

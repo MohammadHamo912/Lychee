@@ -7,6 +7,11 @@ export const getAllDiscounts = async () => {
   return res.data;
 };
 
+export const getTopDiscountsForCarousel = async () => {
+  const res = await axios.get(`${API_URL}/carousel`);
+  return res.data;
+};
+
 export const createDiscount = async (discount) => {
   await axios.post(API_URL, discount);
 };
@@ -17,4 +22,8 @@ export const toggleDiscount = async (id) => {
 
 export const deleteDiscount = async (id) => {
   await axios.delete(`${API_URL}/${id}`);
+};
+export const validateDiscountCode = async (code) => {
+  const res = await axios.get(`${API_URL}/validate/${code}`);
+  return res.data;
 };

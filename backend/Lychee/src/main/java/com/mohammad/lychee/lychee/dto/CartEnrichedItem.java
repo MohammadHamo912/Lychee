@@ -2,10 +2,7 @@ package com.mohammad.lychee.lychee.dto;
 
 import java.math.BigDecimal;
 
-/**
- * Cart-specific extension of EnrichedItem that includes cart quantity
- * This keeps the original EnrichedItem unchanged for backward compatibility
- */
+
 public class CartEnrichedItem extends EnrichedItem {
     private Integer cartQuantity;
 

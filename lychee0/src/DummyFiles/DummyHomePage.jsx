@@ -7,37 +7,9 @@ import HeroSection from "./../components/HeroSection";
 import StoresGrid from "../components/StoreGrid";
 import ItemGrid from "../components/ItemGrid";
 import { getAllProducts } from "../api/products";
-import { getAllStores } from "../api/stores"; // Import the stores API function
+import { getAllStores } from "../api/stores";
+import { getTopDiscountsForCarousel } from "../api/discounts"; // Import the new API function
 import "../ComponentsCss/HomePage.css";
-
-// Mock data for the carousel
-// Updated carousel slides with working placeholder URLs
-const carouselSlides = [
-  {
-    title: "Spring Collection 2025",
-    description:
-      "Discover handcrafted products made with love by independent artisans.",
-    buttonText: "Shop Now",
-    buttonLink: "/collections/spring",
-    imageUrl: "https://picsum.photos/600/400?random=1", // Working placeholder
-  },
-  {
-    title: "Artisan Spotlight",
-    description:
-      "Meet our featured artisans and explore their unique creations.",
-    buttonText: "Explore",
-    buttonLink: "/artisans",
-    imageUrl: "https://picsum.photos/600/400?random=2", // Working placeholder
-  },
-  {
-    title: "Self-Care Essentials",
-    description:
-      "Treat yourself with our curated selection of wellness products.",
-    buttonText: "View Collection",
-    buttonLink: "/collections/self-care",
-    imageUrl: "https://picsum.photos/600/400?random=3", // Working placeholder
-  },
-];
 
 const HomePage = () => {
   const StoresGridRef = useRef(null);
@@ -51,6 +23,39 @@ const HomePage = () => {
   const [stores, setStores] = useState([]);
   const [storesLoading, setStoresLoading] = useState(true);
   const [storesError, setStoresError] = useState(null);
+
+  // Discounts state for carousel
+  const [carouselSlides, setCarouselSlides] = useState([]);
+  const [discountsLoading, setDiscountsLoading] = useState(true);
+  const [discountsError, setDiscountsError] = useState(null);
+
+  // Default carousel slides as fallback
+  const defaultCarouselSlides = [
+    {
+      title: "Spring Collection 2025",
+      description:
+        "Discover handcrafted products made with love by independent artisans.",
+      buttonText: "Shop Now",
+      buttonLink: "/collections/spring",
+      imageUrl: "https://picsum.photos/600/400?random=1",
+    },
+    {
+      title: "Artisan Spotlight",
+      description:
+        "Meet our featured artisans and explore their unique creations.",
+      buttonText: "Explore",
+      buttonLink: "/artisans",
+      imageUrl: "https://picsum.photos/600/400?random=2",
+    },
+    {
+      title: "Self-Care Essentials",
+      description:
+        "Treat yourself with our curated selection of wellness products.",
+      buttonText: "View Collection",
+      buttonLink: "/collections/self-care",
+      imageUrl: "https://picsum.photos/600/400?random=3",
+    },
+  ];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -79,9 +84,41 @@ const HomePage = () => {
       }
     };
 
-    // Fetch both products and stores
+    const fetchDiscountsForCarousel = async () => {
+      try {
+        setDiscountsLoading(true);
+        const discounts = await getTopDiscountsForCarousel();
+
+        // Transform discounts into carousel slides format
+        if (discounts && discounts.length > 0) {
+          const discountSlides = discounts.map((discount, index) => ({
+            title: `${discount.discountPercentage}% OFF`,
+            description: `Use code "${discount.code}" to get ${discount.discountPercentage}% discount on your purchase!`,
+            buttonText: "Shop Now",
+            buttonLink: "/products", // You can customize this link
+            imageUrl: `https://picsum.photos/600/400?random=${index + 10}`, // Different random images
+            discountCode: discount.code,
+            discountPercentage: discount.discountPercentage,
+          }));
+          setCarouselSlides(discountSlides);
+        } else {
+          // Use default slides if no discounts available
+          setCarouselSlides(defaultCarouselSlides);
+        }
+      } catch (err) {
+        console.error("Error fetching discounts for carousel:", err);
+        setDiscountsError("Failed to load discount offers.");
+        // Use default slides as fallback
+        setCarouselSlides(defaultCarouselSlides);
+      } finally {
+        setDiscountsLoading(false);
+      }
+    };
+
+    // Fetch all data
     fetchProducts();
     fetchStores();
+    fetchDiscountsForCarousel();
   }, []);
 
   const handleRetryProducts = async () => {
@@ -112,6 +149,35 @@ const HomePage = () => {
     }
   };
 
+  const handleRetryDiscounts = async () => {
+    try {
+      setDiscountsLoading(true);
+      setDiscountsError(null);
+      const discounts = await getTopDiscountsForCarousel();
+
+      if (discounts && discounts.length > 0) {
+        const discountSlides = discounts.map((discount, index) => ({
+          title: `${discount.discountPercentage}% OFF`,
+          description: `Use code "${discount.code}" to get ${discount.discountPercentage}% discount on your purchase!`,
+          buttonText: "Shop Now",
+          buttonLink: "/products",
+          imageUrl: `https://picsum.photos/600/400?random=${index + 10}`,
+          discountCode: discount.code,
+          discountPercentage: discount.discountPercentage,
+        }));
+        setCarouselSlides(discountSlides);
+      } else {
+        setCarouselSlides(defaultCarouselSlides);
+      }
+    } catch (err) {
+      console.error("Error fetching discounts for carousel:", err);
+      setDiscountsError("Failed to load discount offers.");
+      setCarouselSlides(defaultCarouselSlides);
+    } finally {
+      setDiscountsLoading(false);
+    }
+  };
+
   const scrollToStoresGrid = () => {
     StoresGridRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -123,9 +189,20 @@ const HomePage = () => {
         <HeroSection scrollToStoresGrid={scrollToStoresGrid} />
 
         <div className="carousel-section section">
-          <Carousel slides={carouselSlides} />{" "}
-          {/* replace with real data
-          discounts */}
+          {discountsLoading ? (
+            <div className="loading-message">
+              <p>Loading discount offers...</p>
+            </div>
+          ) : discountsError ? (
+            <div className="error-message">
+              <p>{discountsError}</p>
+              <button onClick={handleRetryDiscounts} className="retry-btn">
+                Retry
+              </button>
+            </div>
+          ) : (
+            <Carousel slides={carouselSlides} />
+          )}
         </div>
 
         <div className="product-grid-section section">

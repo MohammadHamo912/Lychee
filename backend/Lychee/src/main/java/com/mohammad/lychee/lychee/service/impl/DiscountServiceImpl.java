@@ -59,6 +59,12 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Discount> getTopDiscountsForCarousel() {
+        return discountRepository.findTop3ByOrderByDiscountPercentageDesc();
+    }
+
+    @Override
     public Discount createDiscount(Discount discount) {
         validateDiscountForCreation(discount);
 

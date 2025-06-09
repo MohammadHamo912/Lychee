@@ -1,8 +1,5 @@
 package com.mohammad.lychee.lychee.dto;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 public class CheckoutDTO {
     private Integer userId;
     private ShippingAddressDTO shippingAddress;

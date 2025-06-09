@@ -26,7 +26,6 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         review.setComment(rs.getString("Comment"));
         Timestamp ts = rs.getTimestamp("Created_At");
         if (ts != null) review.setCreatedAt(ts.toLocalDateTime());
-        review.setTargetName(rs.getString("targetName")); // ✅ new line
         return review;
     };
 

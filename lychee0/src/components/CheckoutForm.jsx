@@ -3,7 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { processCheckout, getUserInfo } from "../api/checkout";
 import "../ComponentsCss/CheckoutForm.css";
 
-const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
+const CheckoutForm = ({
+  cartItems,
+  cartTotal,
+  userId,
+  onOrderComplete,
+  discount = 0,
+  promoApplied = null,
+  subtotal = 0,
+  shipping = 0,
+}) => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const [formData, setFormData] = useState({
@@ -20,6 +29,17 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [loadingUserInfo, setLoadingUserInfo] = useState(true);
+
+  // Calculate display values
+  const displaySubtotal =
+    subtotal ||
+    cartItems.reduce((sum, item) => {
+      return sum + (item.finalPrice || item.price) * item.cartQuantity;
+    }, 0);
+
+  const displayShipping = shipping || (displaySubtotal > 100 ? 0 : 7.99);
+  const displayDiscount = discount || 0;
+  const displayTotal = displaySubtotal + displayShipping - displayDiscount;
 
   // Fetch user information on component mount
   useEffect(() => {
@@ -111,7 +131,7 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
         return;
       }
 
-      // Prepare checkout data
+      // Prepare checkout data with discount information
       const checkoutData = {
         userId: userId,
         shippingAddress: {
@@ -121,6 +141,15 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
         },
         orderNotes: formData.orderNotes,
         paymentMethod: formData.paymentMethod,
+        // Include discount information in the order
+        discount: {
+          amount: displayDiscount,
+          code: promoApplied?.code || null,
+          percentage: promoApplied?.percentage || null,
+        },
+        orderTotal: displayTotal,
+        subtotal: displaySubtotal,
+        shipping: displayShipping,
       };
 
       // Process checkout
@@ -372,15 +401,25 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
               <h4>Order Summary</h4>
               <div className="summary-line">
                 <span>Subtotal:</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>${displaySubtotal.toFixed(2)}</span>
               </div>
               <div className="summary-line">
                 <span>Shipping:</span>
-                <span>Free</span>
+                <span>
+                  {displayShipping === 0
+                    ? "Free"
+                    : `$${displayShipping.toFixed(2)}`}
+                </span>
               </div>
+              {displayDiscount > 0 && promoApplied && (
+                <div className="summary-line discount">
+                  <span>Discount ({promoApplied.code}):</span>
+                  <span>-${displayDiscount.toFixed(2)}</span>
+                </div>
+              )}
               <div className="summary-line total">
                 <span>Total:</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>${displayTotal.toFixed(2)}</span>
               </div>
             </div>
 
@@ -403,7 +442,7 @@ const CheckoutForm = ({ cartItems, cartTotal, userId, onOrderComplete }) => {
                     Processing Payment...
                   </>
                 ) : (
-                  `Complete Order - $${cartTotal.toFixed(2)}`
+                  `Complete Order - $${displayTotal.toFixed(2)}`
                 )}
               </button>
             </div>

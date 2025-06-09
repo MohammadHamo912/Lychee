@@ -8,6 +8,7 @@ import ProductGrid from "../components/ProductGrid";
 import { getAllProducts } from "../api/products";
 import { getAllCategories } from "../api/categories";
 import { getProductsByCategoryId } from "../api/productcategories";
+import { getReviews } from "../api/reviews";
 import "../PagesCss/ProductListingPage.css";
 
 const ProductListingPage = () => {
@@ -31,6 +32,7 @@ const ProductListingPage = () => {
   const [error, setError] = useState(null);
   const [productBrands, setProductBrands] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [productRatings, setProductRatings] = useState({}); // Cache for product ratings
 
   // Fetch products and categories
   useEffect(() => {
@@ -71,6 +73,33 @@ const ProductListingPage = () => {
     } catch (err) {
       console.error("Error fetching categories:", err);
     }
+  };
+
+  // Function to calculate average rating for a product
+  const calculateProductRating = async (productId) => {
+    try {
+      const reviews = await getReviews("product", productId);
+      if (!reviews || reviews.length === 0) return 0;
+      const totalRating = reviews.reduce(
+        (sum, review) => sum + review.rating,
+        0
+      );
+      return totalRating / reviews.length;
+    } catch (error) {
+      console.error(`Error fetching reviews for product ${productId}:`, error);
+      return 0;
+    }
+  };
+
+  // Function to get or calculate rating for a product (with caching)
+  const getProductRating = async (productId) => {
+    if (productRatings[productId] !== undefined) {
+      return productRatings[productId];
+    }
+
+    const rating = await calculateProductRating(productId);
+    setProductRatings((prev) => ({ ...prev, [productId]: rating }));
+    return rating;
   };
 
   const handleRetry = () => {
@@ -233,17 +262,26 @@ const ProductListingPage = () => {
           b.name?.toLowerCase().localeCompare(a.name?.toLowerCase())
         );
         break;
-      case "priceLowHigh":
-        result.sort((a, b) => (a.price || 0) - (b.price || 0));
+      case "highestRated":
+        // For rating sorting, we need to fetch ratings and sort accordingly
+        const ratingsForSorting = await Promise.all(
+          result.map(async (product) => ({
+            product,
+            rating: await getProductRating(product.productId),
+          }))
+        );
+        ratingsForSorting.sort((a, b) => b.rating - a.rating);
+        result = ratingsForSorting.map((item) => item.product);
         break;
-      case "priceHighLow":
-        result.sort((a, b) => (b.price || 0) - (a.price || 0));
-        break;
-      case "mostReviewed":
-        result.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
-        break;
-      case "leastReviewed":
-        result.sort((a, b) => (a.reviewCount || 0) - (b.reviewCount || 0));
+      case "lowestRated":
+        const ratingsForSortingLow = await Promise.all(
+          result.map(async (product) => ({
+            product,
+            rating: await getProductRating(product.productId),
+          }))
+        );
+        ratingsForSortingLow.sort((a, b) => a.rating - b.rating);
+        result = ratingsForSortingLow.map((item) => item.product);
         break;
       default:
         break;
