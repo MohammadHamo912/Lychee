@@ -67,12 +67,8 @@ const ProductCard = ({ product, onAction }) => {
     navigate(`/product/${productId}`);
   };
 
-  const handleAction = (e) => {
-    alert("Coming Soon");
-  };
-
   const ActionButton = (
-    <button className="product-card-button" onClick={handleAction}>
+    <button className="product-card-button" onClick={handleCardClick}>
       Find Best Price
     </button>
   );

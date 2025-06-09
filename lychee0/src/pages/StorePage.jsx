@@ -11,20 +11,6 @@ import { useUser } from "../context/UserContext";
 
 // Mock data imports for fallback/development
 import shop1SampleImage from "../images/shop1SampleImage.png";
-import storeBanner from "../images/store-banner.jpg";
-
-/**
- * Data to fetch from backend/database:
- * 1. Store information:
- *    - id, name, logo, banner image, description
- *    - rating, location
- *    - socialLinks (instagram, facebook)
- *    - isVerified status
- *
- * 2. Store products:
- *    - Full product details including id, name, price, description
- *    - category, images, stock status, isNew flag
- */
 
 const StorePage = () => {
   // Get storeId from URL params
@@ -44,7 +30,7 @@ const StorePage = () => {
   const { addToCart, isAddingToCart } = useUser();
 
   // Mock categories for filtering - replace with dynamic categories from products
-  const categories = ["Skincare", "Makeup", "Accessories", "Fragrances"];
+  const categories = ["Skincare", "Makeup", "Accessories", "Fragrances"]; // the main categories are the parent categories of the products
 
   // Fetch store data from API
   useEffect(() => {
@@ -123,13 +109,6 @@ const StorePage = () => {
         ) : (
           <div className="store-page section">
             <div className="store-header">
-              {/* Store banner image */}
-              <img
-                src={store.banner || storeBanner}
-                alt={`${store.name} banner`}
-                className="store-banner"
-              />
-
               <div className="store-info-container container">
                 <div className="store-info">
                   <div className="store-logo-container">

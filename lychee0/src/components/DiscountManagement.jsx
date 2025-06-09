@@ -14,20 +14,28 @@ const DiscountManagement = () => {
 
   const [formData, setFormData] = useState({
     code: "",
-    discountType: "percentage",
     value: "",
     startDate: "",
     endDate: "",
   });
 
   const [discounts, setDiscounts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchDiscounts = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const data = await getAllDiscounts();
-      setDiscounts(data);
+      console.log("Fetched discounts:", data); // Debug log
+      setDiscounts(data || []);
     } catch (error) {
       console.error("Failed to fetch discounts:", error.message);
+      setError("Failed to load discounts: " + error.message);
+      setDiscounts([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,42 +51,67 @@ const DiscountManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setError(null);
+
+      // ✅ Fix: Use correct field name for backend
       const newDiscount = {
         code: formData.code,
-        type: formData.discountType,
-        value: parseFloat(formData.value),
-        startDate: formData.startDate,
-        endDate: formData.endDate,
+        discountPercentage: parseFloat(formData.value), // ✅ Changed from 'value' to 'discountPercentage'
+        startDate: formData.startDate || null,
+        endDate: formData.endDate || null,
+        active: true, // ✅ Explicitly set active status
       };
+
+      console.log("Creating discount:", newDiscount); // Debug log
+
       await createDiscount(newDiscount);
-      fetchDiscounts();
+      await fetchDiscounts(); // Refresh the list
+
+      // Reset form
       setFormData({
         code: "",
-        discountType: "percentage",
         value: "",
         startDate: "",
         endDate: "",
       });
+
+      console.log("Discount created successfully");
     } catch (error) {
       console.error("Failed to create discount:", error.message);
+      setError("Failed to create discount: " + error.message);
     }
   };
 
   const handleToggle = async (id) => {
     try {
+      setError(null);
+      console.log("Toggling discount:", id); // Debug log
       await toggleDiscount(id);
-      fetchDiscounts();
+      await fetchDiscounts(); // Refresh the list
     } catch (error) {
       console.error("Failed to toggle discount:", error.message);
+      setError("Failed to toggle discount: " + error.message);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, code) => {
     try {
+      setError(null);
+
+      // Add confirmation
+      if (
+        !window.confirm(`Are you sure you want to delete discount "${code}"?`)
+      ) {
+        return;
+      }
+
+      console.log("Deleting discount:", id); // Debug log
       await deleteDiscount(id);
-      fetchDiscounts();
+      await fetchDiscounts(); // Refresh the list
+      console.log("Discount deleted successfully");
     } catch (error) {
       console.error("Failed to delete discount:", error.message);
+      setError("Failed to delete discount: " + error.message);
     }
   };
 
@@ -87,6 +120,14 @@ const DiscountManagement = () => {
       <div className="discount-header">
         <h1 className="discount-title">Discount Management</h1>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="error-message">
+          <p>{error}</p>
+          <button onClick={() => setError(null)}>×</button>
+        </div>
+      )}
 
       <section className="discount-form-section">
         <h2 className="section-heading">Create New Discount</h2>
@@ -106,20 +147,7 @@ const DiscountManagement = () => {
             </div>
 
             <div className="form-field">
-              <label htmlFor="discountType">Type</label>
-              <select
-                id="discountType"
-                name="discountType"
-                value={formData.discountType}
-                onChange={handleChange}
-              >
-                <option value="percentage">Percentage (%)</option>
-                <option value="fixed">Fixed Amount</option>
-              </select>
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="value">Value</label>
+              <label htmlFor="value">Percentage</label>
               <input
                 type="number"
                 id="value"
@@ -128,6 +156,8 @@ const DiscountManagement = () => {
                 onChange={handleChange}
                 placeholder="e.g., 20"
                 min="1"
+                max="100"
+                step="0.01"
                 required
               />
             </div>
@@ -142,7 +172,6 @@ const DiscountManagement = () => {
                 name="startDate"
                 value={formData.startDate}
                 onChange={handleChange}
-                required
               />
             </div>
 
@@ -154,14 +183,17 @@ const DiscountManagement = () => {
                 name="endDate"
                 value={formData.endDate}
                 onChange={handleChange}
-                required
               />
             </div>
 
             <div className="form-field">
               <label>&nbsp;</label>
-              <button type="submit" className="submit-button">
-                Add Discount
+              <button
+                type="submit"
+                className="submit-button"
+                disabled={loading}
+              >
+                {loading ? "Adding..." : "Add Discount"}
               </button>
             </div>
           </div>
@@ -170,15 +202,17 @@ const DiscountManagement = () => {
 
       <section className="discount-list-section">
         <h2 className="section-heading">Existing Discounts</h2>
-        {discounts.length === 0 ? (
+
+        {loading && <p className="loading-state">Loading discounts...</p>}
+
+        {!loading && discounts.length === 0 ? (
           <p className="empty-state">No discounts available.</p>
         ) : (
           <table className="discount-table">
             <thead>
               <tr>
                 <th>Code</th>
-                <th>Type</th>
-                <th>Value</th>
+                <th>Percentage</th>
                 <th>Start</th>
                 <th>End</th>
                 <th>Status</th>
@@ -186,20 +220,21 @@ const DiscountManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {discounts.map((discount) => (
-                <tr key={discount.id}>
+              {discounts.map((discount, index) => (
+                <tr
+                  key={
+                    discount.discountId || discount.id || `discount-${index}`
+                  }
+                >
                   <td>{discount.code}</td>
-                  <td>{discount.type}</td>
-                  <td>
-                    {discount.type === "percentage"
-                      ? `${discount.value}%`
-                      : `$${discount.value}`}
-                  </td>
-                  <td>{discount.startDate}</td>
-                  <td>{discount.endDate}</td>
+                  <td>{`${discount.discountPercentage || discount.value}%`}</td>
+                  <td>{discount.startDate || "No start date"}</td>
+                  <td>{discount.endDate || "No end date"}</td>
                   <td>
                     <span
-                      className={`status-badge ${discount.active ? "active" : "inactive"}`}
+                      className={`status-badge ${
+                        discount.active ? "active" : "inactive"
+                      }`}
                     >
                       {discount.active ? "Active" : "Inactive"}
                     </span>
@@ -208,13 +243,22 @@ const DiscountManagement = () => {
                     <div className="action-buttons">
                       <button
                         className="action-button activate-btn"
-                        onClick={() => handleToggle(discount.id)}
+                        onClick={() =>
+                          handleToggle(discount.discountId || discount.id)
+                        }
+                        disabled={loading}
                       >
                         {discount.active ? "Deactivate" : "Activate"}
                       </button>
                       <button
                         className="action-button delete-btn"
-                        onClick={() => handleDelete(discount.id)}
+                        onClick={() =>
+                          handleDelete(
+                            discount.discountId || discount.id,
+                            discount.code
+                          )
+                        }
+                        disabled={loading}
                       >
                         Delete
                       </button>
