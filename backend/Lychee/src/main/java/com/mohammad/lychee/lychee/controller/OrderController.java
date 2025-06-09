@@ -3,6 +3,7 @@ package com.mohammad.lychee.lychee.controller;
 import com.mohammad.lychee.lychee.model.Order;
 import com.mohammad.lychee.lychee.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,4 +84,23 @@ public class OrderController {
                                                     @RequestParam(required = false) Integer storeId) {
         return ResponseEntity.ok(orderService.searchOrders(role, query, status, startDate, endDate, userId, storeId));
     }
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<String> updateOrderStatus(@PathVariable int orderId, @RequestBody Map<String, String> body) {
+        String newStatus = body.get("status");
+        try {
+            orderService.updateOrderStatus(orderId, newStatus);
+            return ResponseEntity.ok("Order status updated");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update order status");
+        }
+    }
+    @GetMapping("/order-items/store/{storeId}/order/{orderId}")
+    public ResponseEntity<List<Map<String, Object>>> getOrderItemDetailsByStoreAndOrderId(
+            @PathVariable Integer storeId,
+            @PathVariable Integer orderId
+    ) {
+        List<Map<String, Object>> items = orderService.getOrderItemDetailsByStoreAndOrderId(storeId, orderId);
+        return ResponseEntity.ok(items);
+    }
+
 }

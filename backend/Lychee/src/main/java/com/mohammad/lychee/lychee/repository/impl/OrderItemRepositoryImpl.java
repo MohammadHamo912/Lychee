@@ -134,5 +134,4 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
         return jdbcTemplate.query(sql, orderItemRowMapper, storeId);
     }
 
-
 }

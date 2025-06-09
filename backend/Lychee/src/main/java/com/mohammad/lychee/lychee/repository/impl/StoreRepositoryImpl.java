@@ -140,25 +140,30 @@ public class StoreRepositoryImpl implements StoreRepository {
     @Override
     public Optional<Map<String, Object>> getStoreMetrics(int storeId) {
         String sql = """
-        SELECT 
-            (SELECT COUNT(DISTINCT o.order_id)
-             FROM OrderItem oi
-             JOIN Item i ON oi.item_id = i.Item_ID
-             JOIN `Order` o ON oi.order_id = o.order_id
-             WHERE i.Store_ID = ?) AS totalOrders,
+                SELECT 
+                    (SELECT COUNT(DISTINCT o.order_id)
+                     FROM OrderItem oi
+                     JOIN Item i ON oi.item_id = i.Item_ID
+                     JOIN `Order` o ON oi.order_id = o.order_id
+                     WHERE i.Store_ID = ?) AS totalOrders,
 
-            (SELECT COUNT(*) FROM Item i
-             WHERE i.Store_ID = ?) AS totalProducts,
+                    (SELECT COUNT(*) FROM Item i
+                     WHERE i.Store_ID = ?) AS totalProducts,
 
-            (SELECT COALESCE(SUM(oi.quantity * oi.price_at_purchase), 0)
-             FROM OrderItem oi
-             JOIN Item i ON oi.item_id = i.Item_ID
-             WHERE i.Store_ID = ?) AS totalSales
-        """;
+                    (SELECT SUM(p.amount) FROM PaymentTransaction p
+                     JOIN `Order` o ON o.order_id=p.order_id
+                     JOIN `OrderItem` oi ON oi.order_id=o.order_id
+                     JOIN `Item` i ON i.Item_ID=oi.item_id
+                     WHERE i.Store_ID=? AND p.status LIKE "payed") AS totalSales,
+                     
+                    (SELECT AVG(Rating) 
+                     FROM Review 
+                     WHERE Review_Type LIKE "shop" AND Target_ID=?) AS storeRating
+                """;
 
         try {
             System.out.println("Fetching metrics for store ID: " + storeId);
-            Map<String, Object> result = jdbcTemplate.queryForMap(sql, storeId, storeId, storeId);
+            Map<String, Object> result = jdbcTemplate.queryForMap(sql, storeId, storeId, storeId, storeId);
             System.out.println("Metrics result: " + result);
             return Optional.of(result);
         } catch (Exception e) {
@@ -193,7 +198,7 @@ public class StoreRepositoryImpl implements StoreRepository {
         SELECT r.Review_ID AS id, r.Rating, r.Comment, r.Created_At AS date,
                u.name AS customer, s.name AS storeName
         FROM Review r
-        JOIN User u ON r.User_ID = u.User   _ID
+        JOIN User u ON r.User_ID = u.User_ID
         JOIN Store s ON r.Target_ID = s.Store_ID
         WHERE r.Review_Type = 'shop' AND s.Store_ID = ?
         ORDER BY r.Created_At DESC

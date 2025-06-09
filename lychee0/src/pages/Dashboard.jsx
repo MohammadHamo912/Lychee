@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+// src/pages/Dashboard.jsx
+
+import React, { useEffect, useState } from "react";
 import "../PagesCss/Dashboard.css";
 import { useUser } from "../context/UserContext";
 import { getStoreByOwnerId } from "../api/stores";
@@ -21,88 +23,46 @@ const Dashboard = () => {
   const { user } = useUser();
   const userRole = user?.role || "customer";
   const [activeTab, setActiveTab] = useState("default");
-
   const [storeId, setStoreId] = useState(null);
 
   useEffect(() => {
     const fetchStore = async () => {
-      if (user?.userId && user?.role === "shopowner") {
+      if (user?.userId && userRole === "shopowner") {
         try {
           const data = await getStoreByOwnerId(user.userId);
           setStoreId(data.storeId);
         } catch (err) {
-          console.error("Failed to fetch store for reviews tab:", err);
+          console.error("❌ Failed to fetch store ID for shopowner:", err);
         }
       }
     };
     fetchStore();
-  }, [user]);
-
+  }, [user, userRole]);
 
   const getTabsByRole = () => {
     switch (userRole) {
       case "admin":
         return [
           { key: "overview", title: "📊 Overview", content: <AdminOverview /> },
-          {
-            key: "users",
-            title: "👥 User Management",
-            content: <UserManagement />,
-          },
-          {
-            key: "shops",
-            title: "🛍️ Store Management",
-            content: <ShopApproval />,
-          },
-          {
-            key: "orders",
-            title: "🧾 Orders",
-            content: <OrderManagement role="admin" />,
-          },
-          {
-            key: "discounts",
-            title: "🎁 Discount Management",
-            content: <DiscountManagement />,
-          },
+          { key: "users", title: "👥 User Management", content: <UserManagement /> },
+          { key: "shops", title: "🛍️ Store Management", content: <ShopApproval /> },
+          { key: "orders", title: "🧾 Orders", content: <OrderManagement role="admin" /> },
+          { key: "discounts", title: "🎁 Discount Management", content: <DiscountManagement /> },
         ];
       case "shopowner":
         return [
           { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
-          {
-            key: "dashboard",
-            title: "📊 Dashboard",
-            content: <ShopOwnerDashboard />,
-          },
-          {
-            key: "products",
-            title: "📦 Products",
-            content: <ProductManagement />,
-          },
-          {
-            key: "orders",
-            title: "🧾 Orders",
-            content: <OrderManagement role="shopowner" />,
-          },
-          {
-            key: "reviewsAndSocial",
-            title: "🌐 Social",
-            content: <StoreReviewAndSocial storeId={storeId}/>,
-          },
+          { key: "dashboard", title: "📊 Dashboard", content: <ShopOwnerDashboard /> },
+          { key: "products", title: "📦 Products", content: <ProductManagement /> },
+          { key: "orders", title: "🧾 Orders", content: <OrderManagement role="shopowner" storeId={storeId} /> },
+          { key: "reviewsAndSocial", title: "🌐 Social", content: <StoreReviewAndSocial storeId={storeId} /> },
         ];
       default: // customer
         return [
           { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
-          {
-            key: "orders",
-            title: "📦 My Orders",
-            content: <OrderManagement role="customer" />,
-          },
+          { key: "orders", title: "📦 My Orders", content: <OrderManagement role="customer" /> },
           { key: "wishlist", title: "❤️ Wishlist", content: <Wishlist /> },
-          {
-            key: "reviews",
-            title: "⭐ My Reviews",
-            content: <ShowMyReviews />,
-          },
+          { key: "reviews", title: "⭐ My Reviews", content: <ShowMyReviews /> },
         ];
     }
   };
@@ -122,7 +82,6 @@ const Dashboard = () => {
                 ? "Store Panel"
                 : "My Account"}
           </h2>
-
           {tabs.map((tab) => (
             <div
               key={tab.key}
@@ -133,7 +92,6 @@ const Dashboard = () => {
             </div>
           ))}
         </aside>
-
         <main className="dashboard-content">{currentTab.content}</main>
       </div>
     </div>

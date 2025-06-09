@@ -99,11 +99,11 @@
     text-transform: uppercase;
 }
 
-.status-processing .status-badge {
+.status-confirmed .status-badge {
     background-color: #f0a202;
 }
 
-.status-shipped .status-badge {
+.status-shipping .status-badge {
     background-color: #3d9df6;
 }
 
@@ -111,9 +111,6 @@
     background-color: #3cb371;
 }
 
-.status-cancelled .status-badge {
-    background-color: #e74c3c;
-}
 
 .order-info p {
     margin: 6px 0;

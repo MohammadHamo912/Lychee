@@ -27,7 +27,6 @@ public class OrderRepositoryImpl implements OrderRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // ========================= ORDER ROW MAPPER =========================
     private final RowMapper<Order> orderRowMapper = (rs, rowNum) -> {
         Order order = new Order();
         order.setOrderId(rs.getInt("order_id"));
@@ -55,8 +54,6 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         return order;
     };
-
-    // ========================= ORDER CRUD =========================
 
     @Override
     public List<Order> findAll() {
@@ -105,7 +102,6 @@ public class OrderRepositoryImpl implements OrderRepository {
         return order;
     }
 
-
     @Override
     public void update(Order order) {
         String sql = "UPDATE `Order` SET user_ID = ?, shippingAddress_ID = ?, Discount_ID = ?, " +
@@ -146,8 +142,6 @@ public class OrderRepositoryImpl implements OrderRepository {
         }
     }
 
-    // ========================= ORDER SEARCH =========================
-
     @Override
     public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId) {
         StringBuilder sql = new StringBuilder();
@@ -167,7 +161,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             }
         } else if ("shopowner".equals(role)) {
             sql.append("""
-                SELECT o.* FROM `Order` o
+                SELECT DISTINCT o.* FROM `Order` o
                 JOIN OrderItem oi ON o.order_id = oi.order_id
                 JOIN Item i ON oi.item_id = i.Item_ID
                 JOIN Store s ON i.Store_ID = s.Store_ID
@@ -218,13 +212,13 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public List<Map<String, Object>> getOrderItemSummaries(int orderId) {
         String sql = """
-        SELECT p.name AS productName, oi.quantity, oi.price_at_purchase AS price
-        FROM OrderItem oi
-        JOIN Item i ON oi.item_id = i.Item_ID
-        JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
-        JOIN Product p ON pv.Product_ID = p.Product_ID
-        WHERE oi.order_id = ?
-    """;
+            SELECT p.name AS productName, oi.quantity, oi.price_at_purchase * (1 - i.discount / 100) AS price
+            FROM OrderItem oi
+            JOIN Item i ON oi.item_id = i.Item_ID
+            JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
+            JOIN Product p ON pv.Product_ID = p.Product_ID
+            WHERE oi.order_id = ?
+        """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Map<String, Object> row = new HashMap<>();
@@ -241,5 +235,30 @@ public class OrderRepositoryImpl implements OrderRepository {
         String sql = "UPDATE `Order` SET status = ?, updated_at = ? WHERE order_id = ?";
         jdbcTemplate.update(sql, status, Timestamp.valueOf(LocalDateTime.now()), orderId);
     }
+    @Override
+    public List<Map<String, Object>> getOrderItemDetailsByStoreAndOrderId(Integer storeId, Integer orderId) {
+        String sql = """
+        SELECT p.name AS productName,
+               oi.quantity,
+               i.price * (1 - i.discount / 100) AS price,
+               i.Item_ID AS itemId,
+               i.Store_ID AS storeId
+        FROM `Order` o
+        JOIN OrderItem oi ON o.order_id = oi.order_id
+        JOIN Item i ON i.Item_ID = oi.item_id
+        JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
+        JOIN Product p ON p.Product_ID = pv.Product_ID
+        WHERE i.Store_ID = ? AND o.order_id = ?
+    """;
 
+        return jdbcTemplate.query(sql, new Object[]{storeId, orderId}, (rs, rowNum) -> {
+            Map<String, Object> row = new HashMap<>();
+            row.put("productName", rs.getString("productName"));
+            row.put("quantity", rs.getInt("quantity"));
+            row.put("price", rs.getBigDecimal("price"));
+            row.put("itemId", rs.getInt("itemId"));
+            row.put("storeId", rs.getInt("storeId")); // ✅ added here
+            return row;
+        });
+    }
 }

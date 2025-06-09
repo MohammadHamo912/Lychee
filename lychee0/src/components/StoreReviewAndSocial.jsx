@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import '../ComponentsCss/StoreReviewAndSocial.css';
-import { getStoreReviews } from '../api/stores'; // Adjust path based on your file structure
+import { getStoreReviews } from '../api/stores';
 
 const StoreReviewAndSocial = ({ storeId }) => {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch reviews from backend
     useEffect(() => {
         const fetchReviews = async () => {
             if (!storeId) return;
 
             try {
-                const data = await getStoreReviews(storeId);  // ✅ pass storeId
+                const data = await getStoreReviews(storeId);
                 setReviews(data);
             } catch (err) {
                 setError('Failed to load reviews.');
@@ -33,7 +32,6 @@ const StoreReviewAndSocial = ({ storeId }) => {
         return reviewDate >= oneWeekAgo;
     });
 
-
     return (
         <div className="store-panel-container">
             <div className="reviews-section">
@@ -43,13 +41,14 @@ const StoreReviewAndSocial = ({ storeId }) => {
                 ) : error ? (
                     <p className="error">{error}</p>
                 ) : recentReviews.length === 0 ? (
-                    <p className="no-reviews">No reviews in the last month.</p>
+                    <p className="no-reviews">No reviews in the last week.</p>
                 ) : (
                     recentReviews.map((review) => (
                         <div key={review.id} className="review-card">
-                            <h4>{review.productName}</h4>
+                            <h4>{review.storeName}</h4>
                             <div className="rating">
-                                {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+                                {'★'.repeat(review.rating)}
+                                {'☆'.repeat(5 - review.rating)}
                             </div>
                             <p className="comment">"{review.comment}"</p>
                             <p className="meta">– {review.customer} | {review.date}</p>
