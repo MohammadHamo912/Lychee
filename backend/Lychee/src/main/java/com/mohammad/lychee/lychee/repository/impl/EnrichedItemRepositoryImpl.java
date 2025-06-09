@@ -49,7 +49,7 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
     private final RowMapper<EnrichedItem> enrichedItemRowMapper = (rs, rowNum) -> {
         EnrichedItem item = new EnrichedItem();
 
-        // Item fields
+        // Map item fields
         item.setItemId(rs.getInt("itemId"));
         item.setStoreId(rs.getInt("storeId"));
         item.setProductVariantId(rs.getInt("productVariantId"));
@@ -63,7 +63,7 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
         item.setDeletedAt(rs.getTimestamp("itemDeletedAt") != null ?
                 rs.getTimestamp("itemDeletedAt").toLocalDateTime() : null);
 
-        // Product fields (enriched)
+        // Map product fields
         item.setName(rs.getString("productName"));
         item.setDescription(rs.getString("productDescription"));
         item.setBrand(rs.getString("productBrand"));
@@ -73,9 +73,9 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
         // Store info
         item.setStoreName(rs.getString("storeName"));
 
-        // Current variant - simple version
         Integer productId = rs.getInt("productId");
         if (productId > 0) {
+            // Set current variant
             EnrichedItem.CurrentVariant currentVariant = new EnrichedItem.CurrentVariant(
                     rs.getInt("productVariantId"),
                     productId,
@@ -83,10 +83,13 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
                     rs.getString("variantColor")
             );
             item.setCurrentVariant(currentVariant);
-        }
 
-        // Set empty available variants (no complex enrichment for now)
-        item.setAvailableVariants(new ArrayList<>());
+            // Fetch and set all available variants for this product
+            List<EnrichedItem.AvailableVariant> variants = findVariantsByProductId(productId);
+            item.setAvailableVariants(variants);
+        } else {
+            item.setAvailableVariants(new ArrayList<>());
+        }
 
         return item;
     };
@@ -225,4 +228,26 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
             throw e;
         }
     }
+    private List<EnrichedItem.AvailableVariant> findVariantsByProductId(Integer productId) {
+        String sql = """
+        SELECT
+            Product_Variant_ID as id,
+            Product_ID as productId,
+            size,
+            color
+        FROM ProductVariant
+        WHERE Product_ID = ?
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new EnrichedItem.AvailableVariant(
+                rs.getInt("id"),
+                rs.getInt("productId"),
+                rs.getString("size"),
+                rs.getString("color"),
+                null,   // or true/false based on logic
+                null    // or true/false based on logic
+        ), productId);
+    }
+
+
 }

@@ -40,7 +40,8 @@ public class EnrichedItem {
     // Default constructor
     public EnrichedItem() {}
 
-    // Getters and Setters
+    // ==== Getters and Setters ====
+
     public Integer getItemId() {
         return itemId;
     }
@@ -205,7 +206,7 @@ public class EnrichedItem {
         this.stock = stock;
     }
 
-    // Helper method to calculate final price
+    // Helper method to calculate final price (price after discount)
     private void calculateFinalPrice() {
         if (price != null && discount != null) {
             BigDecimal discountAmount = price.multiply(discount).divide(BigDecimal.valueOf(100));
@@ -215,14 +216,14 @@ public class EnrichedItem {
         }
     }
 
-    // Nested classes for structured data
+    // === Nested classes ===
+
     public static class CurrentVariant {
         private Integer id;
         private Integer productId;
         private String size;
         private String color;
 
-        // Constructors
         public CurrentVariant() {}
 
         public CurrentVariant(Integer id, Integer productId, String size, String color) {
@@ -271,10 +272,9 @@ public class EnrichedItem {
         private Integer productId;
         private String size;
         private String color;
-        private Boolean available;
-        private Boolean availableInSameStore;
+        private Boolean available;              // availability flag (optional)
+        private Boolean availableInSameStore;  // availability in same store (optional)
 
-        // Constructors
         public AvailableVariant() {}
 
         public AvailableVariant(Integer id, Integer productId, String size, String color,
