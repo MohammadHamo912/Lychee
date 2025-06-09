@@ -1,6 +1,5 @@
 package com.mohammad.lychee.lychee.repository.impl;
 
-import com.mohammad.lychee.lychee.model.Address;
 import com.mohammad.lychee.lychee.model.Store;
 import com.mohammad.lychee.lychee.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -95,7 +95,7 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
     public ProductVariant save(ProductVariant pv) {
         if (pv.getProductVariantId() == null || pv.getProductVariantId() == 0) {
             // Insert
-            String sql = "INSERT INTO ProductVariant (Product_ID, size, color, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())";
+            String sql = "INSERT INTO ProductVariant (Product_ID, size, color, created_at, updated_at) VALUES (?, ?, ?,  NOW(), NOW())";
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, pv.getProductId());

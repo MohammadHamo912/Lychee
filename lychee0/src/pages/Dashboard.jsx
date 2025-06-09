@@ -18,6 +18,7 @@ import UserManagement from "../components/UserManagement";
 import ShopApproval from "../components/ShopManagement";
 import DiscountManagement from "../components/DiscountManagement";
 import AdminOverview from "../components/AdminOverview";
+import ItemManagement from "../components/ItemManagement";
 
 const Dashboard = () => {
   const { user } = useUser();
@@ -44,25 +45,61 @@ const Dashboard = () => {
       case "admin":
         return [
           { key: "overview", title: "📊 Overview", content: <AdminOverview /> },
-          { key: "users", title: "👥 User Management", content: <UserManagement /> },
-          { key: "shops", title: "🛍️ Store Management", content: <ShopApproval /> },
-          { key: "orders", title: "🧾 Orders", content: <OrderManagement role="admin" /> },
-          { key: "discounts", title: "🎁 Discount Management", content: <DiscountManagement /> },
+          {
+            key: "users",
+            title: "👥 User Management",
+            content: <UserManagement />,
+          },
+          {
+            key: "shops",
+            title: "🛍️ Store Management",
+            content: <ShopApproval />,
+          },
+          {
+            key: "orders",
+            title: "🧾 Orders",
+            content: <OrderManagement role="admin" />,
+          },
+          {
+            key: "discounts",
+            title: "🎁 Discount Management",
+            content: <DiscountManagement />,
+          },
         ];
       case "shopowner":
         return [
           { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
-          { key: "dashboard", title: "📊 Dashboard", content: <ShopOwnerDashboard /> },
-          { key: "products", title: "📦 Products", content: <ProductManagement /> },
-          { key: "orders", title: "🧾 Orders", content: <OrderManagement role="shopowner" storeId={storeId} /> },
-          { key: "reviewsAndSocial", title: "🌐 Social", content: <StoreReviewAndSocial storeId={storeId} /> },
+          {
+            key: "dashboard",
+            title: "📊 Dashboard",
+            content: <ShopOwnerDashboard />,
+          },
+          { key: "items", title: "📦 Items", content: <ItemManagement /> },
+          {
+            key: "orders",
+            title: "🧾 Orders",
+            content: <OrderManagement role="shopowner" storeId={storeId} />,
+          },
+          {
+            key: "reviewsAndSocial",
+            title: "🌐 Social",
+            content: <StoreReviewAndSocial storeId={storeId} />,
+          },
         ];
       default: // customer
         return [
           { key: "profile", title: "👤 Profile", content: <ProfilePage /> },
-          { key: "orders", title: "📦 My Orders", content: <OrderManagement role="customer" /> },
+          {
+            key: "orders",
+            title: "📦 My Orders",
+            content: <OrderManagement role="customer" />,
+          },
           { key: "wishlist", title: "❤️ Wishlist", content: <Wishlist /> },
-          { key: "reviews", title: "⭐ My Reviews", content: <ShowMyReviews /> },
+          {
+            key: "reviews",
+            title: "⭐ My Reviews",
+            content: <ShowMyReviews />,
+          },
         ];
     }
   };
@@ -79,8 +116,8 @@ const Dashboard = () => {
             {userRole === "admin"
               ? "Admin Panel"
               : userRole === "shopowner"
-                ? "Store Panel"
-                : "My Account"}
+              ? "Store Panel"
+              : "My Account"}
           </h2>
           {tabs.map((tab) => (
             <div

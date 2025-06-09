@@ -10,14 +10,6 @@ public class Review {
     private int rating;
     private String comment;
     private LocalDateTime createdAt;
-    private String targetName;
-
-    public String getTargetName() {
-        return targetName;
-    }
-    public void setTargetName(String targetName) {
-        this.targetName = targetName;
-    }
 
     public int getReviewId() { return reviewId; }
     public void setReviewId(int reviewId) { this.reviewId = reviewId; }

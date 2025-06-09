@@ -7,8 +7,6 @@ public class ProductVariant {
     private Integer productId;
     private String size;
     private String color;
-    private Integer quantity;
-    private Double price;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
@@ -48,21 +46,7 @@ public class ProductVariant {
         this.color = color;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
