@@ -11,7 +11,6 @@ import ProfilePage from "../components/ProfilePage";
 import ShowMyReviews from "../components/ShowMyReviews";
 import Wishlist from "../components/WishList";
 import ShopOwnerDashboard from "../components/ShopOwnerDashboard";
-import ProductManagement from "../components/ProductManagement";
 import OrderManagement from "../components/OrderManagement";
 import StoreReviewAndSocial from "../components/StoreReviewAndSocial";
 import UserManagement from "../components/UserManagement";

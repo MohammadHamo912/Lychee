@@ -8,15 +8,13 @@ import Footer from "../components/Footer";
 import { getStoreById } from "../api/stores.js";
 import { getItemsByStoreId } from "../api/items.js";
 import { useUser } from "../context/UserContext";
-
+import { getAddressById } from "../api/addresses.js"; // Import address API if needed
 // Mock data imports for fallback/development
 import shop1SampleImage from "../images/shop1SampleImage.png";
 
 const StorePage = () => {
   // Get storeId from URL params
-  //const { storeId } = useParams();
-  // For testing/development without router
-  const { storeId } = useParams(); // Uncommented and used
+  const { storeId } = useParams();
   const [store, setStore] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,16 +24,36 @@ const StorePage = () => {
   const [search, setSearch] = useState("");
   // For product detail modal
   const [viewingItem, setViewingItem] = useState(null);
+  const [location, setLocation] = useState("Loading location...");
 
   const { addToCart, isAddingToCart } = useUser();
 
   // Mock categories for filtering - replace with dynamic categories from products
-  const categories = ["Skincare", "Makeup", "Accessories", "Fragrances"]; // the main categories are the parent categories of the products
+  const categories = ["Skincare", "Makeup", "Accessories", "Fragrances"];
+
+  // Function to format address from address object
+  const formatAddress = (addressData) => {
+    if (!addressData) return "Location unknown";
+
+    const parts = [];
+    if (addressData.building) parts.push(addressData.building);
+    if (addressData.street) parts.push(addressData.street);
+    if (addressData.city) parts.push(addressData.city);
+
+    return parts.length > 0 ? parts.join(", ") : "Location unknown";
+  };
 
   // Fetch store data from API
   useEffect(() => {
     fetchStoreData();
   }, [storeId]);
+
+  // Fetch store location when store data is loaded
+  useEffect(() => {
+    if (store && store.addressId) {
+      fetchStoreLocation();
+    }
+  }, [store]);
 
   const fetchStoreData = async () => {
     setLoading(true);
@@ -54,6 +72,21 @@ const StorePage = () => {
       setError("Failed to load store information. Please try again later.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStoreLocation = async () => {
+    try {
+      // Fetch store address details
+      const locationData = await getAddressById(store.addressId);
+      console.log("Store location data:", locationData);
+
+      // Format the address properly
+      const formattedLocation = formatAddress(locationData);
+      setLocation(formattedLocation);
+    } catch (err) {
+      console.error("Error loading store location:", err);
+      setLocation("Location unavailable");
     }
   };
 
@@ -113,7 +146,7 @@ const StorePage = () => {
                 <div className="store-info">
                   <div className="store-logo-container">
                     <img
-                      src={store.logo || shop1SampleImage}
+                      src={store.logo_url || shop1SampleImage}
                       alt={`${store.name} logo`}
                       className="store-logo"
                     />
@@ -132,14 +165,14 @@ const StorePage = () => {
                     <div className="store-meta">
                       <div className="store-meta-item">
                         <span className="meta-icon">📍</span>
-                        <div className="store-location">
-                          {store.location || "Location unknown"}
-                        </div>
+                        <div className="store-location">{location}</div>
                       </div>
 
                       <div className="store-meta-item">
                         <span className="meta-icon">🕒</span>
-                        <div>Since {store.foundedDate || "N/A"}</div>
+                        <div>
+                          Since {store.createdAt.split("T")[0] || "N/A"}
+                        </div>
                       </div>
                     </div>
 

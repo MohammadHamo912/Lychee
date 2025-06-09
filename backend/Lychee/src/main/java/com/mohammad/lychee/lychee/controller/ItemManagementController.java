@@ -7,6 +7,7 @@ import com.mohammad.lychee.lychee.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -31,6 +32,9 @@ public class ItemManagementController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate; // Add this for direct database operations
 
     /**
      * Create a complete item (handles Product, ProductVariant, Category, and Item creation)
@@ -103,7 +107,8 @@ public class ItemManagementController {
 
                 // Link product to category if provided
                 if (category != null) {
-//                    productService.linkProductToCategory(product.getProductId(), category.getCategoryId());
+                    // You'll need to add this method to ProductService or create a ProductCategoryService
+                    linkProductToCategory(product.getProductId(), category.getCategoryId());
                 }
             }
 
@@ -248,5 +253,24 @@ public class ItemManagementController {
         response.put("success", false);
         response.put("message", message);
         return response;
+    }
+
+    /**
+     * Helper method to link product to category
+     */
+    private void linkProductToCategory(Integer productId, Integer categoryId) {
+        try {
+            // Check if the link already exists
+            String checkSql = "SELECT COUNT(*) FROM ProductCategory WHERE Product_ID = ? AND Category_ID = ?";
+            Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, productId, categoryId);
+
+            if (count == 0) {
+                // Insert the new relationship
+                String insertSql = "INSERT INTO ProductCategory (Product_ID, Category_ID) VALUES (?, ?)";
+                jdbcTemplate.update(insertSql, productId, categoryId);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to link product to category", e);
+        }
     }
 }

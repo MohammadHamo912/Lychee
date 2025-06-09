@@ -28,18 +28,15 @@ const WishlistContainer = () => {
         setLoading(true);
         console.log("WishlistContainer - Fetching wishlist for user:", userId);
 
-        // Step 1: Get wishlist items (contains itemId references)
         const wishlistData = await getWishlist(userId);
         console.log("WishlistContainer - Raw wishlist data:", wishlistData);
 
         setWishlistItems(wishlistData || []);
 
         if (wishlistData && wishlistData.length > 0) {
-          // Step 2: Extract unique item IDs from wishlist
           const itemIds = [...new Set(wishlistData.map((item) => item.itemId))];
           console.log("WishlistContainer - Unique item IDs:", itemIds);
 
-          // Step 3: Fetch enriched item data using the item IDs
           const enrichedData = await getEnrichedItemsByIds(itemIds);
           console.log("WishlistContainer - Enriched items data:", enrichedData);
 

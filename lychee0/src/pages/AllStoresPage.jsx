@@ -103,10 +103,60 @@ const AllStoresPage = () => {
     applyFiltersAndSearch(searchTerm, filters);
   };
 
+  // Enhanced search function that prioritizes store name matching
+  const searchStoresByName = (storesList, searchQuery) => {
+    if (!searchQuery || !searchQuery.trim()) {
+      return storesList;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+
+    return storesList.filter((store) => {
+      // Primary search: Store name
+      const storeName = (store.name || "").toLowerCase();
+
+      // Check for exact match first
+      if (storeName === query) {
+        return true;
+      }
+
+      // Check if store name includes the search term
+      if (storeName.includes(query)) {
+        return true;
+      }
+
+      // Check if any word in store name starts with the search term
+      const storeNameWords = storeName.split(/\s+/);
+      if (storeNameWords.some((word) => word.startsWith(query))) {
+        return true;
+      }
+
+      // Secondary search: Store description (less priority)
+      const storeDescription = (store.description || "").toLowerCase();
+      if (storeDescription.includes(query)) {
+        return true;
+      }
+
+      // Tertiary search: Categories if available
+      if (store.categories && Array.isArray(store.categories)) {
+        return store.categories.some((category) =>
+          category.toLowerCase().includes(query)
+        );
+      }
+
+      return false;
+    });
+  };
+
   const applyFiltersAndSearch = async (search = "", filters = {}) => {
     const { location, minRating, sortOption } = filters;
 
     let result = [...stores];
+
+    // Apply search first (prioritizing name search)
+    if (search.trim()) {
+      result = searchStoresByName(result, search);
+    }
 
     // Location filtering with enhanced matching
     if (location && location.trim()) {
@@ -154,20 +204,7 @@ const AllStoresPage = () => {
         .map(({ store }) => store);
     }
 
-    // Search filtering
-    if (search.trim()) {
-      const lowerSearch = search.toLowerCase();
-      result = result.filter(
-        (store) =>
-          store.name?.toLowerCase().includes(lowerSearch) ||
-          store.description?.toLowerCase().includes(lowerSearch) ||
-          store.categories?.some((cat) =>
-            cat.toLowerCase().includes(lowerSearch)
-          )
-      );
-    }
-
-    // Sorting
+    // Sorting with enhanced name search relevance
     switch (sortOption) {
       case "nameAZ":
         result.sort((a, b) =>
@@ -182,6 +219,33 @@ const AllStoresPage = () => {
             .toLowerCase()
             .localeCompare((a.name || "").toLowerCase())
         );
+        break;
+      case "relevance":
+        // Sort by search relevance if there's a search term
+        if (search.trim()) {
+          const query = search.toLowerCase().trim();
+          result.sort((a, b) => {
+            const aName = (a.name || "").toLowerCase();
+            const bName = (b.name || "").toLowerCase();
+
+            // Exact matches first
+            if (aName === query && bName !== query) return -1;
+            if (bName === query && aName !== query) return 1;
+
+            // Names that start with the query
+            if (aName.startsWith(query) && !bName.startsWith(query)) return -1;
+            if (bName.startsWith(query) && !aName.startsWith(query)) return 1;
+
+            // Names that include the query
+            const aIncludes = aName.includes(query);
+            const bIncludes = bName.includes(query);
+            if (aIncludes && !bIncludes) return -1;
+            if (bIncludes && !aIncludes) return 1;
+
+            // Alphabetical as fallback
+            return aName.localeCompare(bName);
+          });
+        }
         break;
       case "highestRated":
         // For rating sorting, we need to fetch ratings and sort accordingly
@@ -220,7 +284,21 @@ const AllStoresPage = () => {
         result = reviewCountsForSortingLow.map((item) => item.store);
         break;
       default:
-        // Keep original order
+        // If there's a search term but no specific sort, apply relevance sorting
+        if (search.trim()) {
+          const query = search.toLowerCase().trim();
+          result.sort((a, b) => {
+            const aName = (a.name || "").toLowerCase();
+            const bName = (b.name || "").toLowerCase();
+
+            if (aName === query && bName !== query) return -1;
+            if (bName === query && aName !== query) return 1;
+            if (aName.startsWith(query) && !bName.startsWith(query)) return -1;
+            if (bName.startsWith(query) && !aName.startsWith(query)) return 1;
+
+            return aName.localeCompare(bName);
+          });
+        }
         break;
     }
 
@@ -260,7 +338,12 @@ const AllStoresPage = () => {
             world
           </p>
           <div className="search-container">
-            <SearchBar searchType="stores" onSearch={handleSearch} />
+            <SearchBar
+              searchType="stores"
+              onSearch={handleSearch}
+              placeholder="Search stores by name..."
+              value={searchTerm}
+            />
           </div>
         </div>
       </div>
@@ -282,13 +365,18 @@ const AllStoresPage = () => {
         <div className="stores-main">
           <div className="stores-results-header">
             <h2>
-              All Stores
+              {searchTerm ? `Search Results` : "All Stores"}
               {filteredStores.length > 0 && ` (${filteredStores.length})`}
             </h2>
             {searchTerm && (
               <div className="search-results-info">
                 Showing results for: <span>"{searchTerm}"</span>
-                <button onClick={handleClearSearch}>Clear Search</button>
+                <button
+                  onClick={handleClearSearch}
+                  className="clear-search-btn"
+                >
+                  Clear Search
+                </button>
               </div>
             )}
           </div>
@@ -319,12 +407,14 @@ const AllStoresPage = () => {
             <div className="no-results">
               <h3>No stores found</h3>
               <p>
-                {getActiveFilterCount() > 0 || searchTerm
-                  ? "Try adjusting your filters or search term"
+                {searchTerm
+                  ? `No stores found matching "${searchTerm}"`
+                  : getActiveFilterCount() > 0
+                  ? "Try adjusting your filters"
                   : "No stores available at the moment"}
               </p>
               <button onClick={handleClearSearch} className="reset-search-btn">
-                Clear All Filters
+                {searchTerm ? "Clear Search" : "Clear All Filters"}
               </button>
             </div>
           )}
