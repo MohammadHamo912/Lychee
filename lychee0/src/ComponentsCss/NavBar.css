@@ -11,7 +11,7 @@ body {
 }
 
 .navbar {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -133,7 +133,6 @@ body {
 }
 
 @media (max-width: 992px) {
-
   .nav-links,
   .nav-auth {
     display: none;

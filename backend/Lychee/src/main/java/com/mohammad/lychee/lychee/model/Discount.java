@@ -5,21 +5,37 @@ import java.time.LocalDate;
 
 public class Discount {
     private int discountId;
-    private String discountType;
-    private BigDecimal discountValue;
-    private LocalDate expirationDate;
+    private BigDecimal discountPercentage;
+    private String code;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private boolean active;
 
+    // Default constructor
     public Discount() {}
 
-    public Discount(int discountId, String discountType, BigDecimal discountValue, LocalDate expirationDate) {
+    // Constructor with all fields
+    public Discount(int discountId, BigDecimal discountPercentage, String code,
+                    LocalDate startDate, LocalDate endDate, boolean active) {
         this.discountId = discountId;
-        this.discountType = discountType;
-        this.discountValue = discountValue;
-        this.expirationDate = expirationDate;
+        this.discountPercentage = discountPercentage;
+        this.code = code;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.active = active;
     }
 
-    // Getters and setters 👇
+    // Constructor without ID (for creating new discounts)
+    public Discount(BigDecimal discountPercentage, String code,
+                    LocalDate startDate, LocalDate endDate, boolean active) {
+        this.discountPercentage = discountPercentage;
+        this.code = code;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.active = active;
+    }
 
+    // Getters and setters
     public int getDiscountId() {
         return discountId;
     }
@@ -28,28 +44,63 @@ public class Discount {
         this.discountId = discountId;
     }
 
-    public String getDiscountType() {
-        return discountType;
+    public BigDecimal getDiscountPercentage() {
+        return discountPercentage;
     }
 
-    public void setDiscountType(String discountType) {
-        this.discountType = discountType;
+    public void setDiscountPercentage(BigDecimal discountPercentage) {
+        this.discountPercentage = discountPercentage;
     }
 
-    public BigDecimal getDiscountValue() {
-        return discountValue;
+    public String getCode() {
+        return code;
     }
 
-    public void setDiscountValue(BigDecimal discountValue) {
-        this.discountValue = discountValue;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public LocalDate getExpirationDate() {
-        return expirationDate;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    // Helper method to check if discount is currently valid
+    public boolean isCurrentlyValid() {
+        LocalDate now = LocalDate.now();
+        return active &&
+                (startDate == null || !now.isBefore(startDate)) &&
+                (endDate == null || !now.isAfter(endDate));
+    }
+
+    @Override
+    public String toString() {
+        return "Discount{" +
+                "discountId=" + discountId +
+                ", discountPercentage=" + discountPercentage +
+                ", code='" + code + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", active=" + active +
+                '}';
+    }
 }

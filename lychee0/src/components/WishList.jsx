@@ -1,20 +1,20 @@
 // src/pages/WishlistContainer.jsx
-import React, { useState, useEffect } from 'react';
-import {
-  getWishlist,
-  removeFromWishlist
-} from '../api/wishlist';
-import '../ComponentsCss/WishList.css';
-import { useUser } from '../context/UserContext';
+import React, { useState, useEffect } from "react";
+import { getWishlist, removeFromWishlist } from "../api/wishlist";
+import { getEnrichedItemsByIds } from "../api/items";
+import ItemCard from "./ItemCard";
+import "../ComponentsCss/WishList.css";
+import { useUser } from "../context/UserContext";
 
 const WishlistContainer = () => {
-  const { user, addToCart } = useUser();
-  const userId = user?.userId;
+  const { user, addToCart, isAddingToCart } = useUser();
+  const userId = user?.userId || user?.id;
 
   const [wishlistItems, setWishlistItems] = useState([]);
+  const [enrichedItems, setEnrichedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [cartStatus, setCartStatus] = useState({});
+  const [itemLoadingStates, setItemLoadingStates] = useState({});
 
   useEffect(() => {
     if (!userId) {
@@ -23,99 +23,158 @@ const WishlistContainer = () => {
       return;
     }
 
-    const fetchData = async () => {
+    const fetchWishlistData = async () => {
       try {
-        const data = await getWishlist(userId);
-        setWishlistItems(data || []);
+        setLoading(true);
+        console.log("WishlistContainer - Fetching wishlist for user:", userId);
+
+        // Step 1: Get wishlist items (contains itemId references)
+        const wishlistData = await getWishlist(userId);
+        console.log("WishlistContainer - Raw wishlist data:", wishlistData);
+
+        setWishlistItems(wishlistData || []);
+
+        if (wishlistData && wishlistData.length > 0) {
+          // Step 2: Extract unique item IDs from wishlist
+          const itemIds = [...new Set(wishlistData.map((item) => item.itemId))];
+          console.log("WishlistContainer - Unique item IDs:", itemIds);
+
+          // Step 3: Fetch enriched item data using the item IDs
+          const enrichedData = await getEnrichedItemsByIds(itemIds);
+          console.log("WishlistContainer - Enriched items data:", enrichedData);
+
+          setEnrichedItems(enrichedData || []);
+        } else {
+          setEnrichedItems([]);
+        }
       } catch (err) {
-        setError("Failed to load wishlist.");
-        console.error("❌ Error fetching wishlist:", err);
+        console.error(
+          "❌ WishlistContainer - Error fetching wishlist data:",
+          err
+        );
+        setError("Failed to load wishlist items.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchWishlistData();
   }, [userId]);
 
-  const handleRemove = async (itemId) => {
+  const handleRemoveFromWishlist = async (itemId) => {
     try {
+      console.log("WishlistContainer - Removing item from wishlist:", itemId);
+
       await removeFromWishlist(userId, itemId);
+
+      // Update local state by removing the item
       setWishlistItems((prev) => prev.filter((item) => item.itemId !== itemId));
+      setEnrichedItems((prev) => prev.filter((item) => item.id !== itemId));
+
+      console.log("✅ Item successfully removed from wishlist!");
     } catch (err) {
-      console.error("❌ Error removing item:", err);
+      console.error("❌ Error removing item from wishlist:", err);
+      // You could show a toast/notification here
     }
   };
 
   const handleAddToCart = async (item) => {
     try {
-      setCartStatus((prev) => ({ ...prev, [item.itemId]: 'loading' }));
+      console.log("WishlistContainer - Adding item to cart:", item);
+
+      // Set loading state for this specific item
+      setItemLoadingStates((prev) => ({ ...prev, [item.id]: true }));
+
       const success = await addToCart(item, 1);
-      setCartStatus((prev) => ({
-        ...prev,
-        [item.itemId]: success ? 'added' : 'error'
-      }));
 
       if (success) {
-        setTimeout(() => {
-          setCartStatus((prev) => ({ ...prev, [item.itemId]: null }));
-        }, 1500);
+        console.log("✅ Item successfully added to cart!");
+        // You could show a success message or toast here
+      } else {
+        console.error("❌ Failed to add item to cart");
       }
     } catch (err) {
-      setCartStatus((prev) => ({ ...prev, [item.itemId]: 'error' }));
+      console.error("❌ Error adding item to cart:", err);
+    } finally {
+      // Clear loading state for this specific item
+      setItemLoadingStates((prev) => ({ ...prev, [item.id]: false }));
     }
   };
 
-  const formatPrice = (price) => `$${price?.toFixed(2) || "0.00"}`;
-  const getImage = (item) => item.imageUrl || "https://placehold.co/150x150?text=No+Image";
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="wishlist-container">
+        <h2>Your Wishlist</h2>
+        <div className="loading-message">
+          <p>Loading your wishlist items...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="wishlist-container">
+        <h2>Your Wishlist</h2>
+        <div className="error-message">
+          <p className="error">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty wishlist
+  if (enrichedItems.length === 0) {
+    return (
+      <div className="wishlist-container">
+        <h2>Your Wishlist</h2>
+        <div className="empty-wishlist">
+          <p>Your wishlist is empty.</p>
+          <p>Start adding items you love to see them here!</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="wishlist-container">
       <h2>Your Wishlist</h2>
+      <div className="wishlist-count">
+        <p>
+          {enrichedItems.length} item{enrichedItems.length !== 1 ? "s" : ""} in
+          your wishlist
+        </p>
+      </div>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p className="error">{error}</p>
-      ) : wishlistItems.length === 0 ? (
-        <p>Your wishlist is empty.</p>
-      ) : (
-        <ul className="wishlist-list">
-          {wishlistItems.map((item, index) => (
-            <li key={item.itemId || `fallback-${index}`} className="wishlist-item">
-              <img
-                src={getImage(item)}
-                alt={item.name}
-                className="wishlist-item-image"
+      <div className="wishlist-grid">
+        {enrichedItems.map((item) => {
+          const isItemLoading = itemLoadingStates[item.id] || false;
+
+          return (
+            <div key={item.id} className="wishlist-item-wrapper">
+              <ItemCard
+                item={item}
+                onAddToCart={() => handleAddToCart(item)}
+                isAddingToCart={isItemLoading}
+                allItems={enrichedItems}
               />
-              <div className="wishlist-item-info">
-                <h3 className="wishlist-item-name">{item.name}</h3>
-                <p className="wishlist-item-price">{formatPrice(item.price)}</p>
 
-                <div className="wishlist-buttons">
-                  <button
-                    className="add-cart-btn"
-                    disabled={cartStatus[item.itemId] === "loading"}
-                    onClick={() => handleAddToCart(item)}
-                  >
-                    {cartStatus[item.itemId] === "added"
-                      ? "✓ Added"
-                      : cartStatus[item.itemId] === "loading"
-                        ? "Adding..."
-                        : "Add to Cart"}
-                  </button>
-                  <button
-                    className="remove-wishlist-btn"
-                    onClick={() => handleRemove(item.itemId)}
-                  >
-                    Remove
-                  </button>
-                </div>
+              {/* Add remove from wishlist button overlay */}
+              <div className="wishlist-actions">
+                <button
+                  className="remove-from-wishlist-btn"
+                  onClick={() => handleRemoveFromWishlist(item.id)}
+                  title="Remove from wishlist"
+                >
+                  ❤️ Remove from Wishlist
+                </button>
               </div>
-            </li>
-          ))}
-        </ul>
-      )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
