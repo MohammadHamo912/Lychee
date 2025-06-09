@@ -14,4 +14,6 @@ public interface OrderService {
     void deleteOrder(Integer orderId);
     List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId);
     List<Map<String, Object>> getOrderItemSummaries(int orderId);
+    void updateOrderStatus(int orderId, String newStatus);
+    List<Map<String, Object>> getOrderItemDetailsByStoreAndOrderId(Integer storeId, Integer orderId);
 }

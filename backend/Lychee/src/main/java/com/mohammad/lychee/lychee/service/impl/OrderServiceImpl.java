@@ -66,5 +66,13 @@ public class OrderServiceImpl implements OrderService {
     public List<Map<String, Object>> getOrderItemSummaries(int orderId) {
         return orderRepository.getOrderItemSummaries(orderId);
     }
+    @Override
+    public void updateOrderStatus(int orderId, String newStatus) {
+        orderRepository.updateOrderStatus(orderId, newStatus);
+    }
+    @Override
+    public List<Map<String, Object>> getOrderItemDetailsByStoreAndOrderId(Integer storeId, Integer orderId) {
+        return orderRepository.getOrderItemDetailsByStoreAndOrderId(storeId, orderId);
+    }
 
 }

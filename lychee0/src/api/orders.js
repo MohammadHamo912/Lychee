@@ -46,3 +46,17 @@ export const fetchOrderItems = async (orderId) => {
     const response = await axios.get(`http://localhost:8081/api/orders/${orderId}/items`);
     return response.data;
 };
+
+export const updateOrderStatus = async (orderId, status) => {
+    await axios.put(`http://localhost:8081/api/orders/${orderId}/status`, { status });
+};
+
+export const fetchOrderItemDetailsByStore = async (storeId, orderId) => {
+    if (!storeId || !orderId) {
+        throw new Error(`Missing storeId or orderId: storeId=${storeId}, orderId=${orderId}`);
+    }
+    const response = await fetch(`http://localhost:8081/api/orders/order-items/store/${storeId}/order/${orderId}`); // ✅ FIXED
+    if (!response.ok) throw new Error('Failed to fetch items for store and order');
+    return await response.json();
+};
+

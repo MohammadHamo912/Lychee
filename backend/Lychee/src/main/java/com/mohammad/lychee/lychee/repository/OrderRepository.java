@@ -22,4 +22,6 @@ public interface OrderRepository {
      * Update order status
      */
     void updateOrderStatus(Integer orderId, String status);
+    List<Map<String, Object>> getOrderItemDetailsByStoreAndOrderId(Integer storeId, Integer orderId);
+
 }

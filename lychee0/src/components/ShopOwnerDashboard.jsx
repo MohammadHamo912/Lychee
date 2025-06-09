@@ -20,11 +20,8 @@ const ShopOwnerDashboard = () => {
     const [logoFile, setLogoFile] = useState(null);
     const [timeframe, setTimeframe] = useState('7days');
     const [salesData, setSalesData] = useState([]);
-    const [reviews, setReviews] = useState([]);
 
-    const averageRating = reviews.length
-        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-        : 0;
+    const averageRating = storeInfo?.storeRating || 0;
     const roundedRating = Math.round(averageRating);
 
     useEffect(() => {
@@ -47,6 +44,7 @@ const ShopOwnerDashboard = () => {
                     totalSales: 0,
                     totalOrders: 0,
                     totalProducts: 0,
+                    storeRating: 0,
                 };
                 setStoreInfo(parsed);
                 setProfileForm(parsed);
@@ -57,6 +55,7 @@ const ShopOwnerDashboard = () => {
                     totalSales: metrics.totalSales || 0,
                     totalOrders: metrics.totalOrders || 0,
                     totalProducts: metrics.totalProducts || 0,
+                    storeRating: metrics.storeRating || 0,
                 }));
             } catch (err) {
                 console.error("❌ Failed to load store or metrics:", err);
@@ -178,9 +177,6 @@ const ShopOwnerDashboard = () => {
                     <h2>Edit Store Profile</h2>
                     <form className="profile-form" onSubmit={e => e.preventDefault()}>
                         <label>Store Name: <input type="text" name="storeName" value={profileForm.storeName} onChange={handleInputChange} /></label>
-                        <label>City: <input type="text" name="city" value={profileForm.address.city} onChange={handleInputChange} /></label>
-                        <label>Street: <input type="text" name="street" value={profileForm.address.street} onChange={handleInputChange} /></label>
-                        <label>Building: <input type="text" name="building" value={profileForm.address.building} onChange={handleInputChange} /></label>
                         <label>Description: <textarea name="description" rows="3" value={profileForm.description} onChange={handleInputChange}></textarea></label>
                         <label>Store Logo: <input type="file" accept="image/*" onChange={handleLogoChange} /></label>
                         {profileForm.logoUrl && (
