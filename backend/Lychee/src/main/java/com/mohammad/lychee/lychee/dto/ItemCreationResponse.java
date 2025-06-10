@@ -4,10 +4,10 @@ public class ItemCreationResponse {
 
     private boolean success;
     private String message;
-    private Integer itemId;
-    private Integer productId;
-    private Integer variantId;
-    private Integer categoryId;
+    private Integer item_id;
+    private Integer product_id;
+    private Integer variant_id;
+    private Integer category_id;
 
     // Constructors
     public ItemCreationResponse() {}
@@ -34,36 +34,36 @@ public class ItemCreationResponse {
         this.message = message;
     }
 
-    public Integer getItemId() {
-        return itemId;
+    public Integer getItem_id() {
+        return item_id;
     }
 
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
+    public void setItem_id(Integer item_id) {
+        this.item_id = item_id;
     }
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getProduct_id() {
+        return product_id;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setProduct_id(Integer product_id) {
+        this.product_id = product_id;
     }
 
-    public Integer getVariantId() {
-        return variantId;
+    public Integer getVariant_id() {
+        return variant_id;
     }
 
-    public void setVariantId(Integer variantId) {
-        this.variantId = variantId;
+    public void setVariant_id(Integer variant_id) {
+        this.variant_id = variant_id;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public Integer getCategory_id() {
+        return category_id;
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory_id(Integer category_id) {
+        this.category_id = category_id;
     }
 
     @Override
@@ -71,10 +71,10 @@ public class ItemCreationResponse {
         return "ItemCreationResponse{" +
                 "success=" + success +
                 ", message='" + message + '\'' +
-                ", itemId=" + itemId +
-                ", productId=" + productId +
-                ", variantId=" + variantId +
-                ", categoryId=" + categoryId +
+                ", itemId=" + item_id +
+                ", productId=" + product_id +
+                ", variantId=" + variant_id +
+                ", categoryId=" + category_id +
                 '}';
     }
 }

@@ -1,11 +1,11 @@
 package com.mohammad.lychee.lychee.dto;
 
 public class CheckoutDTO {
-    private Integer userId;
-    private ShippingAddressDTO shippingAddress;
-    private String orderNotes;
+    private Integer user_id;
+    private ShippingAddressDTO shipping_address;
+    private String order_notes;
 
-    private String paymentMethod;
+    private String payment_method;
 
 
     // Constructors
@@ -34,16 +34,16 @@ public class CheckoutDTO {
 
     public static class CheckoutResponseDTO {
         private boolean success;
-        private Integer orderId;
+        private Integer order_id;
         private String message;
-        private String transactionReference;
+        private String transaction_reference;
 
         // Constructors
         public CheckoutResponseDTO() {}
 
-        public CheckoutResponseDTO(boolean success, Integer orderId, String message) {
+        public CheckoutResponseDTO(boolean success, Integer order_id, String message) {
             this.success = success;
-            this.orderId = orderId;
+            this.order_id = order_id;
             this.message = message;
         }
 
@@ -51,32 +51,32 @@ public class CheckoutDTO {
         public boolean isSuccess() { return success; }
         public void setSuccess(boolean success) { this.success = success; }
 
-        public Integer getOrderId() { return orderId; }
-        public void setOrderId(Integer orderId) { this.orderId = orderId; }
+        public Integer getOrder_id() { return order_id; }
+        public void setOrder_id(Integer order_id) { this.order_id = order_id; }
 
         public String getMessage() { return message; }
         public void setMessage(String message) { this.message = message; }
 
-        public String getTransactionReference() { return transactionReference; }
-        public void setTransactionReference(String transactionReference) { this.transactionReference = transactionReference; }
+        public String getTransaction_reference() { return transaction_reference; }
+        public void setTransaction_reference(String transaction_reference) { this.transaction_reference = transaction_reference; }
     }
 
     // Main DTO Getters and Setters
-    public Integer getUserId() { return userId; }
-    public void setUserId(Integer userId) { this.userId = userId; }
+    public Integer getUser_id() { return user_id; }
+    public void setUser_id(Integer user_id) { this.user_id = user_id; }
 
-    public ShippingAddressDTO getShippingAddress() { return shippingAddress; }
-    public void setShippingAddress(ShippingAddressDTO shippingAddress) { this.shippingAddress = shippingAddress; }
+    public ShippingAddressDTO getShipping_address() { return shipping_address; }
+    public void setShipping_address(ShippingAddressDTO shipping_address) { this.shipping_address = shipping_address; }
 
 
-    public String getOrderNotes() { return orderNotes; }
-    public void setOrderNotes(String orderNotes) { this.orderNotes = orderNotes; }
-    public String getPaymentMethod() {
-        return paymentMethod;
+    public String getOrder_notes() { return order_notes; }
+    public void setOrder_notes(String order_notes) { this.order_notes = order_notes; }
+    public String getPayment_method() {
+        return payment_method;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
+    public void setPayment_method(String payment_method) {
+        this.payment_method = payment_method;
     }
 
 }

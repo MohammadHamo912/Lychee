@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 
 
 public class CartEnrichedItem extends EnrichedItem {
-    private Integer cartQuantity;
+    private Integer cart_quantity;
 
     // Constructors
     public CartEnrichedItem() {
         super();
     }
 
-    public CartEnrichedItem(EnrichedItem enrichedItem, Integer cartQuantity) {
+    public CartEnrichedItem(EnrichedItem enrichedItem, Integer cart_quantity) {
         super();
         // Copy all fields from EnrichedItem
         this.setItem_id(enrichedItem.getItem_id());
@@ -28,29 +28,29 @@ public class CartEnrichedItem extends EnrichedItem {
         this.setBrand(enrichedItem.getBrand());
         this.setBarcode(enrichedItem.getBarcode());
         this.setImage(enrichedItem.getImage());
-        this.setCurrentVariant(enrichedItem.getCurrentVariant());
-        this.setAvailableVariants(enrichedItem.getAvailableVariants());
-        this.setStoreName(enrichedItem.getStoreName());
-        this.setFinalPrice(enrichedItem.getFinalPrice());
+        this.setCurrent_variant(enrichedItem.getCurrent_variant());
+        this.setAvailable_variants(enrichedItem.getAvailable_variants());
+        this.setStore_name(enrichedItem.getStore_name());
+        this.setFinal_price(enrichedItem.getFinal_price());
         this.setStock(enrichedItem.getStock());
 
         // Set the cart-specific field
-        this.cartQuantity = cartQuantity;
+        this.cart_quantity = cart_quantity;
     }
 
     // Cart quantity getter and setter
-    public Integer getCartQuantity() {
-        return cartQuantity;
+    public Integer getCart_quantity() {
+        return cart_quantity;
     }
 
-    public void setCartQuantity(Integer cartQuantity) {
-        this.cartQuantity = cartQuantity;
+    public void setCart_quantity(Integer cart_quantity) {
+        this.cart_quantity = cart_quantity;
     }
 
     // Helper method to calculate total price for this cart item
     public BigDecimal getCartItemTotal() {
-        if (getFinalPrice() != null && cartQuantity != null) {
-            return getFinalPrice().multiply(BigDecimal.valueOf(cartQuantity));
+        if (getFinal_price() != null && cart_quantity != null) {
+            return getFinal_price().multiply(BigDecimal.valueOf(cart_quantity));
         }
         return BigDecimal.ZERO;
     }

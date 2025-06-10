@@ -68,24 +68,24 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Transactional
     public CheckoutDTO.CheckoutResponseDTO processCheckout(CheckoutDTO checkoutData){
         try {
-            System.out.println("CheckoutService - Starting checkout process for user: " + checkoutData.getUserId());
+            System.out.println("CheckoutService - Starting checkout process for user: " + checkoutData.getUser_id());
 
             // 1. Get and validate cart items
-            List<CartEnrichedItem> cartItems = getCartItems(checkoutData.getUserId());
+            List<CartEnrichedItem> cartItems = getCartItems(checkoutData.getUser_id());
             if (cartItems.isEmpty()) {
                 return new CheckoutDTO.CheckoutResponseDTO(false, null, "Cart is empty");
             }
 
             // 2. Validate stock availability
             for (CartEnrichedItem item : cartItems) {
-                if (item.getStock_quantity() < item.getCartQuantity()) {
+                if (item.getStock_quantity() < item.getCart_quantity()) {
                     return new CheckoutDTO.CheckoutResponseDTO(false, null,
                             "Insufficient stock for item: " + item.getName());
                 }
             }
 
             // 3. Create shipping address
-            Integer addressId = createShippingAddress(checkoutData.getShippingAddress());
+            Integer addressId = createShippingAddress(checkoutData.getShipping_address());
             if (addressId == null) {
                 return new CheckoutDTO.CheckoutResponseDTO(false, null, "Failed to create shipping address");
             }
@@ -94,7 +94,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             BigDecimal totalPrice = calculateOrderTotal(cartItems);
 
             // 5. Create order
-            Integer orderId = createOrder(checkoutData.getUserId(), addressId, totalPrice, checkoutData.getOrderNotes());
+            Integer orderId = createOrder(checkoutData.getUser_id(), addressId, totalPrice, checkoutData.getOrder_notes());
             if (orderId == null) {
                 return new CheckoutDTO.CheckoutResponseDTO(false, null, "Failed to create order");
             }
@@ -106,14 +106,14 @@ public class CheckoutServiceImpl implements CheckoutService {
             }
 
 
-            boolean paymentTransaction = processDummyPayment(checkoutData.getUserId(), totalPrice,checkoutData.getPaymentMethod());
+            boolean paymentTransaction = processDummyPayment(checkoutData.getUser_id(), totalPrice,checkoutData.getPayment_method());
             if(!paymentTransaction){
                 throw new RuntimeException("Failed to save the paymentTransaction");
             }
 
 
             // 8. Clear shopping cart
-            clearShoppingCart(checkoutData.getUserId(), cartItems);
+            clearShoppingCart(checkoutData.getUser_id(), cartItems);
 
             // 10. Update order status
             updateOrderStatus(orderId, "confirmed");
@@ -209,7 +209,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         try {
             for (CartEnrichedItem item : items) {
                 // Reserve inventory
-                boolean stockUpdated = itemRepository.updateStock(item.getItem_id(), item.getCartQuantity());
+                boolean stockUpdated = itemRepository.updateStock(item.getItem_id(), item.getCart_quantity());
                 if (!stockUpdated) {
                     throw new RuntimeException("Failed to reserve stock for item: " + item.getItem_id());
                 }
@@ -218,7 +218,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                 OrderItem orderItem = new OrderItem();
                 orderItem.setOrder_id(orderId);
                 orderItem.setItem_id(item.getItem_id());
-                orderItem.setQuantity(item.getCartQuantity());
+                orderItem.setQuantity(item.getCart_quantity());
                 orderItem.setPrice_at_purchase(item.getPrice());
                 orderItem.setShipping_status("processing");
                 orderItem.setCreated_at(LocalDateTime.now());

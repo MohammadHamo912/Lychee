@@ -40,7 +40,7 @@ public class ItemManagementController {
     public ResponseEntity<?> createCompleteItem(@RequestBody ItemCreationRequest request) {
         try {
             // Validate required fields
-            if (request.getProductName() == null || request.getProductName().trim().isEmpty()) {
+            if (request.getProduct_name() == null || request.getProduct_name().trim().isEmpty()) {
                 return ResponseEntity.badRequest().body(createErrorResponse("Product name is required"));
             }
 
@@ -48,24 +48,24 @@ public class ItemManagementController {
                 return ResponseEntity.badRequest().body(createErrorResponse("Valid price is required"));
             }
 
-            if (request.getStoreId() == null) {
+            if (request.getStore_id() == null) {
                 return ResponseEntity.badRequest().body(createErrorResponse("store ID is required"));
             }
 
             // Step 1: Handle Category
             Category category = null;
-            if (request.getCategoryId() != null) {
-                category = categoryService.getCategoryById(request.getCategoryId()).orElse(null);
+            if (request.getCategory_id() != null) {
+                category = categoryService.getCategoryById(request.getCategory_id()).orElse(null);
                 if (category == null) {
                     return ResponseEntity.badRequest().body(createErrorResponse("Category not found"));
                 }
-            } else if (request.getNewCategoryName() != null && !request.getNewCategoryName().trim().isEmpty()) {
+            } else if (request.getNew_category_name() != null && !request.getNew_category_name().trim().isEmpty()) {
                 // Create new category
-                if (request.getParentCategoryId() == null) {
+                if (request.getParent_category_id() == null) {
                     return ResponseEntity.badRequest().body(createErrorResponse("Parent category is required for new categories"));
                 }
 
-                Category parentCategory = categoryService.getCategoryById(request.getParentCategoryId()).orElse(null);
+                Category parentCategory = categoryService.getCategoryById(request.getParent_category_id()).orElse(null);
                 if (parentCategory == null) {
                     return ResponseEntity.badRequest().body(createErrorResponse("Parent category not found"));
                 }
@@ -76,8 +76,8 @@ public class ItemManagementController {
                 }
 
                 Category newCategory = new Category();
-                newCategory.setName(request.getNewCategoryName().trim());
-                newCategory.setParent_id(request.getParentCategoryId());
+                newCategory.setName(request.getNew_category_name().trim());
+                newCategory.setParent_id(request.getParent_category_id());
                 newCategory.setLevel(parentCategory.getLevel() + 1);
 
                 category = categoryService.createCategory(newCategory);
@@ -94,11 +94,11 @@ public class ItemManagementController {
             // If product doesn't exist, create it
             if (product == null) {
                 product = new Product();
-                product.setName(request.getProductName().trim());
+                product.setName(request.getProduct_name().trim());
                 product.setDescription(request.getDescription());
                 product.setBarcode(request.getBarcode());
                 product.setBrand(request.getBrand());
-                product.setLogo_url(request.getImageUrl());
+                product.setLogo_url(request.getImage_url());
 
                 product = productService.createProduct(product);
 
@@ -135,7 +135,7 @@ public class ItemManagementController {
             // Step 4: Check if Item already exists for this store and variant
             List<Item> existingItems = itemService.getItemsByProductVariantId(variant.getProduct_variant_id());
             Item existingItem = existingItems.stream()
-                    .filter(item -> item.getStore_id() == request.getStoreId())
+                    .filter(item -> item.getStore_id() == request.getStore_id())
                     .findFirst()
                     .orElse(null);
 
@@ -145,7 +145,7 @@ public class ItemManagementController {
 
             // Step 5: Create Item
             Item item = new Item();
-            item.setStore_id(request.getStoreId());
+            item.setStore_id(request.getStore_id());
             item.setProduct_variant_id(variant.getProduct_variant_id());
             item.setPrice(request.getPrice());
             item.setStock_quantity(request.getStock_quantity() != null ? request.getStock_quantity() : 0);
@@ -157,10 +157,10 @@ public class ItemManagementController {
             ItemCreationResponse response = new ItemCreationResponse();
             response.setSuccess(true);
             response.setMessage("Item created successfully");
-            response.setItemId(item.getItem_id());
-            response.setProductId(product.getProduct_id());
-            response.setVariantId(variant.getProduct_variant_id());
-            response.setCategoryId(category != null ? category.getCategory_id() : null);
+            response.setItem_id(item.getItem_id());
+            response.setProduct_id(product.getProduct_id());
+            response.setVariant_id(variant.getProduct_variant_id());
+            response.setCategory_id(category != null ? category.getCategory_id() : null);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 

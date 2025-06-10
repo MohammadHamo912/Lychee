@@ -40,16 +40,16 @@ public class CheckoutController {
     @PostMapping("/process")
     public ResponseEntity<CheckoutDTO.CheckoutResponseDTO> processCheckout(@RequestBody CheckoutDTO checkoutData) {
         try {
-            System.out.println("CheckoutController - Processing checkout for user: " + checkoutData.getUserId());
+            System.out.println("CheckoutController - Processing checkout for user: " + checkoutData.getUser_id());
 
             // Validate required fields
-            if (checkoutData.getUserId() == null) {
+            if (checkoutData.getUser_id() == null) {
                 return ResponseEntity.badRequest().body(
                         new CheckoutDTO.CheckoutResponseDTO(false, null, "User ID is required")
                 );
             }
 
-            if (checkoutData.getShippingAddress() == null) {
+            if (checkoutData.getShipping_address() == null) {
                 return ResponseEntity.badRequest().body(
                         new CheckoutDTO.CheckoutResponseDTO(false, null, "Shipping address is required")
                 );
@@ -59,7 +59,7 @@ public class CheckoutController {
             CheckoutDTO.CheckoutResponseDTO response = checkoutService.processCheckout(checkoutData);
 
             if (response.isSuccess()) {
-                System.out.println("CheckoutController - Checkout successful. order ID: " + response.getOrderId());
+                System.out.println("CheckoutController - Checkout successful. order ID: " + response.getOrder_id());
                 return ResponseEntity.ok(response);
             } else {
                 System.out.println("CheckoutController - Checkout failed: " + response.getMessage());

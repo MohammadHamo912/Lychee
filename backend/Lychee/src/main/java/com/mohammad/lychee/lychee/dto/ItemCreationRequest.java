@@ -5,19 +5,19 @@ import java.math.BigDecimal;
 public class ItemCreationRequest {
 
     // Store information
-    private Integer storeId;
+    private Integer store_id;
 
     // Product information
-    private String productName;
+    private String product_name;
     private String description;
     private String barcode;
     private String brand;
-    private String imageUrl;
+    private String image_url;
 
     // Category information
-    private Integer categoryId; // Use existing category
-    private String newCategoryName; // Create new category
-    private Integer parentCategoryId; // Required if creating new category
+    private Integer category_id; // Use existing category
+    private String new_category_name; // Create new category
+    private Integer parent_category_id; // Required if creating new category
 
     // Variant information
     private String size;
@@ -32,20 +32,20 @@ public class ItemCreationRequest {
     public ItemCreationRequest() {}
 
     // Getters and Setters
-    public Integer getStoreId() {
-        return storeId;
+    public Integer getStore_id() {
+        return store_id;
     }
 
-    public void setStoreId(Integer storeId) {
-        this.storeId = storeId;
+    public void setStore_id(Integer store_id) {
+        this.store_id = store_id;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getProduct_name() {
+        return product_name;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
     }
 
     public String getDescription() {
@@ -72,36 +72,36 @@ public class ItemCreationRequest {
         this.brand = brand;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public Integer getCategory_id() {
+        return category_id;
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory_id(Integer category_id) {
+        this.category_id = category_id;
     }
 
-    public String getNewCategoryName() {
-        return newCategoryName;
+    public String getNew_category_name() {
+        return new_category_name;
     }
 
-    public void setNewCategoryName(String newCategoryName) {
-        this.newCategoryName = newCategoryName;
+    public void setNew_category_name(String new_category_name) {
+        this.new_category_name = new_category_name;
     }
 
-    public Integer getParentCategoryId() {
-        return parentCategoryId;
+    public Integer getParent_category_id() {
+        return parent_category_id;
     }
 
-    public void setParentCategoryId(Integer parentCategoryId) {
-        this.parentCategoryId = parentCategoryId;
+    public void setParent_category_id(Integer parent_category_id) {
+        this.parent_category_id = parent_category_id;
     }
 
     public String getSize() {
@@ -147,15 +147,15 @@ public class ItemCreationRequest {
     @Override
     public String toString() {
         return "ItemCreationRequest{" +
-                "storeId=" + storeId +
-                ", productName='" + productName + '\'' +
+                "storeId=" + store_id +
+                ", productName='" + product_name + '\'' +
                 ", description='" + description + '\'' +
                 ", barcode='" + barcode + '\'' +
                 ", brand='" + brand + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", categoryId=" + categoryId +
-                ", newCategoryName='" + newCategoryName + '\'' +
-                ", parentCategoryId=" + parentCategoryId +
+                ", imageUrl='" + image_url + '\'' +
+                ", categoryId=" + category_id +
+                ", newCategoryName='" + new_category_name + '\'' +
+                ", parentCategoryId=" + parent_category_id +
                 ", size='" + size + '\'' +
                 ", color='" + color + '\'' +
                 ", price=" + price +

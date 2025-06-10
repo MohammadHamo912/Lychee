@@ -71,7 +71,7 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
         item.setImage(rs.getString("productImage"));
 
         // Store info
-        item.setStoreName(rs.getString("storeName"));
+        item.setStore_name(rs.getString("storeName"));
 
         Integer productId = rs.getInt("productId");
         if (productId > 0) {
@@ -82,13 +82,13 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
                     rs.getString("variantSize"),
                     rs.getString("variantColor")
             );
-            item.setCurrentVariant(currentVariant);
+            item.setCurrent_variant(currentVariant);
 
             // Fetch and set all available variants for this product
             List<EnrichedItem.AvailableVariant> variants = findVariantsByProductId(productId);
-            item.setAvailableVariants(variants);
+            item.setAvailable_variants(variants);
         } else {
-            item.setAvailableVariants(new ArrayList<>());
+            item.setAvailable_variants(new ArrayList<>());
         }
 
         return item;

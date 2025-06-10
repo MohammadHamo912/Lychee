@@ -25,16 +25,16 @@ public class EnrichedItem {
     private String image; // logo_url from product
 
     // Current variant info
-    private CurrentVariant currentVariant;
+    private CurrentVariant current_variant;
 
     // Available variants for this product
-    private List<AvailableVariant> availableVariants;
+    private List<AvailableVariant> available_variants;
 
     // Store info
-    private String storeName;
+    private String store_name;
 
     // Calculated fields
-    private BigDecimal finalPrice; // price after discount
+    private BigDecimal final_price; // price after discount
     private Integer stock; // alias for stock_quantity
 
     // Default constructor
@@ -166,36 +166,36 @@ public class EnrichedItem {
         this.image = image;
     }
 
-    public CurrentVariant getCurrentVariant() {
-        return currentVariant;
+    public CurrentVariant getCurrent_variant() {
+        return current_variant;
     }
 
-    public void setCurrentVariant(CurrentVariant currentVariant) {
-        this.currentVariant = currentVariant;
+    public void setCurrent_variant(CurrentVariant current_variant) {
+        this.current_variant = current_variant;
     }
 
-    public List<AvailableVariant> getAvailableVariants() {
-        return availableVariants;
+    public List<AvailableVariant> getAvailable_variants() {
+        return available_variants;
     }
 
-    public void setAvailableVariants(List<AvailableVariant> availableVariants) {
-        this.availableVariants = availableVariants;
+    public void setAvailable_variants(List<AvailableVariant> available_variants) {
+        this.available_variants = available_variants;
     }
 
-    public String getStoreName() {
-        return storeName;
+    public String getStore_name() {
+        return store_name;
     }
 
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
+    public void setStore_name(String store_name) {
+        this.store_name = store_name;
     }
 
-    public BigDecimal getFinalPrice() {
-        return finalPrice;
+    public BigDecimal getFinal_price() {
+        return final_price;
     }
 
-    public void setFinalPrice(BigDecimal finalPrice) {
-        this.finalPrice = finalPrice;
+    public void setFinal_price(BigDecimal final_price) {
+        this.final_price = final_price;
     }
 
     public Integer getStock() {
@@ -210,9 +210,9 @@ public class EnrichedItem {
     private void calculateFinalPrice() {
         if (price != null && discount != null) {
             BigDecimal discountAmount = price.multiply(discount).divide(BigDecimal.valueOf(100));
-            this.finalPrice = price.subtract(discountAmount);
+            this.final_price = price.subtract(discountAmount);
         } else if (price != null) {
-            this.finalPrice = price;
+            this.final_price = price;
         }
     }
 
@@ -220,15 +220,15 @@ public class EnrichedItem {
 
     public static class CurrentVariant {
         private Integer id;
-        private Integer productId;
+        private Integer product_id;
         private String size;
         private String color;
 
         public CurrentVariant() {}
 
-        public CurrentVariant(Integer id, Integer productId, String size, String color) {
+        public CurrentVariant(Integer id, Integer product_id, String size, String color) {
             this.id = id;
-            this.productId = productId;
+            this.product_id = product_id;
             this.size = size;
             this.color = color;
         }
@@ -242,12 +242,12 @@ public class EnrichedItem {
             this.id = id;
         }
 
-        public Integer getProductId() {
-            return productId;
+        public Integer getProduct_id() {
+            return product_id;
         }
 
-        public void setProductId(Integer productId) {
-            this.productId = productId;
+        public void setProduct_id(Integer product_id) {
+            this.product_id = product_id;
         }
 
         public String getSize() {
@@ -269,22 +269,22 @@ public class EnrichedItem {
 
     public static class AvailableVariant {
         private Integer id;
-        private Integer productId;
+        private Integer producd_id;
         private String size;
         private String color;
         private Boolean available;              // availability flag (optional)
-        private Boolean availableInSameStore;  // availability in same store (optional)
+        private Boolean available_in_same_store;  // availability in same store (optional)
 
         public AvailableVariant() {}
 
-        public AvailableVariant(Integer id, Integer productId, String size, String color,
-                                Boolean available, Boolean availableInSameStore) {
+        public AvailableVariant(Integer id, Integer producd_id, String size, String color,
+                                Boolean available, Boolean available_in_same_store) {
             this.id = id;
-            this.productId = productId;
+            this.producd_id = producd_id;
             this.size = size;
             this.color = color;
             this.available = available;
-            this.availableInSameStore = availableInSameStore;
+            this.available_in_same_store = available_in_same_store;
         }
 
         // Getters and Setters
@@ -296,12 +296,12 @@ public class EnrichedItem {
             this.id = id;
         }
 
-        public Integer getProductId() {
-            return productId;
+        public Integer getProducd_id() {
+            return producd_id;
         }
 
-        public void setProductId(Integer productId) {
-            this.productId = productId;
+        public void setProducd_id(Integer producd_id) {
+            this.producd_id = producd_id;
         }
 
         public String getSize() {
@@ -328,12 +328,12 @@ public class EnrichedItem {
             this.available = available;
         }
 
-        public Boolean getAvailableInSameStore() {
-            return availableInSameStore;
+        public Boolean getAvailable_in_same_store() {
+            return available_in_same_store;
         }
 
-        public void setAvailableInSameStore(Boolean availableInSameStore) {
-            this.availableInSameStore = availableInSameStore;
+        public void setAvailable_in_same_store(Boolean available_in_same_store) {
+            this.available_in_same_store = available_in_same_store;
         }
     }
 }
