@@ -10,6 +10,7 @@
   margin: 0 auto;
   font-family: "Segoe UI", sans-serif;
   color: #670010;
+  margin-top: 50px;
 }
 
 /* Header */
@@ -230,6 +231,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

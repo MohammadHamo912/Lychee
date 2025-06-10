@@ -1,8 +1,9 @@
 .dashboard-container {
   display: flex;
+  min-height: 100vh;
+  background-color: #fefcf9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   flex-direction: row;
-  align-items: flex-start;
-  /* important: prevents stretching */
 }
 
 .dashboard-sidebar {
@@ -10,37 +11,52 @@
   background-color: #fff5e1;
   border-right: 1px solid #d9b6a3;
   position: sticky;
-  top: 25%;
-  /* ✅ makes it stick to top when scrolling */
-  height: 50vh;
-  /* ✅ full viewport height */
+  top: 0;
+  height: 100vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* center tabs horizontally */
+  padding: 2rem 1rem;
+  z-index: 100;
 }
 
-#sidebar-title {
-  margin-top: 20%;
+.sidebar-title {
+  margin-bottom: 2rem;
+  font-size: 1.4rem;
+  font-weight: 600;
   text-align: center;
+  color: #8b5e3c;
 }
 
 .sidebar-tab {
-  padding: 15px;
+  padding: 0.8rem 1rem;
   cursor: pointer;
-  border-bottom: 1px solid #eee;
+  border-radius: 8px;
   width: 100%;
   text-align: center;
+  transition: background-color 0.2s ease, font-weight 0.2s ease;
+  color: #5a4632;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-tab:hover {
+  background-color: #ffe9ed;
+  color: #3d2b1f;
 }
 
 .sidebar-tab.active {
   background-color: #ffe5e8;
   font-weight: bold;
+  color: #3a2615;
+  border: 1px solid #f2caca;
 }
 
 .dashboard-content {
   flex: 1;
-  padding-left: 50px;
-  margin-top: -50px;
+  padding: 2rem;
+  background-color: #fff5e1;
+  min-height: 100vh;
+  margin-left: 350px;
+  margin-top: -900px;
 }
