@@ -39,7 +39,7 @@ public class UserController {
 
             // Create a safe response without password hash
             UserInfoResponse userInfo = new UserInfoResponse();
-            userInfo.setUserId(user.getUser_id());
+            userInfo.setUser_id(user.getUser_id());
             userInfo.setName(user.getName());
             userInfo.setEmail(user.getEmail());
             userInfo.setPhone(user.getPhone());
@@ -119,7 +119,7 @@ public class UserController {
 
     // Inner class for safe user information response
     public static class UserInfoResponse {
-        private Integer userId;
+        private Integer user_id;
         private String name;
         private String email;
         private String phone;
@@ -128,8 +128,8 @@ public class UserController {
         // Constructors
         public UserInfoResponse() {}
 
-        public UserInfoResponse(Integer userId, String name, String email, String phone, String role) {
-            this.userId = userId;
+        public UserInfoResponse(Integer user_id, String name, String email, String phone, String role) {
+            this.user_id = user_id;
             this.name = name;
             this.email = email;
             this.phone = phone;
@@ -137,8 +137,8 @@ public class UserController {
         }
 
         // Getters and Setters
-        public Integer getUserId() { return userId; }
-        public void setUserId(Integer userId) { this.userId = userId; }
+        public Integer getUser_id() { return user_id; }
+        public void setUser_id(Integer user_id) { this.user_id = user_id; }
 
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }

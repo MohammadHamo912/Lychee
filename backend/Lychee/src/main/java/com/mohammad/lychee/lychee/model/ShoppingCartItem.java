@@ -86,7 +86,7 @@ public class ShoppingCartItem {
     @Override
     public String toString() {
         return "ShoppingCartItem{" +
-                "userId=" + user_id +
+                "user_id=" + user_id +
                 ", itemId=" + item_id +
                 ", quantity=" + quantity +
                 ", createdAt=" + created_at +

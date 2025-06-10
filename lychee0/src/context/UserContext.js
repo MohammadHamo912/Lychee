@@ -49,7 +49,8 @@ export const UserProvider = ({ children }) => {
 
     try {
       setIsLoadingCart(true);
-      const userIdToUse = user.user_id;
+      // Use the correct property name from your user object
+      const userIdToUse = user.userId || user.user_id; // Support both naming conventions
       console.log("UserContext - Loading cart for user:", userIdToUse);
 
       const cartItems = await ShoppingCartAPI.getCartItems(userIdToUse);
@@ -86,7 +87,8 @@ export const UserProvider = ({ children }) => {
       setIsAddingToCart(true);
       console.log("UserContext - Adding to cart:", item, "quantity:", quantity);
 
-      const userIdToUse = user.user_id;
+      // Use the correct property name from your user object
+      const userIdToUse = user.userId || user.user_id; // Support both naming conventions
       await ShoppingCartAPI.addToCart(userIdToUse, item.item_id, quantity);
 
       // Reload cart items to get updated data from server
@@ -106,7 +108,8 @@ export const UserProvider = ({ children }) => {
     if (!user) return false;
 
     try {
-      const userIdToUse = user.user_id;
+      // Use the correct property name from your user object
+      const userIdToUse = user.userId || user.user_id; // Support both naming conventions
       await ShoppingCartAPI.removeFromCart(userIdToUse, itemId);
 
       // Reload cart items to get updated data from server
@@ -124,7 +127,8 @@ export const UserProvider = ({ children }) => {
     if (!user) return false;
 
     try {
-      const userIdToUse = user.user_id;
+      // Use the correct property name from your user object
+      const userIdToUse = user.userId || user.user_id; // Support both naming conventions
       await ShoppingCartAPI.updateCartItemQuantity(
         userIdToUse,
         itemId,
@@ -146,7 +150,8 @@ export const UserProvider = ({ children }) => {
     if (!user) return false;
 
     try {
-      const userIdToUse = user.user_id;
+      // Use the correct property name from your user object
+      const userIdToUse = user.userId || user.user_id; // Support both naming conventions
       await ShoppingCartAPI.clearCart(userIdToUse);
 
       setCart([]);
