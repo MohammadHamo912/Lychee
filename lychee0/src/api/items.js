@@ -34,7 +34,9 @@ export const getTrendingItems = async () => {
 export const getItemById = async (itemId) => {
   try {
     console.log("API - Getting enriched item by ID:", itemId);
-    const response = await axios.get(`http://localhost:8081/api/items/enriched/${itemId}`);
+    const response = await axios.get(
+      `http://localhost:8081/api/items/enriched/${itemId}`
+    );
     console.log("API - Got enriched item:", response.data);
     return response.data;
   } catch (error) {
@@ -42,7 +44,6 @@ export const getItemById = async (itemId) => {
     throw error;
   }
 };
-
 
 // Get enriched items by store ID
 export const getItemsByStoreId = async (storeId) => {

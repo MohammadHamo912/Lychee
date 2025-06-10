@@ -11,14 +11,11 @@
   border-right: 1px solid #d9b6a3;
   position: sticky;
   top: 25%;
-  /* ✅ makes it stick to top when scrolling */
   height: 50vh;
-  /* ✅ full viewport height */
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* center tabs horizontally */
 }
 
 #sidebar-title {
@@ -40,7 +37,9 @@
 }
 
 .dashboard-content {
+  align-self: self-end;
   flex: 1;
+  margin-right: 150px;
   padding-left: 50px;
   margin-top: -50px;
 }

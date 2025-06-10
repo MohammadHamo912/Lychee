@@ -17,7 +17,6 @@ const AllStoresPage = () => {
   const [filteredStores, setFilteredStores] = useState([]);
   const [searchTerm, setSearchTerm] = useState(initialQuery);
   const [activeFilters, setActiveFilters] = useState({
-    location: "",
     minRating: 0,
     sortOption: "none",
   });
@@ -149,44 +148,13 @@ const AllStoresPage = () => {
   };
 
   const applyFiltersAndSearch = async (search = "", filters = {}) => {
-    const { location, minRating, sortOption } = filters;
+    const { minRating, sortOption } = filters;
 
     let result = [...stores];
 
     // Apply search first (prioritizing name search)
     if (search.trim()) {
       result = searchStoresByName(result, search);
-    }
-
-    // Location filtering with enhanced matching
-    if (location && location.trim()) {
-      const lowerLocation = location.toLowerCase();
-      result = result.filter((store) => {
-        const searchTerms = lowerLocation
-          .split(/[,\s-]+/)
-          .filter((term) => term.length > 0);
-
-        const storeLocationText = [
-          store.city || "",
-          store.country || "",
-          store.address || "",
-          store.location || "",
-          `${store.city || ""}, ${store.country || ""}`
-            .replace(", ,", ",")
-            .replace(/^,|,$/, ""),
-        ]
-          .join(" ")
-          .toLowerCase();
-
-        return searchTerms.some(
-          (term) =>
-            storeLocationText.includes(term) ||
-            (store.city && store.city.toLowerCase().includes(term)) ||
-            (store.country && store.country.toLowerCase().includes(term)) ||
-            (store.address && store.address.toLowerCase().includes(term)) ||
-            (store.location && store.location.toLowerCase().includes(term))
-        );
-      });
     }
 
     // Minimum rating filtering - need to get actual ratings from reviews
@@ -309,7 +277,6 @@ const AllStoresPage = () => {
     setSearchTerm("");
     // Reset filters completely
     const resetFilters = {
-      location: "",
       minRating: 0,
       sortOption: "none",
     };
@@ -321,7 +288,6 @@ const AllStoresPage = () => {
   const getActiveFilterCount = () => {
     let count = 0;
     if (activeFilters.minRating > 0) count++;
-    if (activeFilters.location.trim()) count++;
     if (activeFilters.sortOption !== "none") count++;
     return count;
   };

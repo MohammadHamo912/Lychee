@@ -3,7 +3,6 @@ import "../ComponentsCss/StoreFiltersPanel.css"; // Assuming you have a CSS file
 
 const StoreFiltersPanel = ({ onApplyFilters, activeFilters }) => {
   const [filters, setFilters] = useState({
-    location: "",
     minRating: 0,
     sortOption: "none",
   });
@@ -26,7 +25,6 @@ const StoreFiltersPanel = ({ onApplyFilters, activeFilters }) => {
 
   const handleClearFilters = () => {
     const clearedFilters = {
-      location: "",
       minRating: 0,
       sortOption: "none",
     };
@@ -41,18 +39,6 @@ const StoreFiltersPanel = ({ onApplyFilters, activeFilters }) => {
 
   return (
     <div className="filters-panel">
-      {/* Location Filter */}
-      <div className="filter-group">
-        <label>Location</label>
-        <input
-          type="text"
-          value={filters.location}
-          onChange={(e) => handleFilterChange("location", e.target.value)}
-          className="filter-input"
-          placeholder="Enter city, country, or address"
-        />
-      </div>
-
       {/* Minimum Rating Filter */}
       <div className="filter-group">
         <label>
