@@ -1,6 +1,7 @@
 package com.mohammad.lychee.lychee.controller;
 
 import com.mohammad.lychee.lychee.model.Order;
+import com.mohammad.lychee.lychee.repository.OrderRepository;
 import com.mohammad.lychee.lychee.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,18 +73,24 @@ public class OrderController {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
+    @Autowired
+    private OrderRepository orderRepository;
 
     // Advanced search with filters
-    @GetMapping("/search")
-    public ResponseEntity<List<Order>> searchOrders(@RequestParam String role,
-                                                    @RequestParam(required = false) String query,
-                                                    @RequestParam(required = false) String status,
-                                                    @RequestParam(required = false) String startDate,
-                                                    @RequestParam(required = false) String endDate,
-                                                    @RequestParam(required = false) Integer userId,
-                                                    @RequestParam(required = false) Integer storeId) {
-        return ResponseEntity.ok(orderService.searchOrders(role, query, status, startDate, endDate, userId, storeId));
+    @GetMapping("/orders")
+    public List<Order> searchOrders(
+
+            @RequestParam String role,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(value = "user_id", required = false) Integer user_id,
+            @RequestParam(value = "store_id", required = false) Integer store_id
+    ) {
+        return orderRepository.searchOrders(role, query, status, startDate, endDate, user_id, store_id);
     }
+
     @PutMapping("/{orderId}/status")
     public ResponseEntity<String> updateOrderStatus(@PathVariable int orderId, @RequestBody Map<String, String> body) {
         String newStatus = body.get("status");

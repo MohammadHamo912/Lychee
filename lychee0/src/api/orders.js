@@ -30,8 +30,8 @@ export const fetchOrders = async ({ role, status, query, startDate, endDate, use
     if (query) params.append('query', query);
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    if (userId) params.append('userId', userId);
-    if (storeId) params.append('storeId', storeId); // ✅ This was missing
+    if (userId) params.append('user_id', userId);
+    if (storeId) params.append('store_id', storeId); // ✅ This was missing
 
     try {
         const response = await axios.get(`${API_URL}/search?${params.toString()}`);

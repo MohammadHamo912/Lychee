@@ -28,7 +28,7 @@ const ProfilePage = () => {
 
     const fetchSpending = async () => {
       try {
-        const total = await getTotalSpendingByUserId(user.userId);
+        const total = await getTotalSpendingByUserId(user.user_id);
         setTotalSpending(total);
       } catch (err) {
         console.error("Failed to fetch total spending", err);
