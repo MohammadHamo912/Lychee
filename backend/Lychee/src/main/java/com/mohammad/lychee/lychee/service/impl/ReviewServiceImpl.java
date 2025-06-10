@@ -16,8 +16,8 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     @Override
-    public void addReview(Review review) {
-        reviewRepository.addReview(review);
+    public Review addReview(Review review) {
+       return reviewRepository.addReview(review);
     }
 
     @Override

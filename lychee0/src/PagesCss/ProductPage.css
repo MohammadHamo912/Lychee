@@ -261,11 +261,6 @@
   line-height: 1; /* Prevent vertical stacking due to line height */
 }
 
-/* For interactive stars */
-.star.interactive {
-  cursor: pointer;
-}
-
 /* Rating stars container */
 .rating-stars {
   display: flex;
@@ -632,7 +627,6 @@
   }
 
   .rating-overview {
-    flex-direction: column;
     align-items: center;
     gap: 15px;
   }

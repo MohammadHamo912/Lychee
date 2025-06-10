@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReviewService {
-    void addReview(Review review);
+    Review addReview(Review review);
     List<Review> getReviewsByTypeAndTarget(String type, int targetId);
     List<Review> getReviewsByUserId(int userId);
     public void deleteReview(int reviewId);

@@ -4,7 +4,7 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import "../PagesCss/ProductPage.css";
 
-import { useUser } from "../context/UserContext"; // Import user context
+import { useUser } from "../context/UserContext";
 
 import { getProductById } from "../api/products";
 
@@ -16,6 +16,7 @@ import {
 } from "../api/items";
 import { getItemImagesByItemId } from "../api/itemImage.js";
 
+import { getUserById } from "../api/users";
 import { getReviews, addReview } from "../api/reviews";
 
 const ProductPage = () => {
@@ -48,6 +49,9 @@ const ProductPage = () => {
     rating: 5,
     comment: "",
   });
+
+  // Store user names cache to avoid repeated API calls
+  const [userNamesCache, setUserNamesCache] = useState({});
 
   // Fetch product data on component mount
   useEffect(() => {
@@ -110,13 +114,35 @@ const ProductPage = () => {
     }
   }, [id]);
 
-  // Fetch product reviews
+  // Fetch product reviews and user names
   const fetchProductReviews = async () => {
     try {
       setReviewsLoading(true);
       const reviewsData = await getReviews("product", parseInt(id));
       console.log("Fetched reviews:", reviewsData);
       setReviews(reviewsData || []);
+
+      // Fetch user names for all reviews
+      if (reviewsData && reviewsData.length > 0) {
+        const userIds = [
+          ...new Set(reviewsData.map((review) => review.user_id)),
+        ];
+        const userNames = {};
+
+        await Promise.all(
+          userIds.map(async (userId) => {
+            try {
+              const userData = await getUserById(userId);
+              userNames[userId] = userData?.name || `User #${userId}`;
+            } catch (error) {
+              console.error(`Error fetching user data for ${userId}:`, error);
+              userNames[userId] = `User #${userId}`;
+            }
+          })
+        );
+
+        setUserNamesCache(userNames);
+      }
     } catch (err) {
       console.error("Error fetching reviews:", err);
       setReviews([]);
@@ -143,7 +169,8 @@ const ProductPage = () => {
       setSubmittingReview(true);
 
       // Get user ID from context
-      const userIdToUse = user.userId || user.id || user.User_ID;
+      const userIdToUse =
+        user.userId || user.id || user.User_ID || user.user_id;
 
       if (!userIdToUse) {
         showTemporaryNotification(
@@ -154,11 +181,11 @@ const ProductPage = () => {
       }
 
       const reviewData = {
-        Review_Type: "product",
-        Target_ID: parseInt(id),
-        User_ID: userIdToUse,
-        Rating: newReview.rating,
-        Comment: newReview.comment.trim(),
+        review_type: "product",
+        target_id: parseInt(id),
+        user_id: userIdToUse,
+        rating: newReview.rating,
+        comment: newReview.comment.trim(),
       };
 
       console.log("Submitting review data:", reviewData);
@@ -255,11 +282,9 @@ const ProductPage = () => {
     }
   };
 
-  // Get user name for display (you might want to fetch this from a users API)
+  // Get user name from cache (synchronous)
   const getUserDisplayName = (userId) => {
-    // For now, return a generic username
-    // You could extend this to fetch actual user names from your users API
-    return `User #${userId}`;
+    return userNamesCache[userId] || `User #${userId}`;
   };
 
   // Fetch available items for a variant and calculate best price
@@ -381,6 +406,22 @@ const ProductPage = () => {
 
     const colorName = variant.color?.toLowerCase() || "default";
     return colorMap[colorName] || "#b76e79";
+  };
+
+  // Helper function to get store name (you'll need to implement this based on your store data structure)
+  const getStoreName = (storeId) => {
+    // This is a placeholder - you should replace this with actual store data fetching
+    // You might want to create a stores context or fetch store data
+    const storeNames = {
+      1: "Beauty Store Downtown",
+      2: "Cosmetics Corner",
+      3: "Glamour Gallery",
+      4: "Beauty Boutique",
+      5: "Makeup Mart",
+      // Add more store mappings as needed
+    };
+
+    return storeNames[storeId] || `Store #${storeId}`;
   };
 
   if (loading) {
@@ -530,9 +571,12 @@ const ProductPage = () => {
               <div className="product-variants">
                 <h3 className="variants-title">Available Options</h3>
                 <div className="variant-options">
-                  {productVariants.map((variant) => (
+                  {productVariants.map((variant, index) => (
                     <button
-                      key={variant.Product_Variant_ID}
+                      key={
+                        variant.Product_Variant_ID ??
+                        `variant-fallback-${index}`
+                      }
                       className={`variant-option ${
                         selectedVariant?.Product_Variant_ID ===
                         variant.Product_Variant_ID
@@ -586,45 +630,6 @@ const ProductPage = () => {
               </button>
             </div>
 
-            <div className="product-meta">
-              <div className="shipping-info">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="1" y="3" width="15" height="13"></rect>
-                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                </svg>
-                <span>Free shipping on orders over $35</span>
-              </div>
-              <div className="returns-info">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 2v6h6"></path>
-                  <path d="M3 13a9 9 0 1 0 3-7.7L3 8"></path>
-                </svg>
-                <span>30-day hassle-free returns</span>
-              </div>
-            </div>
-
             <div className="product-tabs">
               <div className="tabs-header">
                 <button
@@ -676,10 +681,11 @@ const ProductPage = () => {
                             <div key={item.itemId} className="store-item">
                               <div className="store-info">
                                 <span className="store-name">
-                                  Store ID: {item.Store_ID}
+                                  {getStoreName(item.Store_ID)}
                                 </span>
-                                <span className="store-stock">
-                                  Stock: {item.stockQuantity}
+                                <span className="store-location">
+                                  {/* You can add store location here if available */}
+                                  Store ID: {item.Store_ID}
                                 </span>
                               </div>
                               <div className="store-pricing">
@@ -691,6 +697,19 @@ const ProductPage = () => {
                                     {item.discount}% off
                                   </span>
                                 )}
+                              </div>
+                              <div className="store-availability-status">
+                                <span
+                                  className={`availability-badge ${
+                                    item.stockQuantity > 0
+                                      ? "in-stock"
+                                      : "out-of-stock"
+                                  }`}
+                                >
+                                  {item.stockQuantity > 0
+                                    ? "In Stock"
+                                    : "Out of Stock"}
+                                </span>
                               </div>
                             </div>
                           ))}
@@ -803,7 +822,7 @@ const ProductPage = () => {
                         <p>Loading reviews...</p>
                       ) : reviews.length > 0 ? (
                         reviews.map((review) => (
-                          <div key={review.reviewId} className="review-item">
+                          <div key={review.review_id} className="review-item">
                             <div className="review-header">
                               <div className="review-rating">
                                 {renderStars(review.rating || 0)}
@@ -818,7 +837,7 @@ const ProductPage = () => {
                               <p>{review.comment || "No comment provided."}</p>
                             </div>
                             <div className="review-author">
-                              <span>{getUserDisplayName(review.userId)}</span>
+                              <span>{getUserDisplayName(review.user_id)}</span>
                             </div>
                           </div>
                         ))

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import FiltersPanel from "../components/FiltersPanel";
 import ItemCard from "./ItemCard";
 import { getEnrichedItemsByIds } from "../api/items";
-import "../ComponentsCss/ProductManagement.css";
+import "../ComponentsCss/ItemManagement.css";
 
 const ItemManagement = () => {
   const [items, setItems] = useState([]);
   const [enrichedItems, setEnrichedItems] = useState([]);
-  const [filteredResults, setFilteredResults] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -42,13 +40,6 @@ const ItemManagement = () => {
     discount: "",
   });
 
-  const [filters, setFilters] = useState({
-    category: "All",
-    minPrice: "",
-    maxPrice: "",
-    sortOption: "",
-  });
-
   useEffect(() => {
     loadItems();
     loadMainCategories();
@@ -71,7 +62,6 @@ const ItemManagement = () => {
 
       setItems(data);
       setEnrichedItems(data || []);
-      setFilteredResults(data || []);
     } catch (error) {
       console.error("Error loading items:", error);
       setError("Failed to load store items.");
@@ -390,9 +380,6 @@ const ItemManagement = () => {
         setEnrichedItems((prev) =>
           prev.filter((i) => i.itemId !== item.itemId)
         );
-        setFilteredResults((prev) =>
-          prev.filter((i) => i.itemId !== item.itemId)
-        );
 
         // You could show a success message or toast here
       } else {
@@ -427,26 +414,6 @@ const ItemManagement = () => {
         (item) => parseFloat(item.price) <= parseFloat(newFilters.maxPrice)
       );
     }
-
-    if (newFilters.sortOption) {
-      results.sort((a, b) => {
-        switch (newFilters.sortOption) {
-          case "priceAsc":
-            return parseFloat(a.price) - parseFloat(b.price);
-          case "priceDesc":
-            return parseFloat(b.price) - parseFloat(a.price);
-          case "nameAsc":
-            return a.productName.localeCompare(b.productName);
-          case "nameDesc":
-            return b.productName.localeCompare(a.productName);
-          default:
-            return 0;
-        }
-      });
-    }
-
-    setFilteredResults(results);
-    setFilters(newFilters);
   };
 
   // Render different form steps
@@ -742,27 +709,12 @@ const ItemManagement = () => {
 
       {/* Items List */}
       <div className="pm-layout">
-        <div className="pm-sidebar">
-          <FiltersPanel
-            onApplyFilters={applyFilters}
-            categories={[
-              ...new Set(
-                enrichedItems.map(
-                  (item) => item.categoryName || "Uncategorized"
-                )
-              ),
-            ]}
-          />
-        </div>
-
         <div className="items-section">
           <div className="items-header">
             <h3>Your Store Items</h3>
             <div className="items-count">
-              <p>
-                {filteredResults.length} item
-                {filteredResults.length !== 1 ? "s" : ""} in your store
-              </p>
+              {enrichedItems.length}{" "}
+              {enrichedItems.length === 1 ? "item" : "items"}
             </div>
           </div>
 
@@ -780,21 +732,10 @@ const ItemManagement = () => {
             </div>
           )}
 
-          {/* Show empty state */}
-          {filteredResults.length === 0 && !loading && !error && (
-            <div className="empty-items">
-              <p>No items found in your store.</p>
-              <p>Start adding items to see them here!</p>
-              <button className="pm-add-btn" onClick={() => setShowForm(true)}>
-                Add Your First Item
-              </button>
-            </div>
-          )}
-
           {/* Items Grid */}
-          {filteredResults.length > 0 && !loading && (
+          {enrichedItems.length > 0 && !loading && (
             <div className="items-grid">
-              {filteredResults.map((item) => {
+              {enrichedItems.map((item) => {
                 const isItemLoading = itemActionStates[item.itemId];
 
                 return (

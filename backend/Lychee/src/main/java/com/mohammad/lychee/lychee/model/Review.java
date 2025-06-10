@@ -3,25 +3,25 @@ package com.mohammad.lychee.lychee.model;
 import java.time.LocalDateTime;
 
 public class Review {
-    private int reviewId;
-    private String reviewType; // "product" or "shop"
-    private int targetId;
-    private int userId;
+    private int review_id;
+    private String review_type; // "product" or "shop"
+    private int target_id;
+    private int user_id;
     private int rating;
     private String comment;
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 
-    public int getReviewId() { return reviewId; }
-    public void setReviewId(int reviewId) { this.reviewId = reviewId; }
+    public int getReview_id() { return review_id; }
+    public void setReview_id(int review_id) { this.review_id = review_id; }
 
-    public String getReviewType() { return reviewType; }
-    public void setReviewType(String reviewType) { this.reviewType = reviewType; }
+    public String getReview_type() { return review_type; }
+    public void setReview_type(String review_type) { this.review_type = review_type; }
 
-    public int getTargetId() { return targetId; }
-    public void setTargetId(int targetId) { this.targetId = targetId; }
+    public int getTarget_id() { return target_id; }
+    public void setTarget_id(int target_id) { this.target_id = target_id; }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public int getUser_id() { return user_id; }
+    public void setUser_id(int user_id) { this.user_id = user_id; }
 
     public int getRating() { return rating; }
     public void setRating(int rating) { this.rating = rating; }
@@ -29,6 +29,6 @@ public class Review {
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getCreated_at() { return created_at; }
+    public void setCreated_at(LocalDateTime created_at) { this.created_at = created_at; }
 }
