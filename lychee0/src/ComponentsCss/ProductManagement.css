@@ -567,6 +567,7 @@
 .empty-items button:hover {
   background: #218838;
 }
+
 @media (max-width: 768px) {
   .pm-layout {
     flex-direction: column;
@@ -622,6 +623,7 @@
   }
 
   .step-indicator {
-    display: none; /* Hide on very small screens */
+    display: none;
+    /* Hide on very small screens */
   }
 }

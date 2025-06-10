@@ -640,9 +640,8 @@ const ItemManagement = () => {
 
       {variantCheck && (
         <div
-          className={`variant-status ${
-            variantCheck.exists ? "warning" : "success"
-          }`}
+          className={`variant-status ${variantCheck.exists ? "warning" : "success"
+            }`}
         >
           {variantCheck.exists
             ? "⚠️ Variant exists - will use existing variant"
@@ -712,13 +711,12 @@ const ItemManagement = () => {
 
           <div className="step-indicator">
             <div
-              className={`step ${
-                step === "barcode"
+              className={`step ${step === "barcode"
                   ? "active"
                   : step !== "barcode"
-                  ? "completed"
-                  : ""
-              }`}
+                    ? "completed"
+                    : ""
+                }`}
             >
               1. Barcode
             </div>
@@ -742,19 +740,6 @@ const ItemManagement = () => {
 
       {/* Items List */}
       <div className="pm-layout">
-        <div className="pm-sidebar">
-          <FiltersPanel
-            onApplyFilters={applyFilters}
-            categories={[
-              ...new Set(
-                enrichedItems.map(
-                  (item) => item.categoryName || "Uncategorized"
-                )
-              ),
-            ]}
-          />
-        </div>
-
         <div className="items-section">
           <div className="items-header">
             <h3>Your Store Items</h3>
@@ -801,7 +786,7 @@ const ItemManagement = () => {
                   <div key={item.itemId} className="item-wrapper">
                     <ItemCard
                       item={item}
-                      onAddToCart={() => {}} // Disable add to cart for store owners viewing their own items
+                      onAddToCart={() => { }} // Disable add to cart for store owners viewing their own items
                       isAddingToCart={false}
                       allItems={enrichedItems}
                       showAddToCart={false} // Don't show add to cart for store owners
