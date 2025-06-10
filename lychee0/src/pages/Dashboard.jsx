@@ -19,7 +19,7 @@ import AdminOverview from "../components/AdminOverview";
 import ItemManagement from "../components/ItemManagement";
 
 const Dashboard = () => {
-  const { user } = useUser();
+  const { user } = useUser(); 
   const userRole = user?.role || "customer";
   const [activeTab, setActiveTab] = useState("default");
   const [storeId, setStoreId] = useState(null);

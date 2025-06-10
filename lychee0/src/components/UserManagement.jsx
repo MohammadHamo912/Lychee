@@ -17,31 +17,29 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
-  // Function to fetch all users
+  const normalizeUser = (user) => ({
+    id: user.user_id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    role: user.role,
+    registeredAt: user.created_at,
+    lastLogin: user.updated_at,
+    orders: 0,
+    totalSpent: 0,
+    wishlist: 0,
+    reviews: 0,
+  });
+
   const fetchUsers = async () => {
     setIsLoading(true);
     setError(null);
     try {
       const data = await getAllUsers();
 
-      // Map backend user model to component model format
-      // Only include users that are not deleted (deletedAt is null)
       const mappedUsers = data
-        .filter((user) => user.deletedAt === null)
-        .map((user) => ({
-          id: user.userId,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          role: user.role,
-          registeredAt: user.createdAt,
-          lastLogin: user.updatedAt,
-          // Default values for missing fields
-          orders: 0,
-          totalSpent: 0,
-          wishlist: 0,
-          reviews: 0,
-        }));
+        .filter((user) => user.deleted_at === null)
+        .map(normalizeUser);
 
       setUsers(mappedUsers);
     } catch (error) {
@@ -64,39 +62,32 @@ const UserManagement = () => {
   const handleSaveUser = async (id, userData) => {
     setIsLoading(true);
     setError(null);
-
     try {
-      if (editingUser) {
-        // Prepare data for the backend API format
-        const userForApi = {
-          userId: id,
-          name: userData.name,
-          email: userData.email,
-          phone: userData.phone,
-          role: userData.role,
-          // Don't change password here
-        };
+      const userForApi = {
+        user_id: id,
+        name: userData.name,
+        email: userData.email,
+        phone: userData.phone,
+        role: userData.role,
+      };
 
-        // Call the API to update the user in the backend
-        const updatedUserFromApi = await updateUser(id, userForApi);
+      const updatedUser = await updateUser(id, userForApi);
 
-        // Update the user in the state
-        setUsers((prev) =>
-          prev.map((u) =>
-            u.id === id
-              ? {
-                  ...u,
-                  name: updatedUserFromApi.name,
-                  email: updatedUserFromApi.email,
-                  phone: updatedUserFromApi.phone,
-                  role: updatedUserFromApi.role,
-                }
-              : u
-          )
-        );
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === id
+            ? {
+              ...u,
+              name: updatedUser.name,
+              email: updatedUser.email,
+              phone: updatedUser.phone,
+              role: updatedUser.role,
+            }
+            : u
+        )
+      );
 
-        setEditingUser(null);
-      }
+      setEditingUser(null);
     } catch (error) {
       console.error("Failed to update user:", error);
       setError("Failed to update user. Please try again.");
@@ -108,42 +99,20 @@ const UserManagement = () => {
   const handleAddUser = async (userData) => {
     setIsLoading(true);
     setError(null);
-
     try {
-      // Prepare data for the backend API format
       const userForApi = {
         name: userData.name,
         email: userData.email,
         phone: userData.phone,
         role: userData.role,
-        // Include any other fields your API requires for user creation
-        // For example, you might need a password field
-        password: "defaultPassword123", // This should be handled properly in a real app
+        password: "defaultPassword123",
       };
 
-      // Call the API to create the user in the backend
-      const newUserFromApi = await createUser(userForApi);
+      const createdUser = await createUser(userForApi);
 
-      // Map the API response to the format expected by the component
-      const newUserForState = {
-        id: newUserFromApi.userId,
-        name: newUserFromApi.name,
-        email: newUserFromApi.email,
-        phone: newUserFromApi.phone,
-        role: newUserFromApi.role,
-        registeredAt: newUserFromApi.createdAt,
-        lastLogin: newUserFromApi.updatedAt,
-        // Default values for the stats
-        orders: 0,
-        totalSpent: 0,
-        wishlist: 0,
-        reviews: 0,
-      };
+      const newUserForState = normalizeUser(createdUser);
 
-      // Add the user to state
       setUsers((prev) => [...prev, newUserForState]);
-
-      // Close the modal
       setNewUser(null);
     } catch (error) {
       console.error("Failed to create user:", error);
@@ -156,10 +125,7 @@ const UserManagement = () => {
   const handleDeleteUser = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        // Call API to soft delete the user
         await deleteUser(id);
-
-        // Remove the user from the state
         setUsers((prev) => prev.filter((u) => u.id !== id));
       } catch (error) {
         console.error("Failed to delete user:", error);
@@ -278,7 +244,6 @@ const UserManagement = () => {
               <p>
                 <strong>Last Login:</strong> {viewingUser.lastLogin}
               </p>
-
               <p>
                 <strong>Orders:</strong> {viewingUser.orders}
               </p>
