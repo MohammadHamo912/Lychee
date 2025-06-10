@@ -108,11 +108,6 @@ const ProductCard = ({ product, onAction }) => {
     return stars;
   };
 
-  const getDirectImageUrl = (driveUrl) => {
-    console.log("Original URL:", driveUrl);
-    return driveUrl;
-  };
-
   const handleCardClick = () => {
     navigate(`/product/${productId}`);
   };
@@ -187,7 +182,7 @@ const ProductCard = ({ product, onAction }) => {
 
   return (
     <ReusableCard
-      image={getDirectImageUrl(logo_url)}
+      image={logo_url}
       imageAlt={name}
       title={name}
       subtitle={subtitleContent}

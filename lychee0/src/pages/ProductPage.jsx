@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import axios from "axios";
 import "../PagesCss/ProductPage.css";
 
 import { useUser } from "../context/UserContext"; // Import user context
@@ -15,6 +14,7 @@ import {
   getItemsByProductVariantId,
   getAvailableVariantsForProduct,
 } from "../api/items";
+import { getItemImagesByItemId } from "../api/itemImage.js";
 
 import { getReviews, addReview } from "../api/reviews";
 
@@ -90,8 +90,9 @@ const ProductPage = () => {
             ? productVariants
             : await getProductVariantsByProductId(id);
         if (initialVariants && initialVariants.length > 0) {
-          await fetchItemImages(initialVariants[0].Product_Variant_ID);
-          await fetchAvailableItems(initialVariants[0].Product_Variant_ID);
+          console.log("Initial variants fetched:", initialVariants);
+          await fetchItemImages(initialVariants[0].productVariantId);
+          await fetchAvailableItems(initialVariants[0].productVariantId);
         }
 
         // Fetch product reviews
@@ -114,7 +115,7 @@ const ProductPage = () => {
     try {
       setReviewsLoading(true);
       const reviewsData = await getReviews("product", parseInt(id));
-      console.log("Fetched reviews:", reviewsData); // Debug log
+      console.log("Fetched reviews:", reviewsData);
       setReviews(reviewsData || []);
     } catch (err) {
       console.error("Error fetching reviews:", err);
@@ -160,7 +161,7 @@ const ProductPage = () => {
         Comment: newReview.comment.trim(),
       };
 
-      console.log("Submitting review data:", reviewData); // Debug log
+      console.log("Submitting review data:", reviewData);
 
       await addReview(reviewData);
 
@@ -190,14 +191,14 @@ const ProductPage = () => {
     }
   };
 
-  // Calculate average rating with proper error handling
+  // Calculate average rating with proper error handling (using camelCase properties)
   const getAverageRating = () => {
     if (!reviews || reviews.length === 0) return 0;
 
-    // Filter out invalid ratings and convert to numbers
+    // Filter out invalid ratings and convert to numbers - using camelCase 'rating'
     const validRatings = reviews
       .map((review) => {
-        const rating = Number(review.Rating);
+        const rating = Number(review.rating); // Changed from review.Rating to review.rating
         return isNaN(rating) ? 0 : rating;
       })
       .filter((rating) => rating > 0);
@@ -254,6 +255,13 @@ const ProductPage = () => {
     }
   };
 
+  // Get user name for display (you might want to fetch this from a users API)
+  const getUserDisplayName = (userId) => {
+    // For now, return a generic username
+    // You could extend this to fetch actual user names from your users API
+    return `User #${userId}`;
+  };
+
   // Fetch available items for a variant and calculate best price
   const fetchAvailableItems = async (variantId) => {
     try {
@@ -290,10 +298,7 @@ const ProductPage = () => {
       const items = await getItemsByProductVariantId(variantId);
 
       if (items && items.length > 0) {
-        // Get images for the first item
-        const imagesResponse = await axios.get(
-          `http://localhost:8081/api/item-images/item/${items[0].Item_ID}`
-        );
+        const imagesResponse = await getItemImagesByItemId(items[0].itemId);
         setItemImages(imagesResponse.data || []);
       }
     } catch (err) {
@@ -317,8 +322,9 @@ const ProductPage = () => {
     console.log("Selected variant:", variant);
     setSelectedVariant(variant);
     // Fetch images and items for the selected variant
+
     await fetchItemImages(
-      variant.productVariantId || variant.Product_Variant_ID
+      variant.id || variant.productVariantId || variant.Product_Variant_ID
     );
     await fetchAvailableItems(
       variant.id || variant.productVariantId || variant.Product_Variant_ID
@@ -667,7 +673,7 @@ const ProductPage = () => {
                         </h4>
                         <div className="store-availability">
                           {availableItems.map((item) => (
-                            <div key={item.Item_ID} className="store-item">
+                            <div key={item.itemId} className="store-item">
                               <div className="store-info">
                                 <span className="store-name">
                                   Store ID: {item.Store_ID}
@@ -797,20 +803,22 @@ const ProductPage = () => {
                         <p>Loading reviews...</p>
                       ) : reviews.length > 0 ? (
                         reviews.map((review) => (
-                          <div key={review.Review_ID} className="review-item">
+                          <div key={review.reviewId} className="review-item">
                             <div className="review-header">
                               <div className="review-rating">
-                                {renderStars(review.Rating || 0)}
+                                {renderStars(review.rating || 0)}
                               </div>
                               <div className="review-date">
-                                {formatDate(review.Created_At)}
+                                {formatDate(
+                                  review.createdAt || review.created_at
+                                )}
                               </div>
                             </div>
                             <div className="review-content">
-                              <p>{review.Comment || "No comment provided."}</p>
+                              <p>{review.comment || "No comment provided."}</p>
                             </div>
                             <div className="review-author">
-                              <span>User ID: {review.User_ID}</span>
+                              <span>{getUserDisplayName(review.userId)}</span>
                             </div>
                           </div>
                         ))

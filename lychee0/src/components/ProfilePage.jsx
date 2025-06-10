@@ -74,7 +74,7 @@ const ProfilePage = () => {
         <h1>My Profile</h1>
 
         <div className="profile-field-row">
-          <div className="profile-half">
+          <div className="profile-half profile-field">
             <label>First Name</label>
             <input
               name="firstName"
@@ -83,7 +83,7 @@ const ProfilePage = () => {
               disabled={!editing}
             />
           </div>
-          <div className="profile-half">
+          <div className="profile-half profile-field">
             <label>Last Name</label>
             <input
               name="lastName"

@@ -1,11 +1,10 @@
 .reviews-container {
     padding: 20px;
     background: #FFF5E1;
-    /* Creamy White */
     border: 1px solid #D9B6A3;
-    /* Warm Taupe */
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
 }
 
 .reviews-container h2 {

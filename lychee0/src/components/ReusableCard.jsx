@@ -30,9 +30,6 @@ const ReusableCard = ({
             console.error("Image failed to load:", e.target.src);
             e.target.style.display = "none"; // Hide broken image
           }}
-          onLoad={() => {
-            console.log("Image loaded successfully:", image);
-          }}
         />
       )}
 
