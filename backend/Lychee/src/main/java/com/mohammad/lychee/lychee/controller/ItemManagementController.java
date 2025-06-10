@@ -36,9 +36,6 @@ public class ItemManagementController {
     @Autowired
     private JdbcTemplate jdbcTemplate; // Add this for direct database operations
 
-    /**
-     * Create a complete item (handles Product, ProductVariant, Category, and Item creation)
-     */
     @PostMapping("/create-item")
     public ResponseEntity<?> createCompleteItem(@RequestBody ItemCreationRequest request) {
         try {
@@ -52,7 +49,7 @@ public class ItemManagementController {
             }
 
             if (request.getStoreId() == null) {
-                return ResponseEntity.badRequest().body(createErrorResponse("Store ID is required"));
+                return ResponseEntity.badRequest().body(createErrorResponse("store ID is required"));
             }
 
             // Step 1: Handle Category
@@ -80,7 +77,7 @@ public class ItemManagementController {
 
                 Category newCategory = new Category();
                 newCategory.setName(request.getNewCategoryName().trim());
-                newCategory.setParentId(request.getParentCategoryId());
+                newCategory.setParent_id(request.getParentCategoryId());
                 newCategory.setLevel(parentCategory.getLevel() + 1);
 
                 category = categoryService.createCategory(newCategory);
@@ -108,7 +105,7 @@ public class ItemManagementController {
                 // Link product to category if provided
                 if (category != null) {
                     // You'll need to add this method to ProductService or create a ProductCategoryService
-                    linkProductToCategory(product.getProductId(), category.getCategoryId());
+                    linkProductToCategory(product.getProduct_id(), category.getCategory_id());
                 }
             }
 
@@ -119,7 +116,7 @@ public class ItemManagementController {
             String size = request.getSize() != null ? request.getSize() : "default";
             String color = request.getColor() != null ? request.getColor() : "default";
 
-            List<ProductVariant> existingVariants = productVariantService.getProductVariantsByProductId(product.getProductId());
+            List<ProductVariant> existingVariants = productVariantService.getProductVariantsByProductId(product.getProduct_id());
             variant = existingVariants.stream()
                     .filter(v -> size.equals(v.getSize()) && color.equals(v.getColor()))
                     .findFirst()
@@ -128,7 +125,7 @@ public class ItemManagementController {
             // If variant doesn't exist, create it
             if (variant == null) {
                 variant = new ProductVariant();
-                variant.setProductId(product.getProductId());
+                variant.setProduct_id(product.getProduct_id());
                 variant.setSize(size);
                 variant.setColor(color);
 
@@ -136,9 +133,9 @@ public class ItemManagementController {
             }
 
             // Step 4: Check if Item already exists for this store and variant
-            List<Item> existingItems = itemService.getItemsByProductVariantId(variant.getProductVariantId());
+            List<Item> existingItems = itemService.getItemsByProductVariantId(variant.getProduct_variant_id());
             Item existingItem = existingItems.stream()
-                    .filter(item -> item.getStoreId() == request.getStoreId())
+                    .filter(item -> item.getStore_id() == request.getStoreId())
                     .findFirst()
                     .orElse(null);
 
@@ -148,10 +145,10 @@ public class ItemManagementController {
 
             // Step 5: Create Item
             Item item = new Item();
-            item.setStoreId(request.getStoreId());
-            item.setProductVariantId(variant.getProductVariantId());
+            item.setStore_id(request.getStoreId());
+            item.setProduct_variant_id(variant.getProduct_variant_id());
             item.setPrice(request.getPrice());
-            item.setStockQuantity(request.getStockQuantity() != null ? request.getStockQuantity() : 0);
+            item.setStock_quantity(request.getStock_quantity() != null ? request.getStock_quantity() : 0);
             item.setDiscount(request.getDiscount() != null ? request.getDiscount() : BigDecimal.ZERO);
 
             item = itemService.createItem(item);
@@ -160,10 +157,10 @@ public class ItemManagementController {
             ItemCreationResponse response = new ItemCreationResponse();
             response.setSuccess(true);
             response.setMessage("Item created successfully");
-            response.setItemId(item.getItemId());
-            response.setProductId(product.getProductId());
-            response.setVariantId(variant.getProductVariantId());
-            response.setCategoryId(category != null ? category.getCategoryId() : null);
+            response.setItemId(item.getItem_id());
+            response.setProductId(product.getProduct_id());
+            response.setVariantId(variant.getProduct_variant_id());
+            response.setCategoryId(category != null ? category.getCategory_id() : null);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
@@ -208,7 +205,7 @@ public class ItemManagementController {
                 response.put("product", product.get());
 
                 // Get variants for this product
-                List<ProductVariant> variants = productVariantService.getProductVariantsByProductId(product.get().getProductId());
+                List<ProductVariant> variants = productVariantService.getProductVariantsByProductId(product.get().getProduct_id());
                 response.put("variants", variants);
             } else {
                 response.put("exists", false);
@@ -261,12 +258,12 @@ public class ItemManagementController {
     private void linkProductToCategory(Integer productId, Integer categoryId) {
         try {
             // Check if the link already exists
-            String checkSql = "SELECT COUNT(*) FROM ProductCategory WHERE Product_ID = ? AND Category_ID = ?";
+            String checkSql = "SELECT COUNT(*) FROM product_category WHERE product_id = ? AND category_id = ?";
             Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, productId, categoryId);
 
             if (count == 0) {
                 // Insert the new relationship
-                String insertSql = "INSERT INTO ProductCategory (Product_ID, Category_ID) VALUES (?, ?)";
+                String insertSql = "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)";
                 jdbcTemplate.update(insertSql, productId, categoryId);
             }
         } catch (Exception e) {

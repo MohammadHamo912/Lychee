@@ -72,8 +72,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product updateProduct(Product product) {
-        if (!productRepository.existsById(product.getProductId())) {
-            throw new IllegalArgumentException("Product with ID " + product.getProductId() + " does not exist.");
+        if (!productRepository.existsById(product.getProduct_id())) {
+            throw new IllegalArgumentException("Product with ID " + product.getProduct_id() + " does not exist.");
         }
         return productRepository.save(product);
     }

@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createUser(User user) {
         // Hash the password before saving
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
         return userRepository.save(user);
     }
 
@@ -51,13 +51,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateUser(User user) {
         // Check if user exists
-        Optional<User> existingUser = userRepository.findById(user.getUserId());
+        Optional<User> existingUser = userRepository.findById(user.getUser_id());
         if (existingUser.isEmpty()) {
-            throw new IllegalArgumentException("User with ID " + user.getUserId() + " does not exist");
+            throw new IllegalArgumentException("User with ID " + user.getUser_id() + " does not exist");
         }
 
         // Don't update password through this method
-        user.setPasswordHash(existingUser.get().getPasswordHash());
+        user.setPassword_hash(existingUser.get().getPassword_hash());
         userRepository.save(user);
         return user;
     }
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userOptional.get();
-        return passwordEncoder.matches(password, user.getPasswordHash());
+        return passwordEncoder.matches(password, user.getPassword_hash());
     }
 
     @Override
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userOptional.get();
-        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setPassword_hash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 

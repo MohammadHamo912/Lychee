@@ -44,9 +44,9 @@ public class ItemImageServiceImpl implements ItemImageService {
     @Override
     @Transactional
     public ItemImage updateItemImage(ItemImage itemImage) {
-        Optional<ItemImage> existingImage = itemImageRepository.findById(itemImage.getImageId());
+        Optional<ItemImage> existingImage = itemImageRepository.findById(itemImage.getImage_id());
         if (existingImage.isEmpty()) {
-            throw new IllegalArgumentException("Item image with ID " + itemImage.getImageId() + " does not exist");
+            throw new IllegalArgumentException("Item image with ID " + itemImage.getImage_id() + " does not exist");
         }
 
         itemImageRepository.save(itemImage);

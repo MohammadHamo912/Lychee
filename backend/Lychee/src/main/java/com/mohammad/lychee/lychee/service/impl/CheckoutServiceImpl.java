@@ -78,7 +78,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
             // 2. Validate stock availability
             for (CartEnrichedItem item : cartItems) {
-                if (item.getStockQuantity() < item.getCartQuantity()) {
+                if (item.getStock_quantity() < item.getCartQuantity()) {
                     return new CheckoutDTO.CheckoutResponseDTO(false, null,
                             "Insufficient stock for item: " + item.getName());
                 }
@@ -120,7 +120,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
 
             System.out.println("CheckoutService - Checkout completed successfully. Order ID: " + orderId);
-            return new CheckoutDTO.CheckoutResponseDTO(true, orderId, "Order processed successfully (payment skipped for testing)");
+            return new CheckoutDTO.CheckoutResponseDTO(true, orderId, "order processed successfully (payment skipped for testing)");
 
         } catch (Exception e) {
             System.err.println("CheckoutService - Checkout failed: " + e.getMessage());
@@ -133,11 +133,11 @@ public class CheckoutServiceImpl implements CheckoutService {
         try {
             // Create payment transaction
             PaymentTransaction transaction = new PaymentTransaction();
-            transaction.setOrderId(orderId);
+            transaction.setOrder_id(orderId);
             transaction.setAmount(amount);
             transaction.setStatus(paymentMethod.equals("creditCard") ? "completed": "pending");
-            transaction.setCreatedAt(LocalDateTime.now());
-            transaction.setTransactionReference(paymentMethod.equals("creditCard") ? "creditCard" : "cashOnDelivery");
+            transaction.setCreated_at(LocalDateTime.now());
+            transaction.setTransaction_reference(paymentMethod.equals("creditCard") ? "creditCard" : "cashOnDelivery");
 
             paymentTransactionRepository.save(transaction);
             return true;
@@ -172,13 +172,13 @@ public class CheckoutServiceImpl implements CheckoutService {
 
             Address savedAddress = addressRepository.save(address);
 
-            System.out.println("CheckoutService - Address created with ID: " + savedAddress.getAddressId());
+            System.out.println("CheckoutService - Address created with ID: " + savedAddress.getAddress_id());
 
-            if (savedAddress.getAddressId() == 0) {
+            if (savedAddress.getAddress_id() == 0) {
                 throw new RuntimeException("Address ID was not generated properly");
             }
 
-            return savedAddress.getAddressId();
+            return savedAddress.getAddress_id();
         } catch (Exception e) {
             System.err.println("CheckoutService - Error creating address: " + e.getMessage());
             e.printStackTrace();
@@ -189,16 +189,16 @@ public class CheckoutServiceImpl implements CheckoutService {
     private Integer createOrder(Integer userId, Integer addressId, BigDecimal totalPrice, String orderNotes) {
         try {
             Order order = new Order();
-            order.setUserId(userId);
-            order.setShippingAddressId(addressId);
+            order.setUser_id(userId);
+            order.setShipping_address_id(addressId);
             order.setStatus("pending");
-            order.setTotalPrice(totalPrice);
-            order.setShippingFee(BigDecimal.ZERO); // Free shipping
-            order.setCreatedAt(LocalDateTime.now());
-            order.setUpdatedAt(LocalDateTime.now());
+            order.setTotal_price(totalPrice);
+            order.setShipping_fee(BigDecimal.ZERO); // Free shipping
+            order.setCreated_at(LocalDateTime.now());
+            order.setUpdated_at(LocalDateTime.now());
 
             Order savedOrder = orderRepository.save(order);
-            return savedOrder.getOrderId();
+            return savedOrder.getOrder_id();
         } catch (Exception e) {
             System.err.println("CheckoutService - Error creating order: " + e.getMessage());
             return null;
@@ -209,20 +209,20 @@ public class CheckoutServiceImpl implements CheckoutService {
         try {
             for (CartEnrichedItem item : items) {
                 // Reserve inventory
-                boolean stockUpdated = itemRepository.updateStock(item.getItemId(), item.getCartQuantity());
+                boolean stockUpdated = itemRepository.updateStock(item.getItem_id(), item.getCartQuantity());
                 if (!stockUpdated) {
-                    throw new RuntimeException("Failed to reserve stock for item: " + item.getItemId());
+                    throw new RuntimeException("Failed to reserve stock for item: " + item.getItem_id());
                 }
 
                 // Create order item
                 OrderItem orderItem = new OrderItem();
-                orderItem.setOrderId(orderId);
-                orderItem.setItemId(item.getItemId());
+                orderItem.setOrder_id(orderId);
+                orderItem.setItem_id(item.getItem_id());
                 orderItem.setQuantity(item.getCartQuantity());
-                orderItem.setPriceAtPurchase(item.getPrice());
-                orderItem.setShippingStatus("processing");
-                orderItem.setCreatedAt(LocalDateTime.now());
-                orderItem.setUpdatedAt(LocalDateTime.now());
+                orderItem.setPrice_at_purchase(item.getPrice());
+                orderItem.setShipping_status("processing");
+                orderItem.setCreated_at(LocalDateTime.now());
+                orderItem.setUpdated_at(LocalDateTime.now());
 
                 orderItemRepository.save(orderItem);
             }
@@ -236,7 +236,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     private void clearShoppingCart(Integer userId, List<CartEnrichedItem> items) {
         for (CartEnrichedItem item : items) {
-            shoppingCartItemRepository.deleteByUserIdAndItemId(userId, item.getItemId());
+            shoppingCartItemRepository.deleteByUserIdAndItemId(userId, item.getItem_id());
         }
     }
 

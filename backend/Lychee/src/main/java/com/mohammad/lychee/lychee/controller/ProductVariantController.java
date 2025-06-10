@@ -61,7 +61,7 @@ public class ProductVariantController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductVariant> updateProductVariant(@PathVariable Integer id,
                                                                @RequestBody ProductVariant productVariant) {
-        productVariant.setProductVariantId(id);
+        productVariant.setProduct_variant_id(id);
         ProductVariant updated = productVariantService.updateProductVariant(productVariant);
         return ResponseEntity.ok(updated);
     }

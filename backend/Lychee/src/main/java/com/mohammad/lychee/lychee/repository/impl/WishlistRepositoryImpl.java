@@ -23,45 +23,39 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     private final RowMapper<Wishlist> rowMapper = (rs, rowNum) -> {
         Wishlist wishlist = new Wishlist();
-        wishlist.setUserId(rs.getInt("User_ID"));
-        wishlist.setItemId(rs.getInt("Item_ID"));
-        wishlist.setAddedAt(rs.getTimestamp("added_at").toLocalDateTime());
-        wishlist.setName(rs.getString("product_name"));
-        wishlist.setImageUrl(rs.getString("product_logo"));
-        wishlist.setPrice(rs.getDouble("price"));
+        wishlist.setUser_id(rs.getInt("user_id"));
+        wishlist.setItem_id(rs.getInt("item_id"));
+        wishlist.setAdded_at(rs.getTimestamp("added_at").toLocalDateTime());
         return wishlist;
     };
 
     @Override
     public List<Wishlist> findAll() {
-        return jdbcTemplate.query("SELECT * FROM Wishlist_Table", rowMapper);
+        return jdbcTemplate.query("SELECT * FROM wishlist_table", rowMapper);
     }
 
     @Override
     public List<Wishlist> findByUserId(Integer userId) {
         String sql = """
                    SELECT
-                       w.User_ID,
-                       w.Item_ID,
+                       w.user_id,
+                       w.item_id,
                        w.added_at,
                        p.name AS product_name,
                        p.logo_url AS product_logo,
                        i.price
-                   FROM Wishlist_Table w
-                   JOIN Item i ON w.Item_ID = i.Item_ID
-                   JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
-                   JOIN Product p ON pv.Product_ID = p.Product_ID
-                   WHERE w.User_ID = ?
+                   FROM wishlist_table w
+                   JOIN item i ON w.item_id = i.item_id
+                   JOIN product_variant pv ON i.product_variant_id = pv.product_variant_id
+                   JOIN product p ON pv.product_id = p.product_id
+                   WHERE w.user_id = ?
                 """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Wishlist wishlist = new Wishlist();
-            wishlist.setUserId(rs.getInt("User_ID"));
-            wishlist.setItemId(rs.getInt("Item_ID"));
-            wishlist.setAddedAt(rs.getTimestamp("added_at").toLocalDateTime());
-            wishlist.setName(rs.getString("product_name"));
-            wishlist.setImageUrl(rs.getString("product_logo"));
-            wishlist.setPrice(rs.getDouble("price"));
+            wishlist.setUser_id(rs.getInt("user_id"));
+            wishlist.setItem_id(rs.getInt("item_id"));
+            wishlist.setAdded_at(rs.getTimestamp("added_at").toLocalDateTime());
             return wishlist;
         }, userId);
 
@@ -70,19 +64,19 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     @Override
     public void addWishlistItem(Integer userId, Integer itemId) {
-        jdbcTemplate.update("INSERT INTO Wishlist_Table (User_ID, Item_ID) VALUES (?, ?)", userId, itemId);
+        jdbcTemplate.update("INSERT INTO wishlist_table (user_id, item_id) VALUES (?, ?)", userId, itemId);
     }
 
     @Override
     public void removeWishlistItem(Integer userId, Integer itemId) {
-        jdbcTemplate.update("DELETE FROM Wishlist_Table WHERE User_ID = ? AND Item_ID = ?", userId, itemId);
+        jdbcTemplate.update("DELETE FROM wishlist_table WHERE user_id = ? AND item_id = ?", userId, itemId);
     }
 
     @Override
     public Optional<Wishlist> findByUserIdAndItemId(Integer userId, Integer itemId) {
         try {
             Wishlist wishlist = jdbcTemplate.queryForObject(
-                    "SELECT * FROM Wishlist_Table WHERE User_ID = ? AND Item_ID = ?",
+                    "SELECT * FROM wishlist_table WHERE user_id = ? AND item_id = ?",
                     rowMapper, userId, itemId
             );
             return Optional.ofNullable(wishlist);
@@ -93,6 +87,6 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     @Override
     public void deleteAllByUserId(Integer userId) {
-        jdbcTemplate.update("DELETE FROM Wishlist_Table WHERE User_ID = ?", userId);
+        jdbcTemplate.update("DELETE FROM wishlist_table WHERE user_id = ?", userId);
     }
 }

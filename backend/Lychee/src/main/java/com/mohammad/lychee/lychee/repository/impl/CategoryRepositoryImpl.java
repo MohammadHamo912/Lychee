@@ -28,12 +28,12 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     private final RowMapper<Category> categoryRowMapper = (rs, rowNum) -> {
         Category category = new Category();
-        category.setCategoryId(rs.getInt("Category_ID"));
+        category.setCategory_id(rs.getInt("category_id"));
         category.setName(rs.getString("name"));
 
-        Integer parentId = rs.getInt("parent_ID");
+        Integer parentId = rs.getInt("parent_id");
         if (!rs.wasNull()) {
-            category.setParentId(parentId);
+            category.setParent_id(parentId);
         }
 
         category.setLevel(rs.getInt("level"));
@@ -42,14 +42,14 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public List<Category> findAll() {
-        String sql = "SELECT * FROM Category";
+        String sql = "SELECT * FROM category";
         return jdbcTemplate.query(sql, categoryRowMapper);
     }
 
     @Override
     public Optional<Category> findById(Integer id) {
         try {
-            String sql = "SELECT * FROM Category WHERE Category_ID = ?";
+            String sql = "SELECT * FROM category WHERE category_id = ?";
             Category category = jdbcTemplate.queryForObject(sql, categoryRowMapper, id);
             return Optional.ofNullable(category);
         } catch (EmptyResultDataAccessException e) {
@@ -59,13 +59,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public List<Category> findByParentId(Integer parentId) {
-        String sql = "SELECT * FROM Category WHERE parent_ID = ?";
+        String sql = "SELECT * FROM category WHERE parent_id = ?";
         return jdbcTemplate.query(sql, categoryRowMapper, parentId);
     }
 
     @Override
     public List<Category> findRootCategories() {
-        String sql = "SELECT * FROM Category WHERE parent_ID IS NULL";
+        String sql = "SELECT * FROM category WHERE parent_id IS NULL";
         return jdbcTemplate.query(sql, categoryRowMapper);
     }
 
@@ -81,7 +81,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
   */  }
 
     private Category insert(Category category) {
-        String sql = "INSERT INTO Category (name, parent_ID, level) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO category (name, parent_id, level) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -89,8 +89,8 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, category.getName());
 
-            if (category.getParentId() != null) {
-                ps.setInt(2, category.getParentId());
+            if (category.getParent_id() != null) {
+                ps.setInt(2, category.getParent_id());
             } else {
                 ps.setNull(2, java.sql.Types.INTEGER);
             }
@@ -100,31 +100,31 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             return ps;
         }, keyHolder);
 
-        category.setCategoryId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        category.setCategory_id(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return category;
     }
 
     private Category update(Category category) {
-        String sql = "UPDATE Category SET name = ?, parent_ID = ?, level = ? WHERE Category_ID = ?";
+        String sql = "UPDATE category SET name = ?, parent_id = ?, level = ? WHERE category_id = ?";
 
         jdbcTemplate.update(sql,
                 category.getName(),
-                category.getParentId(),
+                category.getParent_id(),
                 category.getLevel(),
-                category.getCategoryId());
+                category.getCategory_id());
 
-        return findById(category.getCategoryId()).orElse(category);
+        return findById(category.getCategory_id()).orElse(category);
     }
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM Category WHERE Category_ID = ?";
+        String sql = "DELETE FROM category WHERE category_id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public List<Category> findSubcategories(Integer parentId) {
-        String sql = "SELECT * FROM Category WHERE parent_ID = ?";
+        String sql = "SELECT * FROM category WHERE parent_id = ?";
         return jdbcTemplate.query(sql, categoryRowMapper, parentId);
     }
 

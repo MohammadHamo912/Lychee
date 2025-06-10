@@ -59,7 +59,7 @@ public class CheckoutController {
             CheckoutDTO.CheckoutResponseDTO response = checkoutService.processCheckout(checkoutData);
 
             if (response.isSuccess()) {
-                System.out.println("CheckoutController - Checkout successful. Order ID: " + response.getOrderId());
+                System.out.println("CheckoutController - Checkout successful. order ID: " + response.getOrderId());
                 return ResponseEntity.ok(response);
             } else {
                 System.out.println("CheckoutController - Checkout failed: " + response.getMessage());

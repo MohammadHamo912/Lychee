@@ -30,8 +30,8 @@ public class WishlistController {
     public ResponseEntity<Void> addWishlistItem(@RequestParam Integer userId,
                                                 @RequestParam Integer itemId) {
         Wishlist item = new Wishlist();
-        item.setUserId(userId);
-        item.setItemId(itemId);
+        item.setUser_id(userId);
+        item.setItem_id(itemId);
         wishlistService.addItemToWishlist(item);
         return ResponseEntity.ok().build();
     }

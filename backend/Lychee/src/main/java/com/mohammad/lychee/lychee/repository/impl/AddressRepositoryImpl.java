@@ -28,7 +28,7 @@ public class AddressRepositoryImpl implements AddressRepository {
 
     private final RowMapper<Address> addressRowMapper = (rs, rowNum) -> {
         Address address = new Address();
-        address.setAddressId(rs.getInt("Address_ID"));
+        address.setAddress_id(rs.getInt("address_id"));
         address.setCity(rs.getString("city"));
         address.setStreet(rs.getString("street"));
         address.setBuilding(rs.getString("building"));
@@ -37,14 +37,14 @@ public class AddressRepositoryImpl implements AddressRepository {
 
     @Override
     public List<Address> findAll() {
-        String sql = "SELECT * FROM Address";
+        String sql = "SELECT * FROM address";
         return jdbcTemplate.query(sql, addressRowMapper);
     }
 
     @Override
     public Optional<Address> findById(Integer id) {
         try {
-            String sql = "SELECT * FROM Address WHERE Address_ID = ?";
+            String sql = "SELECT * FROM address WHERE address_id = ?";
             Address address = jdbcTemplate.queryForObject(sql, addressRowMapper, id);
             return Optional.ofNullable(address);
         } catch (EmptyResultDataAccessException e) {
@@ -55,7 +55,7 @@ public class AddressRepositoryImpl implements AddressRepository {
 
     @Override
     public Address save(Address address) {
-        if (address.getAddressId() == 0) {
+        if (address.getAddress_id() == 0) {
             return insert(address);
         } else {
             return update(address);
@@ -63,7 +63,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     private Address insert(Address address) {
-        String sql = "INSERT INTO Address (city, street, building) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO address (city, street, building) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -75,20 +75,20 @@ public class AddressRepositoryImpl implements AddressRepository {
             return ps;
         }, keyHolder);
 
-        address.setAddressId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        address.setAddress_id(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return address;
     }
 
     @Override
     public Address update(Address address) {
-        String sql = "UPDATE Address SET city = ?, street = ?, building = ? WHERE Address_ID = ?";
-        jdbcTemplate.update(sql, address.getCity(), address.getStreet(), address.getBuilding(), address.getAddressId());
+        String sql = "UPDATE address SET city = ?, street = ?, building = ? WHERE address_id = ?";
+        jdbcTemplate.update(sql, address.getCity(), address.getStreet(), address.getBuilding(), address.getAddress_id());
         return address;
     }
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM Address WHERE Address_ID = ?";
+        String sql = "DELETE FROM address WHERE address_id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

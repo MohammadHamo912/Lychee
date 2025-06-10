@@ -4,52 +4,52 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Discount {
-    private int discountId;
-    private BigDecimal discountPercentage;
+    private int discount_id;
+    private BigDecimal discount_percentage;
     private String code;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate start_date;
+    private LocalDate end_date;
     private boolean active;
 
     // Default constructor
     public Discount() {}
 
     // Constructor with all fields
-    public Discount(int discountId, BigDecimal discountPercentage, String code,
-                    LocalDate startDate, LocalDate endDate, boolean active) {
-        this.discountId = discountId;
-        this.discountPercentage = discountPercentage;
+    public Discount(int discount_id, BigDecimal discount_percentage, String code,
+                    LocalDate start_date, LocalDate end_date, boolean active) {
+        this.discount_id = discount_id;
+        this.discount_percentage = discount_percentage;
         this.code = code;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.start_date = start_date;
+        this.end_date = end_date;
         this.active = active;
     }
 
     // Constructor without ID (for creating new discounts)
-    public Discount(BigDecimal discountPercentage, String code,
-                    LocalDate startDate, LocalDate endDate, boolean active) {
-        this.discountPercentage = discountPercentage;
+    public Discount(BigDecimal discount_percentage, String code,
+                    LocalDate start_date, LocalDate end_date, boolean active) {
+        this.discount_percentage = discount_percentage;
         this.code = code;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.start_date = start_date;
+        this.end_date = end_date;
         this.active = active;
     }
 
     // Getters and setters
-    public int getDiscountId() {
-        return discountId;
+    public int getDiscount_id() {
+        return discount_id;
     }
 
-    public void setDiscountId(int discountId) {
-        this.discountId = discountId;
+    public void setDiscount_id(int discount_id) {
+        this.discount_id = discount_id;
     }
 
-    public BigDecimal getDiscountPercentage() {
-        return discountPercentage;
+    public BigDecimal getDiscount_percentage() {
+        return discount_percentage;
     }
 
-    public void setDiscountPercentage(BigDecimal discountPercentage) {
-        this.discountPercentage = discountPercentage;
+    public void setDiscount_percentage(BigDecimal discount_percentage) {
+        this.discount_percentage = discount_percentage;
     }
 
     public String getCode() {
@@ -60,20 +60,20 @@ public class Discount {
         this.code = code;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public LocalDate getStart_date() {
+        return start_date;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setStart_date(LocalDate start_date) {
+        this.start_date = start_date;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public LocalDate getEnd_date() {
+        return end_date;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setEnd_date(LocalDate end_date) {
+        this.end_date = end_date;
     }
 
     public boolean isActive() {
@@ -88,18 +88,18 @@ public class Discount {
     public boolean isCurrentlyValid() {
         LocalDate now = LocalDate.now();
         return active &&
-                (startDate == null || !now.isBefore(startDate)) &&
-                (endDate == null || !now.isAfter(endDate));
+                (start_date == null || !now.isBefore(start_date)) &&
+                (end_date == null || !now.isAfter(end_date));
     }
 
     @Override
     public String toString() {
         return "Discount{" +
-                "discountId=" + discountId +
-                ", discountPercentage=" + discountPercentage +
+                "discount_id=" + discount_id +
+                ", discount_percentage=" + discount_percentage +
                 ", code='" + code + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
+                ", startDate=" + start_date +
+                ", endDate=" + end_date +
                 ", active=" + active +
                 '}';
     }

@@ -62,9 +62,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item updateItem(Item item) {
-        Optional<Item> existingItem = itemRepository.findById(item.getItemId());
+        Optional<Item> existingItem = itemRepository.findById(item.getItem_id());
         if (existingItem.isEmpty()) {
-            throw new IllegalArgumentException("Item with ID " + item.getItemId() + " does not exist");
+            throw new IllegalArgumentException("Item with ID " + item.getItem_id() + " does not exist");
         }
 
         itemRepository.save(item);
@@ -86,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
         }
 
         Item item = itemOptional.get();
-        item.setStockQuantity(newQuantity);
+        item.setStock_quantity(newQuantity);
         itemRepository.save(item);
     }
 

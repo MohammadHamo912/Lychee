@@ -3,30 +3,30 @@ package com.mohammad.lychee.lychee.model;
 import java.time.LocalDateTime;
 
 public class ProductVariant {
-    private Integer productVariantId;
-    private Integer productId;
+    private Integer product_variant_id;
+    private Integer product_id;
     private String size;
     private String color;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
 
     public ProductVariant() {}
 
-    public Integer getProductVariantId() {
-        return productVariantId;
+    public Integer getProduct_variant_id() {
+        return product_variant_id;
     }
 
-    public void setProductVariantId(Integer productVariantId) {
-        this.productVariantId = productVariantId;
+    public void setProduct_variant_id(Integer product_variant_id) {
+        this.product_variant_id = product_variant_id;
     }
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getProduct_id() {
+        return product_id;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setProduct_id(Integer product_id) {
+        this.product_id = product_id;
     }
 
 
@@ -48,27 +48,27 @@ public class ProductVariant {
 
 
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
+    public LocalDateTime getDeleted_at() {
+        return deleted_at;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setDeleted_at(LocalDateTime deleted_at) {
+        this.deleted_at = deleted_at;
     }
 }

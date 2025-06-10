@@ -25,7 +25,7 @@ public class ItemCreationRequest {
 
     // Item information
     private BigDecimal price;
-    private Integer stockQuantity;
+    private Integer stock_quantity;
     private BigDecimal discount;
 
     // Constructors
@@ -128,12 +128,12 @@ public class ItemCreationRequest {
         this.price = price;
     }
 
-    public Integer getStockQuantity() {
-        return stockQuantity;
+    public Integer getStock_quantity() {
+        return stock_quantity;
     }
 
-    public void setStockQuantity(Integer stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public void setStock_quantity(Integer stock_quantity) {
+        this.stock_quantity = stock_quantity;
     }
 
     public BigDecimal getDiscount() {
@@ -159,7 +159,7 @@ public class ItemCreationRequest {
                 ", size='" + size + '\'' +
                 ", color='" + color + '\'' +
                 ", price=" + price +
-                ", stockQuantity=" + stockQuantity +
+                ", stock_quantity=" + stock_quantity +
                 ", discount=" + discount +
                 '}';
     }

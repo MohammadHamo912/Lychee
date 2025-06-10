@@ -45,10 +45,10 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Transactional
     public OrderItem updateOrderItem(OrderItem orderItem) {
         Optional<OrderItem> existing = orderItemRepository.findByOrderIdAndItemId(
-                orderItem.getOrderId(), orderItem.getItemId());
+                orderItem.getOrder_id(), orderItem.getItem_id());
         if (existing.isEmpty()) {
-            throw new IllegalArgumentException("OrderItem with Order ID " + orderItem.getOrderId() +
-                    " and Item ID " + orderItem.getItemId() + " not found");
+            throw new IllegalArgumentException("order_item with order ID " + orderItem.getOrder_id() +
+                    " and Item ID " + orderItem.getItem_id() + " not found");
         }
         return orderItemRepository.save(orderItem);
     }

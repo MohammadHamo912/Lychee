@@ -23,7 +23,7 @@ const ShoppingCartPage = () => {
   const [estimatedDelivery, setEstimatedDelivery] = useState("");
   const [updating, setUpdating] = useState({});
 
-  const userId = user?.userId || user?.id;
+  const userId = user?.user_id;
 
   // Debug logs
   console.log("ShoppingCartPage - User:", user);

@@ -44,9 +44,9 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     @Override
     @Transactional
     public PaymentTransaction updatePaymentTransaction(PaymentTransaction paymentTransaction) {
-        Optional<PaymentTransaction> existing = paymentTransactionRepository.findById(paymentTransaction.getPaymentTransactionId());
+        Optional<PaymentTransaction> existing = paymentTransactionRepository.findById(paymentTransaction.getPayment_transaction_id());
         if (existing.isEmpty()) {
-            throw new IllegalArgumentException("PaymentTransaction with ID " + paymentTransaction.getPaymentTransactionId() + " not found");
+            throw new IllegalArgumentException("PaymentTransaction with ID " + paymentTransaction.getPayment_transaction_id() + " not found");
         }
         return paymentTransactionRepository.save(paymentTransaction);
     }

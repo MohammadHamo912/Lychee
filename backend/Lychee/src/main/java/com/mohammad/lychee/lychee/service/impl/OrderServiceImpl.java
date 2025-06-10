@@ -45,9 +45,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order updateOrder(Order order) {
-        Optional<Order> existing = orderRepository.findById(order.getOrderId());
+        Optional<Order> existing = orderRepository.findById(order.getOrder_id());
         if (existing.isEmpty()) {
-            throw new IllegalArgumentException("Order with ID " + order.getOrderId() + " not found");
+            throw new IllegalArgumentException("Order with ID " + order.getOrder_id() + " not found");
         }
         return orderRepository.save(order);
     }

@@ -169,7 +169,7 @@ public class ItemController {
     @PutMapping("/{itemId:[0-9]+}")
     public ResponseEntity<Item> updateItem(@PathVariable Integer itemId, @RequestBody Item item) {
         try {
-            item.setItemId(itemId);
+            item.setItem_id(itemId);
             Item updatedItem = itemService.updateItem(item);
             return ResponseEntity.ok(updatedItem);
         } catch (IllegalArgumentException e) {

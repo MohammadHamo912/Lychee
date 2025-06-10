@@ -42,7 +42,7 @@ public class BaseEntityRepositoryImpl<T extends BaseEntity> implements BaseEntit
     @Override
     public Optional<T> findById(Integer id) {
         try {
-            String sql = "SELECT * FROM User WHERE User_ID = ? AND deleted_at IS NULL";
+            String sql = "SELECT * FROM User WHERE user_id = ? AND deleted_at IS NULL";
             User user = jdbcTemplate.queryForObject(sql, userRowMapper, id);
             return Optional.ofNullable(user);
         } catch (EmptyResultDataAccessException e) {
@@ -85,7 +85,7 @@ public class BaseEntityRepositoryImpl<T extends BaseEntity> implements BaseEntit
 
     private User update(User user) {
         String sql = "UPDATE User SET role = ?, name = ?, email = ?, password_hash = ?, " +
-                "phone = ?, updated_at = ? WHERE User_ID = ?";
+                "phone = ?, updated_at = ? WHERE user_id = ?";
 
         jdbcTemplate.update(sql,
                 user.getRole(),
@@ -101,7 +101,7 @@ public class BaseEntityRepositoryImpl<T extends BaseEntity> implements BaseEntit
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM User WHERE User_ID = ?";
+        String sql = "DELETE FROM User WHERE user_id = ?";
         jdbcTemplate.update(sql, id);
     }
 

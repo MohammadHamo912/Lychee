@@ -35,8 +35,8 @@ public class WishlistServiceImpl implements WishlistService {
     @Transactional
     public void addItemToWishlist(Wishlist wishlistItem) {
         // Check if item already in wishlist
-        if (!isItemInWishlist(wishlistItem.getUserId(), wishlistItem.getItemId())) {
-            wishlistRepository.addWishlistItem(wishlistItem.getUserId(), wishlistItem.getItemId());
+        if (!isItemInWishlist(wishlistItem.getUser_id(), wishlistItem.getItem_id())) {
+            wishlistRepository.addWishlistItem(wishlistItem.getUser_id(), wishlistItem.getItem_id());
         }
         // If already in wishlist, do nothing (idempotent operation)
     }

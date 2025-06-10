@@ -53,12 +53,12 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
     @Transactional
     public ShoppingCartItem addItemToCart(ShoppingCartItem cartItem) {
         try {
-            System.out.println("Service - Adding item to cart: User=" + cartItem.getUserId() +
-                    ", Item=" + cartItem.getItemId() +
+            System.out.println("Service - Adding item to cart: User=" + cartItem.getUser_id() +
+                    ", Item=" + cartItem.getItem_id() +
                     ", Quantity=" + cartItem.getQuantity());
 
             // Validate input
-            if (cartItem.getUserId() == null || cartItem.getItemId() == null || cartItem.getQuantity() == null) {
+            if (cartItem.getUser_id() == null || cartItem.getItem_id() == null || cartItem.getQuantity() == null) {
                 throw new IllegalArgumentException("User ID, Item ID, and Quantity cannot be null");
             }
 
@@ -68,22 +68,22 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
             // Check if item already in cart
             Optional<ShoppingCartItem> existingItem = shoppingCartItemRepository.findByUserIdAndItemId(
-                    cartItem.getUserId(), cartItem.getItemId());
+                    cartItem.getUser_id(), cartItem.getItem_id());
 
             if (existingItem.isPresent()) {
                 System.out.println("Service - Item already exists, updating quantity");
                 // Update quantity if item already exists
                 ShoppingCartItem item = existingItem.get();
                 item.setQuantity(item.getQuantity() + cartItem.getQuantity());
-                item.setUpdatedAt(LocalDateTime.now());
+                item.setUpdated_at(LocalDateTime.now());
                 ShoppingCartItem updatedItem = shoppingCartItemRepository.update(item);
                 System.out.println("Service - Successfully updated existing cart item");
                 return updatedItem;
             } else {
                 System.out.println("Service - Adding new item to cart");
                 // Set timestamps for new item
-                cartItem.setCreatedAt(LocalDateTime.now());
-                cartItem.setUpdatedAt(LocalDateTime.now());
+                cartItem.setCreated_at(LocalDateTime.now());
+                cartItem.setUpdated_at(LocalDateTime.now());
 
                 // Add new item to cart - USE SAVE, NOT UPDATE!
                 ShoppingCartItem savedItem = shoppingCartItemRepository.save(cartItem);
@@ -116,7 +116,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
             ShoppingCartItem cartItem = cartItemOptional.get();
             cartItem.setQuantity(quantity);
-            cartItem.setUpdatedAt(LocalDateTime.now());
+            cartItem.setUpdated_at(LocalDateTime.now());
 
             ShoppingCartItem updatedItem = shoppingCartItemRepository.update(cartItem);
             System.out.println("Service - Successfully updated cart item quantity");

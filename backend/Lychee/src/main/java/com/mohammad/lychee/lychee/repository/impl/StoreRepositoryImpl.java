@@ -28,14 +28,14 @@ public class StoreRepositoryImpl implements StoreRepository {
 
     private final RowMapper<Store> storeRowMapper = (rs, rowNum) -> {
         Store store = new Store();
-        store.setStoreId(rs.getInt("Store_ID"));
-        store.setShopOwnerId(rs.getInt("ShopOwner_ID"));
-        store.setAddressId(rs.getInt("Address_ID"));
+        store.setStore_id(rs.getInt("store_id"));
+        store.setShopowner_id(rs.getInt("shopowner_id"));
+        store.setAddress_id(rs.getInt("address_id"));
         store.setName(rs.getString("name"));
         store.setDescription(rs.getString("description"));
-        store.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
-        store.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
-        store.setDeletedAt(rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null);
+        store.setCreated_at(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+        store.setUpdated_at(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+        store.setDeleted_at(rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null);
         store.setLogo_url(rs.getString("logo_url"));
 
 
@@ -44,14 +44,14 @@ public class StoreRepositoryImpl implements StoreRepository {
 
     @Override
     public List<Store> findAll() {
-        String sql = "SELECT * FROM Store WHERE deleted_at IS NULL";
+        String sql = "SELECT * FROM store WHERE deleted_at IS NULL";
         return jdbcTemplate.query(sql, storeRowMapper);
     }
 
     @Override
     public Optional<Store> findById(Integer id) {
         try {
-            String sql = "SELECT * FROM Store WHERE Store_ID = ? AND deleted_at IS NULL";
+            String sql = "SELECT * FROM store WHERE store_id = ? AND deleted_at IS NULL";
             Store store = jdbcTemplate.queryForObject(sql, storeRowMapper, id);
             return Optional.ofNullable(store);
         } catch (EmptyResultDataAccessException e) {
@@ -62,9 +62,9 @@ public class StoreRepositoryImpl implements StoreRepository {
     @Override
     public List<Store> findByShopOwnerId(Integer shopOwnerId) {
         String sql = """
-              SELECT s.*, a.Address_ID AS a_id, a.city, a.street, a.building
-              FROM Store s
-              JOIN Address a ON s.Address_ID = a.Address_ID
+              SELECT s.*, a.address_id AS a_id, a.city, a.street, a.building
+              FROM store s
+              JOIN address a ON s.address_id = a.address_id
               WHERE s.ShopOwner_ID = ? AND s.deleted_at IS NULL
                 """;
         return jdbcTemplate.query(sql, storeRowMapper, shopOwnerId);
@@ -72,13 +72,13 @@ public class StoreRepositoryImpl implements StoreRepository {
 
     @Override
     public List<Store> findByNameContaining(String name){
-        String sql = "SELECT * FROM Store WHERE name = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM store WHERE name = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql,storeRowMapper,name);
     }
     @Override
     public Store save(Store store) {
 
-        if (store.getStoreId() == 0) {
+        if (store.getStore_id() == 0) {
             return insert(store);
         } else {
             return update(store);
@@ -86,14 +86,14 @@ public class StoreRepositoryImpl implements StoreRepository {
     }
 
     private Store insert(Store store) {
-        String sql = "INSERT INTO Store (ShopOwner_ID, Address_ID, name, description) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO store (shopowner_id, address_id, name, description) VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, store.getShopOwnerId());
-            ps.setInt(2, store.getAddressId());
+            ps.setInt(1, store.getShopowner_id());
+            ps.setInt(2, store.getAddress_id());
             ps.setString(3, store.getName());
 
             if (store.getDescription() != null) {
@@ -105,35 +105,35 @@ public class StoreRepositoryImpl implements StoreRepository {
             return ps;
         }, keyHolder);
 
-        store.setStoreId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        store.setStore_id(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return store;
     }
 
     private Store update(Store store) {
-        String sql = "UPDATE Store SET ShopOwner_ID = ?, Address_ID = ?, name = ?, description = ?,logo_url = ?, " +
-                "updated_at = ? WHERE Store_ID = ?";
+        String sql = "UPDATE store SET shopowner_id = ?, address_id = ?, name = ?, description = ?,logo_url = ?, " +
+                "updated_at = ? WHERE store_id = ?";
 
         jdbcTemplate.update(sql,
-                store.getShopOwnerId(),
-                store.getAddressId(),
+                store.getShopowner_id(),
+                store.getAddress_id(),
                 store.getName(),
                 store.getDescription(),
                 store.getLogo_url(),
                 Timestamp.valueOf(LocalDateTime.now()),
-                store.getStoreId());
+                store.getStore_id());
 
-        return findById(store.getStoreId()).orElse(store);
+        return findById(store.getStore_id()).orElse(store);
     }
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM Store WHERE Store_ID = ?";
+        String sql = "DELETE FROM store WHERE store_id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public void softDelete(Integer id) {
-        String sql = "UPDATE Store SET deleted_at = ? WHERE Store_ID = ?";
+        String sql = "UPDATE store SET deleted_at = ? WHERE store_id = ?";
         jdbcTemplate.update(sql, Timestamp.valueOf(LocalDateTime.now()), id);
     }
     @Override
@@ -141,22 +141,22 @@ public class StoreRepositoryImpl implements StoreRepository {
         String sql = """
                 SELECT 
                     (SELECT COUNT(DISTINCT o.order_id)
-                     FROM OrderItem oi
-                     JOIN Item i ON oi.item_id = i.Item_ID
-                     JOIN `Order` o ON oi.order_id = o.order_id
-                     WHERE i.Store_ID = ?) AS totalOrders,
+                     FROM order_item oi
+                     JOIN item i ON oi.item_id = i.item_id
+                     JOIN `order` o ON oi.order_id = o.order_id
+                     WHERE i.store_id = ?) AS totalOrders,
 
-                    (SELECT COUNT(*) FROM Item i
-                     WHERE i.Store_ID = ?) AS totalProducts,
+                    (SELECT COUNT(*) FROM item i
+                     WHERE i.store_id = ?) AS totalProducts,
 
-                    (SELECT SUM(p.amount) FROM PaymentTransaction p
-                     JOIN `Order` o ON o.order_id=p.order_id
-                     JOIN `OrderItem` oi ON oi.order_id=o.order_id
-                     JOIN `Item` i ON i.Item_ID=oi.item_id
-                     WHERE i.Store_ID=? AND p.status LIKE "payed") AS totalSales,
+                    (SELECT SUM(p.amount) FROM payment_transaction p
+                     JOIN `order` o ON o.order_id=p.order_id
+                     JOIN `order_item` oi ON oi.order_id=o.order_id
+                     JOIN `item` i ON i.item_id=oi.item_id
+                     WHERE i.store_id=? AND p.status LIKE "payed") AS totalSales,
                      
                     (SELECT AVG(Rating) 
-                     FROM Review 
+                     FROM review 
                      WHERE Review_Type LIKE "shop" AND Target_ID=?) AS storeRating
                 """;
 
@@ -176,10 +176,10 @@ public class StoreRepositoryImpl implements StoreRepository {
         String sql = """
         SELECT DATE(o.created_at) as date,
                SUM(oi.quantity * oi.price_at_purchase) as total
-        FROM OrderItem oi
-        JOIN Item i ON oi.item_id = i.Item_ID
-        JOIN `Order` o ON o.order_id = oi.order_id
-        WHERE i.Store_ID = ?
+        FROM order_item oi
+        JOIN item i ON oi.item_id = i.item_id
+        JOIN `order` o ON o.order_id = oi.order_id
+        WHERE i.store_id = ?
         GROUP BY DATE(o.created_at)
         ORDER BY DATE(o.created_at)
     """;
@@ -196,10 +196,10 @@ public class StoreRepositoryImpl implements StoreRepository {
         String sql = """
         SELECT r.Review_ID AS id, r.Rating, r.Comment, r.Created_At AS date,
                u.name AS customer, s.name AS storeName
-        FROM Review r
-        JOIN User u ON r.User_ID = u.User_ID
-        JOIN Store s ON r.Target_ID = s.Store_ID
-        WHERE r.Review_Type = 'shop' AND s.Store_ID = ?
+        FROM review r
+        JOIN `user` u ON r.user_id = u.user_id
+        JOIN store s ON r.Target_ID = s.store_id
+        WHERE r.Review_Type = 'shop' AND s.store_id = ?
         ORDER BY r.Created_At DESC
     """;
 

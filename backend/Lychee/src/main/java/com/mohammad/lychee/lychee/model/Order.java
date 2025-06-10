@@ -3,66 +3,66 @@ package com.mohammad.lychee.lychee.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 public class Order {
-    private int orderId;
-    private int userId;
-    private int shippingAddressId;
-    private Integer discountId;
+    private int order_id;
+    private int user_id;
+    private int shipping_address_id;
+    private Integer discount_id;
     private String status;
-    private BigDecimal totalPrice;
-    private BigDecimal shippingFee;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    private BigDecimal total_price;
+    private BigDecimal shipping_fee;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
 
     public Order() {}
 
-    public Order(int orderId, int userId, int shippingAddressId, Integer discountId, String status,
-                 BigDecimal totalPrice, BigDecimal shippingFee, LocalDateTime createdAt,
-                 LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.orderId = orderId;
-        this.userId = userId;
-        this.shippingAddressId = shippingAddressId;
-        this.discountId = discountId;
+    public Order(int order_id, int user_id, int shipping_address_id, Integer discount_id, String status,
+                 BigDecimal total_price, BigDecimal shipping_fee, LocalDateTime created_at,
+                 LocalDateTime updated_at, LocalDateTime deleted_at) {
+        this.order_id = order_id;
+        this.user_id = user_id;
+        this.shipping_address_id = shipping_address_id;
+        this.discount_id = discount_id;
         this.status = status;
-        this.totalPrice = totalPrice;
-        this.shippingFee = shippingFee;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+        this.total_price = total_price;
+        this.shipping_fee = shipping_fee;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.deleted_at = deleted_at;
     }
 
     // Getters and setters 👇
 
-    public int getOrderId() {
-        return orderId;
+    public int getOrder_id() {
+        return order_id;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrder_id(int order_id) {
+        this.order_id = order_id;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
-    public int getShippingAddressId() {
-        return shippingAddressId;
+    public int getShipping_address_id() {
+        return shipping_address_id;
     }
 
-    public void setShippingAddressId(int shippingAddressId) {
-        this.shippingAddressId = shippingAddressId;
+    public void setShipping_address_id(int shipping_address_id) {
+        this.shipping_address_id = shipping_address_id;
     }
 
-    public Integer getDiscountId() {
-        return discountId;
+    public Integer getDiscount_id() {
+        return discount_id;
     }
 
-    public void setDiscountId(Integer discountId) {
-        this.discountId = discountId;
+    public void setDiscount_id(Integer discount_id) {
+        this.discount_id = discount_id;
     }
 
     public String getStatus() {
@@ -73,43 +73,43 @@ public class Order {
         this.status = status;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public BigDecimal getTotal_price() {
+        return total_price;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotal_price(BigDecimal total_price) {
+        this.total_price = total_price;
     }
 
-    public BigDecimal getShippingFee() {
-        return shippingFee;
+    public BigDecimal getShipping_fee() {
+        return shipping_fee;
     }
 
-    public void setShippingFee(BigDecimal shippingFee) {
-        this.shippingFee = shippingFee;
+    public void setShipping_fee(BigDecimal shipping_fee) {
+        this.shipping_fee = shipping_fee;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
+    public LocalDateTime getDeleted_at() {
+        return deleted_at;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setDeleted_at(LocalDateTime deleted_at) {
+        this.deleted_at = deleted_at;
     }
 }

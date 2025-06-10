@@ -1,7 +1,6 @@
 package com.mohammad.lychee.lychee.repository.impl;
 
 import com.mohammad.lychee.lychee.model.Order;
-import com.mohammad.lychee.lychee.model.OrderItem;
 import com.mohammad.lychee.lychee.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,27 +28,27 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private final RowMapper<Order> orderRowMapper = (rs, rowNum) -> {
         Order order = new Order();
-        order.setOrderId(rs.getInt("order_id"));
-        order.setUserId(rs.getInt("user_ID"));
-        order.setShippingAddressId(rs.getInt("shippingAddress_ID"));
+        order.setOrder_id(rs.getInt("order_id"));
+        order.setUser_id(rs.getInt("user_id"));
+        order.setShipping_address_id(rs.getInt("shipping_address_id"));
 
-        if (rs.getObject("Discount_ID") != null) {
-            order.setDiscountId(rs.getInt("Discount_ID"));
+        if (rs.getObject("discount_id") != null) {
+            order.setDiscount_id(rs.getInt("discount_id"));
         }
 
         order.setStatus(rs.getString("status"));
-        order.setTotalPrice(rs.getBigDecimal("total_price"));
-        order.setShippingFee(rs.getBigDecimal("shipping_fee"));
-        order.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        order.setTotal_price(rs.getBigDecimal("total_price"));
+        order.setShipping_fee(rs.getBigDecimal("shipping_fee"));
+        order.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
 
         Timestamp updatedAt = rs.getTimestamp("updated_at");
         if (updatedAt != null) {
-            order.setUpdatedAt(updatedAt.toLocalDateTime());
+            order.setUpdated_at(updatedAt.toLocalDateTime());
         }
 
         Timestamp deletedAt = rs.getTimestamp("deleted_at");
         if (deletedAt != null) {
-            order.setDeletedAt(deletedAt.toLocalDateTime());
+            order.setDeleted_at(deletedAt.toLocalDateTime());
         }
 
         return order;
@@ -57,82 +56,82 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<Order> findAll() {
-        String sql = "SELECT * FROM `Order` WHERE deleted_at IS NULL";
+        String sql = "SELECT * FROM `order` WHERE deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderRowMapper);
     }
 
     @Override
     public Optional<Order> findById(Integer orderId) {
-        String sql = "SELECT * FROM `Order` WHERE order_id = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM `order` WHERE order_id = ? AND deleted_at IS NULL";
         List<Order> orders = jdbcTemplate.query(sql, orderRowMapper, orderId);
         return orders.isEmpty() ? Optional.empty() : Optional.of(orders.get(0));
     }
 
     @Override
     public List<Order> findByUserId(Integer userId) {
-        String sql = "SELECT * FROM `Order` WHERE user_ID = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM `order` WHERE user_id = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderRowMapper, userId);
     }
 
     @Override
     public Order save(Order order) {
-        String sql = "INSERT INTO `Order` (user_ID, shippingAddress_ID, Discount_ID, status, total_price, shipping_fee) " +
+        String sql = "INSERT INTO `order` (user_id, shipping_address_id, discount_id, status, total_price, shipping_fee) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, order.getUserId());
-            ps.setInt(2, order.getShippingAddressId());
+            ps.setInt(1, order.getUser_id());
+            ps.setInt(2, order.getShipping_address_id());
 
-            if (order.getDiscountId() != null) {
-                ps.setInt(3, order.getDiscountId());
+            if (order.getDiscount_id() != null) {
+                ps.setInt(3, order.getDiscount_id());
             } else {
                 ps.setNull(3, java.sql.Types.INTEGER);
             }
 
             ps.setString(4, order.getStatus());
-            ps.setBigDecimal(5, order.getTotalPrice());
-            ps.setBigDecimal(6, order.getShippingFee());
+            ps.setBigDecimal(5, order.getTotal_price());
+            ps.setBigDecimal(6, order.getShipping_fee());
             return ps;
         }, keyHolder);
 
-        order.setOrderId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        order.setOrder_id(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return order;
     }
 
     @Override
     public void update(Order order) {
-        String sql = "UPDATE `Order` SET user_ID = ?, shippingAddress_ID = ?, Discount_ID = ?, " +
+        String sql = "UPDATE `order` SET user_id = ?, shipping_address_id = ?, discount_id = ?, " +
                 "status = ?, total_price = ?, shipping_fee = ? WHERE order_id = ?";
 
         jdbcTemplate.update(sql,
-                order.getUserId(),
-                order.getShippingAddressId(),
-                order.getDiscountId(),
+                order.getUser_id(),
+                order.getShipping_address_id(),
+                order.getDiscount_id(),
                 order.getStatus(),
-                order.getTotalPrice(),
-                order.getShippingFee(),
-                order.getOrderId()
+                order.getTotal_price(),
+                order.getShipping_fee(),
+                order.getOrder_id()
         );
     }
 
     @Override
     public void softDelete(Integer orderId) {
-        String sql = "UPDATE `Order` SET deleted_at = ? WHERE order_id = ?";
+        String sql = "UPDATE `order` SET deleted_at = ? WHERE order_id = ?";
         jdbcTemplate.update(sql, Timestamp.valueOf(LocalDateTime.now()), orderId);
     }
 
     @Override
     public List<Order> findByStatus(String status) {
-        String sql = "SELECT * FROM `Order` WHERE status = ? AND deleted_at IS NULL";
+        String sql = "SELECT * FROM `order` WHERE status = ? AND deleted_at IS NULL";
         return jdbcTemplate.query(sql, orderRowMapper, status);
     }
 
     @Override
     public Optional<Double> getTotalSpendingByUserId(Integer userId) {
-        String sql = "SELECT COALESCE(SUM(total_price), 0.0) FROM `Order` WHERE user_ID = ? AND deleted_at IS NULL";
+        String sql = "SELECT COALESCE(SUM(total_price), 0.0) FROM `order` WHERE user_id = ? AND deleted_at IS NULL";
         try {
             Double total = jdbcTemplate.queryForObject(sql, Double.class, userId);
             return Optional.ofNullable(total);
@@ -148,28 +147,28 @@ public class OrderRepositoryImpl implements OrderRepository {
         List<Object> params = new ArrayList<>();
 
         if ("admin".equals(role)) {
-            sql.append("SELECT o.* FROM `Order` o WHERE o.deleted_at IS NULL ");
+            sql.append("SELECT o.* FROM `order` o WHERE o.deleted_at IS NULL ");
         } else if ("customer".equals(role)) {
             sql.append("""
-                SELECT o.* FROM `Order` o
-                JOIN `User` u ON o.user_ID = u.User_ID
+                SELECT o.* FROM `order` o
+                JOIN `user` u ON o.user_id = u.user_id
                 WHERE o.deleted_at IS NULL AND u.deleted_at IS NULL
             """);
             if (userId != null) {
-                sql.append("AND o.user_ID = ? ");
+                sql.append("AND o.user_id = ? ");
                 params.add(userId);
             }
         } else if ("shopowner".equals(role)) {
             sql.append("""
-                SELECT DISTINCT o.* FROM `Order` o
-                JOIN OrderItem oi ON o.order_id = oi.order_id
-                JOIN Item i ON oi.item_id = i.Item_ID
-                JOIN Store s ON i.Store_ID = s.Store_ID
-                JOIN `User` u ON o.user_ID = u.User_ID
+                SELECT DISTINCT o.* FROM `order` o
+                JOIN order_item oi ON o.order_id = oi.order_id
+                JOIN item i ON oi.item_id = i.item_id
+                JOIN store s ON i.store_id = s.store_id
+                JOIN `user` u ON o.user_id = u.user_id
                 WHERE o.deleted_at IS NULL AND s.deleted_at IS NULL
             """);
             if (storeId != null) {
-                sql.append("AND s.Store_ID = ? ");
+                sql.append("AND s.store_id = ? ");
                 params.add(storeId);
             }
         }
@@ -189,7 +188,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 sql.append("AND LOWER(u.name) LIKE ? ");
                 params.add(query);
             } else if ("customer".equals(role)) {
-                sql.append("AND EXISTS (SELECT 1 FROM Store s2 WHERE s2.Store_ID = i.Store_ID AND LOWER(s2.name) LIKE ?) ");
+                sql.append("AND EXISTS (SELECT 1 FROM store s2 WHERE s2.store_id = i.store_id AND LOWER(s2.name) LIKE ?) ");
                 params.add(query);
             }
         }
@@ -213,10 +212,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     public List<Map<String, Object>> getOrderItemSummaries(int orderId) {
         String sql = """
             SELECT p.name AS productName, oi.quantity, oi.price_at_purchase * (1 - i.discount / 100) AS price
-            FROM OrderItem oi
-            JOIN Item i ON oi.item_id = i.Item_ID
-            JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
-            JOIN Product p ON pv.Product_ID = p.Product_ID
+            FROM order_item oi
+            JOIN item i ON oi.item_id = i.item_id
+            JOIN product_variant pv ON i.product_variant_id = pv.product_variant_id
+            JOIN product p ON pv.product_id = p.product_id
             WHERE oi.order_id = ?
         """;
 
@@ -232,7 +231,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     @Transactional
     public void updateOrderStatus(Integer orderId, String status) {
-        String sql = "UPDATE `Order` SET status = ?, updated_at = ? WHERE order_id = ?";
+        String sql = "UPDATE `order` SET status = ?, updated_at = ? WHERE order_id = ?";
         jdbcTemplate.update(sql, status, Timestamp.valueOf(LocalDateTime.now()), orderId);
     }
     @Override
@@ -241,14 +240,14 @@ public class OrderRepositoryImpl implements OrderRepository {
         SELECT p.name AS productName,
                oi.quantity,
                i.price * (1 - i.discount / 100) AS price,
-               i.Item_ID AS itemId,
-               i.Store_ID AS storeId
-        FROM `Order` o
-        JOIN OrderItem oi ON o.order_id = oi.order_id
-        JOIN Item i ON i.Item_ID = oi.item_id
-        JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
-        JOIN Product p ON p.Product_ID = pv.Product_ID
-        WHERE i.Store_ID = ? AND o.order_id = ?
+               i.item_id AS itemId,
+               i.store_id AS storeId
+        FROM `order` o
+        JOIN order_item oi ON o.order_id = oi.order_id
+        JOIN item i ON i.item_id = oi.item_id
+        JOIN product_variant pv ON i.product_variant_id = pv.product_variant_id
+        JOIN product p ON p.product_id = pv.product_id
+        WHERE i.store_id = ? AND o.order_id = ?
     """;
 
         return jdbcTemplate.query(sql, new Object[]{storeId, orderId}, (rs, rowNum) -> {

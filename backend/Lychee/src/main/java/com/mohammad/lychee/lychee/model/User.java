@@ -3,41 +3,41 @@ package com.mohammad.lychee.lychee.model;
 import java.time.LocalDateTime;
 
 public class User { //extends BaseEntity
-    private int userId;
+    private int user_id;
     private String role;
     private String name;
     private String email;
-    private String passwordHash;
+    private String password_hash;
     private String phone;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
     public User() {
         // Default constructor
     }
-    public User(int userId, String role, String name, String email, String passwordHash,
-                String phone, LocalDateTime createdAt, LocalDateTime updatedAt,
-                LocalDateTime deletedAt) {
+    public User(int user_id, String role, String name, String email, String password_hash,
+                String phone, LocalDateTime created_at, LocalDateTime updated_at,
+                LocalDateTime deleted_at) {
        // super("User",userId);
-        this.userId = userId;
+        this.user_id = user_id;
         this.role = role;
         this.name = name;
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password_hash = password_hash;
         this.phone = phone;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.deleted_at = deleted_at;
     }
 
     // Getters and setters
 
-    public int getUserId() {
-        return userId;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public String getRole() {
@@ -64,12 +64,12 @@ public class User { //extends BaseEntity
         this.email = email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword_hash() {
+        return password_hash;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword_hash(String password_hash) {
+        this.password_hash = password_hash;
     }
 
     public String getPhone() {
@@ -80,28 +80,28 @@ public class User { //extends BaseEntity
         this.phone = phone;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
+    public LocalDateTime getDeleted_at() {
+        return deleted_at;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setDeleted_at(LocalDateTime deleted_at) {
+        this.deleted_at = deleted_at;
     }
 
 

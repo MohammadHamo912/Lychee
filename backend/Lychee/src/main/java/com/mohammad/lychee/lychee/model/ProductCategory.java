@@ -1,31 +1,31 @@
 package com.mohammad.lychee.lychee.model;
 
 public class ProductCategory {
-    private int productId;
-    private int categoryId;
+    private int product_id;
+    private int category_id;
 
     public ProductCategory() {}
 
-    public ProductCategory(int productId, int categoryId) {
-        this.productId = productId;
-        this.categoryId = categoryId;
+    public ProductCategory(int product_id, int category_id) {
+        this.product_id = product_id;
+        this.category_id = category_id;
     }
 
     // Getters and setters
 
-    public int getProductId() {
-        return productId;
+    public int getProduct_id() {
+        return product_id;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setProduct_id(int product_id) {
+        this.product_id = product_id;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public int getCategory_id() {
+        return category_id;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
     }
 }

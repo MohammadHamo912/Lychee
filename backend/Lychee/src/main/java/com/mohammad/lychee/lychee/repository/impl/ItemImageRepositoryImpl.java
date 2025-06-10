@@ -28,9 +28,9 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
 
     private final RowMapper<ItemImage> itemImageRowMapper = (rs, rowNum) -> {
         ItemImage itemImage = new ItemImage();
-        itemImage.setImageId(rs.getInt("Image_ID"));
-        itemImage.setItemId(rs.getInt("Item_ID"));
-        itemImage.setImageUrl(rs.getString("image_url"));
+        itemImage.setImage_id(rs.getInt("image_id"));
+        itemImage.setItem_id(rs.getInt("item_id"));
+        itemImage.setImage_url(rs.getString("image_url"));
         itemImage.setCaption(rs.getString("caption"));
         return itemImage;
     };
@@ -44,7 +44,7 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
     @Override
     public Optional<ItemImage> findById(Integer id) {
         try {
-            String sql = "SELECT * FROM item_images WHERE Image_ID = ?";
+            String sql = "SELECT * FROM item_images WHERE image_id = ?";
             ItemImage itemImage = jdbcTemplate.queryForObject(sql, itemImageRowMapper, id);
             return Optional.ofNullable(itemImage);
         } catch (EmptyResultDataAccessException e) {
@@ -54,7 +54,7 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
 
     @Override
     public List<ItemImage> findByItemId(Integer itemId) {
-        String sql = "SELECT * FROM item_images WHERE Item_ID = ?";
+        String sql = "SELECT * FROM item_images WHERE item_id = ?";
         return jdbcTemplate.query(sql, itemImageRowMapper, itemId);
     }
 
@@ -70,14 +70,14 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
     }
 
     private ItemImage insert(ItemImage itemImage) {
-        String sql = "INSERT INTO item_images (Item_ID, image_url, caption) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO item_images (item_id, image_url, caption) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, itemImage.getItemId());
-            ps.setString(2, itemImage.getImageUrl());
+            ps.setInt(1, itemImage.getItem_id());
+            ps.setString(2, itemImage.getImage_url());
 
             if (itemImage.getCaption() != null) {
                 ps.setString(3, itemImage.getCaption());
@@ -88,25 +88,25 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
             return ps;
         }, keyHolder);
 
-        itemImage.setImageId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        itemImage.setImage_id(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return itemImage;
     }
 
     private ItemImage update(ItemImage itemImage) {
-        String sql = "UPDATE item_images SET Item_ID = ?, image_url = ?, caption = ? WHERE Image_ID = ?";
+        String sql = "UPDATE item_images SET item_id = ?, image_url = ?, caption = ? WHERE image_id = ?";
 
         jdbcTemplate.update(sql,
-                itemImage.getItemId(),
-                itemImage.getImageUrl(),
+                itemImage.getItem_id(),
+                itemImage.getImage_url(),
                 itemImage.getCaption(),
-                itemImage.getImageId());
+                itemImage.getImage_id());
 
-        return findById(itemImage.getImageId()).orElse(itemImage);
+        return findById(itemImage.getImage_id()).orElse(itemImage);
     }
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM item_images WHERE Image_ID = ?";
+        String sql = "DELETE FROM item_images WHERE image_id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

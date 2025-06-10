@@ -20,12 +20,12 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
     // Simple base query - no complex joins that might cause issues
     private static final String BASE_ENRICHED_QUERY = """
         SELECT 
-            i.Item_ID as itemId,
-            i.Store_ID as storeId,
-            i.Product_Variant_ID as productVariantId,
+            i.item_id as itemId,
+            i.store_id as storeId,
+            i.product_variant_id as productVariantId,
             i.price,
             i.discount,
-            i.stockQuantity as stockQuantity,
+            i.stock_quantity as stockQuantity,
             i.created_at as itemCreatedAt,
             i.updated_at as itemUpdatedAt,
             i.deleted_at as itemDeletedAt,
@@ -36,12 +36,12 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
             COALESCE(p.logo_url, '') as productImage,
             COALESCE(pv.size, 'default') as variantSize,
             COALESCE(pv.color, 'default') as variantColor,
-            COALESCE(s.name, 'Unknown Store') as storeName,
-            COALESCE(p.Product_ID, 0) as productId
-        FROM Item i
-        LEFT JOIN ProductVariant pv ON i.Product_Variant_ID = pv.Product_Variant_ID
-        LEFT JOIN Product p ON pv.Product_ID = p.Product_ID
-        LEFT JOIN Store s ON i.Store_ID = s.Store_ID
+            COALESCE(s.name, 'Unknown store') as storeName,
+            COALESCE(p.product_id, 0) as productId
+        FROM item i
+        LEFT JOIN product_variant pv ON i.product_variant_id = pv.product_variant_id
+        LEFT JOIN product p ON pv.product_id = p.product_id
+        LEFT JOIN store s ON i.store_id = s.store_id
         WHERE i.deleted_at IS NULL
     """;
 
@@ -50,17 +50,17 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
         EnrichedItem item = new EnrichedItem();
 
         // Map item fields
-        item.setItemId(rs.getInt("itemId"));
-        item.setStoreId(rs.getInt("storeId"));
-        item.setProductVariantId(rs.getInt("productVariantId"));
+        item.setItem_id(rs.getInt("itemId"));
+        item.setStore_id(rs.getInt("storeId"));
+        item.setProduct_variant_id(rs.getInt("productVariantId"));
         item.setPrice(rs.getBigDecimal("price"));
         item.setDiscount(rs.getBigDecimal("discount"));
-        item.setStockQuantity(rs.getInt("stockQuantity"));
-        item.setCreatedAt(rs.getTimestamp("itemCreatedAt") != null ?
+        item.setStock_quantity(rs.getInt("stockQuantity")); // FIXED: Use correct alias
+        item.setCreated_at(rs.getTimestamp("itemCreatedAt") != null ?
                 rs.getTimestamp("itemCreatedAt").toLocalDateTime() : null);
-        item.setUpdatedAt(rs.getTimestamp("itemUpdatedAt") != null ?
+        item.setUpdated_at(rs.getTimestamp("itemUpdatedAt") != null ?
                 rs.getTimestamp("itemUpdatedAt").toLocalDateTime() : null);
-        item.setDeletedAt(rs.getTimestamp("itemDeletedAt") != null ?
+        item.setDeleted_at(rs.getTimestamp("itemDeletedAt") != null ?
                 rs.getTimestamp("itemDeletedAt").toLocalDateTime() : null);
 
         // Map product fields
@@ -112,7 +112,7 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
     public Optional<EnrichedItem> findEnrichedById(Integer itemId) {
         try {
             System.out.println("SimpleRepository - Finding enriched item by ID: " + itemId);
-            String query = BASE_ENRICHED_QUERY + " AND i.Item_ID = ?";
+            String query = BASE_ENRICHED_QUERY + " AND i.item_id = ?";
 
             EnrichedItem item = jdbcTemplate.queryForObject(query, enrichedItemRowMapper, itemId);
 
@@ -136,7 +136,7 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
     public List<EnrichedItem> findEnrichedByStoreId(Integer storeId) {
         try {
             System.out.println("SimpleRepository - Finding enriched items by store ID: " + storeId);
-            String query = BASE_ENRICHED_QUERY + " AND i.Store_ID = ?";
+            String query = BASE_ENRICHED_QUERY + " AND i.store_id = ?";
 
             List<EnrichedItem> items = jdbcTemplate.query(query, enrichedItemRowMapper, storeId);
 
@@ -191,7 +191,7 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
         try {
             System.out.println("SimpleRepository - Searching enriched items in store " + storeId + " with query: " + query);
             String searchQuery = BASE_ENRICHED_QUERY +
-                    " AND i.Store_ID = ? AND (p.name LIKE ? OR p.description LIKE ? OR p.brand LIKE ?)";
+                    " AND i.store_id = ? AND (p.name LIKE ? OR p.description LIKE ? OR p.brand LIKE ?)";
 
             String searchPattern = "%" + query + "%";
             List<EnrichedItem> items = jdbcTemplate.query(searchQuery, enrichedItemRowMapper,
@@ -216,7 +216,7 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
             }
 
             String placeholders = itemIds.stream().map(id -> "?").collect(Collectors.joining(","));
-            String query = BASE_ENRICHED_QUERY + " AND i.Item_ID IN (" + placeholders + ")";
+            String query = BASE_ENRICHED_QUERY + " AND i.item_id IN (" + placeholders + ")";
 
             List<EnrichedItem> items = jdbcTemplate.query(query, enrichedItemRowMapper, itemIds.toArray());
 
@@ -228,15 +228,16 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
             throw e;
         }
     }
+
     private List<EnrichedItem.AvailableVariant> findVariantsByProductId(Integer productId) {
         String sql = """
         SELECT
-            Product_Variant_ID as id,
-            Product_ID as productId,
+            product_variant_id as id,
+            product_id as productId,
             size,
             color
-        FROM ProductVariant
-        WHERE Product_ID = ?
+        FROM product_variant
+        WHERE product_id = ?
     """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new EnrichedItem.AvailableVariant(
@@ -248,6 +249,4 @@ public class EnrichedItemRepositoryImpl implements EnrichedItemRepository {
                 null    // or true/false based on logic
         ), productId);
     }
-
-
 }

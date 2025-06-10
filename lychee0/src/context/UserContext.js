@@ -49,7 +49,7 @@ export const UserProvider = ({ children }) => {
 
     try {
       setIsLoadingCart(true);
-      const userIdToUse = user.userId || user.id;
+      const userIdToUse = user.user_id;
       console.log("UserContext - Loading cart for user:", userIdToUse);
 
       const cartItems = await ShoppingCartAPI.getCartItems(userIdToUse);
@@ -86,8 +86,8 @@ export const UserProvider = ({ children }) => {
       setIsAddingToCart(true);
       console.log("UserContext - Adding to cart:", item, "quantity:", quantity);
 
-      const userIdToUse = user.userId || user.id;
-      await ShoppingCartAPI.addToCart(userIdToUse, item.id, quantity);
+      const userIdToUse = user.user_id;
+      await ShoppingCartAPI.addToCart(userIdToUse, item.item_id, quantity);
 
       // Reload cart items to get updated data from server
       await loadCartItems();
@@ -106,7 +106,7 @@ export const UserProvider = ({ children }) => {
     if (!user) return false;
 
     try {
-      const userIdToUse = user.userId || user.id;
+      const userIdToUse = user.user_id;
       await ShoppingCartAPI.removeFromCart(userIdToUse, itemId);
 
       // Reload cart items to get updated data from server
@@ -124,7 +124,7 @@ export const UserProvider = ({ children }) => {
     if (!user) return false;
 
     try {
-      const userIdToUse = user.userId || user.id;
+      const userIdToUse = user.user_id;
       await ShoppingCartAPI.updateCartItemQuantity(
         userIdToUse,
         itemId,
@@ -146,7 +146,7 @@ export const UserProvider = ({ children }) => {
     if (!user) return false;
 
     try {
-      const userIdToUse = user.userId || user.id;
+      const userIdToUse = user.user_id;
       await ShoppingCartAPI.clearCart(userIdToUse);
 
       setCart([]);

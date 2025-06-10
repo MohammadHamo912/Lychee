@@ -242,8 +242,9 @@
 }
 
 .average-rating {
-  display: flex;
   align-items: center;
+  display: flex;
+  justify-content: center;
   gap: 10px;
 }
 

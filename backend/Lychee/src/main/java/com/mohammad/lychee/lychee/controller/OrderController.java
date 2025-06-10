@@ -61,7 +61,7 @@ public class OrderController {
     // Update an existing order
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateOrder(@PathVariable Integer id, @RequestBody Order order) {
-        order.setOrderId(id);
+        order.setOrder_id(id);
         orderService.updateOrder(order);
         return ResponseEntity.noContent().build();
     }
@@ -89,7 +89,7 @@ public class OrderController {
         String newStatus = body.get("status");
         try {
             orderService.updateOrderStatus(orderId, newStatus);
-            return ResponseEntity.ok("Order status updated");
+            return ResponseEntity.ok("order status updated");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update order status");
         }

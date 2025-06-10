@@ -17,11 +17,11 @@ public class AdminOverviewController {
     public Map<String, Object> getSummary() {
         Map<String, Object> map = new HashMap<>();
         try {
-            map.put("users", jdbc.queryForObject("SELECT COUNT(*) FROM `User`", Integer.class));
-            map.put("shops", jdbc.queryForObject("SELECT COUNT(*) FROM `Store`", Integer.class));
-            map.put("orders", jdbc.queryForObject("SELECT COUNT(*) FROM `Order`", Integer.class));
+            map.put("users", jdbc.queryForObject("SELECT COUNT(*) FROM `user`", Integer.class));
+            map.put("shops", jdbc.queryForObject("SELECT COUNT(*) FROM `store`", Integer.class));
+            map.put("orders", jdbc.queryForObject("SELECT COUNT(*) FROM `order`", Integer.class));
             map.put("revenue", jdbc.queryForObject(
-                    "SELECT IFNULL(SUM(total_price), 0) FROM `Order` WHERE status = 'completed'", Double.class));
+                    "SELECT IFNULL(SUM(total_price), 0) FROM `order` WHERE status = 'completed'", Double.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,7 +32,7 @@ public class AdminOverviewController {
     public List<Map<String, Object>> getOrderTrends() {
         String sql = """
             SELECT DATE(created_at) AS date, COUNT(*) AS orders
-            FROM `Order`
+            FROM `order`
             GROUP BY DATE(created_at)
             ORDER BY DATE(created_at)
         """;
@@ -53,7 +53,7 @@ public class AdminOverviewController {
     public List<Map<String, Object>> getOrderStatus() {
         String sql = """
             SELECT status AS name, COUNT(*) AS value
-            FROM `Order`
+            FROM `order`
             GROUP BY status
         """;
         try {
@@ -72,14 +72,14 @@ public class AdminOverviewController {
     @GetMapping("/recent-users")
     public List<Map<String, Object>> getRecentUsers() {
         String sql = """
-            SELECT User_ID, name
-            FROM `User`
+            SELECT user_id, name
+            FROM `user`
             ORDER BY created_at DESC
             LIMIT 5
         """;
         try {
             return jdbc.query(sql, (rs, rowNum) -> Map.of(
-                    "id", rs.getInt("User_ID"),
+                    "id", rs.getInt("user_id"),
                     "name", rs.getString("name")
             ));
         } catch (Exception e) {
@@ -91,14 +91,14 @@ public class AdminOverviewController {
     @GetMapping("/recent-shops")
     public List<Map<String, Object>> getRecentShops() {
         String sql = """
-            SELECT Store_ID, name
-            FROM `Store`
+            SELECT store_id, name
+            FROM `store`
             ORDER BY created_at DESC
             LIMIT 5
         """;
         try {
             return jdbc.query(sql, (rs, rowNum) -> Map.of(
-                    "id", rs.getInt("Store_ID"),
+                    "id", rs.getInt("store_id"),
                     "name", rs.getString("name")
             ));
         } catch (Exception e) {
@@ -111,8 +111,8 @@ public class AdminOverviewController {
     public List<Map<String, Object>> getRecentOrders() {
         String sql = """
             SELECT o.order_id AS id, u.name AS customer, o.total_price AS total
-            FROM `Order` o
-            JOIN `User` u ON o.user_ID = u.User_ID
+            FROM `order` o
+            JOIN `User` u ON o.user_id = u.user_id
             ORDER BY o.created_at DESC
             LIMIT 5
         """;

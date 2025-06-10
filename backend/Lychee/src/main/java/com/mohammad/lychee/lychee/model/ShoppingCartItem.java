@@ -3,51 +3,51 @@ package com.mohammad.lychee.lychee.model;
 import java.time.LocalDateTime;
 
 public class ShoppingCartItem {
-    private Integer userId;
-    private Integer itemId;
+    private Integer user_id;
+    private Integer item_id;
     private Integer quantity;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
 
     // Default constructor
     public ShoppingCartItem() {}
 
     // Constructor with required fields
-    public ShoppingCartItem(Integer userId, Integer itemId, Integer quantity) {
-        this.userId = userId;
-        this.itemId = itemId;
+    public ShoppingCartItem(Integer user_id, Integer item_id, Integer quantity) {
+        this.user_id = user_id;
+        this.item_id = item_id;
         this.quantity = quantity;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        this.created_at = LocalDateTime.now();
+        this.updated_at = LocalDateTime.now();
     }
 
     // Full constructor
-    public ShoppingCartItem(Integer userId, Integer itemId, Integer quantity,
-                            LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.userId = userId;
-        this.itemId = itemId;
+    public ShoppingCartItem(Integer user_id, Integer item_id, Integer quantity,
+                            LocalDateTime created_at, LocalDateTime updated_at, LocalDateTime deleted_at) {
+        this.user_id = user_id;
+        this.item_id = item_id;
         this.quantity = quantity;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.deleted_at = deleted_at;
     }
 
     // Getters and Setters
-    public Integer getUserId() {
-        return userId;
+    public Integer getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
 
-    public Integer getItemId() {
-        return itemId;
+    public Integer getItem_id() {
+        return item_id;
     }
 
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
+    public void setItem_id(Integer item_id) {
+        this.item_id = item_id;
     }
 
     public Integer getQuantity() {
@@ -58,40 +58,40 @@ public class ShoppingCartItem {
         this.quantity = quantity;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
+    public LocalDateTime getDeleted_at() {
+        return deleted_at;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setDeleted_at(LocalDateTime deleted_at) {
+        this.deleted_at = deleted_at;
     }
 
     // Utility methods
     @Override
     public String toString() {
         return "ShoppingCartItem{" +
-                "userId=" + userId +
-                ", itemId=" + itemId +
+                "userId=" + user_id +
+                ", itemId=" + item_id +
                 ", quantity=" + quantity +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", deletedAt=" + deletedAt +
+                ", createdAt=" + created_at +
+                ", updatedAt=" + updated_at +
+                ", deletedAt=" + deleted_at +
                 '}';
     }
 
@@ -102,14 +102,14 @@ public class ShoppingCartItem {
 
         ShoppingCartItem that = (ShoppingCartItem) o;
 
-        if (!userId.equals(that.userId)) return false;
-        return itemId.equals(that.itemId);
+        if (!user_id.equals(that.user_id)) return false;
+        return item_id.equals(that.item_id);
     }
 
     @Override
     public int hashCode() {
-        int result = userId.hashCode();
-        result = 31 * result + itemId.hashCode();
+        int result = user_id.hashCode();
+        result = 31 * result + item_id.hashCode();
         return result;
     }
 }

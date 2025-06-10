@@ -59,7 +59,7 @@ public class ShoppingCartItemController {
     @PostMapping
     public ResponseEntity<ShoppingCartItem> addToCart(@RequestBody AddToCartRequest request) {
         try {
-            System.out.println("Adding to cart - User: " + request.getUserId() +
+            System.out.println("Adding to cart - user: " + request.getUserId() +
                     ", Item: " + request.getItemId() +
                     ", Quantity: " + request.getQuantity());
 
@@ -75,11 +75,11 @@ public class ShoppingCartItemController {
             }
 
             ShoppingCartItem cartItem = new ShoppingCartItem();
-            cartItem.setUserId(request.getUserId());
-            cartItem.setItemId(request.getItemId());
+            cartItem.setUser_id(request.getUserId());
+            cartItem.setItem_id(request.getItemId());
             cartItem.setQuantity(request.getQuantity());
-            cartItem.setCreatedAt(LocalDateTime.now());
-            cartItem.setUpdatedAt(LocalDateTime.now());
+            cartItem.setCreated_at(LocalDateTime.now());
+            cartItem.setUpdated_at(LocalDateTime.now());
 
             ShoppingCartItem savedItem = shoppingCartItemService.addItemToCart(cartItem);
             System.out.println("Successfully added item to cart!");

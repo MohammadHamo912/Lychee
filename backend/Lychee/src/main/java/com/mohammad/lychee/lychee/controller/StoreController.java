@@ -5,7 +5,6 @@ import com.mohammad.lychee.lychee.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class StoreController {
     @PutMapping("/{storeId}")
     public ResponseEntity<Store> updateStore(@PathVariable Integer storeId, @RequestBody Store store){
         try{
-            store.setStoreId(storeId);
+            store.setStore_id(storeId);
             Store updatedStore = storeService.updateStore(store);
             return ResponseEntity.ok(updatedStore);
         }catch (IllegalArgumentException e){

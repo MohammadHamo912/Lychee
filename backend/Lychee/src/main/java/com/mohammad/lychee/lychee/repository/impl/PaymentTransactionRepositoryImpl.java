@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,79 +28,79 @@ public class PaymentTransactionRepositoryImpl implements PaymentTransactionRepos
 
     private final RowMapper<PaymentTransaction> paymentTransactionRowMapper = (rs, rowNum) -> {
         PaymentTransaction paymentTransaction = new PaymentTransaction();
-        paymentTransaction.setPaymentTransactionId(rs.getInt("payment_transaction_id"));
-        paymentTransaction.setOrderId(rs.getInt("order_id"));
+        paymentTransaction.setPayment_transaction_id(rs.getInt("payment_transaction_id"));
+        paymentTransaction.setOrder_id(rs.getInt("order_id"));
         paymentTransaction.setAmount(rs.getBigDecimal("amount"));
         paymentTransaction.setStatus(rs.getString("status"));
-        paymentTransaction.setTransactionReference(rs.getString("transaction_reference"));
-        paymentTransaction.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        paymentTransaction.setTransaction_reference(rs.getString("transaction_reference"));
+        paymentTransaction.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
 
         return paymentTransaction;
     };
 
     @Override
     public List<PaymentTransaction> findAll() {
-        String sql = "SELECT * FROM PaymentTransaction";
+        String sql = "SELECT * FROM payment_transaction";
         return jdbcTemplate.query(sql, paymentTransactionRowMapper);
     }
 
     @Override
     public Optional<PaymentTransaction> findById(Integer paymentTransactionId) {
-        String sql = "SELECT * FROM PaymentTransaction WHERE payment_transaction_id = ?";
+        String sql = "SELECT * FROM payment_transaction WHERE payment_transaction_id = ?";
         List<PaymentTransaction> transactions = jdbcTemplate.query(sql, paymentTransactionRowMapper, paymentTransactionId);
         return transactions.isEmpty() ? Optional.empty() : Optional.of(transactions.get(0));
     }
 
     @Override
     public List<PaymentTransaction> findByOrderId(Integer orderId) {
-        String sql = "SELECT * FROM PaymentTransaction WHERE order_id = ?";
+        String sql = "SELECT * FROM payment_transaction WHERE order_id = ?";
         return jdbcTemplate.query(sql, paymentTransactionRowMapper, orderId);
     }
 
     @Override
     public List<PaymentTransaction> findByStatus(String status) {
-        String sql = "SELECT * FROM PaymentTransaction WHERE status = ?";
+        String sql = "SELECT * FROM payment_transaction WHERE status = ?";
         return jdbcTemplate.query(sql, paymentTransactionRowMapper, status);
     }
 
     @Override
     public PaymentTransaction save(PaymentTransaction paymentTransaction) {
-        String sql = "INSERT INTO PaymentTransaction (order_id, amount, status, transaction_reference) " +
+        String sql = "INSERT INTO payment_transaction (order_id, amount, status, transaction_reference) " +
                 "VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, paymentTransaction.getOrderId());
+            ps.setInt(1, paymentTransaction.getOrder_id());
             ps.setBigDecimal(2, paymentTransaction.getAmount());
             ps.setString(3, paymentTransaction.getStatus());
-            ps.setString(4, paymentTransaction.getTransactionReference());
+            ps.setString(4, paymentTransaction.getTransaction_reference());
 
             return ps;
         }, keyHolder);
 
-        paymentTransaction.setPaymentTransactionId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        paymentTransaction.setPayment_transaction_id(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return paymentTransaction;
     }
 
     @Override
     public void update(PaymentTransaction paymentTransaction) {
-        String sql = "UPDATE PaymentTransaction SET order_id = ?,  amount = ?, " +
+        String sql = "UPDATE payment_transaction SET order_id = ?,  amount = ?, " +
                 "status = ?, transaction_reference = ? WHERE payment_transaction_id = ?";
 
         jdbcTemplate.update(sql,
-                paymentTransaction.getOrderId(),
+                paymentTransaction.getOrder_id(),
                 paymentTransaction.getAmount(),
                 paymentTransaction.getStatus(),
-                paymentTransaction.getTransactionReference(),
-                paymentTransaction.getPaymentTransactionId()
+                paymentTransaction.getTransaction_reference(),
+                paymentTransaction.getPayment_transaction_id()
         );
     }
 
     @Override
     public void updateStatus(Integer paymentTransactionId, String status) {
-        String sql = "UPDATE PaymentTransaction SET status = ? WHERE payment_transaction_id = ?";
+        String sql = "UPDATE payment_transaction SET status = ? WHERE payment_transaction_id = ?";
         jdbcTemplate.update(sql, status, paymentTransactionId);
     }
     @Override

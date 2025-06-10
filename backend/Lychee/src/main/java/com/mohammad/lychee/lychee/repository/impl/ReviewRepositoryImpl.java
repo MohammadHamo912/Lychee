@@ -38,7 +38,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public Review addReview(Review review) {
         String sql = """
-        INSERT INTO Review (review_type, target_id, user_id, rating, comment, created_at)
+        INSERT INTO review (review_type, target_id, user_id, rating, comment, created_at)
         VALUES (?, ?, ?, ?, ?, ?)
     """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -68,9 +68,9 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                    WHEN r.review_type = 'shop' THEN s.name
                    ELSE NULL
                END AS targetName
-        FROM Review r
-        LEFT JOIN Product p ON r.review_type = 'product' AND r.target_id = p.Product_ID
-        LEFT JOIN Store s ON r.review_type = 'shop' AND r.target_id = s.Store_ID
+        FROM review r
+        LEFT JOIN product p ON r.review_type = 'product' AND r.target_id = p.product_id
+        LEFT JOIN store s ON r.review_type = 'shop' AND r.target_id = s.store_id
         WHERE r.user_id = ?
     """;
 
@@ -79,13 +79,13 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public List<Review> getReviewsByTypeAndTarget(String type, int targetId) {
-        String sql = "SELECT * FROM Review WHERE review_type = ? AND target_id = ?";
+        String sql = "SELECT * FROM review WHERE review_type = ? AND target_id = ?";
         return jdbcTemplate.query(sql, rowMapper, type, targetId);
     }
 
     @Override
     public void deleteReview(int reviewId) {
-        String sql = "DELETE FROM Review WHERE review_id = ?";
+        String sql = "DELETE FROM review WHERE review_id = ?";
         jdbcTemplate.update(sql, reviewId);
     }
 }

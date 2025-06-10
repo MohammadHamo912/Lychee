@@ -6,16 +6,16 @@ import java.util.List;
 
 public class EnrichedItem {
     // Item fields
-    private Integer itemId;
+    private Integer item_id;
     private Integer id; // Alias for itemId for frontend compatibility
-    private Integer storeId;
-    private Integer productVariantId;
+    private Integer store_id;
+    private Integer product_variant_id;
     private BigDecimal price;
     private BigDecimal discount;
-    private Integer stockQuantity;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    private Integer stock_quantity;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
 
     // Product fields (enriched)
     private String name;
@@ -35,20 +35,20 @@ public class EnrichedItem {
 
     // Calculated fields
     private BigDecimal finalPrice; // price after discount
-    private Integer stock; // alias for stockQuantity
+    private Integer stock; // alias for stock_quantity
 
     // Default constructor
     public EnrichedItem() {}
 
     // ==== Getters and Setters ====
 
-    public Integer getItemId() {
-        return itemId;
+    public Integer getItem_id() {
+        return item_id;
     }
 
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
-        this.id = itemId; // Set alias
+    public void setItem_id(Integer item_id) {
+        this.item_id = item_id;
+        this.id = item_id; // Set alias
     }
 
     public Integer getId() {
@@ -59,20 +59,20 @@ public class EnrichedItem {
         this.id = id;
     }
 
-    public Integer getStoreId() {
-        return storeId;
+    public Integer getStore_id() {
+        return store_id;
     }
 
-    public void setStoreId(Integer storeId) {
-        this.storeId = storeId;
+    public void setStore_id(Integer store_id) {
+        this.store_id = store_id;
     }
 
-    public Integer getProductVariantId() {
-        return productVariantId;
+    public Integer getProduct_variant_id() {
+        return product_variant_id;
     }
 
-    public void setProductVariantId(Integer productVariantId) {
-        this.productVariantId = productVariantId;
+    public void setProduct_variant_id(Integer product_variant_id) {
+        this.product_variant_id = product_variant_id;
     }
 
     public BigDecimal getPrice() {
@@ -93,37 +93,37 @@ public class EnrichedItem {
         calculateFinalPrice();
     }
 
-    public Integer getStockQuantity() {
-        return stockQuantity;
+    public Integer getStock_quantity() {
+        return stock_quantity;
     }
 
-    public void setStockQuantity(Integer stockQuantity) {
-        this.stockQuantity = stockQuantity;
-        this.stock = stockQuantity; // Set alias
+    public void setStock_quantity(Integer stock_quantity) {
+        this.stock_quantity = stock_quantity;
+        this.stock = stock_quantity; // Set alias
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
+    public LocalDateTime getDeleted_at() {
+        return deleted_at;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setDeleted_at(LocalDateTime deleted_at) {
+        this.deleted_at = deleted_at;
     }
 
     public String getName() {

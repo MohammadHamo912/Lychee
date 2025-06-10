@@ -48,9 +48,9 @@ public class StoreServiceImpl implements StoreService {
     @Override
     @Transactional
     public Store updateStore(Store store) {
-        Optional<Store> existingStore = storeRepository.findById(store.getStoreId());
+        Optional<Store> existingStore = storeRepository.findById(store.getStore_id());
         if (existingStore.isEmpty()) {
-            throw new IllegalArgumentException("Store with ID " + store.getStoreId() + " does not exist");
+            throw new IllegalArgumentException("Store with ID " + store.getStore_id() + " does not exist");
         }
 
         return storeRepository.save(store); // this triggers the store update

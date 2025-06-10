@@ -73,7 +73,7 @@ public class AddressController {
     @PutMapping("/{id}")
     public ResponseEntity<Address> updateAddressById(@PathVariable Integer id, @RequestBody Address address) {
         try {
-            address.setAddressId(id);
+            address.setAddress_id(id);
             Address updatedAddress = addressService.updateAddress(address);
             return ResponseEntity.ok(updatedAddress);
         } catch (IllegalArgumentException e) {

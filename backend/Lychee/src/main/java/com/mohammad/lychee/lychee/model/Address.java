@@ -1,15 +1,15 @@
 package com.mohammad.lychee.lychee.model;
 
 public class Address {
-    private int addressId;
+    private int address_id;
     private String city;
     private String street;
     private String building;
 
     public Address() {}
 
-    public Address(int addressId, String city, String street, String building) {
-        this.addressId = addressId;
+    public Address(int address_id, String city, String street, String building) {
+        this.address_id = address_id;
         this.city = city;
         this.street = street;
         this.building = building;
@@ -17,12 +17,12 @@ public class Address {
 
     // Getters and setters 👇
 
-    public int getAddressId() {
-        return addressId;
+    public int getAddress_id() {
+        return address_id;
     }
 
-    public void setAddressId(int addressId) {
-        this.addressId = addressId;
+    public void setAddress_id(int address_id) {
+        this.address_id = address_id;
     }
 
     public String getCity() {

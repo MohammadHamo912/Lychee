@@ -51,7 +51,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Integer id, @RequestBody Category category){
         try {
-            category.setCategoryId(id);
+            category.setCategory_id(id);
             Category updatedCategory = categoryService.updateCategory(category);
             return ResponseEntity.ok(updatedCategory);
         } catch (IllegalArgumentException e) {

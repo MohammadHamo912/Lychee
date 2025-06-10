@@ -14,15 +14,15 @@ public class CartEnrichedItem extends EnrichedItem {
     public CartEnrichedItem(EnrichedItem enrichedItem, Integer cartQuantity) {
         super();
         // Copy all fields from EnrichedItem
-        this.setItemId(enrichedItem.getItemId());
-        this.setStoreId(enrichedItem.getStoreId());
-        this.setProductVariantId(enrichedItem.getProductVariantId());
+        this.setItem_id(enrichedItem.getItem_id());
+        this.setStore_id(enrichedItem.getStore_id());
+        this.setProduct_variant_id(enrichedItem.getProduct_variant_id());
         this.setPrice(enrichedItem.getPrice());
         this.setDiscount(enrichedItem.getDiscount());
-        this.setStockQuantity(enrichedItem.getStockQuantity());
-        this.setCreatedAt(enrichedItem.getCreatedAt());
-        this.setUpdatedAt(enrichedItem.getUpdatedAt());
-        this.setDeletedAt(enrichedItem.getDeletedAt());
+        this.setStock_quantity(enrichedItem.getStock_quantity());
+        this.setCreated_at(enrichedItem.getCreated_at());
+        this.setUpdated_at(enrichedItem.getUpdated_at());
+        this.setDeleted_at(enrichedItem.getDeleted_at());
         this.setName(enrichedItem.getName());
         this.setDescription(enrichedItem.getDescription());
         this.setBrand(enrichedItem.getBrand());

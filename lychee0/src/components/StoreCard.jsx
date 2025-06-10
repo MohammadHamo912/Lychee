@@ -12,10 +12,10 @@ const StoreCard = ({ store }) => {
   const [reviewsLoading, setReviewsLoading] = useState(true);
 
   // Get the store ID from any of the possible property names
-  const storeId = store.storeId || store.id || store.Store_ID;
+  const storeId = store.store_id;
 
   // Get the address ID from any of the possible property names
-  const addressId = store.address_id || store.addressId || store.Address_ID;
+  const addressId = store.address_id;
 
   // Fetch address data when component mounts or addressId changes
   useEffect(() => {

@@ -39,9 +39,9 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public Address updateAddress(Address address) {
-        Optional<Address> existingAddress = addressRepository.findById(address.getAddressId());
+        Optional<Address> existingAddress = addressRepository.findById(address.getAddress_id());
         if (existingAddress.isEmpty()) {
-            throw new IllegalArgumentException("Address with ID " + address.getAddressId() + " does not exist");
+            throw new IllegalArgumentException("Address with ID " + address.getAddress_id() + " does not exist");
         }
 
         addressRepository.save(address);

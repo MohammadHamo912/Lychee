@@ -1,44 +1,44 @@
 package com.mohammad.lychee.lychee.model;
 
 public class ItemImage {
-    private int imageId;
-    private int itemId;
-    private String imageUrl;
+    private int image_id;
+    private int item_id;
+    private String image_url;
     private String caption;
 
     public ItemImage() {}
 
-    public ItemImage(int imageId, int itemId, String imageUrl, String caption) {
-        this.imageId = imageId;
-        this.itemId = itemId;
-        this.imageUrl = imageUrl;
+    public ItemImage(int image_id, int item_id, String image_url, String caption) {
+        this.image_id = image_id;
+        this.item_id = item_id;
+        this.image_url = image_url;
         this.caption = caption;
     }
 
     // Getters and setters
 
-    public int getImageId() {
-        return imageId;
+    public int getImage_id() {
+        return image_id;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setImage_id(int image_id) {
+        this.image_id = image_id;
     }
 
-    public int getItemId() {
-        return itemId;
+    public int getItem_id() {
+        return item_id;
     }
 
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
+    public void setItem_id(int item_id) {
+        this.item_id = item_id;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public String getCaption() {

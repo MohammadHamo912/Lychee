@@ -81,8 +81,8 @@ public class ItemImageController {
 
             // Create ItemImage record
             ItemImage itemImage = new ItemImage();
-            itemImage.setItemId(itemId);
-            itemImage.setImageUrl(imageUrl);
+            itemImage.setItem_id(itemId);
+            itemImage.setImage_url(imageUrl);
             itemImage.setCaption(caption);
 
             ItemImage savedItemImage = itemImageService.createItemImage(itemImage);
@@ -124,7 +124,7 @@ public class ItemImageController {
             @PathVariable Integer imageId,
             @RequestBody ItemImage itemImage) {
         try {
-            itemImage.setImageId(imageId);
+            itemImage.setImage_id(imageId);
             ItemImage updatedItemImage = itemImageService.updateItemImage(itemImage);
 
             Map<String, Object> response = new HashMap<>();
@@ -198,13 +198,13 @@ public class ItemImageController {
             }
 
             ItemImage currentImage = existingImage.get();
-            String oldImageUrl = currentImage.getImageUrl();
+            String oldImageUrl = currentImage.getImage_url();
 
             // Upload new image
             String newImageUrl = s3Service.uploadFile(file, "item-images");
 
             // Update record
-            currentImage.setImageUrl(newImageUrl);
+            currentImage.setImage_url(newImageUrl);
             if (caption != null) {
                 currentImage.setCaption(caption);
             }
@@ -243,7 +243,7 @@ public class ItemImageController {
                 return ResponseEntity.notFound().build();
             }
 
-            String imageUrl = itemImage.get().getImageUrl();
+            String imageUrl = itemImage.get().getImage_url();
 
             // Delete from database
             itemImageService.deleteItemImage(imageId);
@@ -277,12 +277,12 @@ public class ItemImageController {
 
             for (ItemImage itemImage : itemImages) {
                 // Delete from database
-                itemImageService.deleteItemImage(itemImage.getImageId());
+                itemImageService.deleteItemImage(itemImage.getImage_id());
 
                 // Delete from S3
-                if (itemImage.getImageUrl() != null && !itemImage.getImageUrl().isEmpty()) {
+                if (itemImage.getImage_url() != null && !itemImage.getImage_url().isEmpty()) {
                     try {
-                        s3Service.deleteFile(itemImage.getImageUrl());
+                        s3Service.deleteFile(itemImage.getImage_url());
                     } catch (Exception e) {
                         System.err.println("Warning: Failed to delete image from S3: " + e.getMessage());
                     }

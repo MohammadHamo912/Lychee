@@ -4,58 +4,58 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Item {
-    private int itemId;
-    private int storeId;
-    private int productVariantId;
+    private int item_id;
+    private int store_id;
+    private int product_variant_id;
     private BigDecimal price;
-    private int stockQuantity;
+    private int stock_quantity;
     private float rating;
     private BigDecimal discount;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
 
     public Item() {}
 
-    public Item(int itemId, int storeId, int productVariantId, BigDecimal price, int stockQuantity,
-                float rating, BigDecimal discount, LocalDateTime createdAt, LocalDateTime updatedAt,
-                LocalDateTime deletedAt) {
-        this.itemId = itemId;
-        this.storeId = storeId;
-        this.productVariantId = productVariantId;
+    public Item(int item_id, int store_id, int product_variant_id, BigDecimal price, int stock_quantity,
+                float rating, BigDecimal discount, LocalDateTime created_at, LocalDateTime updated_at,
+                LocalDateTime deleted_at) {
+        this.item_id = item_id;
+        this.store_id = store_id;
+        this.product_variant_id = product_variant_id;
         this.price = price;
-        this.stockQuantity = stockQuantity;
+        this.stock_quantity = stock_quantity;
         this.rating = rating;
         this.discount = discount;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.deleted_at = deleted_at;
     }
 
     // Getters and setters
 
-    public int getItemId() {
-        return itemId;
+    public int getItem_id() {
+        return item_id;
     }
 
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
+    public void setItem_id(int item_id) {
+        this.item_id = item_id;
     }
 
-    public int getStoreId() {
-        return storeId;
+    public int getStore_id() {
+        return store_id;
     }
 
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
+    public void setStore_id(int store_id) {
+        this.store_id = store_id;
     }
 
-    public int getProductVariantId() {
-        return productVariantId;
+    public int getProduct_variant_id() {
+        return product_variant_id;
     }
 
-    public void setProductVariantId(int productVariantId) {
-        this.productVariantId = productVariantId;
+    public void setProduct_variant_id(int product_variant_id) {
+        this.product_variant_id = product_variant_id;
     }
 
     public BigDecimal getPrice() {
@@ -66,12 +66,12 @@ public class Item {
         this.price = price;
     }
 
-    public int getStockQuantity() {
-        return stockQuantity;
+    public int getStock_quantity() {
+        return stock_quantity;
     }
 
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public void setStock_quantity(int stock_quantity) {
+        this.stock_quantity = stock_quantity;
     }
 
     public float getRating() {
@@ -90,27 +90,27 @@ public class Item {
         this.discount = discount;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
+    public LocalDateTime getDeleted_at() {
+        return deleted_at;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
+    public void setDeleted_at(LocalDateTime deleted_at) {
+        this.deleted_at = deleted_at;
     }
 }

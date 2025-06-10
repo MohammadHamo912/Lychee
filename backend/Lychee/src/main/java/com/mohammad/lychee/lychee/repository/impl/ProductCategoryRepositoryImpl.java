@@ -23,21 +23,21 @@ public class ProductCategoryRepositoryImpl implements ProductCategoryRepository 
 
     private final RowMapper<ProductCategory> productCategoryRowMapper = (rs, rowNum) -> {
         ProductCategory productCategory = new ProductCategory();
-        productCategory.setProductId(rs.getInt("Product_ID"));
-        productCategory.setCategoryId(rs.getInt("Category_ID"));
+        productCategory.setProduct_id(rs.getInt("product_id"));
+        productCategory.setCategory_id(rs.getInt("category_id"));
         return productCategory;
     };
 
     @Override
     public List<ProductCategory> findAll() {
-        String sql = "SELECT * FROM ProductCategory";
+        String sql = "SELECT * FROM product_category";
         return jdbcTemplate.query(sql, productCategoryRowMapper);
     }
 
     @Override
     public Optional<ProductCategory> findByProductIdAndCategoryId(Integer productId, Integer categoryId) {
         try {
-            String sql = "SELECT * FROM ProductCategory WHERE Product_ID = ? AND Category_ID = ?";
+            String sql = "SELECT * FROM product_category WHERE product_id = ? AND category_id = ?";
             ProductCategory productCategory = jdbcTemplate.queryForObject(sql, productCategoryRowMapper, productId, categoryId);
             return Optional.ofNullable(productCategory);
         } catch (EmptyResultDataAccessException e) {
@@ -47,31 +47,31 @@ public class ProductCategoryRepositoryImpl implements ProductCategoryRepository 
 
     @Override
     public List<ProductCategory> findByProductId(Integer productId) {
-        String sql = "SELECT * FROM ProductCategory WHERE Product_ID = ?";
+        String sql = "SELECT * FROM product_category WHERE product_id = ?";
         return jdbcTemplate.query(sql, productCategoryRowMapper, productId);
     }
 
     @Override
     public List<ProductCategory> findByCategoryId(Integer categoryId) {
-        String sql = "SELECT * FROM ProductCategory WHERE Category_ID = ?";
+        String sql = "SELECT * FROM product_category WHERE category_id = ?";
         return jdbcTemplate.query(sql, productCategoryRowMapper, categoryId);
     }
 
     @Override
     public ProductCategory save(ProductCategory productCategory) {
-        String sql = "INSERT INTO ProductCategory (Product_ID, Category_ID) VALUES (?, ?) " +
-                "ON DUPLICATE KEY UPDATE Product_ID = Product_ID";
+        String sql = "INSERT INTO product_category (product_id, category_id) VALUES (?, ?) " +
+                "ON DUPLICATE KEY UPDATE product_id = product_id";
 
         jdbcTemplate.update(sql,
-                productCategory.getProductId(),
-                productCategory.getCategoryId());
+                productCategory.getProduct_id(),
+                productCategory.getCategory_id());
 
         return productCategory;
     }
 
     @Override
     public void delete(Integer productId, Integer categoryId) {
-        String sql = "DELETE FROM ProductCategory WHERE Product_ID = ? AND Category_ID = ?";
+        String sql = "DELETE FROM product_category WHERE product_id = ? AND category_id = ?";
         jdbcTemplate.update(sql, productId, categoryId);
     }
 }

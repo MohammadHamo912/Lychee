@@ -69,21 +69,21 @@ public class DiscountServiceImpl implements DiscountService {
         validateDiscountForCreation(discount);
 
         // Ensure it's a new discount (no ID set)
-        discount.setDiscountId(0);
+        discount.setDiscount_id(0);
 
         return discountRepository.save(discount);
     }
 
     @Override
     public Discount updateDiscount(Discount discount) {
-        if (discount.getDiscountId() <= 0) {
+        if (discount.getDiscount_id() <= 0) {
             throw new IllegalArgumentException("Discount ID must be provided for update");
         }
 
         // Check if discount exists
-        Optional<Discount> existing = discountRepository.findById(discount.getDiscountId());
+        Optional<Discount> existing = discountRepository.findById(discount.getDiscount_id());
         if (existing.isEmpty()) {
-            throw new RuntimeException("Discount with ID " + discount.getDiscountId() + " not found");
+            throw new RuntimeException("Discount with ID " + discount.getDiscount_id() + " not found");
         }
 
         validateDiscountForUpdate(discount);
@@ -169,7 +169,7 @@ public class DiscountServiceImpl implements DiscountService {
         // Check if code already exists for another discount
         Optional<Discount> existingWithCode = discountRepository.findByCode(discount.getCode());
         if (existingWithCode.isPresent() &&
-                existingWithCode.get().getDiscountId() != discount.getDiscountId()) {
+                existingWithCode.get().getDiscount_id() != discount.getDiscount_id()) {
             throw new IllegalArgumentException("Discount code '" + discount.getCode() + "' already exists");
         }
     }
@@ -181,22 +181,22 @@ public class DiscountServiceImpl implements DiscountService {
         }
 
         // Validate percentage
-        if (discount.getDiscountPercentage() == null ||
-                discount.getDiscountPercentage().doubleValue() <= 0 ||
-                discount.getDiscountPercentage().doubleValue() > 100) {
+        if (discount.getDiscount_percentage() == null ||
+                discount.getDiscount_percentage().doubleValue() <= 0 ||
+                discount.getDiscount_percentage().doubleValue() > 100) {
             throw new IllegalArgumentException("Discount percentage must be between 0 and 100");
         }
 
         // Validate dates
-        if (discount.getStartDate() != null && discount.getEndDate() != null) {
-            if (discount.getStartDate().isAfter(discount.getEndDate())) {
+        if (discount.getStart_date() != null && discount.getEnd_date() != null) {
+            if (discount.getStart_date().isAfter(discount.getEnd_date())) {
                 throw new IllegalArgumentException("Start date cannot be after end date");
             }
         }
 
         // Validate end date is not in the past (only for active discounts)
-        if (discount.isActive() && discount.getEndDate() != null &&
-                discount.getEndDate().isBefore(LocalDate.now())) {
+        if (discount.isActive() && discount.getEnd_date() != null &&
+                discount.getEnd_date().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Cannot create/update active discount with end date in the past");
         }
     }

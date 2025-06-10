@@ -56,9 +56,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     @Transactional
     public ProductVariant updateProductVariant(ProductVariant productVariant) {
-        Optional<ProductVariant> existingVariant = productVariantRepository.findById(productVariant.getProductVariantId());
+        Optional<ProductVariant> existingVariant = productVariantRepository.findById(productVariant.getProduct_variant_id());
         if (existingVariant.isEmpty()) {
-            throw new IllegalArgumentException("Product variant with ID " + productVariant.getProductVariantId() + " does not exist");
+            throw new IllegalArgumentException("Product variant with ID " + productVariant.getProduct_variant_id() + " does not exist");
         }
         return productVariantRepository.save(productVariant);
     }

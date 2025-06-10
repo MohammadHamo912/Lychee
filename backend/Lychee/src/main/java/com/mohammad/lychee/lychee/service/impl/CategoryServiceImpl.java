@@ -44,9 +44,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category updateCategory(Category category) {
-        Optional<Category> existing = categoryRepository.findById(category.getCategoryId());
+        Optional<Category> existing = categoryRepository.findById(category.getCategory_id());
         if (existing.isEmpty()) {
-            throw new IllegalArgumentException("Category with ID " + category.getCategoryId() + " not found");
+            throw new IllegalArgumentException("Category with ID " + category.getCategory_id() + " not found");
         }
         return categoryRepository.save(category);
     }

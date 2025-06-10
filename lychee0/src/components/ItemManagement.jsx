@@ -3,6 +3,8 @@ import ItemCard from "./ItemCard";
 import { getEnrichedItemsByIds } from "../api/items";
 import "../ComponentsCss/ItemManagement.css";
 
+// storeId check it its always 1
+
 const ItemManagement = () => {
   const [items, setItems] = useState([]);
   const [enrichedItems, setEnrichedItems] = useState([]);
@@ -42,7 +44,6 @@ const ItemManagement = () => {
 
   useEffect(() => {
     loadItems();
-    loadMainCategories();
   }, []);
 
   const loadItems = async () => {

@@ -39,7 +39,7 @@ public class UserController {
 
             // Create a safe response without password hash
             UserInfoResponse userInfo = new UserInfoResponse();
-            userInfo.setUserId(user.getUserId());
+            userInfo.setUserId(user.getUser_id());
             userInfo.setName(user.getName());
             userInfo.setEmail(user.getEmail());
             userInfo.setPhone(user.getPhone());
@@ -89,7 +89,7 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestBody User user) {
         try {
-            user.setUserId(userId);
+            user.setUser_id(userId);
             User updatedUser = userService.updateUser(user);
             return ResponseEntity.ok(updatedUser);
         } catch (IllegalArgumentException e) {
