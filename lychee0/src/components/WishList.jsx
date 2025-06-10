@@ -8,7 +8,7 @@ import { useUser } from "../context/UserContext";
 
 const WishlistContainer = () => {
   const { user, addToCart, isAddingToCart } = useUser();
-  const userId = user?.userId || user?.id;
+  const userId = user?.userId || user?.id || user?.user_id;
 
   const [wishlistItems, setWishlistItems] = useState([]);
   const [enrichedItems, setEnrichedItems] = useState([]);

@@ -28,7 +28,9 @@ const ProfilePage = () => {
 
     const fetchSpending = async () => {
       try {
-        const total = await getTotalSpendingByUserId(user.user_id);
+        const total = await getTotalSpendingByUserId(
+          user.user_id | user.userId
+        );
         setTotalSpending(total);
       } catch (err) {
         console.error("Failed to fetch total spending", err);
@@ -46,14 +48,16 @@ const ProfilePage = () => {
   const handleSave = async () => {
     try {
       const updatedUser = {
-        ...user,
+        user_id: user.user_id || user.userId,
+        role: user.role,
         name: `${userData.firstName} ${userData.lastName}`,
         email: userData.email,
         phone: userData.phone,
-        passwordHash: userData.password || user.passwordHash,
+        password_hash:
+          userData.password || user.password_hash || user.passwordHash,
       };
 
-      const res = await updateUser(user.userId, updatedUser);
+      const res = await updateUser(user.user_id || user.userId, updatedUser);
       alert("Profile updated!");
       localStorage.setItem("user", JSON.stringify(res));
       window.location.reload();
@@ -138,7 +142,10 @@ const ProfilePage = () => {
           />
         </div>
 
-        <button className="profile-btn" onClick={editing ? handleSave : () => setEditing(true)}>
+        <button
+          className="profile-btn"
+          onClick={editing ? handleSave : () => setEditing(true)}
+        >
           {editing ? "Save Changes" : "Edit Profile"}
         </button>
       </div>
@@ -146,7 +153,11 @@ const ProfilePage = () => {
       <div className="profile-extra-box">
         <div className="spending-box">
           <h2>Total Spending</h2>
-          <p>{totalSpending !== null ? `$${totalSpending.toFixed(2)}` : "Loading..."}</p>
+          <p>
+            {totalSpending !== null
+              ? `$${totalSpending.toFixed(2)}`
+              : "Loading..."}
+          </p>
         </div>
 
         <div className="spending-box">

@@ -48,8 +48,12 @@ const ItemPage = () => {
         document.title = `${data.name} | Lychee`;
 
         if (user) {
-          const wishlist = await getWishlist(user.userId);
-          const inWishlist = wishlist.some((w) => w.itemId === itemId);
+          const wishlist = await getWishlist(
+            user.userId || user.id || user.user_id
+          );
+          const inWishlist = wishlist.some(
+            (w) => w.itemId === itemId || w.itemId === data.itemId
+          );
           setIsWishlisted(inWishlist);
         }
       } catch (err) {
@@ -64,17 +68,17 @@ const ItemPage = () => {
 
   // Get unique colors and sizes from availableVariants
   const colors = item
-    ? [...new Set(item.availableVariants.map((v) => v.color))]
+    ? [...new Set(item.available_variants.map((v) => v.color))]
     : [];
   const sizes = item
-    ? [...new Set(item.availableVariants.map((v) => v.size))]
+    ? [...new Set(item.available_variants.map((v) => v.size))]
     : [];
 
   // Find variant matching selected color and size
   const selectedVariant =
-    item?.availableVariants.find(
+    item?.available_variants.find(
       (v) => v.color === selectedColor && v.size === selectedSize
-    ) || item?.currentVariant;
+    ) || item?.current_variant;
 
   // Quantity controls
   const handleQuantityChange = (delta) => {
@@ -147,7 +151,9 @@ const ItemPage = () => {
   // Calculate discounted price of selected variant or item price
   const discountedPrice = selectedVariant
     ? selectedVariant.price && selectedVariant.discount
-      ? (selectedVariant.price * (1 - selectedVariant.discount / 100)).toFixed(2)
+      ? (selectedVariant.price * (1 - selectedVariant.discount / 100)).toFixed(
+          2
+        )
       : selectedVariant.price?.toFixed(2)
     : item?.price?.toFixed(2);
 
@@ -218,14 +224,18 @@ const ItemPage = () => {
                 {discountedPrice ? (
                   <>
                     <span className="original-price">
-                      ${selectedVariant?.price?.toFixed(2) || item.price.toFixed(2)}
+                      $
+                      {selectedVariant?.price?.toFixed(2) ||
+                        item.price.toFixed(2)}
                     </span>
                     {selectedVariant?.discount > 0 && (
                       <span className="sale-price">${discountedPrice}</span>
                     )}
                   </>
                 ) : (
-                  <span className="product-price">${item.price.toFixed(2)}</span>
+                  <span className="product-price">
+                    ${item.price.toFixed(2)}
+                  </span>
                 )}
               </div>
             </div>
@@ -236,8 +246,9 @@ const ItemPage = () => {
                 {colors.map((color) => (
                   <button
                     key={color}
-                    className={`shade-option ${selectedColor === color ? "selected" : ""
-                      }`}
+                    className={`shade-option ${
+                      selectedColor === color ? "selected" : ""
+                    }`}
                     title={color}
                     onClick={() => setSelectedColor(color)}
                   >
@@ -255,7 +266,9 @@ const ItemPage = () => {
                 {sizes.map((size) => (
                   <button
                     key={size}
-                    className={`shade-option ${selectedSize === size ? "selected" : ""}`}
+                    className={`shade-option ${
+                      selectedSize === size ? "selected" : ""
+                    }`}
                     title={size}
                     onClick={() => setSelectedSize(size)}
                   >
@@ -268,10 +281,15 @@ const ItemPage = () => {
             <div className="product-actions">
               <div className="stock-status">
                 <span
-                  className={`status-indicator ${selectedVariant?.stockQuantity > 0 ? "in-stock" : "out-of-stock"
-                    }`}
+                  className={`status-indicator ${
+                    selectedVariant?.stockQuantity > 0
+                      ? "in-stock"
+                      : "out-of-stock"
+                  }`}
                 ></span>
-                {selectedVariant?.stockQuantity > 0 ? "In Stock" : "Out of Stock"}
+                {selectedVariant?.stockQuantity > 0
+                  ? "In Stock"
+                  : "Out of Stock"}
               </div>
 
               <div className="quantity-control">

@@ -20,10 +20,12 @@ import { getUserById } from "../api/users";
 import { getReviews, addReview } from "../api/reviews";
 
 const ProductPage = () => {
-  const { productId } = useParams();
+  const { product_id } = useParams();
   const navigate = useNavigate();
   const { user, isLoggedIn } = useUser();
-
+  const productId = product_id;
+  console.log("ProductPage - Current user from context:", user);
+  console.log("ProductPage - Product ID from URL:", productId);
   const [product, setProduct] = useState(null);
   const [productVariants, setProductVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -58,31 +60,29 @@ const ProductPage = () => {
         }
         setProduct(productData);
 
+        let variants = [];
+
         try {
           const availableVariantsFromItems =
             await getAvailableVariantsForProduct(parseInt(productId));
-
-          if (
-            availableVariantsFromItems &&
-            availableVariantsFromItems.length > 0
-          ) {
-            setProductVariants(availableVariantsFromItems);
-          } else {
-            const variantsData = await getProductVariantsByProductId(productId);
-            setProductVariants(variantsData || []);
-          }
-        } catch (variantError) {
-          const variantsData = await getProductVariantsByProductId(productId);
-          setProductVariants(variantsData || []);
+          variants = availableVariantsFromItems || [];
+        } catch {
+          variants = await getProductVariantsByProductId(productId);
         }
 
-        const initialVariants =
-          productVariants.length > 0
-            ? productVariants
-            : await getProductVariantsByProductId(productId);
-        if (initialVariants && initialVariants.length > 0) {
-          await fetchItemImages(initialVariants[0].productVariantId);
-          await fetchAvailableItems(initialVariants[0].productVariantId);
+        setProductVariants(variants);
+
+        if (variants.length > 0) {
+          const firstVariant = variants[0];
+          setSelectedVariant(firstVariant);
+
+          const variantId =
+            firstVariant.id ||
+            firstVariant.productVariantId ||
+            firstVariant.product_variant_id;
+
+          await fetchItemImages(variantId);
+          await fetchAvailableItems(variantId);
         }
 
         await fetchProductReviews();

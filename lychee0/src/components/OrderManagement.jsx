@@ -1,3 +1,5 @@
+// src/components/OrderManagement.jsx
+
 import React, { useState, useEffect } from "react";
 import "../ComponentsCss/OrderManagement.css";
 import {
@@ -6,10 +8,9 @@ import {
   fetchOrderItemDetailsByStore,
   updateOrderStatus,
 } from "../api/orders";
-import { getStoreByOwnerId } from "../api/stores";
 import { useUser } from "../context/UserContext";
 
-const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
+const OrderManagement = ({ role = "shopowner", storeId }) => {
   const { user } = useUser();
   const [orders, setOrders] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
@@ -19,72 +20,53 @@ const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
   const [endDate, setEndDate] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [statusUpdateMessage, setStatusUpdateMessage] = useState("");
-  const [effectiveStoreId, setEffectiveStoreId] = useState(propStoreId ?? null);
-
-  useEffect(() => {
-    const fetchStoreId = async () => {
-      if (role === "shopowner" && !propStoreId && user?.user_id) {
-        try {
-          const store = await getStoreByOwnerId(user.user_id);
-          console.log("✅ Loaded store for shopowner:", store);
-          setEffectiveStoreId(store.store_id);
-        } catch (err) {
-          console.error("❌ Failed to fetch store ID:", err);
-        }
-      }
-    };
-    fetchStoreId();
-  }, [user, role, propStoreId]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getOrders = async () => {
-      if (!user || (role === "shopowner" && !effectiveStoreId)) {
-        console.warn("⚠️ Skipping fetchOrders: missing user or store ID");
-        return;
-      }
-
+      setLoading(true);
       const params = {
         role,
         status: filterStatus !== "All" ? filterStatus : "",
         query: searchQuery,
         startDate,
         endDate,
-        user_id: role === "customer" ? user.user_id : undefined,
-        store_id: role === "shopowner" ? effectiveStoreId : undefined,
       };
 
+      if (role === "shopowner") params.storeId = storeId;
+      else if (role === "customer") params.userId = user.user_id;
+
       try {
-        console.log("📦 Fetching orders with params:", params);
         const data = await fetchOrders(params);
+
         setOrders(data || []);
       } catch (err) {
         console.error("❌ Failed to fetch orders:", err);
+        setOrders([]); // Reset orders on error
+      } finally {
+        setLoading(false);
       }
     };
 
     getOrders();
-  }, [
-    filterStatus,
-    searchQuery,
-    startDate,
-    endDate,
-    role,
-    user,
-    effectiveStoreId,
-  ]);
+  }, [filterStatus, searchQuery, startDate, endDate, role, user]);
 
   const handleCardClick = async (order) => {
     setSelectedOrder(order);
+    setOrderItems([]); // Reset items while loading
+
     try {
       let items;
+
       if (role === "shopowner") {
         items = await fetchOrderItemDetailsByStore(
-          effectiveStoreId,
-          order.order_id
+          storeId,
+          order.order_id || order.orderId // Handle both possible field names
         );
       } else {
-        items = await fetchOrderItems(order.order_id);
+        items = await fetchOrderItems(order.order_id || order.orderId);
       }
+
       setOrderItems(items || []);
     } catch (err) {
       console.error("❌ Error loading order items:", err.message);
@@ -99,24 +81,32 @@ const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
   };
 
   const handleStatusChange = (e) => {
-    setSelectedOrder((prev) => ({ ...prev, status: e.target.value }));
+    const newStatus = e.target.value;
+    setSelectedOrder((prev) => ({ ...prev, status: newStatus }));
   };
 
   const handleStatusUpdate = async () => {
+    if (!selectedOrder) return;
+
     try {
-      await updateOrderStatus(selectedOrder.order_id, selectedOrder.status);
-      setOrders((prev) =>
-        prev.map((o) =>
-          o.order_id === selectedOrder.order_id
-            ? { ...o, status: selectedOrder.status }
-            : o
-        )
+      const id = selectedOrder.order_id || selectedOrder.orderId;
+
+      await updateOrderStatus(id, selectedOrder.status);
+
+      // Update the orders list
+      const updated = orders.map((o) =>
+        (o.order_id || o.orderId) === id
+          ? { ...o, status: selectedOrder.status }
+          : o
       );
-      setStatusUpdateMessage("✅ Status updated!");
+
+      setOrders(updated);
+      setStatusUpdateMessage("✅ Status updated successfully!");
       setTimeout(() => setStatusUpdateMessage(""), 3000);
     } catch (err) {
-      console.error("❌ Failed to update order status:", err);
+      console.error("Failed to update order status:", err);
       setStatusUpdateMessage("❌ Update failed");
+      setTimeout(() => setStatusUpdateMessage(""), 3000);
     }
   };
 
@@ -124,6 +114,16 @@ const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
     if (role === "admin") return "Search by customer or store...";
     if (role === "shopowner") return "Search by customer...";
     return "";
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  const formatPrice = (price) => {
+    if (price === null || price === undefined) return "0.00";
+    return parseFloat(price).toFixed(2);
   };
 
   return (
@@ -171,28 +171,46 @@ const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
         </div>
       </div>
 
+      {loading && <div className="loading">Loading orders...</div>}
+
       <div className="order-grid">
         {orders.map((order) => (
           <div
-            key={order.order_id}
+            key={order.order_id || order.orderId}
             className={`order-card status-${order.status?.toLowerCase()}`}
             onClick={() => handleCardClick(order)}
           >
             <div className="order-header">
-              <h3>Order #{order.order_id}</h3>
+              <h3>Order #{order.order_id || order.orderId}</h3>
               <span className="status-badge">{order.status}</span>
             </div>
             <div className="order-info">
               <p>
-                <strong>Date:</strong> {order.created_at?.split("T")[0]}
+                <strong>Date:</strong>{" "}
+                {formatDate(order.created_at || order.createdAt)}
               </p>
               <p>
-                <strong>Total:</strong> ${order.total_price?.toFixed(2)}
+                <strong>Total:</strong> $
+                {formatPrice(order.total_price || order.totalPrice)}
               </p>
+              {role === "admin" && order.customer_name && (
+                <p>
+                  <strong>Customer:</strong> {order.customer_name}
+                </p>
+              )}
+              {role === "admin" && order.store_name && (
+                <p>
+                  <strong>Store:</strong> {order.store_name}
+                </p>
+              )}
             </div>
           </div>
         ))}
       </div>
+
+      {orders.length === 0 && !loading && (
+        <div className="no-orders">No orders found.</div>
+      )}
 
       {selectedOrder && (
         <div className="order-popup" onClick={closeModal}>
@@ -204,18 +222,22 @@ const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
               ×
             </button>
 
-            <h3>Order #{selectedOrder.order_id} Details</h3>
+            <h3>
+              Order #{selectedOrder.order_id || selectedOrder.orderId} Details
+            </h3>
             <p>
               <strong>Date:</strong>{" "}
-              {selectedOrder.created_at?.split("T")[0]}
+              {formatDate(selectedOrder.created_at || selectedOrder.createdAt)}
             </p>
             <p>
-              <strong>Total:</strong>{" "}
-              ${selectedOrder.total_price?.toFixed(2)}
+              <strong>Total:</strong> $
+              {formatPrice(
+                selectedOrder.total_price || selectedOrder.totalPrice
+              )}
             </p>
 
             {role === "admin" ? (
-              <div>
+              <div className="status-control">
                 <label>Status:</label>
                 <select
                   value={selectedOrder.status}
@@ -224,6 +246,7 @@ const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
                   <option value="Confirmed">Confirmed</option>
                   <option value="Shipping">Shipping</option>
                   <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
                 </select>
               </div>
             ) : (
@@ -236,27 +259,31 @@ const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
             {orderItems.length > 0 ? (
               <ul className="order-items-list">
                 {orderItems.map((item, i) => (
-                  <li key={i}>
+                  <li key={i} className="order-item">
                     <p>
-                      <strong>Product:</strong> {item.productName}
+                      <strong>Product:</strong>{" "}
+                      {item.productName ||
+                        item.product_name ||
+                        "Unknown Product"}
                     </p>
-                    {item.quantity !== undefined && (
+                    {(item.quantity !== undefined ||
+                      item.quantity !== null) && (
                       <p>
                         <strong>Quantity:</strong> {item.quantity}
                       </p>
                     )}
                     <p>
-                      <strong>Price:</strong> ${item.price?.toFixed(2)}
+                      <strong>Price:</strong> ${formatPrice(item.price)}
                     </p>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>No items found.</p>
+              <p>No items found for this order.</p>
             )}
 
             {role === "admin" && (
-              <>
+              <div className="admin-controls">
                 <button
                   className="update-status-btn"
                   onClick={handleStatusUpdate}
@@ -264,11 +291,9 @@ const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
                   Update Status
                 </button>
                 {statusUpdateMessage && (
-                  <p className="status-update-message">
-                    {statusUpdateMessage}
-                  </p>
+                  <p className="status-update-message">{statusUpdateMessage}</p>
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>

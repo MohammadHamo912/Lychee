@@ -12,7 +12,6 @@ import ShowMyReviews from "../components/ShowMyReviews";
 import Wishlist from "../components/WishList";
 import ShopOwnerDashboard from "../components/ShopOwnerDashboard";
 import OrderManagement from "../components/OrderManagement";
-import StoreReviewAndSocial from "../components/StoreReviewAndSocial";
 import UserManagement from "../components/UserManagement";
 import ShopApproval from "../components/ShopManagement";
 import DiscountManagement from "../components/DiscountManagement";
@@ -79,11 +78,6 @@ const Dashboard = () => {
             title: "🧾 Orders",
             content: <OrderManagement role="shopowner" storeId={storeId} />,
           },
-          {
-            key: "reviewsAndSocial",
-            title: "🌐 Social",
-            content: <StoreReviewAndSocial storeId={storeId} />,
-          },
         ];
       default: // customer
         return [
@@ -115,8 +109,8 @@ const Dashboard = () => {
             {userRole === "admin"
               ? "Admin Panel"
               : userRole === "shopowner"
-                ? "Store Panel"
-                : "My Account"}
+              ? "Store Panel"
+              : "My Account"}
           </h2>
           {tabs.map((tab) => (
             <div

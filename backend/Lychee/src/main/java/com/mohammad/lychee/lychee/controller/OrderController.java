@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -17,69 +18,100 @@ import java.util.Map;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderRepository orderRepository) {
         this.orderService = orderService;
+        this.orderRepository = orderRepository;
     }
 
     // Get all orders (basic list)
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders(@RequestParam(required = false) String role,
-                                                    @RequestParam(required = false) Integer userId,
-                                                    @RequestParam(required = false) Integer storeId) {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<List<Order>> getAllOrders(
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) Integer storeId) {
+
+        try {
+            List<Order> orders = orderService.getAllOrders();
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // Get order by ID
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Integer id) {
-        return orderService.getOrderById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            Optional<Order> order = orderService.getOrderById(id);
+            return order.map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // Get orders for a specific user
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
+        try {
+            List<Order> orders = orderService.getOrdersByUserId(userId);
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    // ✅ Get order item summaries (uses Map<String, Object>)
+    // Get order item summaries (uses Map<String, Object>)
     @GetMapping("/{orderId}/items")
     public ResponseEntity<List<Map<String, Object>>> getOrderItemSummaries(@PathVariable int orderId) {
-        List<Map<String, Object>> items = orderService.getOrderItemSummaries(orderId);
-        return ResponseEntity.ok(items);
+        try {
+            List<Map<String, Object>> items = orderService.getOrderItemSummaries(orderId);
+            return ResponseEntity.ok(items);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // Create a new order
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order created = orderService.createOrder(order);
-        return ResponseEntity.ok(created);
+        try {
+            Order created = orderService.createOrder(order);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     // Update an existing order
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateOrder(@PathVariable Integer id, @RequestBody Order order) {
-        order.setOrder_id(id);
-        orderService.updateOrder(order);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Order> updateOrder(@PathVariable Integer id, @RequestBody Order order) {
+        try {
+            order.setOrder_id(id);
+            Order updated = orderService.updateOrder(order);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // Soft delete an order
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Integer id) {
-        orderService.deleteOrder(id);
-        return ResponseEntity.noContent().build();
+        try {
+            orderService.deleteOrder(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
-    @Autowired
-    private OrderRepository orderRepository;
 
     // Advanced search with filters
-    @GetMapping("/orders")
-    public List<Order> searchOrders(
-
+    @GetMapping("/search")
+    public ResponseEntity<List<Order>> searchOrders(
             @RequestParam String role,
             @RequestParam(required = false) String query,
             @RequestParam(required = false) String status,
@@ -88,26 +120,91 @@ public class OrderController {
             @RequestParam(value = "user_id", required = false) Integer user_id,
             @RequestParam(value = "store_id", required = false) Integer store_id
     ) {
-        return orderRepository.searchOrders(role, query, status, startDate, endDate, user_id, store_id);
-    }
-
-    @PutMapping("/{orderId}/status")
-    public ResponseEntity<String> updateOrderStatus(@PathVariable int orderId, @RequestBody Map<String, String> body) {
-        String newStatus = body.get("status");
         try {
-            orderService.updateOrderStatus(orderId, newStatus);
-            return ResponseEntity.ok("order status updated");
+            // Validate role parameter
+            if (role == null || role.trim().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            List<Order> orders = orderRepository.searchOrders(
+                    role.trim(),
+                    query != null ? query.trim() : null,
+                    status != null ? status.trim() : null,
+                    startDate,
+                    endDate,
+                    user_id,
+                    store_id
+            );
+
+            return ResponseEntity.ok(orders);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update order status");
+            System.err.println("Error in searchOrders: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    // Update order status
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<String> updateOrderStatus(
+            @PathVariable int orderId,
+            @RequestBody Map<String, String> body) {
+
+        try {
+            String newStatus = body.get("status");
+
+            if (newStatus == null || newStatus.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Status cannot be empty");
+            }
+
+            // Validate status values
+            String trimmedStatus = newStatus.trim();
+            if (!isValidStatus(trimmedStatus)) {
+                return ResponseEntity.badRequest().body("Invalid status value");
+            }
+
+            orderService.updateOrderStatus(orderId, trimmedStatus);
+            return ResponseEntity.ok("Order status updated successfully");
+
+        } catch (Exception e) {
+            System.err.println("Error updating order status: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update order status");
+        }
+    }
+
+    // Get order item details by store and order ID
     @GetMapping("/order-items/store/{storeId}/order/{orderId}")
     public ResponseEntity<List<Map<String, Object>>> getOrderItemDetailsByStoreAndOrderId(
             @PathVariable Integer storeId,
             @PathVariable Integer orderId
     ) {
-        List<Map<String, Object>> items = orderService.getOrderItemDetailsByStoreAndOrderId(storeId, orderId);
-        return ResponseEntity.ok(items);
+        try {
+            if (storeId == null || orderId == null) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            List<Map<String, Object>> items = orderService.getOrderItemDetailsByStoreAndOrderId(storeId, orderId);
+            return ResponseEntity.ok(items);
+
+        } catch (Exception e) {
+            System.err.println("Error fetching order items by store: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
+    // Helper method to validate status values
+    private boolean isValidStatus(String status) {
+        return status.equals("Confirmed") ||
+                status.equals("Shipping") ||
+                status.equals("Delivered") ||
+                status.equals("Cancelled") ||
+                status.equals("Pending");
+    }
+
+    // Health check endpoint
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Order service is running");
+    }
 }
