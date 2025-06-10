@@ -735,3 +735,55 @@
     margin-top: 50px;
   }
 }
+.item-page-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.item-image img {
+  max-width: 400px;
+  border-radius: 12px;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.variant-options {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.variant-options button {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.variant-options button.active {
+  background-color: #b76e79;
+  color: white;
+  border: none;
+}
+
+.final-price {
+  color: green;
+  font-weight: bold;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: gray;
+  margin-left: 10px;
+}
+
+.notification {
+  margin-top: 10px;
+  color: #b76e79;
+  font-weight: bold;
+}

@@ -255,3 +255,7 @@ export const getAvailableVariantsForProduct = async (
     throw error;
   }
 };
+export const getEnrichedItemByVariantId = async (variantId) => {
+  const allItems = await getAllItems(); // optionally cache this
+  return allItems.find((item) => item.productVariantId === variantId);
+};
