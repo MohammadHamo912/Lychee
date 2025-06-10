@@ -30,7 +30,7 @@ const CheckoutPage = () => {
     console.log("CheckoutPage - Discount data from navigation:", discountData);
 
     // Check if user is logged in and get the correct user ID field
-    const userId = user?.userId || user?.User_ID;
+    const userId = user?.user_id || user?.userId || user?.User_ID;
 
     if (!user || !userId) {
       console.log("CheckoutPage - No user found, redirecting to login");
@@ -150,7 +150,7 @@ const CheckoutPage = () => {
           <CheckoutForm
             cartItems={cartItems}
             cartTotal={cartTotal}
-            userId={user?.userId || user?.User_ID}
+            userId={user?.user_id || user?.userId || user?.User_ID}
             onOrderComplete={handleOrderComplete}
             discount={discount}
             promoApplied={promoApplied}
@@ -179,19 +179,19 @@ const CheckoutPage = () => {
                           <p className="item-brand">{item.brand}</p>
                           <p className="item-variant">
                             {item.currentVariant?.size &&
-                              `Size: ${item.currentVariant.size}`}
+                              `Size: ${item.current_variant.size}`}
                             {item.currentVariant?.color &&
-                              ` | Color: ${item.currentVariant.color}`}
+                              ` | Color: ${item.current_variant.color}`}
                           </p>
                           <p className="item-quantity">
-                            Quantity: {item.cartQuantity}
+                            Quantity: {item.cart_quantity}
                           </p>
                         </div>
                       </div>
                       <div className="item-price">
                         $
                         {(
-                          (item.finalPrice || item.price) * item.cartQuantity
+                          (item.final_price || item.price) * item.cart_quantity
                         ).toFixed(2)}
                       </div>
                     </div>

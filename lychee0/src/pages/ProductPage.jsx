@@ -59,9 +59,13 @@ const ProductPage = () => {
         setProduct(productData);
 
         try {
-          const availableVariantsFromItems = await getAvailableVariantsForProduct(parseInt(productId));
+          const availableVariantsFromItems =
+            await getAvailableVariantsForProduct(parseInt(productId));
 
-          if (availableVariantsFromItems && availableVariantsFromItems.length > 0) {
+          if (
+            availableVariantsFromItems &&
+            availableVariantsFromItems.length > 0
+          ) {
             setProductVariants(availableVariantsFromItems);
           } else {
             const variantsData = await getProductVariantsByProductId(productId);
@@ -72,7 +76,10 @@ const ProductPage = () => {
           setProductVariants(variantsData || []);
         }
 
-        const initialVariants = productVariants.length > 0 ? productVariants : await getProductVariantsByProductId(productId);
+        const initialVariants =
+          productVariants.length > 0
+            ? productVariants
+            : await getProductVariantsByProductId(productId);
         if (initialVariants && initialVariants.length > 0) {
           await fetchItemImages(initialVariants[0].productVariantId);
           await fetchAvailableItems(initialVariants[0].productVariantId);
@@ -99,7 +106,9 @@ const ProductPage = () => {
       setReviews(reviewsData || []);
 
       if (reviewsData && reviewsData.length > 0) {
-        const userIds = [...new Set(reviewsData.map((review) => review.user_id))];
+        const userIds = [
+          ...new Set(reviewsData.map((review) => review.user_id)),
+        ];
         const userNames = {};
 
         await Promise.all(
@@ -218,8 +227,9 @@ const ProductPage = () => {
       stars.push(
         <span
           key={i}
-          className={`star ${i <= numericRating ? "filled" : ""} ${interactive ? "interactive" : ""
-            }`}
+          className={`star ${i <= numericRating ? "filled" : ""} ${
+            interactive ? "interactive" : ""
+          }`}
           onClick={interactive ? () => onRatingChange(i) : undefined}
           style={{
             cursor: interactive ? "pointer" : "default",
@@ -457,31 +467,31 @@ const ProductPage = () => {
             <div className="image-thumbnails">
               {itemImages.length > 0
                 ? itemImages.slice(0, 4).map((image, index) => (
-                  <div key={image.Image_ID} className="thumbnail-wrapper">
-                    <img
-                      src={image.image_url}
-                      alt={
-                        image.caption || `${product.name} view ${index + 1}`
-                      }
-                      className="thumbnail-image"
-                      onError={(e) => {
-                        e.target.src = "/default-product-image.png";
-                      }}
-                    />
-                  </div>
-                ))
+                    <div key={image.Image_ID} className="thumbnail-wrapper">
+                      <img
+                        src={image.image_url}
+                        alt={
+                          image.caption || `${product.name} view ${index + 1}`
+                        }
+                        className="thumbnail-image"
+                        onError={(e) => {
+                          e.target.src = "/default-product-image.png";
+                        }}
+                      />
+                    </div>
+                  ))
                 : [1, 2, 3].map((i) => (
-                  <div key={i} className="thumbnail-wrapper">
-                    <img
-                      src={product.logo_url || "/default-product-image.png"}
-                      alt={`${product.name} view ${i}`}
-                      className="thumbnail-image"
-                      onError={(e) => {
-                        e.target.src = "/default-product-image.png";
-                      }}
-                    />
-                  </div>
-                ))}
+                    <div key={i} className="thumbnail-wrapper">
+                      <img
+                        src={product.logo_url || "/default-product-image.png"}
+                        alt={`${product.name} view ${i}`}
+                        className="thumbnail-image"
+                        onError={(e) => {
+                          e.target.src = "/default-product-image.png";
+                        }}
+                      />
+                    </div>
+                  ))}
             </div>
           </div>
 
@@ -518,14 +528,14 @@ const ProductPage = () => {
                   </div>
                   {bestPriceInfo.priceRange.min !==
                     bestPriceInfo.priceRange.max && (
-                      <div className="price-range">
-                        <span className="price-range-text">
-                          Available from $
-                          {bestPriceInfo.priceRange.min.toFixed(2)} - $
-                          {bestPriceInfo.priceRange.max.toFixed(2)}
-                        </span>
-                      </div>
-                    )}
+                    <div className="price-range">
+                      <span className="price-range-text">
+                        Available from $
+                        {bestPriceInfo.priceRange.min.toFixed(2)} - $
+                        {bestPriceInfo.priceRange.max.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
                   <div className="availability-info">
                     <span>
                       Available at {bestPriceInfo.availableStores} store
@@ -547,11 +557,12 @@ const ProductPage = () => {
                         variant.product_variant_id ??
                         `variant-fallback-${index}`
                       }
-                      className={`variant-option ${selectedVariant?.product_variant_id ===
+                      className={`variant-option ${
+                        selectedVariant?.product_variant_id ===
                         variant.product_variant_id
-                        ? "active"
-                        : ""
-                        }`}
+                          ? "active"
+                          : ""
+                      }`}
                       onClick={() => handleVariantSelection(variant)}
                     >
                       <span
@@ -592,32 +603,35 @@ const ProductPage = () => {
                 {productVariants.length === 0
                   ? "Not Available"
                   : !selectedVariant
-                    ? "Select Variant First"
-                    : !bestPriceInfo
-                      ? "Not Available"
-                      : "Find Best Price"}
+                  ? "Select Variant First"
+                  : !bestPriceInfo
+                  ? "Not Available"
+                  : "Find Best Price"}
               </button>
             </div>
 
             <div className="product-tabs">
               <div className="tabs-header">
                 <button
-                  className={`tab-button ${activeTab === "description" ? "active" : ""
-                    }`}
+                  className={`tab-button ${
+                    activeTab === "description" ? "active" : ""
+                  }`}
                   onClick={() => setActiveTab("description")}
                 >
                   Description
                 </button>
                 <button
-                  className={`tab-button ${activeTab === "availability" ? "active" : ""
-                    }`}
+                  className={`tab-button ${
+                    activeTab === "availability" ? "active" : ""
+                  }`}
                   onClick={() => setActiveTab("availability")}
                 >
                   Availability
                 </button>
                 <button
-                  className={`tab-button ${activeTab === "reviews" ? "active" : ""
-                    }`}
+                  className={`tab-button ${
+                    activeTab === "reviews" ? "active" : ""
+                  }`}
                   onClick={() => setActiveTab("reviews")}
                 >
                   Reviews ({reviews.length})
@@ -651,7 +665,7 @@ const ProductPage = () => {
                                 </span>
                                 <span className="store-location">
                                   {/* You can add store location here if available */}
-                                  Store ID: {item.Store_ID}
+                                  Store ID: {item.store_id}
                                 </span>
                               </div>
                               <div className="store-pricing">
@@ -666,10 +680,11 @@ const ProductPage = () => {
                               </div>
                               <div className="store-availability-status">
                                 <span
-                                  className={`availability-badge ${item.stockQuantity > 0
-                                    ? "in-stock"
-                                    : "out-of-stock"
-                                    }`}
+                                  className={`availability-badge ${
+                                    item.stockQuantity > 0
+                                      ? "in-stock"
+                                      : "out-of-stock"
+                                  }`}
                                 >
                                   {item.stockQuantity > 0
                                     ? "In Stock"

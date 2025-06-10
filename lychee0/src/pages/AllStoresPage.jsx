@@ -161,7 +161,7 @@ const AllStoresPage = () => {
     if (minRating > 0) {
       const storesWithRatings = await Promise.all(
         result.map(async (store) => {
-          const storeId = store.storeId || store.id || store.Store_ID;
+          const storeId = store.storeId || store.id || store.store_id;
           const { rating } = await getStoreRatingAndCount(storeId);
           return { store, rating };
         })
@@ -219,7 +219,7 @@ const AllStoresPage = () => {
         // For rating sorting, we need to fetch ratings and sort accordingly
         const ratingsForSorting = await Promise.all(
           result.map(async (store) => {
-            const storeId = store.storeId || store.id || store.Store_ID;
+            const storeId = store.storeId || store.id || store.store_id;
             const { rating } = await getStoreRatingAndCount(storeId);
             return { store, rating };
           })
@@ -230,7 +230,7 @@ const AllStoresPage = () => {
       case "mostReviewed":
         const reviewCountsForSortingHigh = await Promise.all(
           result.map(async (store) => {
-            const storeId = store.storeId || store.id || store.Store_ID;
+            const storeId = store.storeId || store.id || store.store_id;
             const { reviewCount } = await getStoreRatingAndCount(storeId);
             return { store, reviewCount };
           })
@@ -243,7 +243,7 @@ const AllStoresPage = () => {
       case "leastReviewed":
         const reviewCountsForSortingLow = await Promise.all(
           result.map(async (store) => {
-            const storeId = store.storeId || store.id || store.Store_ID;
+            const storeId = store.storeId || store.id || store.store_id;
             const { reviewCount } = await getStoreRatingAndCount(storeId);
             return { store, reviewCount };
           })

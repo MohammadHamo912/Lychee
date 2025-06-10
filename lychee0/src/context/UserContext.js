@@ -128,6 +128,7 @@ export const UserProvider = ({ children }) => {
     isAddingToCart,
     isLoadingCart,
     isLoggedIn: !!user,
+    getUserId,
     login,
     logout,
     addToCart,

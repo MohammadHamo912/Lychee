@@ -8,9 +8,10 @@ import ShoppingCartAPI from "../api/shoppingcartitems";
 import { getEnrichedItemsByIds } from "../api/items";
 import { useUser } from "../context/UserContext";
 import { validateDiscountCode } from "../api/discounts";
-
 const ShoppingCartPage = () => {
-  const { user, isLoggedIn } = useUser();
+  const { isLoggedIn, getUserId } = useUser();
+  const userId = getUserId();
+
   const [cartItems, setCartItems] = useState([]);
   const [enrichedCartItems, setEnrichedCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,8 +21,6 @@ const ShoppingCartPage = () => {
   const [promoApplied, setPromoApplied] = useState(null);
   const [estimatedDelivery, setEstimatedDelivery] = useState("");
   const [updating, setUpdating] = useState({});
-
-  const userId = user?.user_id;
 
   const fetchCartItems = async () => {
     if (!userId) {
@@ -34,6 +33,8 @@ const ShoppingCartPage = () => {
       setError(null);
 
       const apiCartItems = await ShoppingCartAPI.getCartItems(userId);
+      console.log("Raw Cart Items:", apiCartItems);
+
       if (apiCartItems.length === 0) {
         setCartItems([]);
         setEnrichedCartItems([]);
@@ -41,17 +42,17 @@ const ShoppingCartPage = () => {
         return;
       }
 
-      const itemIds = apiCartItems.map((cartItem) => cartItem.itemId);
+      const itemIds = apiCartItems.map((cartItem) => cartItem.item_id);
       const enrichedItems = await getEnrichedItemsByIds(itemIds);
 
       const mergedCartItems = apiCartItems.map((cartItem) => {
         const enrichedItem = enrichedItems.find(
-          (item) => item.id === cartItem.itemId || item.item_id === cartItem.itemId
+          (item) => item.item_id === cartItem.item_id
         );
 
         return {
           ...cartItem,
-          id: enrichedItem?.id || cartItem.itemId,
+          id: enrichedItem?.item_id || cartItem.item_id,
           name: enrichedItem?.name || `Product ${cartItem.itemId}`,
           description: enrichedItem?.description || "No description available",
           brand: enrichedItem?.brand || "Unknown Brand",
@@ -68,6 +69,7 @@ const ShoppingCartPage = () => {
 
       setCartItems(apiCartItems);
       setEnrichedCartItems(mergedCartItems);
+      console.log("Enriched Cart Items:", mergedCartItems);
 
       const today = new Date();
       const minDelivery = new Date(today);
@@ -76,7 +78,10 @@ const ShoppingCartPage = () => {
       maxDelivery.setDate(today.getDate() + 7);
       const options = { month: "short", day: "numeric" };
       setEstimatedDelivery(
-        `${minDelivery.toLocaleDateString("en-US", options)} - ${maxDelivery.toLocaleDateString("en-US", options)}`
+        `${minDelivery.toLocaleDateString(
+          "en-US",
+          options
+        )} - ${maxDelivery.toLocaleDateString("en-US", options)}`
       );
     } catch (err) {
       console.error("Error fetching cart items:", err);
@@ -87,7 +92,10 @@ const ShoppingCartPage = () => {
   };
 
   const calculateSubtotal = () =>
-    enrichedCartItems.reduce((sum, item) => sum + item.finalPrice * item.quantity, 0);
+    enrichedCartItems.reduce(
+      (sum, item) => sum + item.finalPrice * item.quantity,
+      0
+    );
 
   const calculateTotal = () => {
     const shipping = calculateSubtotal() > 100 ? 0 : 7.99;
@@ -136,11 +144,17 @@ const ShoppingCartPage = () => {
         setDiscount(result.amount);
         setPromoApplied({ message: result.message });
       } else {
-        setPromoApplied({ error: true, message: result.message || "Invalid promo code." });
+        setPromoApplied({
+          error: true,
+          message: result.message || "Invalid promo code.",
+        });
       }
     } catch (error) {
       console.error("Promo error:", error);
-      setPromoApplied({ error: true, message: "Failed to validate promo code." });
+      setPromoApplied({
+        error: true,
+        message: "Failed to validate promo code.",
+      });
     }
   };
 

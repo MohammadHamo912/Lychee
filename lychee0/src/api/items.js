@@ -37,7 +37,7 @@ export const getItemById = async (itemId) => {
     const response = await axios.get(
       `http://localhost:8081/api/items/enriched/${itemId}`
     );
-    console.log("API - Got enriched item:", response.data);
+    console.log("API - Got enriched item:", response);
     return response.data;
   } catch (error) {
     console.error(`Error fetching enriched item ${itemId}:`, error);
@@ -98,9 +98,9 @@ export const searchItemsInStore = async (storeId, query) => {
 
 export const getEnrichedItemsByIds = async (itemIds) => {
   try {
-    console.log("API - Getting enriched items by IDs:", itemIds);
-    const response = await axios.post(`${API_URL}/enriched/by-ids`, itemIds); // ✅ raw array
-    console.log("API - Got", response.data.length, "items by IDs");
+    const response = await axios.post(`${API_URL}/enriched/by-ids`, itemIds);
+
+    console.log("API - Enriched items by IDs:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching enriched items by IDs:", error);

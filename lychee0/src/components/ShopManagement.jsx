@@ -187,7 +187,7 @@ const ShopManagement = () => {
             <div className="product-list">
               {filteredItems.length > 0 ? (
                 filteredItems.map((item) => (
-                  <div key={item.Item_ID} className="product-card">
+                  <div key={item.item_id} className="product-card">
                     <p>
                       <strong>{item.name}</strong>
                     </p>

@@ -22,11 +22,13 @@ const ItemCard = ({ item, onAddToCart, isAddingToCart, allItems = [] }) => {
     barcode,
     brand,
     storeId,
-    storeName, // Store name is already included in enriched data
-    finalPrice, // Final price is already calculated in enriched data
+    store_name,
+    final_price,
   } = item;
 
-  // Extract productId from the current variant
+  const storeName = store_name || "Unknown Store";
+  const finalPrice = final_price || price * (1 - discount / 100);
+
   const productId = currentVariant?.productId;
 
   // Get categories from other items with the same productId (if needed for display)

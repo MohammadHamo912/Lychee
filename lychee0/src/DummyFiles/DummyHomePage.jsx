@@ -88,11 +88,12 @@ const HomePage = () => {
       try {
         setDiscountsLoading(true);
         const discounts = await getTopDiscountsForCarousel();
+        console.log("Raw discounts from API:", discounts);
 
         // Transform discounts into carousel slides format
         if (discounts && discounts.length > 0) {
           const discountSlides = discounts.map((discount, index) => ({
-            title: `${discount.discountPercentage}% OFF`,
+            title: `${discount.discount_percentage}% OFF`,
             description: `Use code "${discount.code}" to get ${discount.discountPercentage}% discount on your purchase!`,
             buttonText: "Shop Now",
             buttonLink: "/products", // You can customize this link

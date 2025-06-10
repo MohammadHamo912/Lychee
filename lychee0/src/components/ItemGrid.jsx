@@ -41,7 +41,7 @@ const ItemGrid = ({
 
         if (storeId) {
           filteredItems = filteredItems.filter(
-            (item) => item.storeId == storeId
+            (item) => item.store_id == storeId
           );
         }
 

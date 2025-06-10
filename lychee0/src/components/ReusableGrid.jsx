@@ -64,8 +64,10 @@ const ReusableGrid = ({
           // Create absolutely unique key by combining multiple unique identifiers
           const itemId =
             item.id ||
+            item.item_id ||
+            item.product_id ||
             item.storeId ||
-            item.Store_ID ||
+            item.store_id ||
             item.itemId ||
             item.productId;
           const uniqueKey = `${gridIdRef.current}-${className}-item-${

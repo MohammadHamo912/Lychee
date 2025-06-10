@@ -32,7 +32,7 @@ export const getCartItems = async (userId) => {
 // Process complete checkout (updated to handle dummy payment)
 export const processCheckout = async (checkoutData) => {
   try {
-    console.log("API - Processing checkout for user:", checkoutData.userId);
+    console.log("API - Processing checkout for user:", checkoutData.user_id);
     const response = await axios.post(
       `${API_BASE_URL}/checkout/process`,
       checkoutData

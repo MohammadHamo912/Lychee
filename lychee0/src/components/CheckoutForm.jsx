@@ -133,21 +133,21 @@ const CheckoutForm = ({
 
       // Prepare checkout data with discount information
       const checkoutData = {
-        userId: userId,
-        shippingAddress: {
+        user_id: userId,
+        shipping_address: {
           city: formData.city,
           street: formData.street,
           building: formData.building,
         },
-        orderNotes: formData.orderNotes,
-        paymentMethod: formData.paymentMethod,
+        order_notes: formData.orderNotes,
+        payment_method: formData.paymentMethod,
         // Include discount information in the order
         discount: {
           amount: displayDiscount,
           code: promoApplied?.code || null,
-          percentage: promoApplied?.percentage || null,
+          percentage: promoApplied?.percentage ?? 0,
         },
-        orderTotal: displayTotal,
+        order_total: displayTotal,
         subtotal: displaySubtotal,
         shipping: displayShipping,
       };
@@ -158,7 +158,7 @@ const CheckoutForm = ({
       if (result.success) {
         setOrderSuccess(true);
         if (onOrderComplete) {
-          onOrderComplete(result.orderId);
+          onOrderComplete(result.order_id);
         }
         // Redirect to success page after a short delay
         setTimeout(() => {

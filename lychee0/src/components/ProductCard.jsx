@@ -12,7 +12,6 @@ const ProductCard = ({ product, onAction }) => {
   const navigate = useNavigate();
   const { product_id, name, logo_url, description, brand } = product;
   const productId = product_id || product.productId;
-  console.log("ProductCard rendered with product:", product);
   const [categories, setCategories] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +26,7 @@ const ProductCard = ({ product, onAction }) => {
 
         if (productCategories && productCategories.length > 0) {
           const categoryPromises = productCategories.map((pc) =>
-            getCategoryById(pc.categoryId)
+            getCategoryById(pc.category_id)
           );
 
           const categoryDetails = await Promise.all(categoryPromises);
