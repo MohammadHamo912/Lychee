@@ -25,7 +25,7 @@ const ItemManagement = () => {
   // Form state
   const [step, setStep] = useState("barcode"); // barcode, product, category, variant, item
   const [formData, setFormData] = useState({
-    storeId: 1, // This should come from authenticated user
+    storeId: 2, // This should come from authenticated user
     barcode: "",
     productName: "",
     description: "",
@@ -213,26 +213,25 @@ const ItemManagement = () => {
 
     try {
       const requestData = {
-        storeId: formData.storeId,
+        store_id: formData.storeId,
         barcode: formData.barcode.trim() || null,
-        productName: formData.productName.trim(),
+        product_name: formData.productName.trim(),
         description: formData.description.trim(),
         brand: formData.brand.trim() || null,
-        imageUrl: formData.imageUrl || null,
-        categoryId: formData.useExistingCategory ? formData.categoryId : null,
-        newCategoryName: !formData.useExistingCategory
+        image_url: formData.imageUrl || null,
+        category_id: formData.useExistingCategory ? formData.categoryId : null,
+        new_category_name: !formData.useExistingCategory
           ? formData.newCategoryName.trim()
           : null,
-        parentCategoryId: !formData.useExistingCategory
+        parent_category_id: !formData.useExistingCategory
           ? formData.parentCategoryId
           : null,
         size: formData.size.trim() || "default",
         color: formData.color.trim() || "default",
         price: parseFloat(formData.price),
-        stockQuantity: parseInt(formData.stockQuantity) || 0,
+        stock_quantity: parseInt(formData.stockQuantity) || 0,
         discount: parseFloat(formData.discount) || 0,
       };
-
       const response = await fetch(
         "http://localhost:8081/api/item-management/create-item",
         {
@@ -608,8 +607,9 @@ const ItemManagement = () => {
 
       {variantCheck && (
         <div
-          className={`variant-status ${variantCheck.exists ? "warning" : "success"
-            }`}
+          className={`variant-status ${
+            variantCheck.exists ? "warning" : "success"
+          }`}
         >
           {variantCheck.exists
             ? "⚠️ Variant exists - will use existing variant"
@@ -679,12 +679,13 @@ const ItemManagement = () => {
 
           <div className="step-indicator">
             <div
-              className={`step ${step === "barcode"
+              className={`step ${
+                step === "barcode"
                   ? "active"
                   : step !== "barcode"
-                    ? "completed"
-                    : ""
-                }`}
+                  ? "completed"
+                  : ""
+              }`}
             >
               1. Barcode
             </div>
@@ -741,7 +742,7 @@ const ItemManagement = () => {
                   <div key={item.itemId} className="item-wrapper">
                     <ItemCard
                       item={item}
-                      onAddToCart={() => { }} // Disable add to cart for store owners viewing their own items
+                      onAddToCart={() => {}} // Disable add to cart for store owners viewing their own items
                       isAddingToCart={false}
                       allItems={enrichedItems}
                       showAddToCart={false} // Don't show add to cart for store owners

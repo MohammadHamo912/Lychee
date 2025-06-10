@@ -79,11 +79,11 @@ const ItemPage = () => {
 
     try {
       if (isWishlisted) {
-        await removeFromWishlist(user.userId, item.itemId);
+        await removeFromWishlist(user.user_id, item.item_id);
         setIsWishlisted(false);
         showTemporaryNotification("Removed from wishlist");
       } else {
-        await addToWishlist(user.userId, item.itemId);
+        await addToWishlist(user.user_id, item.item_id);
         setIsWishlisted(true);
         showTemporaryNotification("Added to wishlist");
       }
