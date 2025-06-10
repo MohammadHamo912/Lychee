@@ -15,14 +15,14 @@ const ProductListingPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const initialQuery = searchParams.get("query") || "";
-  const initialCategory = searchParams.get("category") || "All"; // Get category from URL
+  const initialCategory = searchParams.get("category") || "All";
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState(initialQuery);
   const [activeFilters, setActiveFilters] = useState({
     brand: "All",
-    mainCategory: initialCategory, // Set initial category from URL
+    mainCategory: initialCategory,
     subCategory: "All",
     subSubCategory: "All",
     features: "",
@@ -32,18 +32,15 @@ const ProductListingPage = () => {
   const [error, setError] = useState(null);
   const [productBrands, setProductBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [productRatings, setProductRatings] = useState({}); // Cache for product ratings
+  const [productRatings, setProductRatings] = useState({});
 
-  // Fetch products and categories
   useEffect(() => {
     fetchProducts();
     fetchCategories();
   }, []);
 
-  // Apply filters when products data, initial query, or initial category changes
   useEffect(() => {
     if (products.length > 0) {
-      // Extract unique brands
       const brands = [
         ...new Set(products.map((p) => p.brand).filter(Boolean)),
       ].sort();
@@ -75,28 +72,22 @@ const ProductListingPage = () => {
     }
   };
 
-  // Function to calculate average rating for a product
   const calculateProductRating = async (productId) => {
     try {
       const reviews = await getReviews("product", productId);
       if (!reviews || reviews.length === 0) return 0;
-      const totalRating = reviews.reduce(
-        (sum, review) => sum + review.rating,
-        0
-      );
-      return totalRating / reviews.length;
+      const total = reviews.reduce((sum, r) => sum + r.rating, 0);
+      return total / reviews.length;
     } catch (error) {
-      console.error(`Error fetching reviews for product ${productId}:`, error);
+      console.error(`Error getting rating for product ${productId}:`, error);
       return 0;
     }
   };
 
-  // Function to get or calculate rating for a product (with caching)
   const getProductRating = async (productId) => {
     if (productRatings[productId] !== undefined) {
       return productRatings[productId];
     }
-
     const rating = await calculateProductRating(productId);
     setProductRatings((prev) => ({ ...prev, [productId]: rating }));
     return rating;
@@ -109,7 +100,6 @@ const ProductListingPage = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    // Update URL parameters - preserve category if it exists
     const newParams = {};
     if (term) newParams.query = term;
     if (activeFilters.mainCategory !== "All")
@@ -120,7 +110,6 @@ const ProductListingPage = () => {
 
   const handleApplyFilters = (filters) => {
     setActiveFilters(filters);
-    // Update URL to reflect category changes
     const newParams = {};
     if (searchTerm) newParams.query = searchTerm;
     if (filters.mainCategory !== "All")
@@ -129,27 +118,25 @@ const ProductListingPage = () => {
     applyFiltersAndSearch(searchTerm, filters);
   };
 
-  // Helper function to find category by name
   const findCategoryByName = (categoryName, level = null) => {
-    return categories.find(
+    const match = categories.find(
       (cat) =>
-        cat.name === categoryName && (level === null || cat.level === level)
+        cat.name?.toLowerCase() === categoryName.toLowerCase() &&
+        (level === null || cat.level === level)
     );
+    return match;
   };
 
-  // Get products that belong to a specific category (including all subcategory products)
   const getProductsForCategoryTree = async (categoryName, level) => {
     try {
       const category = findCategoryByName(categoryName, level);
       if (!category) return [];
 
-      // Get direct products for this category
-      const directProducts = await getProductsByCategoryId(category.categoryId);
-      let allProductIds = new Set(directProducts.map((pc) => pc.productId));
+      const directProducts = await getProductsByCategoryId(category.category_id);
+      let allProductIds = new Set(directProducts.map((pc) => pc.product_id));
 
-      // If this is not a leaf category, also get products from all subcategories
       const subcategories = categories.filter(
-        (cat) => cat.parentId === category.categoryId
+        (cat) => cat.parent_id === category.category_id
       );
 
       for (const subcat of subcategories) {
@@ -157,15 +144,12 @@ const ProductListingPage = () => {
           subcat.name,
           subcat.level
         );
-        subcatProducts.forEach((productId) => allProductIds.add(productId));
+        subcatProducts.forEach((id) => allProductIds.add(id));
       }
 
       return Array.from(allProductIds);
     } catch (error) {
-      console.error(
-        `Error getting products for category ${categoryName}:`,
-        error
-      );
+      console.error(`Error getting products for ${categoryName}:`, error);
       return [];
     }
   };
@@ -181,108 +165,81 @@ const ProductListingPage = () => {
     } = filters;
 
     let result = [...products];
-    let categoryFilteredProductIds = null;
+    let categoryFilteredIds = null;
 
-    // Category filtering - find the most specific category selected
     try {
       if (subSubCategory && subSubCategory !== "All") {
-        // Most specific - filter by sub-sub category (level 2)
-        categoryFilteredProductIds = await getProductsForCategoryTree(
-          subSubCategory,
-          2
-        );
+        categoryFilteredIds = await getProductsForCategoryTree(subSubCategory, 2);
       } else if (subCategory && subCategory !== "All") {
-        // Medium specific - filter by sub category (level 1)
-        categoryFilteredProductIds = await getProductsForCategoryTree(
-          subCategory,
-          1
-        );
+        categoryFilteredIds = await getProductsForCategoryTree(subCategory, 1);
       } else if (mainCategory && mainCategory !== "All") {
-        // Least specific - filter by main category (level 0)
-        categoryFilteredProductIds = await getProductsForCategoryTree(
-          mainCategory,
-          0
-        );
+        categoryFilteredIds = await getProductsForCategoryTree(mainCategory, 0);
       }
 
-      // Apply category filter if any category was selected
-      if (categoryFilteredProductIds !== null) {
-        result = result.filter((product) =>
-          categoryFilteredProductIds.includes(product.productId)
-        );
+      if (categoryFilteredIds !== null) {
+        result = result.filter((p) => categoryFilteredIds.includes(p.product_id));
       }
     } catch (error) {
-      console.error("Error applying category filters:", error);
+      console.error("Error filtering by category:", error);
     }
 
-    // Brand filtering
     if (brand && brand !== "All") {
       result = result.filter(
-        (product) => product.brand?.toLowerCase() === brand.toLowerCase()
+        (p) => p.brand?.toLowerCase() === brand.toLowerCase()
       );
     }
 
-    // Features filtering (text-based partial match)
     if (features && features.trim()) {
-      const lowerFeatures = features.toLowerCase();
-      result = result.filter((product) => {
-        const featuresMatch = product.features?.some((feature) =>
-          feature.toLowerCase().includes(lowerFeatures)
+      const query = features.toLowerCase();
+      result = result.filter((p) => {
+        const matchFeatures = p.features?.some((f) =>
+          f.toLowerCase().includes(query)
         );
-        const descriptionMatch = product.description
-          ?.toLowerCase()
-          .includes(lowerFeatures);
-        return featuresMatch || descriptionMatch;
+        const matchDesc = p.description?.toLowerCase().includes(query);
+        return matchFeatures || matchDesc;
       });
     }
 
-    // Search filtering
     if (search.trim()) {
-      const lowerSearch = search.toLowerCase();
+      const query = search.toLowerCase();
       result = result.filter(
-        (product) =>
-          product.name?.toLowerCase().includes(lowerSearch) ||
-          product.description?.toLowerCase().includes(lowerSearch) ||
-          product.brand?.toLowerCase().includes(lowerSearch) ||
-          product.features?.some((feature) =>
-            feature.toLowerCase().includes(lowerSearch)
-          )
+        (p) =>
+          p.name?.toLowerCase().includes(query) ||
+          p.description?.toLowerCase().includes(query) ||
+          p.brand?.toLowerCase().includes(query) ||
+          p.features?.some((f) => f.toLowerCase().includes(query))
       );
     }
 
-    // Sorting
     switch (sortOption) {
       case "nameAZ":
-        result.sort((a, b) =>
-          a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
-        );
+        result.sort((a, b) => a.name?.localeCompare(b.name));
         break;
       case "nameZA":
-        result.sort((a, b) =>
-          b.name?.toLowerCase().localeCompare(a.name?.toLowerCase())
-        );
+        result.sort((a, b) => b.name?.localeCompare(a.name));
         break;
-      case "highestRated":
-        // For rating sorting, we need to fetch ratings and sort accordingly
-        const ratingsForSorting = await Promise.all(
-          result.map(async (product) => ({
-            product,
-            rating: await getProductRating(product.productId),
+      case "highestRated": {
+        const rated = await Promise.all(
+          result.map(async (p) => ({
+            product: p,
+            rating: await getProductRating(p.product_id),
           }))
         );
-        ratingsForSorting.sort((a, b) => b.rating - a.rating);
-        result = ratingsForSorting.map((item) => item.product);
+        rated.sort((a, b) => b.rating - a.rating);
+        result = rated.map((r) => r.product);
         break;
-      case "lowestRated":
-        const ratingsForSortingLow = await Promise.all(
-          result.map(async (product) => ({
-            product,
-            rating: await getProductRating(product.productId),
+      }
+      case "lowestRated": {
+        const rated = await Promise.all(
+          result.map(async (p) => ({
+            product: p,
+            rating: await getProductRating(p.product_id),
           }))
         );
-        ratingsForSortingLow.sort((a, b) => a.rating - b.rating);
-        result = ratingsForSortingLow.map((item) => item.product);
+        rated.sort((a, b) => a.rating - b.rating);
+        result = rated.map((r) => r.product);
         break;
+      }
       default:
         break;
     }
@@ -292,9 +249,7 @@ const ProductListingPage = () => {
 
   const handleClearSearch = () => {
     setSearchTerm("");
-    setSearchParams({}); // Clear URL parameters
-
-    // Reset all filters to default
+    setSearchParams({});
     const resetFilters = {
       brand: "All",
       mainCategory: "All",
@@ -304,8 +259,6 @@ const ProductListingPage = () => {
       sortOption: "none",
     };
     setActiveFilters(resetFilters);
-
-    // Apply filters with empty search
     applyFiltersAndSearch("", resetFilters);
   };
 

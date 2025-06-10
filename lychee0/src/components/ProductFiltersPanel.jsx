@@ -63,7 +63,7 @@ const ProductFiltersPanel = ({ onApplyFilters, brands, activeFilters }) => {
 
         if (selectedMainCategory) {
           const subCats = await getSubcategories(
-            selectedMainCategory.categoryId
+            selectedMainCategory.category_id
           );
           setAvailableSubCategories(subCats);
 
@@ -107,7 +107,7 @@ const ProductFiltersPanel = ({ onApplyFilters, brands, activeFilters }) => {
 
         if (selectedSubCategory) {
           const subSubCats = await getSubcategories(
-            selectedSubCategory.categoryId
+            selectedSubCategory.category_id
           );
           setAvailableSubSubCategories(subSubCats);
 
@@ -184,7 +184,7 @@ const ProductFiltersPanel = ({ onApplyFilters, brands, activeFilters }) => {
         >
           <option value="All">All Categories</option>
           {mainCategories.map((category) => (
-            <option key={category.categoryId} value={category.name}>
+            <option key={category.category_id} value={category.name}>
               {category.name}
             </option>
           ))}
@@ -202,7 +202,7 @@ const ProductFiltersPanel = ({ onApplyFilters, brands, activeFilters }) => {
           >
             <option value="All">All Sub Categories</option>
             {availableSubCategories.map((category) => (
-              <option key={category.categoryId} value={category.name}>
+              <option key={category.category_id} value={category.name}>
                 {category.name}
               </option>
             ))}
@@ -223,7 +223,7 @@ const ProductFiltersPanel = ({ onApplyFilters, brands, activeFilters }) => {
           >
             <option value="All">All Specific Categories</option>
             {availableSubSubCategories.map((category) => (
-              <option key={category.categoryId} value={category.name}>
+              <option key={category.category_id} value={category.name}>
                 {category.name}
               </option>
             ))}

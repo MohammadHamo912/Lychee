@@ -5,14 +5,12 @@ import Footer from "../components/Footer";
 import "./../PagesCss/ShoppingCart.css";
 import { motion } from "framer-motion";
 import ShoppingCartAPI from "../api/shoppingcartitems";
-import { getEnrichedItemsByIds } from "../api/items"; // Import the new enriched API
+import { getEnrichedItemsByIds } from "../api/items";
 import { useUser } from "../context/UserContext";
 import { validateDiscountCode } from "../api/discounts";
 
 const ShoppingCartPage = () => {
   const { user, isLoggedIn } = useUser();
-
-  // State for cart items and user
   const [cartItems, setCartItems] = useState([]);
   const [enrichedCartItems, setEnrichedCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,15 +23,8 @@ const ShoppingCartPage = () => {
 
   const userId = user?.user_id;
 
-  // Debug logs
-  console.log("ShoppingCartPage - User:", user);
-  console.log("ShoppingCartPage - User ID:", userId);
-  console.log("ShoppingCartPage - Is Logged In:", isLoggedIn);
-
-  // Fetch cart items and enrich them with product data
   const fetchCartItems = async () => {
     if (!userId) {
-      console.log("ShoppingCartPage - No user ID, skipping cart fetch");
       setLoading(false);
       return;
     }
@@ -42,12 +33,7 @@ const ShoppingCartPage = () => {
       setLoading(true);
       setError(null);
 
-      console.log("ShoppingCartPage - Fetching cart items for user:", userId);
-
-      // Step 1: Get cart items from cart API
       const apiCartItems = await ShoppingCartAPI.getCartItems(userId);
-      console.log("ShoppingCartPage - Cart API returned:", apiCartItems);
-
       if (apiCartItems.length === 0) {
         setCartItems([]);
         setEnrichedCartItems([]);
@@ -55,76 +41,34 @@ const ShoppingCartPage = () => {
         return;
       }
 
-      // Step 2: Extract item IDs from cart
       const itemIds = apiCartItems.map((cartItem) => cartItem.itemId);
-      console.log("ShoppingCartPage - Item IDs to enrich:", itemIds);
-
-      // Step 3: Get enriched item data
       const enrichedItems = await getEnrichedItemsByIds(itemIds);
-      console.log("ShoppingCartPage - Enriched items:", enrichedItems);
 
-      // Step 4: Merge cart data with enriched item data
       const mergedCartItems = apiCartItems.map((cartItem) => {
         const enrichedItem = enrichedItems.find(
-          (item) => item.id === cartItem.itemId
+          (item) => item.id === cartItem.itemId || item.item_id === cartItem.itemId
         );
 
-        if (enrichedItem) {
-          return {
-            // Cart-specific data
-            cartId: `${cartItem.userId}-${cartItem.itemId}`,
-            userId: cartItem.userId,
-            itemId: cartItem.itemId,
-            quantity: cartItem.quantity,
-            addedAt: cartItem.createdAt,
-            updatedAt: cartItem.updatedAt,
-
-            // Enriched product data
-            id: enrichedItem.id,
-            name: enrichedItem.name || `Product ${cartItem.itemId}`,
-            description: enrichedItem.description || "No description available",
-            brand: enrichedItem.brand || "Unknown Brand",
-            image: enrichedItem.image || "/images/default.jpg",
-            price: enrichedItem.price || 25.0,
-            finalPrice: enrichedItem.finalPrice || enrichedItem.price || 25.0,
-            discount: enrichedItem.discount || 0,
-            stock: enrichedItem.stock || enrichedItem.stockQuantity || 0,
-            storeName: enrichedItem.storeName || "Unknown Store",
-            currentVariant: enrichedItem.currentVariant,
-            availableVariants: enrichedItem.availableVariants || [],
-          };
-        } else {
-          // Fallback for items without enriched data
-          return {
-            cartId: `${cartItem.userId}-${cartItem.itemId}`,
-            userId: cartItem.userId,
-            itemId: cartItem.itemId,
-            quantity: cartItem.quantity,
-            addedAt: cartItem.createdAt,
-            updatedAt: cartItem.updatedAt,
-
-            id: cartItem.itemId,
-            name: `Product ${cartItem.itemId}`,
-            description: "Product information not available",
-            brand: "Unknown Brand",
-            image: "/images/default.jpg",
-            price: 0,
-            finalPrice: 0,
-            discount: 0,
-            stock: 0,
-            storeName: "Unknown Store",
-            currentVariant: null,
-            availableVariants: [],
-          };
-        }
+        return {
+          ...cartItem,
+          id: enrichedItem?.id || cartItem.itemId,
+          name: enrichedItem?.name || `Product ${cartItem.itemId}`,
+          description: enrichedItem?.description || "No description available",
+          brand: enrichedItem?.brand || "Unknown Brand",
+          image: enrichedItem?.image || "/images/default.jpg",
+          price: enrichedItem?.price || 0,
+          finalPrice: enrichedItem?.final_price || enrichedItem?.price || 0,
+          discount: enrichedItem?.discount || 0,
+          stock: enrichedItem?.stock || enrichedItem?.stock_quantity || 0,
+          storeName: enrichedItem?.store_name || "Unknown Store",
+          currentVariant: enrichedItem?.current_variant || null,
+          availableVariants: enrichedItem?.available_variants || [],
+        };
       });
-
-      console.log("ShoppingCartPage - Merged cart items:", mergedCartItems);
 
       setCartItems(apiCartItems);
       setEnrichedCartItems(mergedCartItems);
 
-      // Calculate estimated delivery
       const today = new Date();
       const minDelivery = new Date(today);
       minDelivery.setDate(today.getDate() + 5);
@@ -132,10 +76,7 @@ const ShoppingCartPage = () => {
       maxDelivery.setDate(today.getDate() + 7);
       const options = { month: "short", day: "numeric" };
       setEstimatedDelivery(
-        `${minDelivery.toLocaleDateString(
-          "en-US",
-          options
-        )} - ${maxDelivery.toLocaleDateString("en-US", options)}`
+        `${minDelivery.toLocaleDateString("en-US", options)} - ${maxDelivery.toLocaleDateString("en-US", options)}`
       );
     } catch (err) {
       console.error("Error fetching cart items:", err);
@@ -145,186 +86,72 @@ const ShoppingCartPage = () => {
     }
   };
 
-  // Load cart items on component mount and when user changes
-  useEffect(() => {
-    fetchCartItems();
-  }, [userId]);
+  const calculateSubtotal = () =>
+    enrichedCartItems.reduce((sum, item) => sum + item.finalPrice * item.quantity, 0);
 
-  // Calculate subtotal using real prices from enriched data
-  const calculateSubtotal = () => {
-    return enrichedCartItems.reduce((total, item) => {
-      return total + item.finalPrice * item.quantity;
-    }, 0);
-  };
-
-  // Calculate total - FIXED with better error handling
   const calculateTotal = () => {
-    const subtotal = calculateSubtotal();
-    const shipping = subtotal > 100 ? 0 : 7.99;
-    const discountAmount = isNaN(discount) ? 0 : discount;
-
-    const total = subtotal + shipping - discountAmount;
-    console.log("Total calculation:", {
-      subtotal,
-      shipping,
-      discountAmount,
-      total,
-    }); // Debug log
-
-    return isNaN(total) ? 0 : total;
+    const shipping = calculateSubtotal() > 100 ? 0 : 7.99;
+    return calculateSubtotal() + shipping - discount;
   };
 
-  // Update quantity
-  const updateQuantity = async (itemId, newQuantity) => {
-    if (newQuantity < 1) return;
-
+  const updateQuantity = async (itemId, newQty) => {
+    if (newQty < 1) return;
+    setUpdating((prev) => ({ ...prev, [itemId]: true }));
     try {
-      setUpdating((prev) => ({ ...prev, [itemId]: true }));
-
-      await ShoppingCartAPI.updateCartItemQuantity(userId, itemId, newQuantity);
-
-      // Update local state for both cart items and enriched cart items
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.itemId === itemId ? { ...item, quantity: newQuantity } : item
-        )
-      );
-
-      setEnrichedCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.itemId === itemId ? { ...item, quantity: newQuantity } : item
-        )
-      );
-    } catch (err) {
-      console.error("Error updating quantity:", err);
-      setError("Failed to update quantity. Please try again.");
+      await ShoppingCartAPI.updateCartItemQuantity(userId, itemId, newQty);
+      fetchCartItems();
+    } catch (error) {
+      console.error("Error updating quantity:", error);
     } finally {
       setUpdating((prev) => ({ ...prev, [itemId]: false }));
     }
   };
 
-  // Remove item
   const removeItem = async (itemId) => {
+    setUpdating((prev) => ({ ...prev, [itemId]: true }));
     try {
-      setUpdating((prev) => ({ ...prev, [itemId]: true }));
-
       await ShoppingCartAPI.removeFromCart(userId, itemId);
-
-      // Update local state
-      setCartItems((prevItems) =>
-        prevItems.filter((item) => item.itemId !== itemId)
-      );
-
-      setEnrichedCartItems((prevItems) =>
-        prevItems.filter((item) => item.itemId !== itemId)
-      );
-
-      // Reset promo if cart becomes empty
-      if (enrichedCartItems.length === 1) {
-        setDiscount(0);
-        setPromoApplied(null);
-      }
-    } catch (err) {
-      console.error("Error removing item:", err);
-      setError("Failed to remove item. Please try again.");
+      fetchCartItems();
+    } catch (error) {
+      console.error("Error removing item:", error);
     } finally {
       setUpdating((prev) => ({ ...prev, [itemId]: false }));
     }
   };
 
-  // Clear entire cart
   const clearCart = async () => {
     try {
-      setLoading(true);
       await ShoppingCartAPI.clearCart(userId);
-      setCartItems([]);
-      setEnrichedCartItems([]);
-      setDiscount(0);
-      setPromoApplied(null);
-    } catch (err) {
-      console.error("Error clearing cart:", err);
-      setError("Failed to clear cart. Please try again.");
-    } finally {
-      setLoading(false);
+      fetchCartItems();
+    } catch (error) {
+      console.error("Error clearing cart:", error);
     }
   };
 
-  // Apply promo code - FIXED with single use validation
   const applyPromo = async (e) => {
     e.preventDefault();
-
-    // Check if a promo is already applied
-    if (promoApplied && !promoApplied.error) {
-      setPromoApplied({
-        code: promoCode,
-        message: "A discount is already applied. Please remove it first.",
-        error: true,
-      });
-      setTimeout(() => setPromoApplied(null), 3000);
-      setPromoCode("");
-      return;
-    }
-
     try {
-      // Validate the promo code using the API
-      const response = await validateDiscountCode(promoCode);
-      console.log("Promo validation response:", response); // Debug log
-
-      if (response.valid && response.discount) {
-        const subtotal = calculateSubtotal();
-        const discountData = response.discount;
-
-        console.log("Subtotal:", subtotal); // Debug log
-        console.log("Discount data:", discountData); // Debug log
-
-        // Use discountPercentage instead of value (based on your API response)
-        const discountValue = parseFloat(discountData.discountPercentage);
-        if (isNaN(discountValue) || discountValue <= 0) {
-          throw new Error("Invalid discount value");
-        }
-
-        // Apply percentage discount
-        const discountAmount = subtotal * (discountValue / 100);
-        console.log("Calculated discount amount:", discountAmount); // Debug log
-
-        // Ensure discount amount is valid
-        if (isNaN(discountAmount) || discountAmount < 0) {
-          throw new Error("Invalid discount calculation");
-        }
-
-        setDiscount(discountAmount);
-        setPromoApplied({
-          code: promoCode,
-          message:
-            response.message ||
-            `${discountData.code} applied successfully! ${discountValue}% off`,
-        });
+      const result = await validateDiscountCode(promoCode);
+      if (result?.valid) {
+        setDiscount(result.amount);
+        setPromoApplied({ message: result.message });
       } else {
-        setPromoApplied({
-          code: promoCode,
-          message: response.message || "Invalid promo code",
-          error: true,
-        });
-        setTimeout(() => setPromoApplied(null), 3000);
+        setPromoApplied({ error: true, message: result.message || "Invalid promo code." });
       }
     } catch (error) {
-      console.error("Error validating promo code:", error);
-      setPromoApplied({
-        code: promoCode,
-        message: "Error validating promo code. Please try again.",
-        error: true,
-      });
-      setTimeout(() => setPromoApplied(null), 3000);
+      console.error("Promo error:", error);
+      setPromoApplied({ error: true, message: "Failed to validate promo code." });
     }
-
-    setPromoCode("");
   };
 
-  // Function to remove applied promo code
   const removePromo = () => {
     setDiscount(0);
     setPromoApplied(null);
   };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, [userId]);
 
   // Error display component
   const ErrorMessage = ({ message, onRetry }) => (

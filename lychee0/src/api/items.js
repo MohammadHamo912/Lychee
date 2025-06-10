@@ -96,11 +96,10 @@ export const searchItemsInStore = async (storeId, query) => {
   }
 };
 
-// Get enriched items by IDs
 export const getEnrichedItemsByIds = async (itemIds) => {
   try {
     console.log("API - Getting enriched items by IDs:", itemIds);
-    const response = await axios.post(`${API_URL}/enriched/by-ids`, itemIds);
+    const response = await axios.post(`${API_URL}/enriched/by-ids`, itemIds); // ✅ raw array
     console.log("API - Got", response.data.length, "items by IDs");
     return response.data;
   } catch (error) {

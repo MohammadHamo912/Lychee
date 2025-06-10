@@ -9,32 +9,29 @@ import makeupImg from "../images/placeholder-makeup.jpg";
 import haircareImg from "../images/placeholder-haircare.jpg";
 import fragranceImg from "../images/placeholder-fragrances.jpg";
 
+// Ensure the "path" query params match the exact category names expected in the database
 const categories = [
   {
     name: "Skincare",
     image: skincareImg,
-    // Updated to link to products page with category filter
-    path: "/productlistingpage?category=Skincare",
+    path: "/productlistingpage?category=Skincare", // Must match DB value exactly
     tagline: "Glow up with clean skin",
   },
   {
-    name: "MakeUp",
+    name: "Makeup",
     image: makeupImg,
-    // Updated to link to products page with category filter
     path: "/productlistingpage?category=Makeup",
     tagline: "Bold shades for every mood",
   },
   {
     name: "Haircare",
     image: haircareImg,
-    // Updated to link to products page with category filter
     path: "/productlistingpage?category=Haircare",
     tagline: "For silky, strong hair",
   },
   {
     name: "Fragrances",
     image: fragranceImg,
-    // Updated to link to products page with category filter
     path: "/productlistingpage?category=Fragrances",
     tagline: "Scents that define you",
   },
@@ -44,14 +41,16 @@ export default function CategoriesPage() {
   return (
     <div className="categories-page">
       <NavBar />
+
       <main className="main-content">
         <h1 className="page-title">Shop by Category</h1>
         <p className="page-subtitle">Find your beauty essentials by category</p>
+
         <div className="categories-grid">
           {categories.map((cat, index) => (
             <Link
               to={cat.path}
-              key={cat.name}
+              key={`${cat.name}-${index}`} // Safe unique key
               className="category-card"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -64,6 +63,7 @@ export default function CategoriesPage() {
           ))}
         </div>
       </main>
+
       <Footer />
     </div>
   );
