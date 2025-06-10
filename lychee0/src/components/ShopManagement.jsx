@@ -15,35 +15,58 @@ const ShopManagement = () => {
   const [itemsError, setItemsError] = useState(null);
   const [shopOwners, setShopOwners] = useState({});
 
-  // Fetch stores data from API on component mount
+  const normalizeShop = (shop) => ({
+    storeId: shop.store_id,
+    name: shop.name,
+    logoUrl: shop.logo_url,
+    shopOwnerId: shop.shopowner_id,
+    createdAt: shop.created_at,
+    updatedAt: shop.updated_at,
+    description: shop.description,
+    addressId: shop.address_id,
+  });
+
+  const normalizeUser = (user) => ({
+    id: user.user_id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+  });
+
+  const normalizeItem = (item) => ({
+    itemId: item.item_id,
+    name: item.name,
+    price: item.price,
+    discount: item.discount,
+    stock: item.stock,
+  });
+
   useEffect(() => {
     const fetchStores = async () => {
       try {
         setLoading(true);
         const storesData = await getAllStores();
-        setShops(storesData);
+        const normalizedShops = storesData
+          .filter((s) => s.deleted_at === null)
+          .map(normalizeShop);
+        setShops(normalizedShops);
 
-        // Fetch owner information for each shop
-        const ownersData = {};
-        for (const shop of storesData) {
+        const ownersMap = {};
+        for (const shop of normalizedShops) {
           if (shop.shopOwnerId) {
             try {
               const ownerData = await getUserById(shop.shopOwnerId);
-              ownersData[shop.shopOwnerId] = ownerData;
+              ownersMap[shop.shopOwnerId] = normalizeUser(ownerData);
             } catch (ownerErr) {
-              console.error(
-                `Error fetching owner for shop ${shop.id}:`,
-                ownerErr
-              );
-              // Set a placeholder for failed owner fetches
-              ownersData[shop.shopOwnerId] = {
+              console.error(`Error fetching owner for shop ${shop.storeId}:`, ownerErr);
+              ownersMap[shop.shopOwnerId] = {
                 name: "Unknown",
                 email: "Not available",
               };
             }
           }
         }
-        setShopOwners(ownersData);
+        setShopOwners(ownersMap);
         setError(null);
       } catch (err) {
         console.error("Error fetching stores:", err);
@@ -56,7 +79,6 @@ const ShopManagement = () => {
     fetchStores();
   }, []);
 
-  // Fetch items when a shop is selected
   useEffect(() => {
     const fetchShopItems = async () => {
       if (!selectedShop) {
@@ -68,14 +90,10 @@ const ShopManagement = () => {
         setLoadingItems(true);
         setItemsError(null);
         console.log(`Fetching items for shop ${selectedShop.storeId}...`);
-
         const items = await getItemsByStoreId(selectedShop.storeId);
-        setShopItems(items);
+        setShopItems(items.map(normalizeItem));
       } catch (err) {
-        console.error(
-          `Error fetching items for shop ${selectedShop.storeId}:`,
-          err
-        );
+        console.error(`Error fetching items for shop ${selectedShop.storeId}:`, err);
         setItemsError("Failed to load products for this shop.");
         setShopItems([]);
       } finally {
@@ -129,7 +147,7 @@ const ShopManagement = () => {
           {shops.length > 0 ? (
             shops.map((shop) => (
               <div
-                key={shop.store_id}
+                key={shop.storeId}
                 className="shop-card"
                 onClick={() => handleShopClick(shop)}
               >
@@ -187,7 +205,7 @@ const ShopManagement = () => {
             <div className="product-list">
               {filteredItems.length > 0 ? (
                 filteredItems.map((item) => (
-                  <div key={item.item_id} className="product-card">
+                  <div key={item.itemId} className="product-card">
                     <p>
                       <strong>{item.name}</strong>
                     </p>

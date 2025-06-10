@@ -31,24 +31,36 @@ const WishlistContainer = () => {
         const wishlistData = await getWishlist(userId);
         console.log("WishlistContainer - Raw wishlist data:", wishlistData);
 
-        setWishlistItems(wishlistData || []);
+        const normalizedWishlist = (wishlistData || []).map((item) => ({
+          userId: item.user_id,
+          itemId: item.item_id,
+          addedAt: item.added_at,
+        }));
+        setWishlistItems(normalizedWishlist);
 
-        if (wishlistData && wishlistData.length > 0) {
-          const itemIds = [...new Set(wishlistData.map((item) => item.itemId))];
+        if (normalizedWishlist.length > 0) {
+          const itemIds = [...new Set(normalizedWishlist.map((item) => item.itemId))];
           console.log("WishlistContainer - Unique item IDs:", itemIds);
 
           const enrichedData = await getEnrichedItemsByIds(itemIds);
           console.log("WishlistContainer - Enriched items data:", enrichedData);
 
-          setEnrichedItems(enrichedData || []);
+          const normalizedEnrichedItems = (enrichedData || []).map((item) => ({
+            ...item,
+            imageUrl: item.image_url,
+            stockQuantity: item.stock_quantity,
+            discount: item.discount,
+            createdAt: item.created_at,
+            updatedAt: item.updated_at,
+            // Add more field conversions as needed
+          }));
+
+          setEnrichedItems(normalizedEnrichedItems);
         } else {
           setEnrichedItems([]);
         }
       } catch (err) {
-        console.error(
-          "❌ WishlistContainer - Error fetching wishlist data:",
-          err
-        );
+        console.error("❌ WishlistContainer - Error fetching wishlist data:", err);
         setError("Failed to load wishlist items.");
       } finally {
         setLoading(false);

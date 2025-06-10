@@ -4,6 +4,7 @@
   padding: 2rem;
   font-family: "Segoe UI", sans-serif;
   color: #670010;
+  display: flex;
 }
 
 .top-bar h2 {
@@ -14,7 +15,7 @@
 
 .shop-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, fr));
   gap: 24px;
 }
 

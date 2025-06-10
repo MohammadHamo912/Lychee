@@ -7,7 +7,7 @@ import "../ComponentsCss/ShowMyReviews.css";
 
 const Reviews = () => {
   const { user } = useUser();
-  const userId = user?.userId;
+  const userId = user?.userId || user?.id || user?.user_id;
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,27 +20,49 @@ const Reviews = () => {
 
     const fetchReviews = async () => {
       try {
-        const data = await getUserReviews(userId);
+        const rawData = await getUserReviews(userId);
 
-        // Fetch target names for each review
+        const data = rawData.map((review) => ({
+          reviewId: review.review_id,
+          reviewType: review.review_type,
+          targetId: review.target_id,
+          userId: review.user_id,
+          rating: review.rating,
+          comment: review.comment,
+          createdAt: review.created_at,
+        }));
+
         const reviewsWithNames = await Promise.all(
           data.map(async (review) => {
             let targetName = "Unknown";
 
             try {
               if (review.reviewType === "product") {
-                const product = await getProductById(review.targetId);
+                const rawProduct = await getProductById(review.targetId);
+                const product = {
+                  ...rawProduct,
+                  name: rawProduct.name,
+                  imageUrl: rawProduct.image_url,
+                  createdAt: rawProduct.created_at,
+                  updatedAt: rawProduct.updated_at,
+                  // Add other fields as needed
+                };
                 targetName = product?.name || "Unknown Product";
-              } else if (review.reviewType === "shop") {
-                const store = await getStoreById(review.targetId);
 
+              } else if (review.reviewType === "shop") {
+                const rawStore = await getStoreById(review.targetId);
+                const store = {
+                  ...rawStore,
+                  name: rawStore.name,
+                  imageUrl: rawStore.image_url,
+                  createdAt: rawStore.created_at,
+                  updatedAt: rawStore.updated_at,
+                  // Add other fields as needed
+                };
                 targetName = store?.name || "Unknown Store";
               }
             } catch (err) {
-              console.error(
-                `Error fetching ${review.reviewType} details:`,
-                err
-              );
+              console.error(`Error fetching ${review.reviewType} details:`, err);
             }
 
             return {
