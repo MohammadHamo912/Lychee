@@ -37,14 +37,14 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
 
     @Override
     public List<ItemImage> findAll() {
-        String sql = "SELECT * FROM Item_Images";
+        String sql = "SELECT * FROM item_images";
         return jdbcTemplate.query(sql, itemImageRowMapper);
     }
 
     @Override
     public Optional<ItemImage> findById(Integer id) {
         try {
-            String sql = "SELECT * FROM Item_Images WHERE Image_ID = ?";
+            String sql = "SELECT * FROM item_images WHERE Image_ID = ?";
             ItemImage itemImage = jdbcTemplate.queryForObject(sql, itemImageRowMapper, id);
             return Optional.ofNullable(itemImage);
         } catch (EmptyResultDataAccessException e) {
@@ -54,7 +54,7 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
 
     @Override
     public List<ItemImage> findByItemId(Integer itemId) {
-        String sql = "SELECT * FROM Item_Images WHERE Item_ID = ?";
+        String sql = "SELECT * FROM item_images WHERE Item_ID = ?";
         return jdbcTemplate.query(sql, itemImageRowMapper, itemId);
     }
 
@@ -70,7 +70,7 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
     }
 
     private ItemImage insert(ItemImage itemImage) {
-        String sql = "INSERT INTO Item_Images (Item_ID, image_url, caption) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO item_images (Item_ID, image_url, caption) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -93,7 +93,7 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
     }
 
     private ItemImage update(ItemImage itemImage) {
-        String sql = "UPDATE Item_Images SET Item_ID = ?, image_url = ?, caption = ? WHERE Image_ID = ?";
+        String sql = "UPDATE item_images SET Item_ID = ?, image_url = ?, caption = ? WHERE Image_ID = ?";
 
         jdbcTemplate.update(sql,
                 itemImage.getItemId(),
@@ -106,7 +106,7 @@ public class ItemImageRepositoryImpl implements ItemImageRepository {
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM Item_Images WHERE Image_ID = ?";
+        String sql = "DELETE FROM item_images WHERE Image_ID = ?";
         jdbcTemplate.update(sql, id);
     }
 }

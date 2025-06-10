@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import "../PagesCss/ProductPage.css";
-import { getProductById } from "../api/products";
-import { getProductVariantsByProductId } from "../api/productvariant";
-import {
-  getItemsByProductVariantId,
-  getItemById,
-  getAllItems,
-  getAvailableVariantsForProduct,
-} from "../api/items";
-import { getReviews, addReview } from "../api/reviews"; // Import reviews API
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import axios from "axios";
+import "../PagesCss/ProductPage.css";
+
+import { useUser } from "../context/UserContext";
+
+import { getProductById } from "../api/products";
+
+import { getProductVariantsByProductId } from "../api/productvariant";
+
+import {
+  getItemsByProductVariantId,
+  getAvailableVariantsForProduct,
+} from "../api/items";
+import { getItemImagesByItemId } from "../api/itemImage.js";
+
+import { getUserById } from "../api/users";
+import { getReviews, addReview } from "../api/reviews";
 
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, isLoggedIn } = useUser(); // Get user from context
 
   // Product and variant states
   const [product, setProduct] = useState(null);
@@ -32,16 +38,20 @@ const ProductPage = () => {
   const [activeTab, setActiveTab] = useState("description");
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationType, setNotificationType] = useState("success");
 
   // Review states
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [submittingReview, setSubmittingReview] = useState(false);
   const [newReview, setNewReview] = useState({
     rating: 5,
     comment: "",
-    userId: 1, // You'll need to get this from your auth system
   });
+
+  // Store user names cache to avoid repeated API calls
+  const [userNamesCache, setUserNamesCache] = useState({});
 
   // Fetch product data on component mount
   useEffect(() => {
@@ -84,8 +94,9 @@ const ProductPage = () => {
             ? productVariants
             : await getProductVariantsByProductId(id);
         if (initialVariants && initialVariants.length > 0) {
-          await fetchItemImages(initialVariants[0].Product_Variant_ID);
-          await fetchAvailableItems(initialVariants[0].Product_Variant_ID);
+          console.log("Initial variants fetched:", initialVariants);
+          await fetchItemImages(initialVariants[0].productVariantId);
+          await fetchAvailableItems(initialVariants[0].productVariantId);
         }
 
         // Fetch product reviews
@@ -103,12 +114,35 @@ const ProductPage = () => {
     }
   }, [id]);
 
-  // Fetch product reviews
+  // Fetch product reviews and user names
   const fetchProductReviews = async () => {
     try {
       setReviewsLoading(true);
       const reviewsData = await getReviews("product", parseInt(id));
+      console.log("Fetched reviews:", reviewsData);
       setReviews(reviewsData || []);
+
+      // Fetch user names for all reviews
+      if (reviewsData && reviewsData.length > 0) {
+        const userIds = [
+          ...new Set(reviewsData.map((review) => review.user_id)),
+        ];
+        const userNames = {};
+
+        await Promise.all(
+          userIds.map(async (userId) => {
+            try {
+              const userData = await getUserById(userId);
+              userNames[userId] = userData?.name || `User #${userId}`;
+            } catch (error) {
+              console.error(`Error fetching user data for ${userId}:`, error);
+              userNames[userId] = `User #${userId}`;
+            }
+          })
+        );
+
+        setUserNamesCache(userNames);
+      }
     } catch (err) {
       console.error("Error fetching reviews:", err);
       setReviews([]);
@@ -121,31 +155,40 @@ const ProductPage = () => {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
 
+    if (!isLoggedIn) {
+      showTemporaryNotification("Please log in to write a review", "error");
+      return;
+    }
+
     if (!newReview.comment.trim()) {
-      showTemporaryNotification("Please enter a comment");
+      showTemporaryNotification("Please enter a comment", "error");
       return;
     }
 
     try {
-      // Try different payload formats in case of field name issues
+      setSubmittingReview(true);
+
+      // Get user ID from context
+      const userIdToUse =
+        user.userId || user.id || user.User_ID || user.user_id;
+
+      if (!userIdToUse) {
+        showTemporaryNotification(
+          "User ID not found. Please log in again.",
+          "error"
+        );
+        return;
+      }
+
       const reviewData = {
-        Review_Type: "product",
-        Target_ID: parseInt(id),
-        User_ID: newReview.userId,
-        Rating: newReview.rating,
-        Comment: newReview.comment.trim(),
+        review_type: "product",
+        target_id: parseInt(id),
+        user_id: userIdToUse,
+        rating: newReview.rating,
+        comment: newReview.comment.trim(),
       };
 
-      // Alternative format (uncomment if the above doesn't work)
-      // const reviewData = {
-      //   review_type: 'product',
-      //   target_id: parseInt(id),
-      //   user_id: newReview.userId,
-      //   rating: newReview.rating,
-      //   comment: newReview.comment.trim()
-      // };
-
-      console.log("Submitting review data:", reviewData); // Debug log
+      console.log("Submitting review data:", reviewData);
 
       await addReview(reviewData);
 
@@ -153,14 +196,13 @@ const ProductPage = () => {
       setNewReview({
         rating: 5,
         comment: "",
-        userId: newReview.userId,
       });
       setShowReviewForm(false);
 
       // Refresh reviews
       await fetchProductReviews();
 
-      showTemporaryNotification("Review submitted successfully!");
+      showTemporaryNotification("Review submitted successfully!", "success");
     } catch (err) {
       console.error("Full error object:", err);
       console.error("Error response:", err.response?.data);
@@ -170,31 +212,48 @@ const ProductPage = () => {
         err.response?.data?.message ||
         err.response?.data?.error ||
         "Failed to submit review. Please try again.";
-      showTemporaryNotification(errorMessage);
+      showTemporaryNotification(errorMessage, "error");
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
-  // Calculate average rating
+  // Calculate average rating with proper error handling (using camelCase properties)
   const getAverageRating = () => {
-    if (reviews.length === 0) return 0;
-    const sum = reviews.reduce((acc, review) => acc + review.Rating, 0);
-    return (sum / reviews.length).toFixed(1);
+    if (!reviews || reviews.length === 0) return 0;
+
+    // Filter out invalid ratings and convert to numbers - using camelCase 'rating'
+    const validRatings = reviews
+      .map((review) => {
+        const rating = Number(review.rating); // Changed from review.Rating to review.rating
+        return isNaN(rating) ? 0 : rating;
+      })
+      .filter((rating) => rating > 0);
+
+    if (validRatings.length === 0) return 0;
+
+    const sum = validRatings.reduce((acc, rating) => acc + rating, 0);
+    const average = sum / validRatings.length;
+
+    return isNaN(average) ? 0 : Number(average.toFixed(1));
   };
 
-  // Render star rating
+  // Render star rating with better error handling
   const renderStars = (rating, interactive = false, onRatingChange = null) => {
+    const numericRating = Number(rating) || 0;
     const stars = [];
+
     for (let i = 1; i <= 5; i++) {
       stars.push(
         <span
           key={i}
-          className={`star ${i <= rating ? "filled" : ""} ${
+          className={`star ${i <= numericRating ? "filled" : ""} ${
             interactive ? "interactive" : ""
           }`}
           onClick={interactive ? () => onRatingChange(i) : undefined}
           style={{
             cursor: interactive ? "pointer" : "default",
-            color: i <= rating ? "#ffd700" : "#ddd",
+            color: i <= numericRating ? "#ffd700" : "#ddd",
             fontSize: "18px",
             marginRight: "2px",
           }}
@@ -208,20 +267,33 @@ const ProductPage = () => {
 
   // Format date
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return "Invalid date";
+      }
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
+
+  // Get user name from cache (synchronous)
+  const getUserDisplayName = (userId) => {
+    return userNamesCache[userId] || `User #${userId}`;
   };
 
   // Fetch available items for a variant and calculate best price
   const fetchAvailableItems = async (variantId) => {
     try {
+      console.log("Fetching available items for variant ID:", variantId);
       const items = await getItemsByProductVariantId(variantId);
       setAvailableItems(items || []);
-
+      console.log("Available items fetched:", items);
       if (items && items.length > 0) {
         // Calculate best price info
         const bestPrice = Math.min(...items.map((item) => item.price));
@@ -251,10 +323,7 @@ const ProductPage = () => {
       const items = await getItemsByProductVariantId(variantId);
 
       if (items && items.length > 0) {
-        // Get images for the first item
-        const imagesResponse = await axios.get(
-          `http://localhost:8081/api/item-images/item/${items[0].Item_ID}`
-        );
+        const imagesResponse = await getItemImagesByItemId(items[0].itemId);
         setItemImages(imagesResponse.data || []);
       }
     } catch (err) {
@@ -267,8 +336,9 @@ const ProductPage = () => {
     document.title = product ? `${product.name} | Lychee` : "Product | Lychee";
   }, [product]);
 
-  const showTemporaryNotification = (message) => {
+  const showTemporaryNotification = (message, type = "success") => {
     setNotificationMessage(message);
+    setNotificationType(type);
     setShowNotification(true);
     setTimeout(() => setShowNotification(false), 3000);
   };
@@ -277,27 +347,45 @@ const ProductPage = () => {
     console.log("Selected variant:", variant);
     setSelectedVariant(variant);
     // Fetch images and items for the selected variant
-    await fetchItemImages(variant.productVariantId);
-    await fetchAvailableItems(variant.productVariantId);
+
+    await fetchItemImages(
+      variant.id || variant.productVariantId || variant.Product_Variant_ID
+    );
+    await fetchAvailableItems(
+      variant.id || variant.productVariantId || variant.Product_Variant_ID
+    );
   };
 
   const handleFindBestPrice = async () => {
     if (!selectedVariant) {
-      showTemporaryNotification("Please select a product variant first");
+      showTemporaryNotification(
+        "Please select a product variant first",
+        "error"
+      );
       return;
     }
 
     if (!bestPriceInfo || !bestPriceInfo.bestPriceItem) {
-      showTemporaryNotification("This product variant is not available");
+      showTemporaryNotification(
+        "This product variant is not available",
+        "error"
+      );
       return;
     }
 
     try {
       // Navigate to the best price item page
-      navigate(`/item/${bestPriceInfo.bestPriceItem.Item_ID}`);
+      console.log(
+        "Navigating to best price item:",
+        bestPriceInfo.bestPriceItem
+      );
+      navigate(`/item/${bestPriceInfo.bestPriceItem.itemId}`);
     } catch (err) {
       console.error("Error navigating to best price:", err);
-      showTemporaryNotification("Error finding best price. Please try again.");
+      showTemporaryNotification(
+        "Error finding best price. Please try again.",
+        "error"
+      );
     }
   };
 
@@ -318,6 +406,22 @@ const ProductPage = () => {
 
     const colorName = variant.color?.toLowerCase() || "default";
     return colorMap[colorName] || "#b76e79";
+  };
+
+  // Helper function to get store name (you'll need to implement this based on your store data structure)
+  const getStoreName = (storeId) => {
+    // This is a placeholder - you should replace this with actual store data fetching
+    // You might want to create a stores context or fetch store data
+    const storeNames = {
+      1: "Beauty Store Downtown",
+      2: "Cosmetics Corner",
+      3: "Glamour Gallery",
+      4: "Beauty Boutique",
+      5: "Makeup Mart",
+      // Add more store mappings as needed
+    };
+
+    return storeNames[storeId] || `Store #${storeId}`;
   };
 
   if (loading) {
@@ -353,6 +457,8 @@ const ProductPage = () => {
     );
   }
 
+  const averageRating = getAverageRating();
+
   return (
     <div className="product-page">
       <NavBar />
@@ -360,7 +466,7 @@ const ProductPage = () => {
       <main className="main-content">
         <div className="product-details-container">
           {showNotification && (
-            <div className="notification">
+            <div className={`notification ${notificationType}`}>
               <span>{notificationMessage}</span>
             </div>
           )}
@@ -421,9 +527,10 @@ const ProductPage = () => {
               {reviews.length > 0 && (
                 <div className="rating-summary">
                   <div className="average-rating">
-                    {renderStars(Math.round(getAverageRating()))}
+                    {renderStars(Math.round(averageRating))}
                     <span className="rating-value">
-                      {getAverageRating()} ({reviews.length} review
+                      {averageRating > 0 ? averageRating : "No ratings"} (
+                      {reviews.length} review
                       {reviews.length !== 1 ? "s" : ""})
                     </span>
                   </div>
@@ -464,9 +571,12 @@ const ProductPage = () => {
               <div className="product-variants">
                 <h3 className="variants-title">Available Options</h3>
                 <div className="variant-options">
-                  {productVariants.map((variant) => (
+                  {productVariants.map((variant, index) => (
                     <button
-                      key={variant.Product_Variant_ID}
+                      key={
+                        variant.Product_Variant_ID ??
+                        `variant-fallback-${index}`
+                      }
                       className={`variant-option ${
                         selectedVariant?.Product_Variant_ID ===
                         variant.Product_Variant_ID
@@ -520,45 +630,6 @@ const ProductPage = () => {
               </button>
             </div>
 
-            <div className="product-meta">
-              <div className="shipping-info">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="1" y="3" width="15" height="13"></rect>
-                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                </svg>
-                <span>Free shipping on orders over $35</span>
-              </div>
-              <div className="returns-info">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 2v6h6"></path>
-                  <path d="M3 13a9 9 0 1 0 3-7.7L3 8"></path>
-                </svg>
-                <span>30-day hassle-free returns</span>
-              </div>
-            </div>
-
             <div className="product-tabs">
               <div className="tabs-header">
                 <button
@@ -607,13 +678,14 @@ const ProductPage = () => {
                         </h4>
                         <div className="store-availability">
                           {availableItems.map((item) => (
-                            <div key={item.Item_ID} className="store-item">
+                            <div key={item.itemId} className="store-item">
                               <div className="store-info">
                                 <span className="store-name">
-                                  Store ID: {item.Store_ID}
+                                  {getStoreName(item.Store_ID)}
                                 </span>
-                                <span className="store-stock">
-                                  Stock: {item.stockQuantity}
+                                <span className="store-location">
+                                  {/* You can add store location here if available */}
+                                  Store ID: {item.Store_ID}
                                 </span>
                               </div>
                               <div className="store-pricing">
@@ -625,6 +697,19 @@ const ProductPage = () => {
                                     {item.discount}% off
                                   </span>
                                 )}
+                              </div>
+                              <div className="store-availability-status">
+                                <span
+                                  className={`availability-badge ${
+                                    item.stockQuantity > 0
+                                      ? "in-stock"
+                                      : "out-of-stock"
+                                  }`}
+                                >
+                                  {item.stockQuantity > 0
+                                    ? "In Stock"
+                                    : "Out of Stock"}
+                                </span>
                               </div>
                             </div>
                           ))}
@@ -645,10 +730,10 @@ const ProductPage = () => {
                             <div className="rating-overview">
                               <div className="average-rating-large">
                                 <span className="rating-number">
-                                  {getAverageRating()}
+                                  {averageRating > 0 ? averageRating : "0.0"}
                                 </span>
                                 <div className="rating-stars">
-                                  {renderStars(Math.round(getAverageRating()))}
+                                  {renderStars(Math.round(averageRating))}
                                 </div>
                                 <span className="review-count">
                                   Based on {reviews.length} review
@@ -664,7 +749,16 @@ const ProductPage = () => {
 
                       <button
                         className="write-review-btn"
-                        onClick={() => setShowReviewForm(!showReviewForm)}
+                        onClick={() => {
+                          if (!isLoggedIn) {
+                            showTemporaryNotification(
+                              "Please log in to write a review",
+                              "error"
+                            );
+                            return;
+                          }
+                          setShowReviewForm(!showReviewForm);
+                        }}
                       >
                         {showReviewForm ? "Cancel" : "Write a Review"}
                       </button>
@@ -701,13 +795,20 @@ const ProductPage = () => {
                           </div>
 
                           <div className="form-actions">
-                            <button type="submit" className="submit-review-btn">
-                              Submit Review
+                            <button
+                              type="submit"
+                              className="submit-review-btn"
+                              disabled={submittingReview}
+                            >
+                              {submittingReview
+                                ? "Submitting..."
+                                : "Submit Review"}
                             </button>
                             <button
                               type="button"
                               className="cancel-review-btn"
                               onClick={() => setShowReviewForm(false)}
+                              disabled={submittingReview}
                             >
                               Cancel
                             </button>
@@ -721,20 +822,22 @@ const ProductPage = () => {
                         <p>Loading reviews...</p>
                       ) : reviews.length > 0 ? (
                         reviews.map((review) => (
-                          <div key={review.Review_ID} className="review-item">
+                          <div key={review.review_id} className="review-item">
                             <div className="review-header">
                               <div className="review-rating">
-                                {renderStars(review.Rating)}
+                                {renderStars(review.rating || 0)}
                               </div>
                               <div className="review-date">
-                                {formatDate(review.Created_At)}
+                                {formatDate(
+                                  review.createdAt || review.created_at
+                                )}
                               </div>
                             </div>
                             <div className="review-content">
-                              <p>{review.Comment}</p>
+                              <p>{review.comment || "No comment provided."}</p>
                             </div>
                             <div className="review-author">
-                              <span>User ID: {review.User_ID}</span>
+                              <span>{getUserDisplayName(review.user_id)}</span>
                             </div>
                           </div>
                         ))

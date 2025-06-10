@@ -8,12 +8,9 @@ import Footer from "../components/Footer";
 import { getStoreById } from "../api/stores.js";
 import { getItemsByStoreId } from "../api/items.js";
 import { useUser } from "../context/UserContext";
-import { getAddressById } from "../api/addresses.js"; // Import address API if needed
-// Mock data imports for fallback/development
-import shop1SampleImage from "../images/shop1SampleImage.png";
+import { getAddressById } from "../api/addresses.js";
 
 const StorePage = () => {
-  // Get storeId from URL params
   const { storeId } = useParams();
   const [store, setStore] = useState(null);
   const [items, setItems] = useState([]);
@@ -22,16 +19,13 @@ const StorePage = () => {
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const [search, setSearch] = useState("");
-  // For product detail modal
   const [viewingItem, setViewingItem] = useState(null);
   const [location, setLocation] = useState("Loading location...");
 
   const { addToCart, isAddingToCart } = useUser();
 
-  // Mock categories for filtering - replace with dynamic categories from products
   const categories = ["Skincare", "Makeup", "Accessories", "Fragrances"];
 
-  // Function to format address from address object
   const formatAddress = (addressData) => {
     if (!addressData) return "Location unknown";
 
@@ -146,7 +140,7 @@ const StorePage = () => {
                 <div className="store-info">
                   <div className="store-logo-container">
                     <img
-                      src={store.logo_url || shop1SampleImage}
+                      src={store.logo_url}
                       alt={`${store.name} logo`}
                       className="store-logo"
                     />
@@ -179,50 +173,7 @@ const StorePage = () => {
                     <p className="store-description">
                       {store.description || "No description available"}
                     </p>
-
-                    <div className="store-social">
-                      {store.socialLinks?.instagram && (
-                        <a
-                          href={store.socialLinks.instagram}
-                          className="social-link"
-                        >
-                          <span className="social-icon">📸</span> Instagram
-                        </a>
-                      )}
-                      {store.socialLinks?.facebook && (
-                        <a
-                          href={store.socialLinks.facebook}
-                          className="social-link"
-                        >
-                          <span className="social-icon">👥</span> Facebook
-                        </a>
-                      )}
-                      <a href="#contact" className="social-link">
-                        <span className="social-icon">✉️</span> Contact
-                      </a>
-                    </div>
                   </div>
-                </div>
-
-                <div className="store-quick-actions">
-                  <button
-                    className="action-button favorite"
-                    aria-label="Add to favorites"
-                  >
-                    ❤️
-                  </button>
-                  <button
-                    className="action-button share"
-                    aria-label="Share store"
-                  >
-                    🔗
-                  </button>
-                  <button
-                    className="action-button"
-                    aria-label="View store information"
-                  >
-                    ℹ️
-                  </button>
                 </div>
               </div>
             </div>

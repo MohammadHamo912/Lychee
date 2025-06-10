@@ -17,7 +17,7 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @PostMapping("/add")
-    public ResponseEntity<Void> addReview(@RequestBody Review review) {
+    public ResponseEntity<?> addReview(@RequestBody Review review) {
         reviewService.addReview(review);
         return ResponseEntity.ok().build();
     }
