@@ -24,8 +24,7 @@ const ProductPage = () => {
   const navigate = useNavigate();
   const { user, isLoggedIn } = useUser();
   const productId = product_id;
-  console.log("ProductPage - Current user from context:", user);
-  console.log("ProductPage - Product ID from URL:", productId);
+
   const [product, setProduct] = useState(null);
   const [productVariants, setProductVariants] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -54,6 +53,8 @@ const ProductPage = () => {
         setLoading(true);
 
         const productData = await getProductById(productId);
+        console.log("Fetched product data:", productData);
+
         if (!productData) {
           setError("Product not found");
           return;
@@ -64,10 +65,13 @@ const ProductPage = () => {
 
         try {
           const availableVariantsFromItems =
-            await getAvailableVariantsForProduct(parseInt(productId));
+            await getAvailableVariantsForProduct(productData.product_id);
           variants = availableVariantsFromItems || [];
+          console.log(variants);
         } catch {
-          variants = await getProductVariantsByProductId(productId);
+          variants = await getProductVariantsByProductId(
+            productData.product_id
+          );
         }
 
         setProductVariants(variants);
@@ -78,8 +82,8 @@ const ProductPage = () => {
 
           const variantId =
             firstVariant.id ||
-            firstVariant.productVariantId ||
-            firstVariant.product_variant_id;
+            firstVariant.product_variant_id ||
+            firstVariant.productVariantId; // Keep as fallback
 
           await fetchItemImages(variantId);
           await fetchAvailableItems(variantId);
@@ -131,6 +135,7 @@ const ProductPage = () => {
       setReviewsLoading(false);
     }
   };
+
   // Handle review submission
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
@@ -148,9 +153,9 @@ const ProductPage = () => {
     try {
       setSubmittingReview(true);
 
-      // Get user ID from context
+      // Get user ID from context - check all possible property names
       const userIdToUse =
-        user.userId || user.id || user.User_ID || user.user_id;
+        user.user_id || user.userId || user.id || user.User_ID;
 
       if (!userIdToUse) {
         showTemporaryNotification(
@@ -198,14 +203,14 @@ const ProductPage = () => {
     }
   };
 
-  // Calculate average rating with proper error handling (using camelCase properties)
+  // Calculate average rating with proper error handling
   const getAverageRating = () => {
     if (!reviews || reviews.length === 0) return 0;
 
-    // Filter out invalid ratings and convert to numbers - using camelCase 'rating'
+    // Filter out invalid ratings and convert to numbers
     const validRatings = reviews
       .map((review) => {
-        const rating = Number(review.rating); // Changed from review.Rating to review.rating
+        const rating = Number(review.rating);
         return isNaN(rating) ? 0 : rating;
       })
       .filter((rating) => rating > 0);
@@ -303,7 +308,9 @@ const ProductPage = () => {
       const items = await getItemsByProductVariantId(variantId);
 
       if (items && items.length > 0) {
-        const imagesResponse = await getItemImagesByItemId(items[0].itemId);
+        // Use snake_case for item properties
+        const itemId = items[0].item_id || items[0].itemId; // fallback for safety
+        const imagesResponse = await getItemImagesByItemId(itemId);
         setItemImages(imagesResponse.data || []);
       }
     } catch (err) {
@@ -329,10 +336,10 @@ const ProductPage = () => {
     // Fetch images and items for the selected variant
 
     await fetchItemImages(
-      variant.id || variant.productVariantId || variant.product_variant_id
+      variant.id || variant.product_variant_id || variant.productVariantId
     );
     await fetchAvailableItems(
-      variant.id || variant.productVariantId || variant.product_variant_id
+      variant.id || variant.product_variant_id || variant.productVariantId
     );
   };
 
@@ -467,7 +474,10 @@ const ProductPage = () => {
             <div className="image-thumbnails">
               {itemImages.length > 0
                 ? itemImages.slice(0, 4).map((image, index) => (
-                    <div key={image.Image_ID} className="thumbnail-wrapper">
+                    <div
+                      key={image.image_id || image.Image_ID}
+                      className="thumbnail-wrapper"
+                    >
                       <img
                         src={image.image_url}
                         alt={
@@ -681,12 +691,14 @@ const ProductPage = () => {
                               <div className="store-availability-status">
                                 <span
                                   className={`availability-badge ${
+                                    item.stock_quantity > 0 ||
                                     item.stockQuantity > 0
                                       ? "in-stock"
                                       : "out-of-stock"
                                   }`}
                                 >
-                                  {item.stockQuantity > 0
+                                  {item.stock_quantity > 0 ||
+                                  item.stockQuantity > 0
                                     ? "In Stock"
                                     : "Out of Stock"}
                                 </span>
@@ -809,7 +821,7 @@ const ProductPage = () => {
                               </div>
                               <div className="review-date">
                                 {formatDate(
-                                  review.createdAt || review.created_at
+                                  review.created_at || review.createdAt
                                 )}
                               </div>
                             </div>

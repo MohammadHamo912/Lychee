@@ -220,41 +220,41 @@ export const deleteItem = async (itemId) => {
 
 // Get available variants for a product in a specific store
 export const getAvailableVariantsForProduct = async (
-  productId,
-  storeId = null
+  product_id,
+  store_id = null
 ) => {
   try {
     console.log(
       "API - Getting available variants for product:",
-      productId,
+      product_id,
       "store:",
-      storeId
+      store_id
     );
 
     // This will use the enriched data from getAllItems and filter
     const allItems = await getAllItems();
     const productItems = allItems.filter(
       (item) =>
-        item.currentVariant &&
-        item.currentVariant.productId === productId &&
-        (storeId ? item.storeId === storeId : true) &&
+        item.current_variant &&
+        item.current_variant.product_id === product_id &&
+        (store_id ? item.store_id === store_id : true) &&
         item.stock > 0
     );
 
     if (productItems.length > 0) {
-      return productItems[0].availableVariants || [];
+      return productItems[0].available_variants || [];
     }
 
     return [];
   } catch (error) {
     console.error(
-      `Error fetching available variants for product ${productId}:`,
+      `Error fetching available variants for product ${product_id}:`,
       error
     );
     throw error;
   }
 };
-export const getEnrichedItemByVariantId = async (variantId) => {
+export const getEnrichedItemByVariantId = async (variant_id) => {
   const allItems = await getAllItems(); // optionally cache this
-  return allItems.find((item) => item.productVariantId === variantId);
+  return allItems.find((item) => item.product_variant_id === variant_id);
 };

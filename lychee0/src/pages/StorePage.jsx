@@ -24,7 +24,7 @@ const StorePage = () => {
 
   const { addToCart, isAddingToCart } = useUser();
 
-  const categories = ["Skincare", "Makeup", "Accessories", "Fragrances"];
+  const categories = ["Future Items"];
 
   const formatAddress = (addressData) => {
     if (!addressData) return "Location unknown";
@@ -183,8 +183,9 @@ const StorePage = () => {
                   <h3>Categories</h3>
                   <div className="filter-options">
                     <button
-                      className={`filter-btn ${filter === "all" ? "active" : ""
-                        }`}
+                      className={`filter-btn ${
+                        filter === "all" ? "active" : ""
+                      }`}
                       onClick={() => setFilter("all")}
                     >
                       All Items
@@ -192,8 +193,9 @@ const StorePage = () => {
                     {categories.map((category) => (
                       <button
                         key={category}
-                        className={`filter-btn ${filter === category ? "active" : ""
-                          }`}
+                        className={`filter-btn ${
+                          filter === category ? "active" : ""
+                        }`}
                         onClick={() => setFilter(category)}
                       >
                         {category}
@@ -229,7 +231,7 @@ const StorePage = () => {
 
               <div className="products-section">
                 <h2 className="products-heading">
-                  {filter === "all" ? "All Items" : filter}
+                  {filter === "all" ? "All Items" : "All Items"}
                   <span className="product-count">({sortedItems.length})</span>
                 </h2>
 

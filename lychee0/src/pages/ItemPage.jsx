@@ -24,10 +24,6 @@ const ItemPage = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
 
-  // Selected color and size states
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
-
   useEffect(() => {
     const fetchData = async () => {
       const itemId = Number(id);
@@ -40,11 +36,6 @@ const ItemPage = () => {
       try {
         const data = await getItemById(itemId);
         setItem(data);
-
-        // Initialize selected color and size from current variant
-        setSelectedColor(data.currentVariant?.color || null);
-        setSelectedSize(data.currentVariant?.size || null);
-
         document.title = `${data.name} | Lychee`;
 
         if (user) {
@@ -66,21 +57,6 @@ const ItemPage = () => {
     fetchData();
   }, [id, user]);
 
-  // Get unique colors and sizes from availableVariants
-  const colors = item
-    ? [...new Set(item.available_variants.map((v) => v.color))]
-    : [];
-  const sizes = item
-    ? [...new Set(item.available_variants.map((v) => v.size))]
-    : [];
-
-  // Find variant matching selected color and size
-  const selectedVariant =
-    item?.available_variants.find(
-      (v) => v.color === selectedColor && v.size === selectedSize
-    ) || item?.current_variant;
-
-  // Quantity controls
   const handleQuantityChange = (delta) => {
     setQuantity((prev) => Math.max(1, prev + delta));
   };
@@ -89,14 +65,12 @@ const ItemPage = () => {
     setQuantity(value);
   };
 
-  // Notifications
   const showTemporaryNotification = (message) => {
     setNotificationMessage(message);
     setShowNotification(true);
     setTimeout(() => setShowNotification(false), 2500);
   };
 
-  // Wishlist toggle
   const toggleWishlist = async () => {
     if (!user) {
       showTemporaryNotification("Please log in to manage your wishlist.");
@@ -119,42 +93,19 @@ const ItemPage = () => {
     }
   };
 
-  // Add to cart with selected variant
   const handleAddToCart = async () => {
-    if (!selectedVariant) {
-      showTemporaryNotification("Please select a valid variant.");
-      return;
-    }
-
-    const success = await addToCart(selectedVariant, quantity);
+    const success = await addToCart(item, quantity);
     if (success) {
       showTemporaryNotification(
-        `${quantity} × ${item.name} (${selectedColor}, ${selectedSize}) added to your cart`
+        `${quantity} × ${item.name} added to your cart`
       );
     } else {
       showTemporaryNotification(`Failed to add item to cart`);
     }
   };
 
-  // Color circle helper
-  const getShadeColor = (shade) => {
-    const colors = {
-      "Rose Petal": "#f5a0a0",
-      "Sunset Glow": "#ff9966",
-      "Berry Bliss": "#aa5080",
-      "Clear Shine": "#f0f0f0",
-      default: "#b76e79",
-    };
-    return colors[shade] || colors.default;
-  };
-
-  // Calculate discounted price of selected variant or item price
-  const discountedPrice = selectedVariant
-    ? selectedVariant.price && selectedVariant.discount
-      ? (selectedVariant.price * (1 - selectedVariant.discount / 100)).toFixed(
-          2
-        )
-      : selectedVariant.price?.toFixed(2)
+  const discountedPrice = item?.discount
+    ? (item.price * (1 - item.discount / 100)).toFixed(2)
     : item?.price?.toFixed(2);
 
   if (loading) {
@@ -215,83 +166,20 @@ const ItemPage = () => {
             <div className="product-header">
               <div className="brand-badge">{item.brand}</div>
               <h1 className="product-title">{item.name}</h1>
-
               <Link to={`/store/${item.storeId}`} className="shop-name-link">
                 Sold by: <span>{item.storeName}</span>
               </Link>
-
               <div className="product-price-container">
-                {discountedPrice ? (
-                  <>
-                    <span className="original-price">
-                      $
-                      {selectedVariant?.price?.toFixed(2) ||
-                        item.price.toFixed(2)}
-                    </span>
-                    {selectedVariant?.discount > 0 && (
-                      <span className="sale-price">${discountedPrice}</span>
-                    )}
-                  </>
-                ) : (
-                  <span className="product-price">
+                {item.discount > 0 && (
+                  <span className="original-price">
                     ${item.price.toFixed(2)}
                   </span>
                 )}
-              </div>
-            </div>
-
-            <div className="product-variants">
-              <h3 className="variants-title">Color</h3>
-              <div className="shade-options">
-                {colors.map((color) => (
-                  <button
-                    key={color}
-                    className={`shade-option ${
-                      selectedColor === color ? "selected" : ""
-                    }`}
-                    title={color}
-                    onClick={() => setSelectedColor(color)}
-                  >
-                    <span
-                      className="shade-circle"
-                      style={{ backgroundColor: getShadeColor(color) }}
-                    ></span>
-                    <span className="shade-name">{color}</span>
-                  </button>
-                ))}
-              </div>
-
-              <h3 className="variants-title">Size</h3>
-              <div className="shade-options">
-                {sizes.map((size) => (
-                  <button
-                    key={size}
-                    className={`shade-option ${
-                      selectedSize === size ? "selected" : ""
-                    }`}
-                    title={size}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    <span className="shade-name">{size}</span>
-                  </button>
-                ))}
+                <span className="sale-price">${discountedPrice}</span>
               </div>
             </div>
 
             <div className="product-actions">
-              <div className="stock-status">
-                <span
-                  className={`status-indicator ${
-                    selectedVariant?.stockQuantity > 0
-                      ? "in-stock"
-                      : "out-of-stock"
-                  }`}
-                ></span>
-                {selectedVariant?.stockQuantity > 0
-                  ? "In Stock"
-                  : "Out of Stock"}
-              </div>
-
               <div className="quantity-control">
                 <button
                   className="quantity-btn"
@@ -318,7 +206,7 @@ const ItemPage = () => {
               <button
                 className="add-to-cart-btn"
                 onClick={handleAddToCart}
-                disabled={selectedVariant?.stockQuantity <= 0 || isAddingToCart}
+                disabled={isAddingToCart}
               >
                 {isAddingToCart ? "Adding..." : "Add to Cart"}
               </button>
