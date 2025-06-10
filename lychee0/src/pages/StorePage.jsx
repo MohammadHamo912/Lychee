@@ -165,7 +165,7 @@ const StorePage = () => {
                       <div className="store-meta-item">
                         <span className="meta-icon">🕒</span>
                         <div>
-                          Since {store.createdAt.split("T")[0] || "N/A"}
+                          Since {store?.createdAt?.split("T")[0] || "N/A"}
                         </div>
                       </div>
                     </div>
@@ -183,9 +183,8 @@ const StorePage = () => {
                   <h3>Categories</h3>
                   <div className="filter-options">
                     <button
-                      className={`filter-btn ${
-                        filter === "all" ? "active" : ""
-                      }`}
+                      className={`filter-btn ${filter === "all" ? "active" : ""
+                        }`}
                       onClick={() => setFilter("all")}
                     >
                       All Items
@@ -193,9 +192,8 @@ const StorePage = () => {
                     {categories.map((category) => (
                       <button
                         key={category}
-                        className={`filter-btn ${
-                          filter === category ? "active" : ""
-                        }`}
+                        className={`filter-btn ${filter === category ? "active" : ""
+                          }`}
                         onClick={() => setFilter(category)}
                       >
                         {category}

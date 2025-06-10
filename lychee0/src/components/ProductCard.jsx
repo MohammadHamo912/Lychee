@@ -10,8 +10,9 @@ import "./../ComponentsCss/ProductCard.css";
 
 const ProductCard = ({ product, onAction }) => {
   const navigate = useNavigate();
-  const { productId, name, logo_url, description, brand } = product;
-
+  const { product_id, name, logo_url, description, brand } = product;
+  const productId = product_id || product.productId;
+  console.log("ProductCard rendered with product:", product);
   const [categories, setCategories] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
