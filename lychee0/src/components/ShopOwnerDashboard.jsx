@@ -32,15 +32,15 @@ const ShopOwnerDashboard = () => {
 
   useEffect(() => {
     const fetchStoreAndMetrics = async () => {
-      if (!user?.userId) return;
+      if (!user?.user_id) return;
 
       try {
-        const data = await getStoreByOwnerId(user.userId);
+        const data = await getStoreByOwnerId(user.user_id);
         const parsed = {
-          storeId: data.storeId,
+          storeId: data.store_id,
           storeName: data.name,
           description: data.description || "",
-          addressId: data.addressId,
+          addressId: data.address_id,
           address: {
             city: data.address?.city || "",
             street: data.address?.street || "",
@@ -120,7 +120,7 @@ const ShopOwnerDashboard = () => {
         name: profileForm.storeName,
         description: profileForm.description,
         logo_url: profileForm.logoUrl,
-        shopOwnerId: user.userId,
+        shopOwnerId: user.user_id,
         addressId: profileForm.addressId,
       };
 

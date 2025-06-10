@@ -142,7 +142,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer userId, Integer storeId) {
+    public List<Order> searchOrders(String role, String query, String status, String startDate, String endDate, Integer user_id, Integer store_id) {
         StringBuilder sql = new StringBuilder();
         List<Object> params = new ArrayList<>();
 
@@ -154,9 +154,9 @@ public class OrderRepositoryImpl implements OrderRepository {
                 JOIN `user` u ON o.user_id = u.user_id
                 WHERE o.deleted_at IS NULL AND u.deleted_at IS NULL
             """);
-            if (userId != null) {
+            if (user_id != null) {
                 sql.append("AND o.user_id = ? ");
-                params.add(userId);
+                params.add(user_id);
             }
         } else if ("shopowner".equals(role)) {
             sql.append("""
@@ -167,9 +167,9 @@ public class OrderRepositoryImpl implements OrderRepository {
                 JOIN `user` u ON o.user_id = u.user_id
                 WHERE o.deleted_at IS NULL AND s.deleted_at IS NULL
             """);
-            if (storeId != null) {
+            if (store_id != null) {
                 sql.append("AND s.store_id = ? ");
-                params.add(storeId);
+                params.add(store_id);
             }
         }
 
@@ -234,6 +234,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         String sql = "UPDATE `order` SET status = ?, updated_at = ? WHERE order_id = ?";
         jdbcTemplate.update(sql, status, Timestamp.valueOf(LocalDateTime.now()), orderId);
     }
+
     @Override
     public List<Map<String, Object>> getOrderItemDetailsByStoreAndOrderId(Integer storeId, Integer orderId) {
         String sql = """
@@ -256,7 +257,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             row.put("quantity", rs.getInt("quantity"));
             row.put("price", rs.getBigDecimal("price"));
             row.put("itemId", rs.getInt("itemId"));
-            row.put("storeId", rs.getInt("storeId")); // ✅ added here
+            row.put("store_id", rs.getInt("storeId")); // ✅ matches frontend expectations
             return row;
         });
     }

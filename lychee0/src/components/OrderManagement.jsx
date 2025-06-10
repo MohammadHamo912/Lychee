@@ -1,5 +1,3 @@
-// src/components/OrderManagement.jsx
-
 import React, { useState, useEffect } from "react";
 import "../ComponentsCss/OrderManagement.css";
 import {
@@ -8,9 +6,10 @@ import {
   fetchOrderItemDetailsByStore,
   updateOrderStatus,
 } from "../api/orders";
+import { getStoreByOwnerId } from "../api/stores";
 import { useUser } from "../context/UserContext";
 
-const OrderManagement = ({ role = "shopowner", storeId: propStoreId }) => {
+const OrderManagement = ({ role = "shopowner", store_id: propStoreId }) => {
   const { user } = useUser();
   const [orders, setOrders] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
@@ -20,25 +19,42 @@ const OrderManagement = ({ role = "shopowner", storeId: propStoreId }) => {
   const [endDate, setEndDate] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [statusUpdateMessage, setStatusUpdateMessage] = useState("");
-
-  const effectiveStoreId = propStoreId ?? user?.storeId;
+  const [effectiveStoreId, setEffectiveStoreId] = useState(propStoreId ?? null);
 
   useEffect(() => {
-    if (!user || (role === "shopowner" && !effectiveStoreId)) return;
+    const fetchStoreId = async () => {
+      if (role === "shopowner" && !propStoreId && user?.user_id) {
+        try {
+          const store = await getStoreByOwnerId(user.user_id);
+          console.log("✅ Loaded store for shopowner:", store);
+          setEffectiveStoreId(store.store_id);
+        } catch (err) {
+          console.error("❌ Failed to fetch store ID:", err);
+        }
+      }
+    };
+    fetchStoreId();
+  }, [user, role, propStoreId]);
 
+  useEffect(() => {
     const getOrders = async () => {
+      if (!user || (role === "shopowner" && !effectiveStoreId)) {
+        console.warn("⚠️ Skipping fetchOrders: missing user or store ID");
+        return;
+      }
+
       const params = {
         role,
         status: filterStatus !== "All" ? filterStatus : "",
         query: searchQuery,
         startDate,
         endDate,
+        user_id: role === "customer" ? user.user_id : undefined,
+        store_id: role === "shopowner" ? effectiveStoreId : undefined,
       };
 
-      if (role === "shopowner") params.storeId = effectiveStoreId;
-      else if (role === "customer") params.userId = user.user_id;
-
       try {
+        console.log("📦 Fetching orders with params:", params);
         const data = await fetchOrders(params);
         setOrders(data || []);
       } catch (err) {
@@ -61,20 +77,14 @@ const OrderManagement = ({ role = "shopowner", storeId: propStoreId }) => {
     setSelectedOrder(order);
     try {
       let items;
-
       if (role === "shopowner") {
-        if (!effectiveStoreId) {
-          console.error("❌ Missing storeId for shopowner user:", user);
-          return;
-        }
         items = await fetchOrderItemDetailsByStore(
           effectiveStoreId,
-          order.orderId
+          order.order_id
         );
       } else {
-        items = await fetchOrderItems(order.orderId);
+        items = await fetchOrderItems(order.order_id);
       }
-
       setOrderItems(items || []);
     } catch (err) {
       console.error("❌ Error loading order items:", err.message);
@@ -89,19 +99,19 @@ const OrderManagement = ({ role = "shopowner", storeId: propStoreId }) => {
   };
 
   const handleStatusChange = (e) => {
-    const newStatus = e.target.value;
-    setSelectedOrder((prev) => ({ ...prev, status: newStatus }));
+    setSelectedOrder((prev) => ({ ...prev, status: e.target.value }));
   };
 
   const handleStatusUpdate = async () => {
     try {
-      await updateOrderStatus(selectedOrder.orderId, selectedOrder.status);
-      const updated = orders.map((o) =>
-        o.orderId === selectedOrder.orderId
-          ? { ...o, status: selectedOrder.status }
-          : o
+      await updateOrderStatus(selectedOrder.order_id, selectedOrder.status);
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.order_id === selectedOrder.order_id
+            ? { ...o, status: selectedOrder.status }
+            : o
+        )
       );
-      setOrders(updated);
       setStatusUpdateMessage("✅ Status updated!");
       setTimeout(() => setStatusUpdateMessage(""), 3000);
     } catch (err) {
@@ -164,20 +174,20 @@ const OrderManagement = ({ role = "shopowner", storeId: propStoreId }) => {
       <div className="order-grid">
         {orders.map((order) => (
           <div
-            key={order.orderId}
+            key={order.order_id}
             className={`order-card status-${order.status?.toLowerCase()}`}
             onClick={() => handleCardClick(order)}
           >
             <div className="order-header">
-              <h3>Order #{order.orderId}</h3>
+              <h3>Order #{order.order_id}</h3>
               <span className="status-badge">{order.status}</span>
             </div>
             <div className="order-info">
               <p>
-                <strong>Date:</strong> {order.createdAt?.split("T")[0]}
+                <strong>Date:</strong> {order.created_at?.split("T")[0]}
               </p>
               <p>
-                <strong>Total:</strong> ${order.totalPrice?.toFixed(2)}
+                <strong>Total:</strong> ${order.total_price?.toFixed(2)}
               </p>
             </div>
           </div>
@@ -194,12 +204,14 @@ const OrderManagement = ({ role = "shopowner", storeId: propStoreId }) => {
               ×
             </button>
 
-            <h3>Order #{selectedOrder.orderId} Details</h3>
+            <h3>Order #{selectedOrder.order_id} Details</h3>
             <p>
-              <strong>Date:</strong> {selectedOrder.createdAt?.split("T")[0]}
+              <strong>Date:</strong>{" "}
+              {selectedOrder.created_at?.split("T")[0]}
             </p>
             <p>
-              <strong>Total:</strong> ${selectedOrder.totalPrice?.toFixed(2)}
+              <strong>Total:</strong>{" "}
+              ${selectedOrder.total_price?.toFixed(2)}
             </p>
 
             {role === "admin" ? (
@@ -252,7 +264,9 @@ const OrderManagement = ({ role = "shopowner", storeId: propStoreId }) => {
                   Update Status
                 </button>
                 {statusUpdateMessage && (
-                  <p className="status-update-message">{statusUpdateMessage}</p>
+                  <p className="status-update-message">
+                    {statusUpdateMessage}
+                  </p>
                 )}
               </>
             )}

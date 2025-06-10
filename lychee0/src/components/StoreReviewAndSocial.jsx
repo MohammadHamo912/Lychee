@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import '../ComponentsCss/StoreReviewAndSocial.css';
 import { getStoreReviews } from '../api/stores';
 
-const StoreReviewAndSocial = ({ storeId }) => {
+const StoreReviewAndSocial = ({ store_id }) => {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchReviews = async () => {
-            if (!storeId) return;
+            if (!store_id) return;
 
             try {
-                const data = await getStoreReviews(storeId);
+                const data = await getStoreReviews(store_id);
                 setReviews(data);
             } catch (err) {
                 setError('Failed to load reviews.');
@@ -22,7 +22,7 @@ const StoreReviewAndSocial = ({ storeId }) => {
         };
 
         fetchReviews();
-    }, [storeId]);
+    }, [store_id]);
 
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -51,7 +51,7 @@ const StoreReviewAndSocial = ({ storeId }) => {
                                 {'☆'.repeat(5 - review.rating)}
                             </div>
                             <p className="comment">"{review.comment}"</p>
-                            <p className="meta">– {review.customer} | {review.date}</p>
+                            /*<p className="meta">– {review.customer} | {review.date}</p>*/
                         </div>
                     ))
                 )}
